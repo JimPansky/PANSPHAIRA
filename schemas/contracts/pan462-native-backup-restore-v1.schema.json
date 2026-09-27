@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://chimpmaera.org/schemas/pan462-native-backup-restore-v1.schema.json",
+  "title": "PanSphaira PAN462 native backup archive v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "consumerContract", "boundary", "backupClass", "sourceRoot", "installationId",
+    "releaseId", "version", "versionAxes", "authorityProfile", "installationDigest",
+    "captures", "writerAuthority", "externalEffects", "checkpoint", "capturedAtMs", "archiveDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "pansphaira.pan462/backup-archive/v1" },
+    "consumerContract": { "const": "pan462.installation.native-backup-restore/v1" },
+    "boundary": { "const": "CONSISTENT_QUIESCED_SNAPSHOT" },
+    "backupClass": { "enum": ["LOCAL_COPY", "INDEPENDENT_BACKUP"] },
+    "sourceRoot": { "type": "string", "minLength": 1 },
+    "installationId": { "$ref": "#/$defs/id" },
+    "releaseId": { "$ref": "#/$defs/semver" },
+    "version": { "$ref": "#/$defs/semver" },
+    "versionAxes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["core", "policies", "schemas"],
+      "properties": {
+        "core": { "$ref": "#/$defs/axis" },
+        "policies": { "$ref": "#/$defs/axis" },
+        "schemas": { "$ref": "#/$defs/axis" }
+      }
+    },
+    "authorityProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profileId", "digest"],
+      "properties": { "profileId": { "$ref": "#/$defs/id" }, "digest": { "$ref": "#/$defs/digest" } }
+    },
+    "installationDigest": { "$ref": "#/$defs/digest" },
+    "captures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["database", "files", "config", "keyRefs"],
+      "properties": {
+        "database": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["tables", "digest"],
+          "properties": {
+            "tables": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+            "digest": { "$ref": "#/$defs/digest" }
+          }
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["path", "sha256", "bytes"],
+            "properties": {
+              "path": { "type": "string", "minLength": 1 },
+              "sha256": { "$ref": "#/$defs/digest" },
+              "bytes": { "type": "integer", "minimum": 0 }
+            }
+          }
+        },
+        "config": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["path", "sha256", "bytes"],
+          "properties": {
+            "path": { "type": "string", "minLength": 1 },
+            "sha256": { "$ref": "#/$defs/digest" },
+            "bytes": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "keyRefs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["refId", "role", "path", "required", "available", "sha256", "secretValue", "secretExported"],
+            "properties": {
+              "refId": { "$ref": "#/$defs/id" },
+              "role": { "enum": ["CONFIG", "CREDENTIAL", "CERTIFICATE"] },
+              "path": { "type": "string", "minLength": 1 },
+              "required": { "type": "boolean" },
+              "available": { "type": "boolean" },
+              "sha256": { "anyOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
+              "secretValue": { "const": "REDACTED" },
+              "secretExported": { "const": false }
+            }
+          }
+        }
+      }
+    },
+    "writerAuthority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["epoch", "state", "invalidated"],
+      "properties": {
+        "epoch": { "type": "integer", "minimum": 0 },
+        "state": { "type": "string", "minLength": 1 },
+        "invalidated": { "type": "boolean" }
+      }
+    },
+    "externalEffects": { "enum": ["ENABLED", "DISABLED"] },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schemaVersion", "transition", "phase", "operationDigest", "migrationEdgeDigest", "currentTupleDigest", "rollbackTargetTupleDigest", "snapshotDigest", "snapshotContentDigest", "ownerStateDigest", "checkpointOrdinal", "authorityProfileDigest", "recorder", "capturedAtMs", "checkpointDigest"],
+      "properties": {
+        "schemaVersion": { "const": "chimpmaera.update/migration-checkpoint/v1" },
+        "transition": { "const": "CHECKPOINT_RECORDED" },
+        "phase": { "const": "PRE_MIGRATION" },
+        "operationDigest": { "$ref": "#/$defs/digest" },
+        "migrationEdgeDigest": { "$ref": "#/$defs/digest" },
+        "currentTupleDigest": { "$ref": "#/$defs/digest" },
+        "rollbackTargetTupleDigest": { "$ref": "#/$defs/digest" },
+        "snapshotDigest": { "$ref": "#/$defs/digest" },
+        "snapshotContentDigest": { "$ref": "#/$defs/digest" },
+        "ownerStateDigest": { "$ref": "#/$defs/digest" },
+        "checkpointOrdinal": { "type": "integer", "minimum": 1 },
+        "authorityProfileDigest": { "$ref": "#/$defs/digest" },
+        "recorder": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["schemaVersion", "recorderId", "recorderVersion"],
+          "properties": {
+            "schemaVersion": { "const": "chimpmaera.update/migration-checkpoint-recorder/v1" },
+            "recorderId": { "const": "recorder:checkpoint-writer" },
+            "recorderVersion": { "$ref": "#/$defs/semver" }
+          }
+        },
+        "capturedAtMs": { "type": "integer", "minimum": 0 },
+        "checkpointDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "capturedAtMs": { "type": "integer", "minimum": 0 },
+    "archiveDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,31}:[a-z0-9][a-z0-9._-]{2,95}$" },
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "semver": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?$" },
+    "axis": { "type": "string", "pattern": "^v[1-9]\\d*$" }
+  }
+}

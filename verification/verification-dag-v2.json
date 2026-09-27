@@ -4759,6 +4759,11 @@
           "sha256": "45603ecfc4e4909e1370157b11b50aef94a917cb8547fd0330e52e2b043ace2a"
         },
         {
+          "path": "docs/architecture/pan462-native-backup-restore-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "f3f59523c5002b9d20e32629d0ca61f092627089e9370c7efcfe6a6bbaff92a6"
+        },
+        {
           "path": "docs/architecture/pan468-impact-selection-v1.md",
           "role": "DERIVED_EVIDENCE",
           "sha256": "0c95fdf922e6b4ec3a6036005c2f9263462d6939775d36bff4bc9484b32e37a6"
@@ -4884,6 +4889,11 @@
           "sha256": "a6d5ff5d603912d643de652b65bc033cecd1860ded05bdfe78b8df3606a5a6b9"
         },
         {
+          "path": "schemas/contracts/pan462-native-backup-restore-v1.schema.json",
+          "role": "SCHEMA",
+          "sha256": "781d292274592ce1bfcd89b58887888b86f0d44837262346646277960523fc97"
+        },
+        {
           "path": "schemas/contracts/pan470-handoff-effort-v1.schema.json",
           "role": "SCHEMA",
           "sha256": "234aaaec1ca16f5a9d9944d44a6fe2201e91f105a66c45dbe12ebbdd4e31293c"
@@ -4962,6 +4972,11 @@
           "path": "src/pan461/lifecycle-inventory.mjs",
           "role": "SOURCE",
           "sha256": "8e341e1f928186a7d36aaaa87fde334b98ed2a6016d6853d56f413a6d09a52a5"
+        },
+        {
+          "path": "src/pan462/native-backup-restore.mjs",
+          "role": "SOURCE",
+          "sha256": "9167b1845c0048167cf2a9847e573d12b271fbab009e766695ebb58d8ac80382"
         },
         {
           "path": "src/pan469/contribution-views.mjs",
@@ -5099,6 +5114,31 @@
           "sha256": "f629e35b2d0f7f8437481a0b1d358707d208c421e11dda4562d198a293811aac"
         },
         {
+          "path": "tests/fixtures/pan462/config-source-v1.json",
+          "role": "FIXTURE",
+          "sha256": "4b4e2f41f7a29a1e7976b0f99f1ee74de963433d2f64300f37adbfe1be2832cb"
+        },
+        {
+          "path": "tests/fixtures/pan462/content-note-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "3f13d236b915c7748d76340e92cdb2360cbdefe8abc93c892b2a57ed266995cf"
+        },
+        {
+          "path": "tests/fixtures/pan462/expected-facts-v1.json",
+          "role": "FIXTURE",
+          "sha256": "2bb05e29a6fc7012d79051f94ff54e2bb1c92809a3eb2e950b2e4a1790e8c594"
+        },
+        {
+          "path": "tests/fixtures/pan462/installation-content-v1.json",
+          "role": "FIXTURE",
+          "sha256": "f609d6e6e5f92a072a1a4160436ad1642b8b2a1d15419da106ffae1a911451f2"
+        },
+        {
+          "path": "tests/fixtures/pan462/key-ref-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "bd20c8f71877afaab7d770533db9ab649e8bf251450d78e54f433a7f9081a29a"
+        },
+        {
           "path": "tests/fixtures/pan470/evidence-selfcheck-v1.txt",
           "role": "DERIVED_EVIDENCE",
           "sha256": "eda7bcb4baf93aab7f262f8442b17678bfeb7ec17b46296ce9844da1f58b3d91"
@@ -5182,6 +5222,11 @@
           "path": "tests/pan461/lifecycle-inventory.test.mjs",
           "role": "VALIDATOR",
           "sha256": "2b24ab68ec90fbfb9cdfb3cf5f669dfa9c26a64c3d7b8e58ab42bcb599540c08"
+        },
+        {
+          "path": "tests/pan462/native-backup-restore.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "83143c761e643207bfae09313aec7aac058d9ae06ce1bc6905a3641b44713f83"
         },
         {
           "path": "tests/pan468/pan468-impact-selection.test.mjs",
@@ -5274,6 +5319,11 @@
           "sha256": "7275f0563eb89176a52c86ff525f99bdce7950f60280dfc56c184b12e75cbcb5"
         },
         {
+          "path": "verification/pan462-native-backup-restore-boundary-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "28da1fa1bbab0a39c3244b36dc84b08be9424f13cf23cc8d35c88b7ebe33fa8b"
+        },
+        {
           "path": "verification/pan468-impact-selection-boundary-v1.json",
           "role": "DERIVED_EVIDENCE",
           "sha256": "261ea70de20d943e7da5042b5d8a1a258e16a27076e6cd886b255221da5579b8"
@@ -5315,7 +5365,8 @@
         "npm run pan469:test",
         "npm run pan470:test",
         "npm run pan471:test",
-        "npm run pan461:test"
+        "npm run pan461:test",
+        "npm run pan462:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5870,7 +5921,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "9665e89cc0dc798788117943db034ec134aec6fae421f6eff01f1b04671c88db"
+          "sha256": "f055fa68f9381d07e2f9a91939154c8f349be3356a512dc4fab74eaa53552190"
         },
         {
           "path": "package-lock.json",
@@ -7296,6 +7347,73 @@
         "Declared release metadata is distinguished from observed image, schema, configuration, content and process generations via a closed {declared, observed, validity} triple per axis; an unavailable decisive probe remains UNKNOWN, never an inferred version.",
         "Every owned persistent store, required configuration and key reference is listed with a closed secret reference and a REDACTED marker only; secret values are never exported and uncovered required state is listed explicitly, never dropped or guessed.",
         "Installation identity is re-digested by the released updateDoctorContractDigest (a caller-rehashed lock digest is not an identity); a source-only SOURCE_ARCHIVE is never an installable target; the observation binds to a canonical digest that rebindPan461Inventory re-derives from the retained identity, so resealed substituted snapshots and wrong retained shas are denied."
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false
+    },
+    {
+      "id": "pan462-native-backup-restore-v1",
+      "dependsOn": [],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan462-native-backup-restore-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "f3f59523c5002b9d20e32629d0ca61f092627089e9370c7efcfe6a6bbaff92a6"
+        },
+        {
+          "path": "schemas/contracts/pan462-native-backup-restore-v1.schema.json",
+          "role": "SCHEMA",
+          "sha256": "781d292274592ce1bfcd89b58887888b86f0d44837262346646277960523fc97"
+        },
+        {
+          "path": "src/pan462/native-backup-restore.mjs",
+          "role": "SOURCE",
+          "sha256": "9167b1845c0048167cf2a9847e573d12b271fbab009e766695ebb58d8ac80382"
+        },
+        {
+          "path": "tests/pan462/native-backup-restore.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "83143c761e643207bfae09313aec7aac058d9ae06ce1bc6905a3641b44713f83"
+        },
+        {
+          "path": "verification/pan462-native-backup-restore-boundary-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "28da1fa1bbab0a39c3244b36dc84b08be9424f13cf23cc8d35c88b7ebe33fa8b"
+        },
+        {
+          "path": "tests/fixtures/pan462/config-source-v1.json",
+          "role": "FIXTURE",
+          "sha256": "4b4e2f41f7a29a1e7976b0f99f1ee74de963433d2f64300f37adbfe1be2832cb"
+        },
+        {
+          "path": "tests/fixtures/pan462/content-note-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "3f13d236b915c7748d76340e92cdb2360cbdefe8abc93c892b2a57ed266995cf"
+        },
+        {
+          "path": "tests/fixtures/pan462/expected-facts-v1.json",
+          "role": "FIXTURE",
+          "sha256": "2bb05e29a6fc7012d79051f94ff54e2bb1c92809a3eb2e950b2e4a1790e8c594"
+        },
+        {
+          "path": "tests/fixtures/pan462/installation-content-v1.json",
+          "role": "FIXTURE",
+          "sha256": "f609d6e6e5f92a072a1a4160436ad1642b8b2a1d15419da106ffae1a911451f2"
+        },
+        {
+          "path": "tests/fixtures/pan462/key-ref-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "bd20c8f71877afaab7d770533db9ab649e8bf251450d78e54f433a7f9081a29a"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan462:test"
+      ],
+      "invariants": [
+        "PAN462 is a bounded native backup/restore of ONE strictly container-owned synthetic installation over the released checkpoint, doctor and read-only PostgreSQL product surfaces; no second doctor, installer, updater, database or storage mechanism is introduced and no mock replaces the affected storage adapter.",
+        "Owned database, files, configuration and needed key references are captured at ONE consistent boundary (a REPEATABLE READ / READ ONLY database snapshot, byte-exact files/config, and key references only); the released checkpoint contract binds and independently re-verifies the boundary, and no secret value is exported.",
+        "Restore lands in a DISTINCT isolated target at a MATCHING executable version; missing store, wrong version, corrupt archive and an unavailable required key reference each refuse completion with an exact code, and the restored objects are read back through the actual released native product paths.",
+        "The restored copy disables real external effects (a controlled outbound attempt is denied), the pre-backup writer authority is revoked and cannot be reactivated, effect replay is refused, and a standalone read-only diagnosis distinguishes LOCAL_COPY / INDEPENDENT_BACKUP / VERIFIED_RESTORE while a local copy remains no offhost or disaster proof."
       ],
       "riskClass": "HIGH",
       "globalInvalidation": false
