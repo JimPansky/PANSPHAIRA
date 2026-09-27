@@ -315,6 +315,14 @@
       "fromSha256": "7e56b7ff64262a6cf55b0812c1a59094b16df9144aeaa73b1c093f1b19e49baf",
       "toSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
       "reason": "Advance graph to v62 and bind the bounded PAN461 inventory with corrected schema and unproven process generation while retaining historical obligations."
+    },
+    {
+      "migrationId": "PAN-KS-SYNTHETIC-METRIC-READ/INTEGRITY-GENERATOR/V31",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 31,
+      "fromSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
+      "toSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
+      "reason": "Bind the separately scoped synthetic metric read task to the existing bound resolver and register its validator while preserving PAN453 v5 source and all earlier byte obligations."
     }
   ],
   "scanScope": {
@@ -357,15 +365,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 718,
+    "filesScanned": 720,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 247,
     "importFiles": 246,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2008,
-    "ledgerUniquePaths": 2008
+    "ledgerEntries": 2011,
+    "ledgerUniquePaths": 2011
   },
   "profiles": [
     {
@@ -438,7 +446,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1"
+      "sha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1064,7 +1072,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
+      "sha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
       "basis": "profile-version-migration"
     },
     {
