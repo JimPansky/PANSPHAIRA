@@ -776,7 +776,9 @@ const pan442Inputs = [
   ["docs/architecture/pan442-bound-task-handle-v1.md", "DERIVED_EVIDENCE"],
   ["schemas/contracts/pan442-bound-task-handle-v1.schema.json", "SCHEMA"],
   ["src/pan442/bound-task-handle.mjs", "SOURCE"],
+  ["src/pan442/synthetic-metric-read-task.mjs", "SOURCE"],
   ["tests/pan442/bound-task-handle.test.mjs", "VALIDATOR"],
+  ["tests/pan442/synthetic-metric-read-task.test.mjs", "VALIDATOR"],
   ["verification/pan442-bound-task-handle-boundary-v1.json", "DERIVED_EVIDENCE"],
 ];
 let pan442Node = dag.nodes.find(({ id }) => id === "pan442-bound-task-handles-v1");
@@ -1071,7 +1073,9 @@ for (const relative of [
   "docs/architecture/pan442-bound-task-handle-v1.md",
   "schemas/contracts/pan442-bound-task-handle-v1.schema.json",
   "src/pan442/bound-task-handle.mjs",
+  "src/pan442/synthetic-metric-read-task.mjs",
   "tests/pan442/bound-task-handle.test.mjs",
+  "tests/pan442/synthetic-metric-read-task.test.mjs",
   "verification/pan442-bound-task-handle-boundary-v1.json",
   "docs/architecture/pan468-impact-selection-v1.md",
   "tests/pan468/pan468-impact-selection.test.mjs",

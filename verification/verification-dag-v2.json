@@ -4856,7 +4856,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "CONTRACT",
-          "sha256": "feaae91addcdde0d7b969f273bff101c20a4a1e82864eb694576e15bafd5d97a"
+          "sha256": "e1d12d491320e071586214d481e22d4a4d95c6ebe5d0ca0d03aa997446f7c674"
         },
         {
           "path": "schemas/contracts/incoming-invoice-adaptive-ui-v1.schema.json",
@@ -4896,7 +4896,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "7500f44fe37b0f21c524c8b4614b52dc790a93d09ac66d30c67be70572ba3a83"
+          "sha256": "c891940774ea8dd59ede9f3e264a3ecf73b76f9d564236c7c3496c079cd2d0a8"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4951,7 +4951,12 @@
         {
           "path": "src/pan442/bound-task-handle.mjs",
           "role": "SOURCE",
-          "sha256": "c03c4c6673f822ab79f61ab95adbacd11d065ecd268d233ed44c48669f8a03c5"
+          "sha256": "a458c0b1e9e83b0851657ec8f28e419b89360719a5347b1d5588ab5db3063bd9"
+        },
+        {
+          "path": "src/pan442/synthetic-metric-read-task.mjs",
+          "role": "SOURCE",
+          "sha256": "867bd0d3f4d05d992b7a291d5837148a1942b592312a74de308d22348ca7e32a"
         },
         {
           "path": "src/pan461/lifecycle-inventory.mjs",
@@ -5169,6 +5174,11 @@
           "sha256": "fc9f4ff20ac8e85803b7998c8fa0777c9d511cbef78c27c03097b1e117a9d162"
         },
         {
+          "path": "tests/pan442/synthetic-metric-read-task.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "37a81c883352033eacdc8dde6b56a8ad87735ac3bb585d56a8f1df253f00c571"
+        },
+        {
           "path": "tests/pan461/lifecycle-inventory.test.mjs",
           "role": "VALIDATOR",
           "sha256": "2b24ab68ec90fbfb9cdfb3cf5f669dfa9c26a64c3d7b8e58ab42bcb599540c08"
@@ -5201,7 +5211,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "b64a90dcdfd8827fc887f98a8af0fda83dac58f4b8c761d432d4aaf334093f22"
+          "sha256": "e95bf29fc335ca640cf758f4d9013bdcaa5a6200ffa02b1e9d57f7345009da37"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5860,7 +5870,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "6078f178ec0630b1305adbd57bf15d87f8e7745313a47e03798676a7aee878bc"
+          "sha256": "9665e89cc0dc798788117943db034ec134aec6fae421f6eff01f1b04671c88db"
         },
         {
           "path": "package-lock.json",
@@ -6485,7 +6495,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "feaae91addcdde0d7b969f273bff101c20a4a1e82864eb694576e15bafd5d97a"
+          "sha256": "e1d12d491320e071586214d481e22d4a4d95c6ebe5d0ca0d03aa997446f7c674"
         }
       ],
       "ownedTests": [
@@ -6978,12 +6988,22 @@
         {
           "path": "src/pan442/bound-task-handle.mjs",
           "role": "SOURCE",
-          "sha256": "c03c4c6673f822ab79f61ab95adbacd11d065ecd268d233ed44c48669f8a03c5"
+          "sha256": "a458c0b1e9e83b0851657ec8f28e419b89360719a5347b1d5588ab5db3063bd9"
+        },
+        {
+          "path": "src/pan442/synthetic-metric-read-task.mjs",
+          "role": "SOURCE",
+          "sha256": "867bd0d3f4d05d992b7a291d5837148a1942b592312a74de308d22348ca7e32a"
         },
         {
           "path": "tests/pan442/bound-task-handle.test.mjs",
           "role": "VALIDATOR",
           "sha256": "fc9f4ff20ac8e85803b7998c8fa0777c9d511cbef78c27c03097b1e117a9d162"
+        },
+        {
+          "path": "tests/pan442/synthetic-metric-read-task.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "37a81c883352033eacdc8dde6b56a8ad87735ac3bb585d56a8f1df253f00c571"
         },
         {
           "path": "verification/pan442-bound-task-handle-boundary-v1.json",

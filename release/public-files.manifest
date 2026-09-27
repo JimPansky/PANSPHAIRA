@@ -1651,3 +1651,6 @@ tests/pan453/composed-ambiguity.test.mjs	tests/pan453/composed-ambiguity.test.mj
 tests/pan453/crash-fixture.mjs	tests/pan453/crash-fixture.mjs	0644
 tests/pan453/adoption-race-fixture.mjs	tests/pan453/adoption-race-fixture.mjs	0644
 docs/architecture/pan453-owned-synthetic-journal-v2.md	docs/architecture/pan453-owned-synthetic-journal-v2.md	0644
+src/pan442/synthetic-metric-read-task.mjs	src/pan442/synthetic-metric-read-task.mjs	0644
+tests/pan442/synthetic-metric-read-task.test.mjs	tests/pan442/synthetic-metric-read-task.test.mjs	0644
+docs/architecture/pan442-synthetic-metric-read-v1.md	docs/architecture/pan442-synthetic-metric-read-v1.md	0644

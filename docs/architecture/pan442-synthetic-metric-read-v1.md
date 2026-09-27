@@ -1,0 +1,7 @@
+# Synthetic metric read task v1 (separate operation)
+
+This is an opt-in, local synthetic read-only contract for the published KS246/247 source fixture, not PAN452 Order CREATE_IF_ABSENT. The issuer fixes origin, tenant/actor, question, revision and independent source/metric-contract byte digests, current/comparison periods, layout, EUR minor units and read-only/no-effect admission. The existing BoundTaskHandleResolver and useBoundTaskHandle dispatch by a separate issuer type. Legacy Order support is unchanged. Caller data cannot choose the trusted domain; no arbitrary SQL, production target or provider mutation is authorized. A hostile injected JS callback is NOT sandboxed by the producer module; the consumer must constrain its actual SQL adapter independently.
+
+The in-memory handle is synchronously consumed before the read callback; a failed or ambiguous read cannot replay it. This is not durable cross-process issuance.
+
+The only admitted source is the authored KS246 synthetic pay_feed fixture; it cannot represent an externally owned source. KS seeds a disposable synthetic database before a read-only transaction and verifies a result via its existing metric compiler/lineage; seeding is not a productive effect. A paired completion is not an effect receipt. Local isolated Node 24/Linux and PGlite are qualified separately; no real source, host effect, durable journal, externally sourced authority or general metric selection. PAN452 closed acceptance and PAN453 open runtime criteria remain unchanged.
