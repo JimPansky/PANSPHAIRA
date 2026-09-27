@@ -4956,7 +4956,7 @@
         {
           "path": "src/pan442/synthetic-metric-read-task.mjs",
           "role": "SOURCE",
-          "sha256": "867bd0d3f4d05d992b7a291d5837148a1942b592312a74de308d22348ca7e32a"
+          "sha256": "bbc81e177a299a9da3108ac24a7cd6a085ebdb0e8a28b1715374d10560d9e20c"
         },
         {
           "path": "src/pan461/lifecycle-inventory.mjs",
@@ -5176,7 +5176,7 @@
         {
           "path": "tests/pan442/synthetic-metric-read-task.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "37a81c883352033eacdc8dde6b56a8ad87735ac3bb585d56a8f1df253f00c571"
+          "sha256": "d609ee0f9bdf7e192da38a5c893c9fcc43580632c0adaadcc9a683b270b10861"
         },
         {
           "path": "tests/pan461/lifecycle-inventory.test.mjs",
@@ -6993,7 +6993,7 @@
         {
           "path": "src/pan442/synthetic-metric-read-task.mjs",
           "role": "SOURCE",
-          "sha256": "867bd0d3f4d05d992b7a291d5837148a1942b592312a74de308d22348ca7e32a"
+          "sha256": "bbc81e177a299a9da3108ac24a7cd6a085ebdb0e8a28b1715374d10560d9e20c"
         },
         {
           "path": "tests/pan442/bound-task-handle.test.mjs",
@@ -7003,7 +7003,7 @@
         {
           "path": "tests/pan442/synthetic-metric-read-task.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "37a81c883352033eacdc8dde6b56a8ad87735ac3bb585d56a8f1df253f00c571"
+          "sha256": "d609ee0f9bdf7e192da38a5c893c9fcc43580632c0adaadcc9a683b270b10861"
         },
         {
           "path": "verification/pan442-bound-task-handle-boundary-v1.json",

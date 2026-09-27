@@ -58,3 +58,25 @@ test("one handle cannot dispatch two simultaneous reads; callback failure consum
   await assert.rejects(useBoundTaskHandle({ issuer: failedIssuer, handle: failed.handle, operationInput: request(), operation: { read: async () => { throw new Error("READ_FAILED"); } } }), /READ_FAILED/);
   await assert.rejects(useBoundTaskHandle({ issuer: failedIssuer, handle: failed.handle, operationInput: request(), operation: { read: async () => result() } }), /MRT_REPLAY_DENIED/);
 });
+
+test("second frozen source grants a distinct one-shot synthetic read, not a caller-selected digest",async()=>{
+ const v2=syntheticMetricReadOrigin("v2");
+ assert.equal(v2.sourceRevision,"synthetic-unfamiliar-source-v2");
+ assert.equal(v2.sourceSha256,"cacd2a08d5fa5cb8603513a769362a2f7bdb700c44d700728a1fe2f1244be52e");
+ assert.notEqual(v2.taskRef,origin.taskRef);
+ assert.throws(()=>syntheticMetricReadOrigin("v3"),/MRT_SCOPE_DENIED/);
+ const request2=()=>({...v2.principal,...Object.fromEntries(Object.entries(v2).filter(([key])=>!["schemaVersion","origin","principal"].includes(key)))});
+ const result2=()=>({...result(),binding:{...result().binding,sourceRevision:v2.sourceRevision,sourceSha256:v2.sourceSha256}});
+ const i=issuer(),issued=i.issue({taskRef:v2.taskRef});
+ assert.equal(issued.task,v2);
+ let calls=0;
+ for(const invalid of [{...request2(),sourceSha256:origin.sourceSha256},{...request2(),taskRef:origin.taskRef},{...request2(),sourceRevision:origin.sourceRevision},{...request2(),authority:{readOnly:false,mutationAuthority:true,effectJournal:true}}]){
+  await assert.rejects(useBoundTaskHandle({issuer:i,handle:issued.handle,operationInput:invalid,operation:{read:async()=>{calls++;return result2();}}}),/MRT_(SCOPE|EFFECT)_DENIED/);
+ }
+ assert.equal(calls,0);
+ const output=await useBoundTaskHandle({issuer:i,handle:issued.handle,operationInput:request2(),operation:{read:async()=>{calls++;return result2();}}});
+ assert.equal(output.status,"READ_COMPLETE");assert.equal(output.effectStatus,"NO_EFFECT_AUTHORIZED");assert.equal(output.task.sourceSha256,v2.sourceSha256);assert.equal(calls,1);
+ await assert.rejects(useBoundTaskHandle({issuer:i,handle:issued.handle,operationInput:request2(),operation:{read:async()=>{calls++;return result2();}}}),/MRT_REPLAY_DENIED/);
+ assert.equal(calls,1);
+ const old=issuer().issue({taskRef:origin.taskRef});assert.equal(old.task,origin);
+});
