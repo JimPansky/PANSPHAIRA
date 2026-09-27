@@ -1,3 +1,5 @@
+import { SyntheticMetricReadIssuer, executeSyntheticMetricRead } from "./synthetic-metric-read-task.mjs";
+export { SyntheticMetricReadIssuer, syntheticMetricReadOrigin, METRIC_READ_SCHEMA } from "./synthetic-metric-read-task.mjs";
 import { mkdtempSync } from "node:fs";
 import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -530,10 +532,12 @@ export function createOwnedSyntheticBusinessOperation({ provider, now, root }) {
  */
 export class BoundTaskHandleResolver {
   constructor({ issuer, operation, now }) {
-    if (!isRecord(issuer) || typeof issuer.createHandle !== "function") {
+    if (!isRecord(issuer) || (typeof issuer.createHandle !== "function" && !(issuer instanceof SyntheticMetricReadIssuer))) {
       throw new Error("BTH_RESOLVER_INIT_INVALID_DENIED");
     }
-    if (!isRecord(operation) || typeof operation.execute !== "function") {
+    if (!isRecord(operation) || (issuer instanceof SyntheticMetricReadIssuer
+      ? typeof operation.read !== "function" || Object.keys(operation).sort().join("|") !== "read"
+      : typeof operation.execute !== "function")) {
       throw new Error("BTH_RESOLVER_INIT_INVALID_DENIED");
     }
     this.issuer = issuer;
@@ -542,6 +546,7 @@ export class BoundTaskHandleResolver {
   }
 
   use({ handle, operationInput }) {
+    if (this.issuer instanceof SyntheticMetricReadIssuer) return this.issuer.resolve({ handle, request: operationInput }).task;
     const stage = (name) => fail(this.#codeFor(name), name);
 
     let entry;
@@ -662,6 +667,11 @@ export class BoundTaskHandleResolver {
  * observed result separately in the issuer journal.
  */
 export async function useBoundTaskHandle({ issuer, handle, operationInput, operation }) {
+  if (issuer instanceof SyntheticMetricReadIssuer) {
+    const resolver = new BoundTaskHandleResolver({ issuer, operation });
+    resolver.use({ handle, operationInput });
+    return executeSyntheticMetricRead({ issuer, handle, request: operationInput, operation });
+  }
   const resolver = new BoundTaskHandleResolver({ issuer, operation, now: issuer.now });
   let binding;
   try {
