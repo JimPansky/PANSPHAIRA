@@ -819,3 +819,32 @@ test("production server wires authenticated owner decision and receipt readback 
   assert.match(smoke, /owner-decision-receipt/);
   assert.match(acceptance, /approval-workbench-smoke\.sh/);
 });
+
+test("legacy direct gate retains stale-snapshot denial on ambiguous owner retry", async () => {
+  const snapshotRecords = [];
+  let reconciliations = 0;
+  const current = harness({
+    snapshotRecords,
+    mutate: async (action) => {
+      snapshotRecords.push({ id: 42, date: action.payload.body.date,
+        ref_client: action.payload.body.ref_client, socid: action.payload.body.socid });
+      throw new Error("SYNTHETIC_RESPONSE_LOSS_AFTER_COMMIT");
+    },
+    reconcile: async (action) => {
+      reconciliations += 1;
+      return { providerResult: { id: "order-42" }, readback: {
+        id: "order-42", date: action.payload.body.date,
+        ref_client: action.payload.body.ref_client, socid: action.payload.body.socid,
+      } };
+    },
+  });
+  const { decision, proposal } = await escalation(current, "legacy-stale-snapshot-001");
+  const approved = await ownerDecision(current, decision, "APPROVE");
+  const envelope = effectEnvelope(decision, proposal, approved.authority);
+  await assert.rejects(current.gate.execute(localRequest(), envelope), /SYNTHETIC_RESPONSE_LOSS_AFTER_COMMIT/);
+  assert.equal(current.mutations(), 1);
+  assert.equal(current.gate.state.reservations[decision.replayKey].status, "AMBIGUOUS");
+  await assert.rejects(current.gate.execute(localRequest(), envelope), /APPROVAL_SNAPSHOT_STALE_DENIED/);
+  assert.equal(reconciliations, 0);
+  assert.equal(current.mutations(), 1);
+});

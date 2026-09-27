@@ -8,7 +8,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
-import { assertLocalJournalOwner } from "./local-journal-owner.mjs";
+import { assertLocalJournalOwner, isOwnedSyntheticPath } from "./local-journal-owner.mjs";
 import { canonicalJson, sha256 } from "./enforcement-gate.mjs";
 import {
   APPROVAL_PURPOSE,
@@ -356,11 +356,13 @@ export class ApprovalWorkbench {
     const temp = `${this.receiptPath}.tmp`;
     writeFileSync(temp, `${JSON.stringify(this.state, null, 2)}\n`, {
       mode: 0o600,
-      flush: true,
+      ...(isOwnedSyntheticPath(this.receiptPath) ? { flush: true } : {}),
     });
     renameSync(temp, this.receiptPath);
-    const dirFd = openSync(dirname(this.receiptPath), "r");
-    try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
+    if (isOwnedSyntheticPath(this.receiptPath)) {
+      const dirFd = openSync(dirname(this.receiptPath), "r");
+      try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
+    }
   }
 
   async register(decision) {
