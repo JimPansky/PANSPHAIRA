@@ -199,6 +199,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
     reason: "Correct the inaccurate final-persist convergence comments at both demo mutation-gate persistence sites (the reconciliation site's execute() catch does not re-run markAmbiguous because reserved remains false, and a persistent initial/recovery persist failure lets live AMBIGUOUS coexist with retained durable EXECUTING until storage recovers) and bind the new bounded canonical regression tests for both final-persist sites (real EISDIR at the store temp-file boundary, exact failed-gate retry, fresh Node child restart, persistent storage failure, and unavailable reconciliation); admitted v1 and reviewed v2-v5 gate bytes remain immutable.",
   }),
   Object.freeze({
+    migrationId: "PAN-EVO-02-OWNED-SYNTHETIC-JOURNAL/GATE-PROFILE/V7",
+    path: "demo/runtime/enforcement-gate.mjs",
+    profileVersion: 7,
+    fromSha256: "d64714242f7517f15f4bc985534a82569adfca7fabaa2207e6f937ec67b5b64b",
+    toSha256: "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20",
+    reason: "Bind the bounded v2 synthetic journal-owner refusal and durable reconciliation changes while preserving the immutable reviewed v1-v6 gate source digests; no host enforcement claim.",
+  }),
+  Object.freeze({
     migrationId: "XRA-PS-02-NATIVE-WIRE-INTEGRATE/INTEGRITY-GENERATOR/V13",
     path: "scripts/refresh-integrity-data.mjs",
     profileVersion: 13,
@@ -355,7 +363,7 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 714,
+  filesScanned: 718,
   declarationSites: 37,
   declarationFiles: 37,
   importSites: 247,
@@ -366,7 +374,7 @@ const EXPECTED_COUNTS = {
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2003, uniquePaths: 2003, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2008, uniquePaths: 2008, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
