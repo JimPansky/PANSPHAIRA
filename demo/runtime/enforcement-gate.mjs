@@ -6,11 +6,15 @@ import {
 } from "node:crypto";
 import {
   mkdirSync,
+  openSync,
+  closeSync,
+  fsyncSync,
   readFileSync,
   renameSync,
   writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
+import { assertLocalJournalOwner } from "./local-journal-owner.mjs";
 import {
   APPROVAL_PURPOSE,
   APPROVAL_REQUESTER,
@@ -395,6 +399,7 @@ export class DemoMutationGate {
     controlToken,
     expectedOrigin,
     receiptPath,
+    journalOwner = null,
     provider,
     adminAiPolicyId = "admin-ai-poc-policy-v1",
     adminAiPolicyDigest,
@@ -423,6 +428,8 @@ export class DemoMutationGate {
     this.ownerAuthorityToken = ownerAuthorityToken;
     this.expectedOrigin = expectedOrigin;
     this.receiptPath = receiptPath;
+    this.journalOwner = journalOwner;
+    assertLocalJournalOwner(receiptPath, journalOwner);
     this.provider = provider;
     this.operationTimeoutMs = operationTimeoutMs;
     this.adminAiPolicyDigest = adminAiPolicyDigest;
@@ -843,15 +850,20 @@ export class DemoMutationGate {
   }
 
   persist() {
+    assertLocalJournalOwner(this.receiptPath, this.journalOwner);
     mkdirSync(dirname(this.receiptPath), { recursive: true });
     const temp = `${this.receiptPath}.tmp`;
     writeFileSync(temp, `${JSON.stringify(this.state, null, 2)}\n`, {
       mode: 0o600,
+      flush: true,
     });
     renameSync(temp, this.receiptPath);
+    const dirFd = openSync(dirname(this.receiptPath), "r");
+    try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
   }
 
   async execute(request, envelope) {
+    assertLocalJournalOwner(this.receiptPath, this.journalOwner);
     this.authorize(request);
     const controller = new AbortController();
     const deadlineError = new Error("OPERATION_DEADLINE_EXCEEDED");
@@ -974,10 +986,18 @@ export class DemoMutationGate {
           await runBounded((signal) => this.provider.readAuthoritativeSnapshot(action, signal)),
           action,
         );
-        if (
+        // The pre-effect snapshot necessarily changes after an ambiguous
+        // committed effect. Only an already durable AMBIGUOUS reservation with
+        // the same signed lease can proceed to the read-only reconcile path;
+        // no fresh effect may borrow this exception.
+        const ambiguousRecovery = existing?.status === "AMBIGUOUS"
+          && existing.recovery === "RECONCILE"
+          && existing.leaseId === authority.leaseId
+          && typeof this.provider.reconcile === "function";
+        if (!ambiguousRecovery && (
           currentSnapshot.snapshotDigest !== authority.snapshotDigest
           || currentSnapshot.version !== authority.snapshotVersion
-        ) throw new Error("APPROVAL_SNAPSHOT_STALE_DENIED");
+        )) throw new Error("APPROVAL_SNAPSHOT_STALE_DENIED");
         this.validateOwnerAuthority(
           authority,
           action,

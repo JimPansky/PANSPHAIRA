@@ -64,12 +64,12 @@
     {
       "path": "demo/runtime/approval-workbench.mjs",
       "role": "IMPLEMENTATION",
-      "sha256": "9b7e133473dde1d060812d1689c4e21aea864a59fbfca3826018f52dda9769d6"
+      "sha256": "51ba71f1f96dade794124f8fda587b3894f8fc3354a2597840441805b3c0624d"
     },
     {
       "path": "demo/runtime/enforcement-gate.mjs",
       "role": "IMPLEMENTATION",
-      "sha256": "d64714242f7517f15f4bc985534a82569adfca7fabaa2207e6f937ec67b5b64b"
+      "sha256": "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20"
     },
     {
       "path": "demo/seed-and-flow.sh",

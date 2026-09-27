@@ -1,10 +1,14 @@
 import {
   mkdirSync,
+  openSync,
+  closeSync,
+  fsyncSync,
   readFileSync,
   renameSync,
   writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
+import { assertLocalJournalOwner } from "./local-journal-owner.mjs";
 import { canonicalJson, sha256 } from "./enforcement-gate.mjs";
 import {
   APPROVAL_PURPOSE,
@@ -292,6 +296,7 @@ function normalizeStore(value) {
 export class ApprovalWorkbench {
   constructor({
     receiptPath,
+    journalOwner = null,
     issueAuthority,
     readAuthoritativeSnapshot,
     now = () => Date.now(),
@@ -319,6 +324,8 @@ export class ApprovalWorkbench {
     ) throw new Error("APPROVAL_WORKBENCH_CONFIG_INVALID_DENIED");
     assertHex(policyDigest, "APPROVAL_WORKBENCH_CONFIG_INVALID_DENIED");
     this.receiptPath = receiptPath;
+    this.journalOwner = journalOwner;
+    assertLocalJournalOwner(receiptPath, journalOwner);
     this.issueAuthority = issueAuthority;
     this.readAuthoritativeSnapshot = readAuthoritativeSnapshot;
     this.now = now;
@@ -344,12 +351,16 @@ export class ApprovalWorkbench {
   }
 
   persist() {
+    assertLocalJournalOwner(this.receiptPath, this.journalOwner);
     mkdirSync(dirname(this.receiptPath), { recursive: true });
     const temp = `${this.receiptPath}.tmp`;
     writeFileSync(temp, `${JSON.stringify(this.state, null, 2)}\n`, {
       mode: 0o600,
+      flush: true,
     });
     renameSync(temp, this.receiptPath);
+    const dirFd = openSync(dirname(this.receiptPath), "r");
+    try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
   }
 
   async register(decision) {

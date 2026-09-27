@@ -4856,7 +4856,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "CONTRACT",
-          "sha256": "a5a17c50e5ca251ec4bb3a4656b2df74a0f9d5d9d90b4b7d0a12910e72554a3a"
+          "sha256": "feaae91addcdde0d7b969f273bff101c20a4a1e82864eb694576e15bafd5d97a"
         },
         {
           "path": "schemas/contracts/incoming-invoice-adaptive-ui-v1.schema.json",
@@ -4896,7 +4896,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "11ad63f484e6351506364e6b6cdf99129a6fd4bf9e8afcc1d30d3fdea52383a4"
+          "sha256": "7500f44fe37b0f21c524c8b4614b52dc790a93d09ac66d30c67be70572ba3a83"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4951,7 +4951,7 @@
         {
           "path": "src/pan442/bound-task-handle.mjs",
           "role": "SOURCE",
-          "sha256": "8b284d5a0b635b9362b95d041d6485a22d3f4fb898cd4e25b911ae585ec0f4f1"
+          "sha256": "c03c4c6673f822ab79f61ab95adbacd11d065ecd268d233ed44c48669f8a03c5"
         },
         {
           "path": "src/pan461/lifecycle-inventory.mjs",
@@ -4976,7 +4976,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "9be50c07c28280032df63620ad78b0d7982c9c2c766f67dde29bde190e30829c"
+          "sha256": "3fb478a88da59a5c5b8a9386e852e29bc43481638c24a91752eafaa571c15ab0"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5201,7 +5201,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "db57a725ca40730f70ae3cc243d0383c6d8d06bcb64ab9abbaffc0c09ad6ad41"
+          "sha256": "b64a90dcdfd8827fc887f98a8af0fda83dac58f4b8c761d432d4aaf334093f22"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5211,7 +5211,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "8ec1956ac9e060fea24dfd8afb4c725cef5c4f3b1a8439f6700016c4cf278e5e"
+          "sha256": "0bc913b953b5a48609726030c41a0f6599bcef91fb9ab1273399cc3d7196afa5"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5814,7 +5814,7 @@
         {
           "path": "security/secure-default-proof-v1.json",
           "role": "CONTRACT",
-          "sha256": "a7ba2635f77bb4e119094658595a8032b995b275acf0af0f1f1bbeeee879668c"
+          "sha256": "b927e65a05f541160b55ceec9f198355958cc7dcde21c66030471996d247b078"
         },
         {
           "path": "schemas/security/secure-default-proof-v1.schema.json",
@@ -5824,7 +5824,7 @@
         {
           "path": "security/secure-default-proof-evidence-v1.json",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "d9d590e93b1fa0f8d6542fc6548153433fc51aaedad07083edfe713b5b988922"
+          "sha256": "631fff45539a742bb167a03a59c4d7c68541c5952564065db575dd5b9ff24edd"
         },
         {
           "path": "scripts/verify-secure-default-proof.mjs",
@@ -5860,7 +5860,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "91ce47db813b69cbc1f373aee11b4940cdb321b913d4901b6e434166fdf42b07"
+          "sha256": "6078f178ec0630b1305adbd57bf15d87f8e7745313a47e03798676a7aee878bc"
         },
         {
           "path": "package-lock.json",
@@ -6220,7 +6220,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "d073c6ff25314bd529eef7755c1773d164d8829a18cc52474c0634c0367d3da8"
+          "sha256": "60396438ebeec10bf0e950544855b51e0561ad263eac8ee9c9e229e4cae0cbe9"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6485,7 +6485,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "a5a17c50e5ca251ec4bb3a4656b2df74a0f9d5d9d90b4b7d0a12910e72554a3a"
+          "sha256": "feaae91addcdde0d7b969f273bff101c20a4a1e82864eb694576e15bafd5d97a"
         }
       ],
       "ownedTests": [
@@ -6978,7 +6978,7 @@
         {
           "path": "src/pan442/bound-task-handle.mjs",
           "role": "SOURCE",
-          "sha256": "8b284d5a0b635b9362b95d041d6485a22d3f4fb898cd4e25b911ae585ec0f4f1"
+          "sha256": "c03c4c6673f822ab79f61ab95adbacd11d065ecd268d233ed44c48669f8a03c5"
         },
         {
           "path": "tests/pan442/bound-task-handle.test.mjs",

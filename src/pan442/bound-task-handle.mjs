@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { AdminAiPoc } from "../../demo/runtime/admin-ai-poc.mjs";
+import { acquireLocalJournalOwner } from "../../demo/runtime/local-journal-owner.mjs";
 import { ApprovalWorkbench } from "../../demo/runtime/approval-workbench.mjs";
 import {
   createAuthoritativeApprovalSnapshot,
@@ -368,6 +369,157 @@ export function createLocalBusinessOperation({ provider, now, root }) {
     return { result, decision, proposal, authority: approved.authority };
   }
   return { execute, gate, workbench, poc, dir };
+}
+
+/**
+ * Trusted resolver. The caller supplies only the opaque handle and the
+ * allowed operation input. Every trusted field is re-read from the immutable
+ * issuer store; caller-supplied source, digest or binding fields are rejected
+ * by the exact-key check before any comparison.
+ */
+export function createOwnedSyntheticBusinessOperation({ provider, now, root }) {
+  if (typeof root !== "string" || !root.split(/[\\/]+/).includes("pan453-owned-v2"))
+    throw new Error("JOURNAL_OWNED_NAMESPACE_REQUIRED_DENIED");
+  const dir = root ?? mkdtempSync(join(tmpdir(), "cm-pan442-"));
+  const apiToken = "a".repeat(48);
+  const controlToken = "b".repeat(48);
+  const ownerAuthorityToken = "c".repeat(48);
+  const expectedOrigin = "http://127.0.0.1:7781";
+  const policyBytes = readFileSync(
+    new URL("../../demo/manifests/authority/admin-ai-poc-policy-v1.json", import.meta.url),
+  );
+  const policy = JSON.parse(policyBytes.toString("utf8"));
+  const policyDigest = sha256(policyBytes);
+  const authorityContext = {
+    profileId: "SAFE_GUIDED",
+    profileGeneration: "pan442-handled-task-0001",
+    policyGeneration: 1,
+  };
+  let runtime;
+  function freshRuntime(journalOwner) {
+    const gate = new DemoMutationGate({
+      apiToken,
+      controlToken,
+      ownerAuthorityToken,
+      expectedOrigin,
+      receiptPath: join(dir, "effects.json"),
+      journalOwner,
+      provider,
+      adminAiPolicyDigest: policyDigest,
+      now,
+      authorityContext,
+      assertPolicyUse: () => true,
+    });
+    const poc = new AdminAiPoc({
+      policy,
+      policyDigest,
+      signAuthority: (fields) => gate.agentAuthority(fields),
+    });
+    const workbench = new ApprovalWorkbench({
+      receiptPath: join(dir, "approvals.json"),
+      journalOwner,
+      issueAuthority: (fields) => gate.ownerAuthority(fields),
+      readAuthoritativeSnapshot: (action) => provider.readAuthoritativeSnapshot(action),
+      now,
+      leaseTtlMs: 30_000,
+      policyDigest,
+      policyGeneration: authorityContext.policyGeneration,
+      profileId: authorityContext.profileId,
+      profileGeneration: authorityContext.profileGeneration,
+    });
+    return { gate, workbench, poc };
+  }
+  const localRequest = {
+    headers: {
+      authorization: `Bearer ${apiToken}`,
+      host: "127.0.0.1:7781",
+      origin: expectedOrigin,
+      "x-cm-csrf": "chimpmaera-local-v1",
+    },
+  };
+  async function execute(binding) {
+    // A module-private token binds both journal readers and all writes to the
+    // same local synthetic owner. Crash retention is fail-closed, not takeover.
+    let owner;
+    try { owner = acquireLocalJournalOwner(dir); }
+    catch (error) {
+      if (error?.message === "BTH_JOURNAL_FENCED_DENIED") fail(error.message, "COMPOSE");
+      throw error;
+    }
+    try {
+      runtime = freshRuntime(owner.token);
+      const { gate, workbench, poc } = runtime;
+    const replaySuffix = binding.handleDigest.slice(0, 40);
+    const decision = poc.decide({
+      schemaVersion: "chimpmaera.demo/admin-ai-request/v1",
+      actor: "agent:admin-ai-poc",
+      requestKind: "SYNTHETIC_DOLIBARR_ORDER_CREATE",
+      replayKey: `admin-ai:poc:order:pan442:${replaySuffix}`,
+    }).decision;
+    if (decision.outcome !== "OWNER_ESCALATION") {
+      fail("BTH_COMPOSE_FAILED", "COMPOSE");
+    }
+    // A response may be lost AFTER the provider committed. A fresh snapshot then
+    // shows the target and rightly prevents a NEW approval. Recover only from
+    // the independently persisted approved decision AND matching AMBIGUOUS
+    // reservation; never treat caller input or target presence as approval.
+    const reservation = gate.state.reservations[decision.action.replayKey];
+    if (reservation?.status === "AMBIGUOUS") {
+      const proposal = workbench.state.proposals[decision.decisionDigest];
+      const prior = workbench.state.decisions[decision.decisionDigest];
+      if (
+        proposal?.actionDigest !== decision.actionDigest
+        || proposal?.decisionDigest !== decision.decisionDigest
+        || prior?.receipt?.ownerDecision !== "APPROVE"
+        || prior.receipt.decisionDigest !== decision.decisionDigest
+        || prior.receipt.proposalDigest !== proposal.proposalDigest
+        || prior.authority?.leaseId !== reservation.leaseId
+        || prior.authority?.actionDigest !== reservation.actionDigest
+        || reservation.actionDigest !== decision.actionDigest
+        || reservation.authorityKind !== "OWNER_ESCALATION_LEASE_HMAC_V1"
+        || reservation.authorityBinding !== prior.authority.leaseId
+        || reservation.recovery !== "RECONCILE"
+      ) fail("BTH_RECOVERY_AUTHORITY_DENIED", "COMPOSE");
+      // The gate rechecks the signed lease and reservation, then permits ONLY
+      // read-only reconciliation. No new register/decision/mutation is called.
+      const result = await gate.execute(localRequest, {
+        action: decision.action,
+        actionDigest: decision.actionDigest,
+        businessDiff: proposal.businessDiff,
+        businessDiffDigest: proposal.businessDiffDigest,
+        authority: prior.authority,
+      });
+      if (result.status !== "PASS" || result.replayState !== "RECONCILE_NO_DUPLICATE") {
+        fail("BTH_RECOVERY_NOT_CONFIRMED", "COMPOSE");
+      }
+      return { result, decision, proposal, authority: prior.authority };
+    }
+    const proposal = await workbench.register(decision);
+    const approved = await workbench.decide({
+      decisionDigest: decision.decisionDigest,
+      ownerDecision: "APPROVE",
+      ownerActor: "owner:local-demo",
+    });
+    if (approved.status !== "PASS") fail("BTH_COMPOSE_FAILED", "COMPOSE");
+    const result = await gate.execute(
+      localRequest,
+      {
+        action: decision.action,
+        actionDigest: decision.actionDigest,
+        businessDiff: proposal.businessDiff,
+        businessDiffDigest: proposal.businessDiffDigest,
+        authority: approved.authority,
+      },
+    );
+    if (result.status !== "PASS") fail("BTH_EXECUTE_FAILED", "EXECUTE");
+    return { result, decision, proposal, authority: approved.authority };
+    } finally {
+      owner.release();
+    }
+  }
+  return { execute, get gate() { return runtime?.gate; },
+    get workbench() { return runtime?.workbench; },
+    get poc() { return runtime?.poc; }, dir };
 }
 
 /**
