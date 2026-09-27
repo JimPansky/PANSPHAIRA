@@ -14,7 +14,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
-import { assertLocalJournalOwner } from "./local-journal-owner.mjs";
+import { assertLocalJournalOwner, isOwnedSyntheticPath } from "./local-journal-owner.mjs";
 import {
   APPROVAL_PURPOSE,
   APPROVAL_REQUESTER,
@@ -855,11 +855,13 @@ export class DemoMutationGate {
     const temp = `${this.receiptPath}.tmp`;
     writeFileSync(temp, `${JSON.stringify(this.state, null, 2)}\n`, {
       mode: 0o600,
-      flush: true,
+      ...(isOwnedSyntheticPath(this.receiptPath) ? { flush: true } : {}),
     });
     renameSync(temp, this.receiptPath);
-    const dirFd = openSync(dirname(this.receiptPath), "r");
-    try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
+    if (isOwnedSyntheticPath(this.receiptPath)) {
+      const dirFd = openSync(dirname(this.receiptPath), "r");
+      try { fsyncSync(dirFd); } finally { closeSync(dirFd); }
+    }
   }
 
   async execute(request, envelope) {
@@ -990,7 +992,8 @@ export class DemoMutationGate {
         // committed effect. Only an already durable AMBIGUOUS reservation with
         // the same signed lease can proceed to the read-only reconcile path;
         // no fresh effect may borrow this exception.
-        const ambiguousRecovery = existing?.status === "AMBIGUOUS"
+        const ambiguousRecovery = isOwnedSyntheticPath(this.receiptPath)
+          && existing?.status === "AMBIGUOUS"
           && existing.recovery === "RECONCILE"
           && existing.leaseId === authority.leaseId
           && typeof this.provider.reconcile === "function";

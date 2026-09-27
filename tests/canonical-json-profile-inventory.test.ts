@@ -207,6 +207,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
     reason: "Bind the bounded v2 synthetic journal-owner refusal and durable reconciliation changes while preserving the immutable reviewed v1-v6 gate source digests; no host enforcement claim.",
   }),
   Object.freeze({
+    migrationId: "PAN-EVO-02-LEGACY-SNAPSHOT-PRESERVATION/GATE-PROFILE/V8",
+    path: "demo/runtime/enforcement-gate.mjs",
+    profileVersion: 8,
+    fromSha256: "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20",
+    toSha256: "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
+    reason: "Keep the v2 ambiguous-snapshot recovery and journal flush/sync scoped to the reserved synthetic namespace; legacy direct owner recovery retains pre-existing stale-snapshot denial and persistence semantics. Reviewed v1-v7 digests remain immutable.",
+  }),
+  Object.freeze({
     migrationId: "XRA-PS-02-NATIVE-WIRE-INTEGRATE/INTEGRITY-GENERATOR/V13",
     path: "scripts/refresh-integrity-data.mjs",
     profileVersion: 13,
