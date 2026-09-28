@@ -1043,6 +1043,23 @@ if (!repositoryIntegrityNode.ownedTests.includes("npm run pan462:test")) reposit
 repositoryIntegrityNode.inputs.sort((left, right) => left.path.localeCompare(right.path, "en"));
 
 dag.graphVersion = 62;
+
+// PAN462 canonical CI hard-gate correction: bounded integration ownership.
+// A byte that already has its own bounded task owner is OWNED THERE and must
+// not be duplicated on the integration owner. The integration owner keeps
+// exactly the inputs no other bounded node owns, so its input list stays inside
+// the frozen Evidence-DAG schema bound (inputs maxItems 128) without relaxing
+// the schema, weakening a hard ownership role or dropping any selection.
+const ownedByBoundedNodes = new Set(
+  dag.nodes
+    .filter((node) => node !== repositoryIntegrityNode)
+    .flatMap((node) => node.inputs.map(({ path: ownedPath }) => ownedPath)),
+);
+repositoryIntegrityNode.inputs = repositoryIntegrityNode.inputs.filter(
+  ({ path: ownedPath }) => !ownedByBoundedNodes.has(ownedPath),
+);
+repositoryIntegrityNode.inputs.sort((left, right) => left.path.localeCompare(right.path, "en"));
+
 for (const node of dag.nodes) {
   node.inputs = node.inputs.map((input) => ({ ...input, sha256: digest(input.path) }));
 }
