@@ -4761,7 +4761,7 @@
         {
           "path": "docs/architecture/pan462-native-backup-restore-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "f458f0831e0c7d33a961d072a5710cd5e9d66068b554088ca388554550dd816e"
+          "sha256": "75f00b8855a16b4673b7d09799c38d695e986562d4cafc189c370848c81c876e"
         },
         {
           "path": "docs/architecture/pan468-impact-selection-v1.md",
@@ -4976,7 +4976,7 @@
         {
           "path": "src/pan462/native-backup-restore.mjs",
           "role": "SOURCE",
-          "sha256": "7cd9b76d2db18f5e6c93201b0117bd1f81e01f118dee0406093641baa2ba7e06"
+          "sha256": "fd99e0c9dc9b36d74992c79343ccaca69a5b7f3d8dbbec81175d9baae315e073"
         },
         {
           "path": "src/pan469/contribution-views.mjs",
@@ -5226,7 +5226,7 @@
         {
           "path": "tests/pan462/native-backup-restore.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "fb2895f2c43be168de13813dd19da39022eb71816b58b3dbc42ab6cdf5c77ec0"
+          "sha256": "a0511747bb74bc90684443f5b2959cdef9dc6319654015d7886db5769824ef05"
         },
         {
           "path": "tests/pan468/pan468-impact-selection.test.mjs",
@@ -5321,7 +5321,7 @@
         {
           "path": "verification/pan462-native-backup-restore-boundary-v1.json",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "42453f78261b5fac768b0b559de63c41668a144af0185c5290f431c24ead36b5"
+          "sha256": "8e325d841847e4ac067fa4d6755558ca4bfd7131c6c88f96c032fee601cf216e"
         },
         {
           "path": "verification/pan468-impact-selection-boundary-v1.json",
@@ -7358,7 +7358,7 @@
         {
           "path": "docs/architecture/pan462-native-backup-restore-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "f458f0831e0c7d33a961d072a5710cd5e9d66068b554088ca388554550dd816e"
+          "sha256": "75f00b8855a16b4673b7d09799c38d695e986562d4cafc189c370848c81c876e"
         },
         {
           "path": "schemas/contracts/pan462-native-backup-restore-v1.schema.json",
@@ -7368,17 +7368,17 @@
         {
           "path": "src/pan462/native-backup-restore.mjs",
           "role": "SOURCE",
-          "sha256": "7cd9b76d2db18f5e6c93201b0117bd1f81e01f118dee0406093641baa2ba7e06"
+          "sha256": "fd99e0c9dc9b36d74992c79343ccaca69a5b7f3d8dbbec81175d9baae315e073"
         },
         {
           "path": "tests/pan462/native-backup-restore.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "fb2895f2c43be168de13813dd19da39022eb71816b58b3dbc42ab6cdf5c77ec0"
+          "sha256": "a0511747bb74bc90684443f5b2959cdef9dc6319654015d7886db5769824ef05"
         },
         {
           "path": "verification/pan462-native-backup-restore-boundary-v1.json",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "42453f78261b5fac768b0b559de63c41668a144af0185c5290f431c24ead36b5"
+          "sha256": "8e325d841847e4ac067fa4d6755558ca4bfd7131c6c88f96c032fee601cf216e"
         },
         {
           "path": "tests/fixtures/pan462/config-source-v1.json",

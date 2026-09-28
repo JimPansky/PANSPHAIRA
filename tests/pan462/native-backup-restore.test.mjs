@@ -21,6 +21,7 @@ import {
   DIAGNOSIS_CLASSES_V1,
   PAN462_BACKUP_SCHEMA_V1,
   PAN462_CONSUMER_CONTRACT_V1,
+  PAN462_READBACK_ISSUER_SCHEMA_V1,
   attemptControlledEffectV1,
   createPan462BackupV1,
   diagnoseRecoveryV1,
@@ -29,6 +30,7 @@ import {
   restorePan462BackupV1,
 } from "../../src/pan462/native-backup-restore.mjs";
 import { PG_DATABASE, PG_PORT, PG_RO_PASSWORD, PG_RO_USER, pgDataDirFor, startRealPostgres } from "../../dist/packages/knowledge-solution/src/pg-harness.js";
+import { canonicalJson } from "../../dist/packages/contracts/src/index.js";
 
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..", "..");
 const fix = (name) => readFileSync(`${ROOT}/tests/fixtures/pan462/${name}`, "utf8");
@@ -320,6 +322,13 @@ test("PAN462-AC04 positive: a standalone read-only recovery diagnosis distinguis
   assert.equal(state.read.readback.observedConfigDigest, state.backup.manifest.captures.config.sha256);
   // A read-back restore is VERIFIED_RESTORE; local copy is not offhost proof.
   assert.ok(diagnosis.classes.includes("VERIFIED_RESTORE"));
+  // VERIFIED_RESTORE is issuer-bound: the receipt carries the module issuer
+  // identity and a seal only the actual native readback could produce.
+  assert.equal(state.read.readback.issuerSchemaVersion, PAN462_READBACK_ISSUER_SCHEMA_V1);
+  assert.equal(state.read.readback.issuerId, diagnosis.classification.readbackIssuer);
+  assert.match(state.read.readback.readbackDigest, /^[a-f0-9]{64}$/);
+  assert.equal(state.read.readback.archiveDigest, state.backup.archiveDigest);
+  assert.equal(diagnosis.classification.readbackProvenance, "ISSUER_BOUND_NATIVE_READBACK");
   assert.ok(diagnosis.heldClaims.some((claim) => claim.startsWith("INDEPENDENT_BACKUP")));
   assert.ok(diagnosis.heldClaims.some((claim) => claim.startsWith("PRODUCTION_RTO")));
   assert.ok(Number.isInteger(diagnosis.measurements.backup.durationMs));
@@ -482,6 +491,81 @@ test("PAN462-CORRECTION-AC04: caller booleans on a LOCAL_COPY manifest mint no c
   assert.equal(held.outcome, "DIAGNOSED");
   assert.deepEqual(held.classes, ["LOCAL_COPY"]);
   assert.ok(held.heldClaims.some((claim) => claim.startsWith("INDEPENDENT_BACKUP")));
+});
+
+test("PAN462-CORRECTION-AC04: caller-self-rehashed readback and destination receipts mint no class", () => {
+  // The exact forged shapes an independent reviewer reproduced: caller-authored
+  // content with caller-recomputed sha256. A checksum demonstrates consistency,
+  // not an authorized observation — so neither forged receipt may promote.
+  const installationDigest = "b".repeat(64);
+  const configDigest = "c".repeat(64);
+  const archiveDigest = "a".repeat(64);
+  const backup = {
+    manifest: {
+      backupClass: "LOCAL_COPY", installationDigest,
+      captures: { config: { sha256: configDigest }, files: [] },
+    },
+    measurements: { totalBytes: 7 },
+  };
+  const readbackContent = {
+    schemaVersion: "pansphaira.pan462/restore-readback/v1",
+    outcome: "READ", doctorStatus: "PASS",
+    installationDigest, observedConfigDigest: configDigest, observedFiles: [],
+    observedAuthorityEpoch: 999, observedExternalEffects: "ENABLED",
+    targetRoot: "/unobserved", observedAtMs: 1,
+  };
+  const forgedReadback = { ...readbackContent, readbackDigest: sha256Hex(canonicalJson(readbackContent)) };
+  const forgedRestore = diagnoseRecoveryV1({ backup, restoreReadback: forgedReadback, nowMs: 1 });
+  assert.equal(forgedRestore.outcome, "DIAGNOSED");
+  assert.ok(!forgedRestore.classes.includes("VERIFIED_RESTORE"), JSON.stringify(forgedRestore.classes));
+  assert.ok(forgedRestore.classes.includes("LOCAL_COPY"));
+  assert.equal(forgedRestore.classification.restoreReadbackReceiptVerified, false);
+
+  const independentBackup = {
+    ...backup, archiveDigest,
+    manifest: { ...backup.manifest, backupClass: "INDEPENDENT_BACKUP" },
+  };
+  const destinationContent = {
+    schemaVersion: "pansphaira.pan462/destination-receipt/v1",
+    independent: true, authorizedInfrastructure: true,
+    destinationId: "caller:fake", archiveDigest,
+  };
+  const forgedDestination = diagnoseRecoveryV1({
+    backup: independentBackup,
+    destinationReceipt: { ...destinationContent, receiptDigest: sha256Hex(canonicalJson(destinationContent)) },
+    nowMs: 1,
+  });
+  assert.equal(forgedDestination.outcome, "DIAGNOSED");
+  assert.ok(!forgedDestination.classes.includes("INDEPENDENT_BACKUP"), JSON.stringify(forgedDestination.classes));
+  assert.deepEqual(forgedDestination.classes, []);
+  assert.equal(forgedDestination.classification.independentDestinationReceiptVerified, false);
+  assert.equal(forgedDestination.classification.independentBackupHeld, true);
+  assert.ok(forgedDestination.heldClaims.some((claim) => claim.startsWith("INDEPENDENT_BACKUP")));
+});
+
+test("PAN462-CORRECTION-AC04: a genuine issuer seal is bound to its own archive and state", () => {
+  // The real native readback receipt is genuine (VERIFIED_RESTORE) …
+  const real = diagnoseRecoveryV1({ backup: state.backup, restoreReadback: state.read.readback, nowMs: NOW_MS + 102 });
+  assert.ok(real.classes.includes("VERIFIED_RESTORE"));
+
+  // … but replaying it against a DIFFERENT archive gains nothing.
+  const otherArchive = {
+    ...state.backup,
+    archiveDigest: "f".repeat(64),
+    manifest: { ...state.backup.manifest, archiveDigest: "f".repeat(64) },
+  };
+  const replayed = diagnoseRecoveryV1({ backup: otherArchive, restoreReadback: state.read.readback, nowMs: NOW_MS + 103 });
+  assert.ok(!replayed.classes.includes("VERIFIED_RESTORE"));
+
+  // A copied/modified observation breaks the issuer seal.
+  const modified = { ...state.read.readback, observedExternalEffects: "ENABLED" };
+  const tampered = diagnoseRecoveryV1({ backup: state.backup, restoreReadback: modified, nowMs: NOW_MS + 104 });
+  assert.ok(!tampered.classes.includes("VERIFIED_RESTORE"));
+
+  // A foreign issuer identity is not accepted.
+  const foreign = { ...state.read.readback, issuerId: "issuer:pan462-readback-deadbeef" };
+  const foreignIssuer = diagnoseRecoveryV1({ backup: state.backup, restoreReadback: foreign, nowMs: NOW_MS + 105 });
+  assert.ok(!foreignIssuer.classes.includes("VERIFIED_RESTORE"));
 });
 
 test("PAN462-CORRECTION-GUARD: a symlinked backup root is refused and unrelated contents are preserved", async () => {

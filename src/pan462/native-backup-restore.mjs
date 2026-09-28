@@ -36,8 +36,20 @@
 //     fail-closed denial inside the isolated synthetic restore target.
 //   - Synthetic evidence cannot satisfy human-only or real-environment evidence;
 //     those remain separately held.
+//
+// Correction 2026-09-28 (AC04 provenance): the recovery diagnosis no longer
+// accepts a caller-self-rehashed readback or destination receipt.
+//   - VERIFIED_RESTORE is earned only by an issuer-sealed native readback: the
+//     receipt is HMAC-sealed with a code-owned, per-process issuer secret that
+//     only this module's actual read path holds. The receipt is additionally
+//     bound to the material identity of one specific archive. The seal is
+//     process-bound: a fresh process must re-run the real native readback (the
+//     restored target still exists) to obtain its own valid seal.
+//   - INDEPENDENT_BACKUP is HELD in this slice: there is no independently
+//     authorized destination issuer, and a caller boolean/receipt/rehash is
+//     never authority. No external authority is synthesized.
 
-import { createHash } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import {
   existsSync,
   lstatSync,
@@ -77,6 +89,9 @@ export const PAN462_CONSUMER_CONTRACT_V1 = "pan462.installation.native-backup-re
 export const PAN462_READBACK_SCHEMA_V1 = "pansphaira.pan462/restore-readback/v1";
 export const PAN462_RESTORED_STATE_SCHEMA_V1 = "pansphaira.pan462/restored-installation-state/v1";
 export const PAN462_DESTINATION_SCHEMA_V1 = "pansphaira.pan462/destination-receipt/v1";
+// Correction 2026-09-28: the issuer-bound readback seal vocabulary. The issuer
+// secret is code-owned and per-process (see READBACK_ISSUER_V1 below).
+export const PAN462_READBACK_ISSUER_SCHEMA_V1 = "pansphaira.pan462/readback-issuer/v1";
 
 // The only backup boundary this slice produces: one quiesced, transaction-
 // consistent snapshot of the owned state. It is a LOCAL COPY (same controller
@@ -268,34 +283,83 @@ function restoredReadDenialCode({ observed, filesMatch, configMatch, authorityMa
   return "RESTORED_STATE_UNVERIFIED";
 }
 
-// An independent/offhost destination receipt binds a DIFFERENT destination to
-// the SAME archive. This slice never produces one, so the class stays held;
-// only a source-bound receipt — never a caller boolean — can earn it.
-function verifyDestinationReceipt(receipt, backup) {
-  if (!isRecord(receipt) || receipt.schemaVersion !== PAN462_DESTINATION_SCHEMA_V1) return false;
-  if (receipt.independent !== true || receipt.authorizedInfrastructure !== true) return false;
-  if (typeof receipt.destinationId !== "string" || receipt.destinationId.length === 0) return false;
-  if (typeof backup.archiveDigest !== "string" || receipt.archiveDigest !== backup.archiveDigest) return false;
-  const { receiptDigest, ...content } = receipt;
-  return typeof receiptDigest === "string" && sha(content) === receiptDigest;
+// ---------------------------------------------------------------------------
+// AC04 correction 2026-09-28 — issuer-bound native readback; destination HELD.
+// ---------------------------------------------------------------------------
+// The independent/offhost destination class has NO independently authorized
+// issuer in this slice. A caller-provided destination receipt — or a renamed
+// caller receipt/verifier/key/signer, or an asserted `independent`/
+// `authorizedInfrastructure` boolean — is never authority. INDEPENDENT_BACKUP is
+// therefore always HELD here: the manifest may declare the class, but the
+// diagnosis never mints it. Genuine offhost authority must arrive from a
+// separately authorized destination in a future, separately authorized slice;
+// this slice does not synthesize one.
+const INDEPENDENT_DESTINATION_HELD_V1 = Object.freeze({
+  verified: false,
+  reason: "NO_AUTHORIZED_DESTINATION_ISSUER",
+});
+
+// VERIFIED_RESTORE is earned only by an ISSUER-BOUND native readback. The
+// readback receipt is sealed with a code-owned issuer secret held by this module
+// instance: only `readRestoredInstallationV1` — which actually reads the
+// restored database over the wire and the restored target from disk — can
+// produce a valid seal. A caller that fabricates the same fields and recomputes
+// a plain sha256 can never mint the seal, so a self-rehashed object is not
+// evidence (a checksum shows consistency, not an authorized observation).
+//
+// The seal covers the whole receipt content, which is additionally bound to the
+// MATERIAL identity of one specific archive: the installation identity digest,
+// the observed config/file digests, the fenced successor authority epoch, the
+// disabled effect policy and the archive digest. A genuine receipt replayed
+// against a mismatched backup therefore also fails.
+const READBACK_ISSUER_V1 = Object.freeze({
+  schemaVersion: PAN462_READBACK_ISSUER_SCHEMA_V1,
+  issuerId: `issuer:pan462-readback-${randomBytes(8).toString("hex")}`,
+  key: randomBytes(32),
+});
+
+// The seal is an HMAC over the receipt content with the module-held issuer
+// secret. The secret is never exported, so the seal is not caller-recomputable.
+function sealReadbackReceipt(content) {
+  return createHmac("sha256", READBACK_ISSUER_V1.key).update(canonicalJson(content), "utf8").digest("hex");
 }
 
-// VERIFIED_RESTORE is earned only by the independently re-checked native readback
-// receipt (produced by readRestoredInstallationV1), cross-bound to the SAME
-// archive. A caller boolean is never evidence.
+function issuerSealMatches(content, seal) {
+  if (!sha256Hex(seal)) return false;
+  const expected = Buffer.from(sealReadbackReceipt(content), "hex");
+  const actual = Buffer.from(seal, "hex");
+  return expected.length === actual.length && timingSafeEqual(expected, actual);
+}
+
 function verifyRestoreReadback(receipt, backup) {
   if (!isRecord(receipt) || receipt.schemaVersion !== PAN462_READBACK_SCHEMA_V1) return false;
+  if (receipt.issuerSchemaVersion !== PAN462_READBACK_ISSUER_SCHEMA_V1) return false;
+  if (receipt.issuerId !== READBACK_ISSUER_V1.issuerId) return false;
   if (receipt.outcome !== "READ" || receipt.doctorStatus !== "PASS") return false;
-  const captures = isRecord(backup.manifest) ? backup.manifest.captures : undefined;
+  // (1) Issuer seal over the receipt content. Only the actual native readback
+  //     route holds the issuer secret; a caller-rehashed object fails here.
+  const { readbackDigest, ...content } = receipt;
+  if (!issuerSealMatches(content, readbackDigest)) return false;
+  // (2) Material binding to exactly ONE archive — not arbitrary digest agreement.
+  const manifest = isRecord(backup.manifest) ? backup.manifest : undefined;
+  if (!isRecord(manifest)) return false;
+  const archiveDigest = backup.archiveDigest ?? manifest.archiveDigest;
+  if (typeof archiveDigest !== "string" || receipt.archiveDigest !== archiveDigest) return false;
+  const captures = manifest.captures;
   if (!isRecord(captures) || !isRecord(captures.config) || !isDenseArray(captures.files)) return false;
-  if (receipt.installationDigest !== backup.manifest.installationDigest) return false;
+  if (receipt.installationDigest !== manifest.installationDigest) return false;
   if (receipt.observedConfigDigest !== captures.config.sha256) return false;
   if (!isDenseArray(receipt.observedFiles) || receipt.observedFiles.length !== captures.files.length) return false;
   for (const file of captures.files) {
     if (!receipt.observedFiles.some((observed) => observed.path === file.path && observed.sha256 === file.sha256)) return false;
   }
-  const { readbackDigest, ...content } = receipt;
-  return typeof readbackDigest === "string" && sha(content) === readbackDigest;
+  // (3) The observed state must be this archive's fenced successor: the restored
+  //     writer epoch is the captured epoch + 1 and effects are DISABLED.
+  if (!Number.isSafeInteger(receipt.observedAuthorityEpoch)
+    || !isRecord(manifest.writerAuthority)
+    || receipt.observedAuthorityEpoch !== manifest.writerAuthority.epoch + 1) return false;
+  if (receipt.observedExternalEffects !== "DISABLED") return false;
+  return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -821,6 +885,10 @@ export async function restorePan462BackupV1({
       services: archive.captures.services.map((service) => ({ ...service })),
       targetRoot,
       restoredAtMs: nowMs,
+      // The archive identity this copy was restored from, so a later native
+      // readback receipt can be bound to exactly this archive (correction
+      // 2026-09-28).
+      archiveDigest,
     };
     return {
       outcome: "RESTORED",
@@ -925,6 +993,8 @@ export async function readRestoredInstallationV1({
     if (verified) {
       const readbackContent = {
         schemaVersion: PAN462_READBACK_SCHEMA_V1,
+        issuerSchemaVersion: PAN462_READBACK_ISSUER_SCHEMA_V1,
+        issuerId: READBACK_ISSUER_V1.issuerId,
         consumerContract: PAN462_CONSUMER_CONTRACT_V1,
         outcome: "READ",
         installationId: restored.installationId,
@@ -936,12 +1006,16 @@ export async function readRestoredInstallationV1({
         doctorStatus,
         targetRoot,
         observedAtMs: nowMs,
+        archiveDigest: typeof restored.archiveDigest === "string" ? restored.archiveDigest : null,
       };
       return {
         outcome: "READ",
         code: "OK",
         ...shared,
-        readback: { ...readbackContent, readbackDigest: sha(readbackContent) },
+        // The issuer seal replaces the old caller-recomputable self-hash: only
+        // this module's actual native readback can produce it, so a caller
+        // cannot mint a VERIFIED_RESTORE by rehashing assertions.
+        readback: { ...readbackContent, readbackDigest: sealReadbackReceipt(readbackContent) },
       };
     }
     return {
@@ -1007,16 +1081,16 @@ export function diagnoseRecoveryV1(options = {}) {
     return deny("INPUT_REQUIRED");
   }
   // LOCAL_COPY is a local copy on the same controller as the source. An
-  // INDEPENDENT_BACKUP requires a source-bound, authorized offhost destination
-  // receipt — this slice never mints one, so the class stays held. A
-  // VERIFIED_RESTORE requires the independently re-checked native readback
-  // receipt, never a caller boolean.
-  const independentBackup = backup.manifest.backupClass === "INDEPENDENT_BACKUP"
-    && verifyDestinationReceipt(destinationReceipt, backup);
+  // INDEPENDENT_BACKUP requires an independently authorized offhost destination
+  // issuer; this slice never produces one and a caller receipt/boolean is never
+  // authority, so the class is HELD and never minted here. (destinationReceipt is
+  // accepted for shape stability only and is deliberately not read as evidence.)
+  // A VERIFIED_RESTORE requires the issuer-sealed native readback receipt, never
+  // a caller rehash.
+  const independentBackup = false;
   const verifiedRestore = verifyRestoreReadback(restoreReadback, backup);
   const classes = [];
   if (backup.manifest.backupClass === "LOCAL_COPY") classes.push("LOCAL_COPY");
-  if (independentBackup) classes.push("INDEPENDENT_BACKUP");
   if (verifiedRestore) classes.push("VERIFIED_RESTORE");
   return {
     outcome: "DIAGNOSED",
@@ -1028,7 +1102,11 @@ export function diagnoseRecoveryV1(options = {}) {
       boundary: backup.boundary ?? backup.manifest.boundary ?? null,
       onSameControllerAsSource: backup.manifest.backupClass === "LOCAL_COPY",
       independentDestinationReceiptVerified: independentBackup,
+      independentBackupHeld: true,
+      independentDestinationHeld: INDEPENDENT_DESTINATION_HELD_V1,
       restoreReadbackReceiptVerified: verifiedRestore,
+      readbackIssuer: verifiedRestore ? READBACK_ISSUER_V1.issuerId : null,
+      readbackProvenance: verifiedRestore ? "ISSUER_BOUND_NATIVE_READBACK" : "NONE",
     },
     // Measured observations only — no retrospective or invented timing.
     measurements: {

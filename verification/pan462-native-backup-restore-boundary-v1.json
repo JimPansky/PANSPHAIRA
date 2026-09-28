@@ -91,8 +91,8 @@
       "evidence": "tests/pan462/native-backup-restore.test.mjs (AC04 positive diagnosis + unverified negative)",
       "diagnosis": "standalone read-only; classes over LOCAL_COPY / INDEPENDENT_BACKUP / VERIFIED_RESTORE",
       "measurements": "real durationMs + data sizes recorded at backup and restore; no retrospective or invented timing",
-      "verifiedRestoreEvidence": "independently re-checked native readback receipt (readRestoredInstallationV1), cross-bound to the same archive; caller booleans refused",
-      "independentBackupEvidence": "requires an INDEPENDENT_BACKUP manifest plus a source-bound authorized destination receipt; not produced by this slice (HELD)"
+      "verifiedRestoreEvidence": "issuer-bound native readback receipt (readRestoredInstallationV1): code-owned per-process issuer seal (HMAC) over the receipt, additionally bound to the material identity (installation/config/file digests, fenced successor epoch, disabled effects, archive digest) of one specific archive; caller self-rehash and caller booleans refused; genuine receipt replayed against a mismatched backup refused",
+      "independentBackupEvidence": "HELD: no independently authorized destination issuer exists in this slice; a caller boolean/receipt/self-rehash is never authority and the class is never minted"
     }
   },
   "holds": [
@@ -115,6 +115,16 @@
       "AC02: readRestoredInstallationV1 observes the actual restored target (config/file digests, effect policy, writer authority, persisted installation state) read-only; the released doctor is fed the observed values and a READ/verified restoration is returned only on PASS + full match. Mutated/deleted config or file yields DENIED with an exact code and a non-PASS doctor.",
       "AC04: diagnoseRecoveryV1 has a closed input shape; caller booleans are refused. VERIFIED_RESTORE is derived only from the independently re-checked native readback receipt; INDEPENDENT_BACKUP requires an INDEPENDENT_BACKUP manifest plus a source-bound destination receipt (never minted by this slice).",
       "Guard: createPan462BackupV1/restorePan462BackupV1 prove an owned, disposable, distinct, non-symlink destination inside ownedRoot before any destructive rmSync."
-    ]
+    ],
+    "followUp": {
+      "at": "2026-09-28",
+      "of": "42b489651bcbd4b47c97b53976cb4c648b6a56ee",
+      "finding": "AC04 provenance bypass: exported diagnoseRecoveryV1 accepted a caller-self-rehashed restoreReadback as VERIFIED_RESTORE and a caller-self-rehashed destinationReceipt (with asserted independent/authorizedInfrastructure booleans) as INDEPENDENT_BACKUP, with no native readback and no authorized destination.",
+      "fixed": [
+        "VERIFIED_RESTORE derives only from an issuer-bound native readback: the receipt is HMAC-sealed with a code-owned per-process issuer secret that only the actual native read path holds, and is bound to the material identity of one specific archive; a caller recomputing a plain sha256 cannot mint the seal.",
+        "INDEPENDENT_BACKUP is held: caller booleans, caller destination receipts and self-rehashes are never authority; the class is never minted in this slice.",
+        "Named negatives added: caller-self-rehashed readback (no VERIFIED_RESTORE), caller-self-rehashed destination receipt (no INDEPENDENT_BACKUP), genuine receipt replayed against a mismatched archive, modified observation, foreign issuer. Real native positive retained through the actual readback entry."
+      ]
+    }
   }
 }

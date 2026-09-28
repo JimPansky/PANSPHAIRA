@@ -333,7 +333,7 @@ d33a55dabb163748587da37d6028afd18ee041fbea773d2217bffb9835c6435e  ./docs/archite
 c0620d256e632a64f2df520731adb0852ce7e0c8178b49e6c17d1df1ecdf1117  ./docs/architecture/pan442-synthetic-metric-read-v1.md
 3f2deb3a0cf183a215d3d20edc3252a3ef340f29adba4dec624a54af1a0fb0a5  ./docs/architecture/pan453-owned-synthetic-journal-v2.md
 45603ecfc4e4909e1370157b11b50aef94a917cb8547fd0330e52e2b043ace2a  ./docs/architecture/pan461-lifecycle-inventory-v1.md
-f458f0831e0c7d33a961d072a5710cd5e9d66068b554088ca388554550dd816e  ./docs/architecture/pan462-native-backup-restore-v1.md
+75f00b8855a16b4673b7d09799c38d695e986562d4cafc189c370848c81c876e  ./docs/architecture/pan462-native-backup-restore-v1.md
 0c95fdf922e6b4ec3a6036005c2f9263462d6939775d36bff4bc9484b32e37a6  ./docs/architecture/pan468-impact-selection-v1.md
 5fb325a027879610d8c0d022e9e6d3da1444d6b74522d8707ec41d5abb50f5b2  ./docs/architecture/pan469-contribution-views-v1.md
 8b7d3e4034d4faa87bb168012b808156a59c171a390bd94925d2581ad16f5515  ./docs/architecture/pan470-handoff-effort.md
@@ -1082,7 +1082,7 @@ e2d5fba3fdd8ce038e1e3a4be7588112c3897e0a63dd7cf9f62b1eba42eb2303  ./src/pan433/d
 a458c0b1e9e83b0851657ec8f28e419b89360719a5347b1d5588ab5db3063bd9  ./src/pan442/bound-task-handle.mjs
 867bd0d3f4d05d992b7a291d5837148a1942b592312a74de308d22348ca7e32a  ./src/pan442/synthetic-metric-read-task.mjs
 8e341e1f928186a7d36aaaa87fde334b98ed2a6016d6853d56f413a6d09a52a5  ./src/pan461/lifecycle-inventory.mjs
-7cd9b76d2db18f5e6c93201b0117bd1f81e01f118dee0406093641baa2ba7e06  ./src/pan462/native-backup-restore.mjs
+fd99e0c9dc9b36d74992c79343ccaca69a5b7f3d8dbbec81175d9baae315e073  ./src/pan462/native-backup-restore.mjs
 a99c14d9a66d771f880c9a7b47436af411522b45c75873afa456c53f5dbc2f0f  ./src/pan469/contribution-views.mjs
 4986fa3de86fb4963c1cb191ba65f181aa7dab4e3af4222068cc2df17d3b7f40  ./src/pan470/handoff-effort.mjs
 7eeab48ef9a74f498e6e4fdc83095745a467f595120688691400f602f2cc975f  ./src/pan471/capability-inventory.mjs
@@ -1779,7 +1779,7 @@ a5617f6a9a5cbd28e474525165c39b45b3d0cb09dd63bb04ca5576b5a77daff7  ./tests/pan453
 8ca3c09af881090cd8c470539b757c23f1fbac635224b4dfa0c1c568c712b523  ./tests/pan453/composed-ambiguity.test.mjs
 1940bccf92be0eb2c58fc5fb1f1505f3938ebb52ef0e0ab3d9376e77f67b394e  ./tests/pan453/crash-fixture.mjs
 2b24ab68ec90fbfb9cdfb3cf5f669dfa9c26a64c3d7b8e58ab42bcb599540c08  ./tests/pan461/lifecycle-inventory.test.mjs
-fb2895f2c43be168de13813dd19da39022eb71816b58b3dbc42ab6cdf5c77ec0  ./tests/pan462/native-backup-restore.test.mjs
+a0511747bb74bc90684443f5b2959cdef9dc6319654015d7886db5769824ef05  ./tests/pan462/native-backup-restore.test.mjs
 225adc4679349fe2b7b83c221f9b6c104f8d577f3d110373ffbe4291af4a61d1  ./tests/pan468/pan468-impact-selection.test.mjs
 88e9afa49dbc930c76fb81117889f9b57acbbe08eaf20928f624f1ec15ea96de  ./tests/pan469/pan469-contribution-views.test.mjs
 efdca64f15650f5785d78f190fa9a65d926d3d42efa6cea74b76e1818fb985cb  ./tests/pan470/handoff-effort.test.mjs
@@ -2005,7 +2005,7 @@ bd7c2bd65b87ad56406a4d53e290019b702b9d05bfb2384bff565f0ce5ef31b5  ./verification
 2ae4c1e6f10f43bea2a1ef4928fd7d5e2f1b696a061a38c67a9d0f60dd3e79e9  ./verification/pan435-436-sales-stock-journey-v1.json
 86c23c2b7190f4f52e692c10a0496ce6fbab572556a65f128cd6c7b2d931b8fb  ./verification/pan442-bound-task-handle-boundary-v1.json
 7275f0563eb89176a52c86ff525f99bdce7950f60280dfc56c184b12e75cbcb5  ./verification/pan461-lifecycle-inventory-boundary-v1.json
-42453f78261b5fac768b0b559de63c41668a144af0185c5290f431c24ead36b5  ./verification/pan462-native-backup-restore-boundary-v1.json
+8e325d841847e4ac067fa4d6755558ca4bfd7131c6c88f96c032fee601cf216e  ./verification/pan462-native-backup-restore-boundary-v1.json
 261ea70de20d943e7da5042b5d8a1a258e16a27076e6cd886b255221da5579b8  ./verification/pan468-impact-selection-boundary-v1.json
 92574ce4ad690173e4d3cb68c6cec9ab3dc9c8edb74353d17c935fd9201954e7  ./verification/pan469-contribution-views-boundary-v1.json
 ffae2c6c537cb2baf590bc90cdcc4fe174f80e6990a05a38699ff11b4f1d3001  ./verification/pan470-handoff-effort-boundary-v1.json
@@ -2017,5 +2017,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-301bc31272dc35a8ded1de3342eac5e3491308789779eefa14c0042a7afbe571  ./verification/verification-dag-v2.json
+d242ecd6eb801281d104dbd11a05c262312849178cdf61ce48450a2c8e2ee805  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

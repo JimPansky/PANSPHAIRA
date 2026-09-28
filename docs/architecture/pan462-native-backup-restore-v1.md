@@ -110,17 +110,35 @@ Every boundary refuses composition:
 `INDEPENDENT_BACKUP` and `PRODUCTION_RTO` claims explicitly: a local copy on the
 same controller as the source is **not** offhost or disaster proof.
 
-**Correction 2026-09-28 — caller booleans are not evidence.** The diagnosis has a
-closed input shape (`backup`, `restoreReadback`, `destinationReceipt`, `nowMs`);
-any other field — e.g. a caller `ownsIndependentDestination` or a bare
-`restored.verified` — is refused (`DIAGNOSIS_INPUT_MALFORMED`). `VERIFIED_RESTORE`
-is earned only by the *independently re-checked native readback receipt* produced
-by `readRestoredInstallationV1` (`outcome: READ`, `doctorStatus: PASS`, self-
-consistent `readbackDigest`, and observed config/file digests that re-bind to the
-same archive). `INDEPENDENT_BACKUP` requires both an `INDEPENDENT_BACKUP` manifest
-and a source-bound, authorized destination receipt that binds the same
-`archiveDigest`; this slice never mints one, so an unqualified destination class
-stays unavailable/held.
+**Correction 2026-09-28 — caller booleans and caller rehashes are not
+evidence.** The diagnosis has a closed input shape (`backup`, `restoreReadback`,
+`destinationReceipt`, `nowMs`); any other field — e.g. a caller
+`ownsIndependentDestination` or a bare `restored.verified` — is refused
+(`DIAGNOSIS_INPUT_MALFORMED`).
+
+**Correction 2026-09-28 (follow-up, AC04 provenance).** A self-consistent
+`readbackDigest` recomputed by the caller is *not* evidence — a checksum shows
+consistency, not an authorized observation. `VERIFIED_RESTORE` now requires an
+**issuer-bound** receipt: `readRestoredInstallationV1` — the only code path that
+actually reads the restored database over the wire and the restored target from
+disk — seals the receipt with a code-owned issuer secret held by the module
+instance (`issuerSchemaVersion` + `issuerId` + an HMAC `readbackDigest`). A
+caller that fabricates the same fields and recomputes a plain `sha256` cannot
+mint the seal, so a forged rehash promotes nothing. The receipt is additionally
+bound to the **material identity of one specific archive** (installation digest,
+observed config/file digests, the fenced successor writer epoch = captured epoch
++ 1, the disabled effect policy, and the archive digest), so a *genuine* receipt
+replayed against a mismatched backup, or a copied/modified observation, also
+fails. The seal is process-bound: after a restart the retained restored target
+must be re-read through the real native readback path to obtain a fresh seal —
+there is no caller-mintable substitute.
+
+`INDEPENDENT_BACKUP` is **HELD** in this slice: there is no independently
+authorized destination issuer, and a caller boolean, a caller-provided
+`destinationReceipt`, a self-rehash or a renamed schema is never authority. The
+class is therefore never minted here; genuine offhost authority must come from a
+separately authorized destination in a future slice. `LOCAL_COPY` is unchanged
+and remains usable.
 
 ## Owned/disposable destination guard (correction 2026-09-28)
 
