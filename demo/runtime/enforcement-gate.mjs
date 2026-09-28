@@ -881,6 +881,31 @@ export class DemoMutationGate {
       || Array.isArray(readback)
     ) throw new Error("PROVIDER_READBACK_REQUIRED");
     validateSemanticReadback(action, readback);
+    // PAN453 AC03: a matching reconcile callback is not, by itself, authority.
+    // The claimed persisted target must be corroborated by an INDEPENDENT read
+    // of the actual target at the existing recovery/readback boundary. An
+    // absent or contradictory persisted target stays UNRESOLVED: fail closed
+    // with no CONFIRM, no PASS, no second mutation and no overwritten durable
+    // state. Legacy (non-owned) reconciliation semantics are unchanged.
+    if (isOwnedSyntheticPath(this.receiptPath)) {
+      if (typeof this.provider.readback !== "function") {
+        throw new Error("EFFECT_RECONCILIATION_UNCONFIRMED_DENIED");
+      }
+      const independent = await runBounded(
+        (providerSignal) => this.provider.readback(action, providerResult, providerSignal),
+        signal,
+      );
+      if (
+        independent === null
+        || typeof independent !== "object"
+        || Array.isArray(independent)
+      ) throw new Error("EFFECT_RECONCILIATION_UNCONFIRMED_DENIED");
+      validateSemanticReadback(action, independent);
+      if (!equalSecret(
+        readback.id === undefined ? "" : String(readback.id),
+        independent.id === undefined ? "" : String(independent.id),
+      )) throw new Error("EFFECT_RECONCILIATION_CONTRADICTORY_DENIED");
+    }
     const core = receiptCore(
       action,
       computedDigest,
