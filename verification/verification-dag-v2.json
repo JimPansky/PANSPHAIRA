@@ -5906,7 +5906,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "35dd6b81b036e0e3826512c082226a0985e96f5e5435b20b8f850a4b235eb794"
+          "sha256": "4b7069d2f375fb0558629da7ab887095cbb4242a6eeb01d76df7de01311e062f"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
