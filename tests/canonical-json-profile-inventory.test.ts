@@ -374,6 +374,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
     toSha256: "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
     reason: "Bind the bounded PAN462 native backup/restore family (source, validator, schema, docs, boundary record and fixtures) to its own bounded owner; the integration owner keeps only the inputs no bounded node owns, so its input list stays inside the frozen Evidence-DAG schema bound without relaxing the schema. Admitted v1 and reviewed v2-v31 digests remain immutable.",
   }),
+  Object.freeze({
+    migrationId: "PAN453-AC04-STOP-REVOKE-RETENTION/GATE-PROFILE/V9",
+    path: "demo/runtime/enforcement-gate.mjs",
+    profileVersion: 9,
+    fromSha256: "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
+    toSha256: "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
+    reason: "Bind the bounded owned synthetic STOP/REVOKE control, durable retry-exhaustion fences and read-only recovery to the existing gate; retain reviewed v1-v8 bytes and make no host or external authority claim.",
+  }),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -387,7 +395,7 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 724,
+  filesScanned: 725,
   declarationSites: 37,
   declarationFiles: 37,
   importSites: 248,
@@ -398,7 +406,7 @@ const EXPECTED_COUNTS = {
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2028, uniquePaths: 2028, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2029, uniquePaths: 2029, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 

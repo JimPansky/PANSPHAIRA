@@ -14,7 +14,12 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname } from "node:path";
-import { assertLocalJournalOwner, isOwnedSyntheticPath } from "./local-journal-owner.mjs";
+import {
+  assertLocalJournalOwner,
+  isOwnedSyntheticPath,
+  readLocalJournalControl,
+  recordLocalJournalRecoveryAttempt,
+} from "./local-journal-owner.mjs";
 import {
   APPROVAL_PURPOSE,
   APPROVAL_REQUESTER,
@@ -41,6 +46,19 @@ export function normalizeOperationKey(value) {
     throw new Error("OPERATION_KEY_INVALID_DENIED");
   }
   return value.normalize("NFC");
+}
+
+// PAN453 AC04: bind the durable stop/revoke control to the exact source and
+// target identity of the observed mutation, so a stop issued for one
+// source/target pair never blocks or releases an unrelated operation.
+function mutationSourceIdentity(action) {
+  return `${action.scope.tenant}|${action.actor}`;
+}
+
+function mutationTargetIdentity(action) {
+  const body = action.payload?.body ?? {};
+  const reference = String(body.ref_client ?? body.emailAddress ?? "");
+  return `${action.scope.provider}|${action.scope.entity}|${reference}`;
 }
 
 function equalSecret(presented, expected) {
@@ -407,6 +425,7 @@ export class DemoMutationGate {
     ownerAuthorityToken = controlToken,
     now = () => Date.now(),
     operationTimeoutMs = 30_000,
+    maxReconcileAttempts = 3,
     authorityContext = {
       profileId: "SAFE_GUIDED",
       profileGeneration: randomUUID(),
@@ -420,6 +439,9 @@ export class DemoMutationGate {
       || !Number.isSafeInteger(operationTimeoutMs)
       || operationTimeoutMs < 1
       || operationTimeoutMs > 300_000
+      || !Number.isSafeInteger(maxReconcileAttempts)
+      || maxReconcileAttempts < 1
+      || maxReconcileAttempts > 32
     ) {
       throw new Error("GATE_SECRET_INVALID");
     }
@@ -432,6 +454,7 @@ export class DemoMutationGate {
     assertLocalJournalOwner(receiptPath, journalOwner);
     this.provider = provider;
     this.operationTimeoutMs = operationTimeoutMs;
+    this.maxReconcileAttempts = maxReconcileAttempts;
     this.adminAiPolicyDigest = adminAiPolicyDigest;
     if (
       typeof now !== "function"
@@ -766,6 +789,46 @@ export class DemoMutationGate {
     this.persist();
   }
 
+  /**
+   * PAN453 AC04 bounded local synthetic stop/revoke control, observed from the
+   * durable owner-scoped ledger at the actual entry point.
+   *  - REVOKE always denies (a new effect AND read-only reconciliation) for the
+   *    bound operation key or source/target identity.
+   *  - STOP denies every new effect for the bound source/target identity, but a
+   *    durable AMBIGUOUS reservation that is still eligible for the lease-matched
+   *    read-only reconciliation keeps that no-duplicate recovery path.
+   * Legacy (non-owned) roots are untouched.
+   */
+  assertEffectControl({ action, operationKey, reconcileEligible }) {
+    if (!isOwnedSyntheticPath(this.receiptPath)) return;
+    const control = readLocalJournalControl(dirname(this.receiptPath));
+    const source = mutationSourceIdentity(action);
+    const target = mutationTargetIdentity(action);
+    // A control binding is durable: it is observed from BOTH the bounded detail
+    // records and the compact per-key denial fences. Pruning a detail record
+    // under unrelated churn can therefore never end an active stop/revoke or
+    // lower a retained stop epoch. A saturated fence map means the owned root
+    // can no longer durably admit a new control, so new effects fail closed.
+    const controls = [...control.records, ...Object.values(control.fences)];
+    for (const record of controls) {
+      if (
+        record.kind === "REVOKE"
+        && (
+          record.operationKey === operationKey
+          || (record.sourceIdentity === source && record.targetIdentity === target)
+        )
+      ) throw new Error("EFFECT_REVOKED_DENIED");
+    }
+    if (reconcileEligible) return;
+    if (control.saturated) throw new Error("EFFECT_CONTROL_LEDGER_SATURATED_DENIED");
+    if (
+      controls.some((record) =>
+        record.kind === "STOP"
+        && record.sourceIdentity === source
+        && record.targetIdentity === target)
+    ) throw new Error("EFFECT_STOPPED_DENIED");
+  }
+
   async reconcileOperation({
     operationKey,
     action,
@@ -788,6 +851,20 @@ export class DemoMutationGate {
     ) throw new Error("REPLAY_AUTHORITY_CONFLICT_DENIED");
     if (typeof this.provider.reconcile !== "function") {
       throw new Error("EFFECT_AMBIGUOUS_RECONCILE_REQUIRED");
+    }
+    // PAN453 AC04 bounded attempts with durable retention: the attempt counter
+    // is retained in the owned journal so the bound survives process restarts
+    // and a local restore. Exhausting it fails closed without dispatching a new
+    // effect and without another provider reconciliation read.
+    if (isOwnedSyntheticPath(this.receiptPath)) {
+      const attempts = recordLocalJournalRecoveryAttempt(dirname(this.receiptPath), {
+        operationKey,
+        attemptedAtMs: this.now(),
+        maxAttempts: this.maxReconcileAttempts,
+      });
+      if (attempts > this.maxReconcileAttempts) {
+        throw new Error("EFFECT_RECOVERY_ATTEMPTS_EXHAUSTED_DENIED");
+      }
     }
     const result = await runBounded((providerSignal) =>
       this.provider.reconcile(action, providerSignal), signal);
@@ -974,6 +1051,18 @@ export class DemoMutationGate {
           || !equalSecret(existing.authorityBinding, authorityBinding)
         )
       ) throw new Error("REPLAY_AUTHORITY_CONFLICT_DENIED");
+
+      // A durable STOP/REVOKE is bound to the operation identity and observed
+      // before any snapshot, reservation or provider effect. Only a durable
+      // AMBIGUOUS reservation that still matches the signed lease and the
+      // synthetic reconcile callback keeps the read-only recovery path.
+      const reconcileEligible = isOwnedSyntheticPath(this.receiptPath)
+        && ownerLease
+        && existing?.status === "AMBIGUOUS"
+        && existing.recovery === "RECONCILE"
+        && existing.leaseId === authority?.leaseId
+        && typeof this.provider.reconcile === "function";
+      this.assertEffectControl({ action, operationKey, reconcileEligible });
 
       if (ownerLease && this.state.consumedAuthorityLeases[authority.leaseId] !== undefined) {
         if (existing?.status !== "AMBIGUOUS" || typeof this.provider.reconcile !== "function") {
