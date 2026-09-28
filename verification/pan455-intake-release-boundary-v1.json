@@ -1,0 +1,112 @@
+{
+  "schemaVersion": "pansphaira.verification/pan455-intake-release-boundary/v1",
+  "status": "LOCAL_SYNTHETIC_IMPLEMENTED",
+  "module": "src/pan455/intake-release.mjs",
+  "consumerContract": "schemas/contracts/pan455-intake-release-v1.schema.json",
+  "reusedModules": [
+    {
+      "path": "src/pan442/bound-task-handle.mjs",
+      "role": "UNCHANGED_BOUND_TASK_BUSINESS_JOURNEY_ISSUER_RESOLVER_USE_BOUND_TASK_HANDLE"
+    },
+    {
+      "path": "demo/runtime/admin-ai-poc.mjs",
+      "role": "NON_OWNED_LOCAL_BUSINESS_OPERATION_SEAM_CREATE_LOCAL_BUSINESS_OPERATION"
+    },
+    {
+      "path": "src/cks-12/drift-revalidation-fastpath.ts",
+      "role": "FROZEN_KNOWLEDGE_DRIFT_INVALIDATION_REQUIRE_KNOWLEDGE_DRIFT_REVALIDATION_DENY_UNKNOWN_VARIANT_FAST_PATH"
+    },
+    {
+      "path": "demo/runtime/enforcement-gate.mjs",
+      "role": "CANONICAL_JSON_AND_SHA256_EVIDENCE_DIGESTS"
+    }
+  ],
+  "trustedSource": {
+    "kind": "SYNTHETIC_TRUSTED_TASK_SOURCE_V1",
+    "sourceSchema": "pan455.synthetic/order-intake-journal/v1",
+    "trustLabel": "LOCAL_SYNTHETIC",
+    "identityProviderClaim": false,
+    "modelTextGrantsApproval": false,
+    "retainedOutsideCallerPayloads": true,
+    "binds": [
+      "object (provider, entity, operation, refClient, customerId, orderDateEpoch)",
+      "objectVersion (order.revision, NOT intake.head)",
+      "purpose",
+      "tenant",
+      "user",
+      "runId",
+      "amountLimitMinor",
+      "currency",
+      "ttlMs",
+      "rawSourceDigest",
+      "mappingProfileVersion",
+      "ruleVersion"
+    ]
+  },
+  "rule": {
+    "name": "material-intake-release-eligibility",
+    "version": "intake-release/v1",
+    "eligibility": "journal folds to RELEASED with no open hold; business eligibility only, never owner approval or effect authority",
+    "materialWitness": "appended OPEN after RELEASE -> NOT_RELEASED denied; clearing the last hold alone -> PENDING, not RELEASED"
+  },
+  "sequence": {
+    "reconstructBy": "sorted seq 1..head",
+    "notBy": ["array order", "largest observed row"],
+    "duplicateSeq": "CONTRADICTORY even for identical rows",
+    "gapOrNullJournalOrUnknownKind": "UNKNOWN",
+    "coercion": "none"
+  },
+  "positiveEntry": {
+    "entryPoint": "usePan455IntakeOrder",
+    "journey": [
+      "useBoundTaskHandle (unchanged core)",
+      "AdminAiPoc OWNER_ESCALATION decision (non-owned local business operation seam)",
+      "owner:local-demo approval",
+      "one-use owner-escalation lease with mutation reservation",
+      "semantic readback"
+    ],
+    "bypassesApprovalLeasePolicy": false,
+    "observedResultRetainedSeparately": true,
+    "effects": "exactly one mutation and one semantic readback; handle replay adds no effect"
+  },
+  "denialMatrix": {
+    "PAN455_INTAKE_UNKNOWN_DENIED": "COMPOSE",
+    "PAN455_INTAKE_CONTRADICTORY_DENIED": "COMPOSE",
+    "PAN455_INTAKE_NOT_RELEASED_DENIED": "COMPOSE",
+    "BTH_BINDING_UNSUPPORTED_DENIED": "SUPPORTED"
+  },
+  "codeBoundary": "The PAN455 codes are challenge/reference expectations, not existing baseline product codes; denials are typed BoundTaskHandleError and the BTH_* codes/stages retain their existing meaning. Out-of-scope mappings are denied at the existing BTH SUPPORTED stage by the unchanged core.",
+  "invalidation": {
+    "knowledgeId": "pan455:intake-applicability",
+    "supersededVersion": "v1",
+    "replacementVersion": "v2",
+    "affectedDependencyIds": ["intake-mapping-proof", "intake-eligibility-proof"],
+    "unaffectedDependencyId": "owner-lease-policy-proof",
+    "helpers": ["requireKnowledgeDriftRevalidation", "denyUnknownVariantFastPath"],
+    "tooBroadSet": "DENIED STALE_KNOWLEDGE (helper does not self-filter; caller supplies the exact set)",
+    "refusal": "stale applicability refused before effects; successful requalification is not authority activation (authority NONE, effect NONE)"
+  },
+  "negativeInvariants": [
+    "Every pre-effect denial has zero provider snapshots, mutations and readbacks; handle replay adds no effect.",
+    "Caller text, a caller-selected raw source plus its caller hash, or an intake RELEASE never supplies trusted authority.",
+    "The unchanged owner/lease-policy proof is retained, not invalidated by graph reachability.",
+    "No case-ID branches, second gateway or blanket denial; the mapping and state fold operate on data."
+  ],
+  "publicWrites": false,
+  "realProviders": false,
+  "repositoryOnly": true,
+  "frozenCoreUntouched": true,
+  "blindProof": {
+    "base": "76cc8d04791842b5f861642e6fd84e301641e571",
+    "frozenIdentitiesIntact": 16,
+    "testCommitChangesOnly": ["src/pan455/intake-release.mjs", "tests/pan455/pan455-intake.test.mjs"]
+  },
+  "separation": {
+    "testCommit": "sealed unchanged-core tested commit (blind proof)",
+    "integrationCommit": "separately recorded, unavoidable canonical test-registration/integrity metadata delta (census counts + census-tooling digests + scoped public-safe schema/docs/boundary)",
+    "packageJson": "frozen identity f055fa68... and verification-fabric digest-pinned; NOT modified; the comparison harness runs `node --test tests/pan455/pan455-intake.test.mjs` directly"
+  },
+  "referenceComparisonOwner": "Sol (independent, on this exact candidate against the withheld sealed reference)",
+  "adapterWriter": "Qwen (sole adapter writer)",
+  "integratedBy": "Main/Sol (final integration without changing this frozen proof)"
+}

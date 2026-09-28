@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.local/schemas/contracts/pan455-intake-release-v1.schema.json",
+  "title": "PAN455 synthetic material-intake release eligibility and sequence-addressed mapping contract v1",
+  "description": "Additive repository-only contract for the revealed PAN455 controlled challenge: ONE material intake-release eligibility rule plus a sequence-addressed schema/state mapping, delivered THROUGH the unchanged frozen bound-task-handle (BTH) business journey. A synthetic trusted intake journal (pan455.synthetic/order-intake-journal/v1, LOCAL_SYNTHETIC) is folded by sequence, not array order or the largest observed row; an order may enter the accepted owner-approved journey only when the folded journal ends RELEASED with no open hold. This is business eligibility, NEVER owner approval or effect authority. The mapping joins the nested principal/order/task records into the existing trusted task shape, binding order.revision as objectVersion (NOT journal.head) and the full raw source digest plus the mapping/rule identities into trusted-source evidence. Exact affected knowledge dependencies are invalidated with the frozen CKS-12 helpers; stale applicability is refused before effects and a successful requalification is not authority activation. This contract is additive: it references, and does not modify, the frozen repository definitions named under reuse.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "identity", "rule", "mapping", "denials", "invalidation", "positiveEntry", "limits"],
+  "properties": {
+    "schemaVersion": { "const": "pansphaira.contract/intake-release/v1" },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case", "sourceSchema", "ruleVersion", "mappingVersion", "evidenceSchema"],
+      "properties": {
+        "case": { "const": "pan455-intake-release-01" },
+        "sourceSchema": { "const": "pan455.synthetic/order-intake-journal/v1" },
+        "ruleVersion": { "const": "intake-release/v1" },
+        "mappingVersion": { "const": "intake-journal-to-bound-task/v1" },
+        "evidenceSchema": { "const": "pan455.intake-release-evidence/v1" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "eligibility", "materialWitness", "sequence", "transitions"],
+      "properties": {
+        "name": { "const": "material-intake-release-eligibility" },
+        "eligibility": { "const": "An order is eligible iff the complete trusted intake journal folds to RELEASED with no open hold. Business eligibility only; never owner approval or effect authority." },
+        "materialWitness": { "const": "Appending an OPEN after a RELEASE changes an otherwise identical order from eligible to denied (NOT_RELEASED); clearing the last hold alone yields PENDING, not RELEASED." },
+        "sequence": { "const": "Exactly one row at each integer seq 1..head; reconstructed by sorted seq. Duplicate seq is CONTRADICTORY even for identical rows. A gap, null journal or unknown kind is UNKNOWN. No coercion of identifiers or numbers." },
+        "transitions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["initial", "OPEN", "CLEAR", "RELEASE"],
+          "properties": {
+            "initial": { "const": "PENDING, empty hold set" },
+            "OPEN": { "const": "Requires a nonempty new hold key; adds it and sets BLOCKED (revoking any prior release). Reopening a cleared key is permitted." },
+            "CLEAR": { "const": "Requires an existing open hold key; removes it. If none remain the state is PENDING, not RELEASED." },
+            "RELEASE": { "const": "No hold field; requires no open holds; sets RELEASED. RELEASE with an open hold is CONTRADICTORY." }
+          }
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["objectVersion", "evidence", "noCoercion"],
+      "properties": {
+        "objectVersion": { "const": "order.revision (the object version), never intake.head (the journal sequence head)" },
+        "evidence": { "const": "Trusted-source evidence binds the full raw source digest plus the mapping and rule identities; any journal change changes the evidence digest even when the effect identity is unchanged." },
+        "noCoercion": { "const": "Identifiers and numbers are not coerced; malformed or out-of-scope mappings fail closed." }
+      }
+    },
+    "denials": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unknown", "contradictory", "notReleased", "failurePrecedence", "codeBoundary", "outOfScope"],
+      "properties": {
+        "unknown": { "const": "PAN455_INTAKE_UNKNOWN_DENIED@COMPOSE" },
+        "contradictory": { "const": "PAN455_INTAKE_CONTRADICTORY_DENIED@COMPOSE" },
+        "notReleased": { "const": "PAN455_INTAKE_NOT_RELEASED_DENIED@COMPOSE" },
+        "failurePrecedence": { "const": "source shape/types, duplicate sequence, missing sequence/unknown kind, illegal transition, eligibility; only eligible mappings proceed to the existing BTH checks" },
+        "codeBoundary": { "const": "The PAN455 codes above are challenge/reference expectations, not existing baseline product codes; denials are typed BoundTaskHandleError and the BTH_* codes/stages retain their existing meaning." },
+        "outOfScope": { "const": "A mapping whose order scope differs from the single supported binding is denied at the existing BTH SUPPORTED stage by the unchanged core (BTH_BINDING_UNSUPPORTED_DENIED), with zero effects." }
+      }
+    },
+    "invalidation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["knowledgeId", "affectedDependencyIds", "unaffectedDependencyId", "helpers", "refusal"],
+      "properties": {
+        "knowledgeId": { "const": "pan455:intake-applicability" },
+        "affectedDependencyIds": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "unaffectedDependencyId": { "const": "owner-lease-policy-proof" },
+        "helpers": { "const": "requireKnowledgeDriftRevalidation + denyUnknownVariantFastPath (src/cks-12/drift-revalidation-fastpath.ts), reused unchanged" },
+        "refusal": { "const": "Stale applicability is refused before any effect; a newly hashed source or a successful requalification never activates authority (authority NONE, effect NONE)." }
+      }
+    },
+    "positiveEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entryPoint", "journey", "effects"],
+      "properties": {
+        "entryPoint": { "const": "usePan455IntakeOrder" },
+        "journey": { "const": "useBoundTaskHandle -> AdminAiPoc OWNER_ESCALATION decision -> owner:local-demo approval -> one-use owner-escalation lease -> mutation reservation -> semantic readback (unchanged core)" },
+        "effects": { "const": "Exactly one mutation and one semantic readback on the eligible path; handle replay adds no effect; every pre-effect denial has zero provider snapshots, mutations and readbacks." }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publicWrites", "realProviders", "repositoryOnly", "noCaseIdBranches"],
+      "properties": {
+        "publicWrites": { "const": false },
+        "realProviders": { "const": false },
+        "repositoryOnly": { "const": true },
+        "noCaseIdBranches": { "const": "No case-ID branches, no second gateway, no blanket denial; the mapping and state fold operate on data." }
+      }
+    }
+  }
+}

@@ -389,15 +389,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 728,
+    "filesScanned": 730,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 248,
-    "importFiles": 247,
+    "importSites": 250,
+    "importFiles": 249,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2032,
-    "ledgerUniquePaths": 2032
+    "ledgerEntries": 2037,
+    "ledgerUniquePaths": 2037
   },
   "profiles": [
     {
@@ -781,6 +781,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan455",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "procurement-434",
       "importSites": 1,
       "importFiles": 1
@@ -802,8 +807,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 58,
-      "importFiles": 57
+      "importSites": 59,
+      "importFiles": 58
     },
     {
       "owner": "usage-insights",
