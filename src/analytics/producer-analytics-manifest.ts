@@ -8,12 +8,16 @@ import {
   adjudicateNativeCandidateV1,
   adjudicateNativeForwardCandidateV1,
   adjudicateNativeForwardPrCandidateV1,
+  adjudicateNativeCurrentCandidateV1,
+  adjudicateNativeFrozenCurrentCandidateV1,
+  CURRENT_KS_PROFILES_V1,
   buildAuthoritativeAdjudicationInputs,
   createNativeAdjudicationContextV1,
   nativeCandidateDigestV1,
   nativeProjectionDigestV1,
   nativeTransportBytesV1,
 } from "../cks-12/kaleidosphere-candidate-quarantine.js";
+import type { CurrentKsProfileNameV1 } from "../cks-12/kaleidosphere-candidate-quarantine.js";
 
 /**
  * PAR-PS-01 (#345) — Producer Analytics Manifest.
@@ -424,8 +428,38 @@ export function generateForwardPrProducerAnalyticsManifestV1(input: Readonly<{
   return generateForwardProducerForProfile(input, true);
 }
 
-function generateForwardProducerForProfile(input: Readonly<{ rawArtifactBytes: Uint8Array; candidate: unknown }>, pr235: boolean) {
-  const adjudicate = pr235 ? adjudicateNativeForwardPrCandidateV1 : adjudicateNativeForwardCandidateV1;
+/**
+ * Historical current-pair producer (retained PAN346 source candidate), bound to
+ * the exact 994ac801 KaleidoSphere head. Source-only: no executed-head or
+ * release assertion.
+ */
+export function generateCurrentProducerAnalyticsManifestV1(input: Readonly<{
+  rawArtifactBytes: Uint8Array; candidate: unknown;
+}>): Readonly<{ manifest: Record<string, unknown>; serialized: string }> {
+  return generateForwardProducerForProfile(input, "current-994ac801");
+}
+
+/**
+ * Frozen current release-pair producer, bound to the exact 72d9a4af
+ * KaleidoSphere head (release 2026_09_28_v1). Source-only: no executed-head or
+ * release assertion.
+ */
+export function generateFrozenCurrentProducerAnalyticsManifestV1(input: Readonly<{
+  rawArtifactBytes: Uint8Array; candidate: unknown;
+}>): Readonly<{ manifest: Record<string, unknown>; serialized: string }> {
+  return generateForwardProducerForProfile(input, "current-frozen-72d9a4af");
+}
+
+function generateForwardProducerForProfile(input: Readonly<{ rawArtifactBytes: Uint8Array; candidate: unknown }>, profile: boolean | "pr235" | CurrentKsProfileNameV1) {
+  const currentProfile: CurrentKsProfileNameV1 | null =
+    typeof profile === "string" && (profile in CURRENT_KS_PROFILES_V1) ? (profile as CurrentKsProfileNameV1) : null;
+  const adjudicate = currentProfile === "current-frozen-72d9a4af"
+    ? adjudicateNativeFrozenCurrentCandidateV1
+    : currentProfile === "current-994ac801"
+      ? adjudicateNativeCurrentCandidateV1
+      : profile === true
+        ? adjudicateNativeForwardPrCandidateV1
+        : adjudicateNativeForwardCandidateV1;
   const adjudication = adjudicate({
     rawArtifactBytes: input.rawArtifactBytes,
     canonicalTransportBytes: nativeTransportBytesV1(input.rawArtifactBytes),
@@ -433,7 +467,9 @@ function generateForwardProducerForProfile(input: Readonly<{ rawArtifactBytes: U
     context: createNativeAdjudicationContextV1({ contextId: "pansphaira:forward-producer-001" }),
     qualifiedHeads: {
       pansphaira: RECONCILED_RELEASED_HEADS_V1.pansphaira,
-      kaleidoSphere: pr235 ? "bb52b249feb5968eee286963989f98f3bb673996" : "792e5e38cd4fb612ee034b3edc62aa8b4f58fe0f",
+      kaleidoSphere: currentProfile !== null
+        ? CURRENT_KS_PROFILES_V1[currentProfile].commitOid
+        : profile === true ? "bb52b249feb5968eee286963989f98f3bb673996" : "792e5e38cd4fb612ee034b3edc62aa8b4f58fe0f",
     },
   });
   if (adjudication.outcome !== "ACCEPTED_BOUNDED") {
@@ -442,7 +478,9 @@ function generateForwardProducerForProfile(input: Readonly<{ rawArtifactBytes: U
   const candidate = input.candidate;
   const surface = fieldSurface(candidate, "candidate");
   const body = {
-    schemaVersion: "pansphaira/forward-producer-analytics-manifest/v1",
+    schemaVersion: currentProfile !== null
+      ? "pansphaira/current-producer-analytics-manifest/v1"
+      : "pansphaira/forward-producer-analytics-manifest/v1",
     serviceHead: field(candidate, "bindings.kaleidosphereHead", "candidate"),
     projectionSourceHead: field(candidate, "bindings.pansphairaHead", "candidate"),
     environmentSha256: field(candidate, "bindings.environmentSha256", "candidate"),

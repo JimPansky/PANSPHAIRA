@@ -25,6 +25,17 @@ function classify(path, line) {
     return "exact-digest-provider-capture-and-test-output";
   }
   if (
+    path === "tests/fixtures/pan346/ks-native-response-994ac80.json"
+    || path === "tests/fixtures/pan346/ks-native-response-72d9a4af.json"
+  ) {
+    const currentNativeCaptureDigests = {
+      "tests/fixtures/pan346/ks-native-response-994ac80.json": "c6d13beed946a3ebb1ab4a08fa7b9615b9cc24996cbf1a0feb12883d3b8d4ead",
+      "tests/fixtures/pan346/ks-native-response-72d9a4af.json": "5eaf859903e1e8c256c69389d7ebfe97df4f883f939dd9f6d824a67c9e667a8a",
+    };
+    if (createHash("sha256").update(read(path)).digest("hex") === currentNativeCaptureDigests[path]
+        && line.trim() === `"No generic ${legacyDisplay} domain in KaleidoSphere: the analysis is confined to the one closed native nodes/edges projection v1 shape.",`) return "exact-digest-current-native-service-capture";
+  }
+  if (
     (path === "tests/fixtures/cks-analytics/native-forward-current-candidate-v1.json"
       || path === "tests/fixtures/cks-analytics/native-forward-pr235-candidate-v1.json")
     && line.trim() === `"No generic ${legacyDisplay} domain in KaleidoSphere: the analysis is confined to the one closed native nodes/edges projection v1 shape.",`

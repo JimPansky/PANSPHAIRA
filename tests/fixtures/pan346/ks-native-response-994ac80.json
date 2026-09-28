@@ -1,0 +1,153 @@
+{
+  "heads": {
+    "issue": "XRA-KS-01",
+    "kaleidosphereHead": {
+      "commitOid": "994ac80113af284ffe9fde93bb11f2341aaace91",
+      "treeOid": "b3b033b02a3e35d1d30646856409011ce625def6"
+    },
+    "releaseRegistry": {
+      "status": "HELD",
+      "entryCount": 1,
+      "releasedEntryCount": 0
+    },
+    "nativeReleaseRegistry": {
+      "status": "RELEASED",
+      "entryCount": 1,
+      "releasedEntryCount": 1
+    }
+  },
+  "httpStatus": 200,
+  "capture": {
+    "status": "CANDIDATE",
+    "issue": "XRA-KS-01",
+    "requestSha256": "91c26eb69860767ec2898a48676caaeb52c808de284bb0fbfbe8a986d30ad19c",
+    "candidate": {
+      "schemaVersion": "kaleidosphere.pansphaira-analytics/native-authority-free-candidate/v1",
+      "issue": "XRA-KS-01",
+      "state": "CANDIDATE",
+      "analysis": {
+        "id": "pansphaira/native-edge-evidence-coverage-analysis",
+        "version": "v1",
+        "contractSha256": "913c2599099e7324a17a6dcab6008b107e7869fc4ba840317c1534ee013302bd"
+      },
+      "claims": {
+        "observed": {
+          "nodeIds": [
+            "knowledge-001",
+            "decision-001"
+          ],
+          "nodeKinds": [
+            "KNOWLEDGE",
+            "DECISION"
+          ],
+          "edgeRelation": "KNOWLEDGE_USED_BY_DECISION",
+          "evidenceRoles": [
+            "KNOWLEDGE_QUALIFICATION",
+            "RELATION_ASSERTION"
+          ],
+          "sourceContract": "pansphaira.fnd-ps-02/owner-edge-evidence-inputs/v2",
+          "sourceContractVersion": "v2",
+          "authority": "NONE",
+          "promotion": "NOT_AUTHORIZED",
+          "relationTruth": "NOT_GRANTED",
+          "nonclaimCount": 6
+        },
+        "computed": {
+          "nodeCount": 2,
+          "edgeCount": 1,
+          "evidenceCount": 2,
+          "knowledgeNodeCount": 1,
+          "decisionNodeCount": 1,
+          "unknownTotal": 0,
+          "counterevidenceTotal": 0,
+          "frozenReceiptsEstablishingEdge": 2
+        }
+      },
+      "coverage": {
+        "nodes": "OBSERVED",
+        "edges": "OBSERVED",
+        "evidence": "OBSERVED",
+        "source": "OBSERVED",
+        "unknownChannel": "OBSERVED",
+        "counterevidence": "OBSERVED"
+      },
+      "counterevidence": [
+        {
+          "claim": "nodes",
+          "check": "frozen subject inventory and duplicate node identifiers",
+          "observed": 2,
+          "status": "NONE_FOUND"
+        },
+        {
+          "claim": "edges",
+          "check": "the single frozen purpose-bound relation",
+          "observed": 1,
+          "status": "NONE_FOUND"
+        },
+        {
+          "claim": "evidence",
+          "check": "the edge established by its frozen source receipts",
+          "observed": 2,
+          "status": "NONE_FOUND"
+        },
+        {
+          "claim": "source",
+          "check": "native source binding to the pinned CKS proof input",
+          "observed": 1,
+          "status": "EVIDENCE_FOUND"
+        },
+        {
+          "claim": "unknownChannel",
+          "check": "unknown frozen to false on every node and edge",
+          "observed": 0,
+          "status": "NONE_FOUND"
+        },
+        {
+          "claim": "counterevidence",
+          "check": "per-node and per-edge counterevidence arrays remain empty",
+          "observed": 0,
+          "status": "NONE_FOUND"
+        }
+      ],
+      "resultSha256": "b3027cef96da4262ec7a2a43bbdcea275a23e988aff0aab92f29745e4df81099",
+      "bindings": {
+        "kaleidosphereHead": {
+          "commitOid": "994ac80113af284ffe9fde93bb11f2341aaace91",
+          "treeOid": "b3b033b02a3e35d1d30646856409011ce625def6"
+        },
+        "pansphairaHead": {
+          "status": "RELEASED",
+          "commitOid": "988395110a9189d1b8cd4ee98184ed5c1d77a15d",
+          "releaseTag": "2026_09_05_v1",
+          "releaseCommit": "7f662672bfc45087342f23e5c589d43598f5c20d",
+          "releaseReceiptSha256": "bd485d4525cfce9b843de54b2fb6e30e30e560857e6f06faa0f494f65dddb1c6",
+          "sourceFileIdentity": {
+            "path": "tests/fixtures/cks-analytics/projection-v1.json",
+            "sha256": "22f34bf33874a42cde5a5a23a2242935e8b2b145aa8e2364a5aef26b8ec3e6e8"
+          }
+        },
+        "rawArtifactSha256": "22f34bf33874a42cde5a5a23a2242935e8b2b145aa8e2364a5aef26b8ec3e6e8",
+        "canonicalTransportSha256": "91c26eb69860767ec2898a48676caaeb52c808de284bb0fbfbe8a986d30ad19c",
+        "projectionBodyDigest": "cc5f6cc9591ccf4b6b3c4b9f954aa9da09695b784d7abaa585c082aea195ef1b",
+        "nativeProjectionContractSha256": "99e1ac62cfda3bef59ba310e00f7daa16d80b170ae5e7a7eaa3fff314d1a5d9a",
+        "analysisContractSha256": "913c2599099e7324a17a6dcab6008b107e7869fc4ba840317c1534ee013302bd",
+        "releaseSidecarSha256": "1b6f55dd5507ec6c8894d2b35377439ee206d832d4cf19d9e3dc687ab4a3bce4",
+        "environmentSha256": "dbdf8bef805d77bc3158409184042b44e6dcd0abe6645efab8f7b82d7630d002"
+      },
+      "authority": {
+        "promote": false,
+        "mutate": false,
+        "execute": false,
+        "publish": false,
+        "capabilities": [],
+        "effects": []
+      },
+      "nonclaims": [
+        "No autonomous promotion: this native candidate is state CANDIDATE and carries no promotion, mutation, execution, or publication authority.",
+        "No relation-truth or knowledge-effectiveness claim: the analysis emits structural node/edge/evidence coverage only; no relation truth or effectiveness is asserted.",
+        "No generic PANSPHAIRA domain in KaleidoSphere: the analysis is confined to the one closed native nodes/edges projection v1 shape.",
+        "No external effect: no push, publish, release, credential use, customer data access, or production-data claim is made or implied by this candidate."
+      ]
+    }
+  }
+}

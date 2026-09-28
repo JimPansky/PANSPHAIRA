@@ -387,7 +387,7 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 722,
+  filesScanned: 724,
   declarationSites: 37,
   declarationFiles: 37,
   importSites: 248,
@@ -398,7 +398,7 @@ const EXPECTED_COUNTS = {
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2021, uniquePaths: 2021, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2028, uniquePaths: 2028, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 

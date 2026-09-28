@@ -35,7 +35,7 @@
  *                               scope and is pinned strictly)
  */
 import { createHash } from "node:crypto";
-import { generateForwardProducerAnalyticsManifestV1, generateForwardPrProducerAnalyticsManifestV1 } from "./producer-analytics-manifest.js";
+import { generateForwardProducerAnalyticsManifestV1, generateForwardPrProducerAnalyticsManifestV1, generateCurrentProducerAnalyticsManifestV1, generateFrozenCurrentProducerAnalyticsManifestV1 } from "./producer-analytics-manifest.js";
 
 /**
  * Additive current-pair content qualification, NOT an execution attestation.
@@ -89,6 +89,80 @@ function validateForwardPairProfile(input: Parameters<typeof validateForwardAnal
   }
   return { outcome: reasonCodes.length === 0 ? "PASS" : "DENIED", reasonCodes,
     runtimeExecutionAttested: false, releaseOrPublicCiAttested: false };
+}
+
+/**
+ * Frozen current release-pair content qualification (PAN 4330cd26 x KS
+ * 72d9a4af, release 2026_09_28_v1). Additive and source-only: it is NOT a
+ * CI/release or execution receipt. It mirrors the historical current-pair
+ * qualification exactly but is bound to the frozen KS head by an independent,
+ * code-owned pin (the separately regenerated KS consumer manifest whole-content
+ * digest) and re-derives the producer manifest from the real KS service
+ * capture at that head. Distinct reason codes keep it fail-closed and
+ * independent of the historical profile. No caller-supplied expectations,
+ * heads, receipts or allowlists are accepted.
+ */
+export function validateFrozenCurrentAnalyticsPairV1(input: Parameters<typeof validateCurrentAnalyticsPairV1>[0]) {
+  const reasonCodes: string[] = [];
+  try {
+    const generated = generateFrozenCurrentProducerAnalyticsManifestV1({ rawArtifactBytes: input.rawArtifactBytes, candidate: input.candidate });
+    if (canonicalJson(generated.manifest) !== canonicalJson(input.producerManifest)) reasonCodes.push("FROZEN_PRODUCER_SUBSTITUTION_DENIED");
+    const consumer = input.consumerManifest as Record<string, unknown>;
+    const binding = (consumer?.["bindings"] as Record<string, unknown> | undefined)?.["kaleidosphereHead"];
+    const head = generated.manifest.serviceHead as Record<string, unknown>;
+    if (canonicalJson(binding) !== canonicalJson(head)) reasonCodes.push("FROZEN_PAIR_HEAD_MISMATCH_DENIED");
+    // Whole-content immutable pin from the separately regenerated KS runtime
+    // manifest at the frozen head; never derived from submitted consumer input.
+    if (pairedAnalyticsConsumerContentSha256(consumer) !== "02106246113b066c94e3d9f3956e39bbfb4f4350ea17ed84f2fa25a50afa1a32") {
+      reasonCodes.push("FROZEN_CONSUMER_SUBSTITUTION_DENIED");
+    }
+    const supported = (consumer?.["support"] as Record<string, unknown> | undefined)?.["supported"];
+    const ids = Array.isArray(supported) ? supported.filter((x: any) => x?.status === "SUPPORTED").map((x: any) => x.id) : [];
+    if (canonicalJson(ids) !== canonicalJson(PAIRED_ANALYTICS_PROMISED_SCOPE_V1.supportedActionIds)) reasonCodes.push("FROZEN_PROMISED_SCOPE_DENIED");
+    const channels = consumer?.["channels"] as Record<string, { status: string; version: string }> | undefined;
+    if (!channels || canonicalJson(Object.fromEntries(Object.entries(channels).map(([k, v]) => [k, v?.status === "SUPPORTED" ? v.version : null]))) !== canonicalJson(PAIRED_ANALYTICS_PROMISED_SCOPE_V1.channelVersions)) {
+      reasonCodes.push("FROZEN_PROMISED_CHANNEL_DENIED");
+    }
+    const computed = (generated.manifest.evidence as Record<string, unknown>)?.["computed"] as Record<string, unknown> | undefined;
+    if (!computed || canonicalJson({ nodeCount: computed.nodeCount, edgeCount: computed.edgeCount, evidenceCount: computed.evidenceCount,
+      knowledgeNodeCount: computed.knowledgeNodeCount, decisionNodeCount: computed.decisionNodeCount, unknownTotal: computed.unknownTotal,
+      counterevidenceTotal: computed.counterevidenceTotal, frozenReceiptsEstablishingEdge: computed.frozenReceiptsEstablishingEdge }) !== canonicalJson({ nodeCount: 2, edgeCount: 1, evidenceCount: 2,
+      knowledgeNodeCount: 1, decisionNodeCount: 1, unknownTotal: 0, counterevidenceTotal: 0, frozenReceiptsEstablishingEdge: 2 })) reasonCodes.push("FROZEN_FIXED_COMPUTATION_DENIED");
+  } catch { reasonCodes.push("FROZEN_SOURCE_OR_ADJUDICATION_DENIED"); }
+  return { outcome: reasonCodes.length === 0 ? "PASS" as const : "DENIED" as const, reasonCodes,
+    runtimeExecutionAttested: false as const, publicCiAttested: false as const, releaseAttested: false as const };
+}
+
+/** Bounded current-head content qualification; NOT a CI/release or execution receipt. */
+export function validateCurrentAnalyticsPairV1(input: Parameters<typeof validateForwardAnalyticsPairV1>[0]) {
+  const reasonCodes: string[] = [];
+  try {
+    const generated = generateCurrentProducerAnalyticsManifestV1({ rawArtifactBytes: input.rawArtifactBytes, candidate: input.candidate });
+    if (canonicalJson(generated.manifest) !== canonicalJson(input.producerManifest)) reasonCodes.push("CURRENT_PRODUCER_SUBSTITUTION_DENIED");
+    const consumer = input.consumerManifest as Record<string, unknown>;
+    const binding = (consumer?.["bindings"] as Record<string, unknown> | undefined)?.["kaleidosphereHead"];
+    const head = (generated.manifest.serviceHead as Record<string, unknown>);
+    if (canonicalJson(binding) !== canonicalJson(head)) reasonCodes.push("CURRENT_PAIR_HEAD_MISMATCH_DENIED");
+    // Whole-content immutable pin from a separately regenerated KS runtime manifest,
+    // never derived from submitted consumer input. Any support/version drift blocks.
+    if (pairedAnalyticsConsumerContentSha256(consumer) !== "11d0451643fbbe2fef3f7c9e861fda0fbb7ab9ffa2e805dee9acfabc41b861a5") {
+      reasonCodes.push("CURRENT_CONSUMER_SUBSTITUTION_DENIED");
+    }
+    const supported = (consumer?.["support"] as Record<string, unknown> | undefined)?.["supported"];
+    const ids = Array.isArray(supported) ? supported.filter((x: any) => x?.status === "SUPPORTED").map((x: any) => x.id) : [];
+    if (canonicalJson(ids) !== canonicalJson(PAIRED_ANALYTICS_PROMISED_SCOPE_V1.supportedActionIds)) reasonCodes.push("CURRENT_PROMISED_SCOPE_DENIED");
+    const channels = consumer?.["channels"] as Record<string, { status: string; version: string }> | undefined;
+    if (!channels || canonicalJson(Object.fromEntries(Object.entries(channels).map(([k, v]) => [k, v?.status === "SUPPORTED" ? v.version : null]))) !== canonicalJson(PAIRED_ANALYTICS_PROMISED_SCOPE_V1.channelVersions)) {
+      reasonCodes.push("CURRENT_PROMISED_CHANNEL_DENIED");
+    }
+    const computed = (generated.manifest.evidence as Record<string, unknown>)?.["computed"] as Record<string, unknown> | undefined;
+    if (!computed || canonicalJson({ nodeCount: computed.nodeCount, edgeCount: computed.edgeCount, evidenceCount: computed.evidenceCount,
+      knowledgeNodeCount: computed.knowledgeNodeCount, decisionNodeCount: computed.decisionNodeCount, unknownTotal: computed.unknownTotal,
+      counterevidenceTotal: computed.counterevidenceTotal, frozenReceiptsEstablishingEdge: computed.frozenReceiptsEstablishingEdge }) !== canonicalJson({ nodeCount: 2, edgeCount: 1, evidenceCount: 2,
+      knowledgeNodeCount: 1, decisionNodeCount: 1, unknownTotal: 0, counterevidenceTotal: 0, frozenReceiptsEstablishingEdge: 2 })) reasonCodes.push("CURRENT_FIXED_COMPUTATION_DENIED");
+  } catch { reasonCodes.push("CURRENT_SOURCE_OR_ADJUDICATION_DENIED"); }
+  return { outcome: reasonCodes.length === 0 ? "PASS" as const : "DENIED" as const, reasonCodes,
+    runtimeExecutionAttested: false as const, publicCiAttested: false as const, releaseAttested: false as const };
 }
 
 import { canonicalJson } from "../../packages/contracts/src/canonical-json.js";

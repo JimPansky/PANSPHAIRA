@@ -1664,3 +1664,10 @@ tests/fixtures/pan462/installation-content-v1.json	tests/fixtures/pan462/install
 tests/fixtures/pan462/key-ref-v1.txt	tests/fixtures/pan462/key-ref-v1.txt	0644
 tests/pan462/native-backup-restore.test.mjs	tests/pan462/native-backup-restore.test.mjs	0644
 verification/pan462-native-backup-restore-boundary-v1.json	verification/pan462-native-backup-restore-boundary-v1.json	0644
+docs/architecture/pan346-current-head-source-qualification.md	docs/architecture/pan346-current-head-source-qualification.md	0644
+tests/fixtures/pan346/consumer-support-994ac80.json	tests/fixtures/pan346/consumer-support-994ac80.json	0644
+tests/fixtures/pan346/ks-native-response-994ac80.json	tests/fixtures/pan346/ks-native-response-994ac80.json	0644
+tests/pan346/current-pair.test.mjs	tests/pan346/current-pair.test.mjs	0644
+tests/fixtures/pan346/consumer-support-72d9a4af.json	tests/fixtures/pan346/consumer-support-72d9a4af.json	0644
+tests/fixtures/pan346/ks-native-response-72d9a4af.json	tests/fixtures/pan346/ks-native-response-72d9a4af.json	0644
+tests/pan346/current-frozen-pair.test.mjs	tests/pan346/current-frozen-pair.test.mjs	0644
