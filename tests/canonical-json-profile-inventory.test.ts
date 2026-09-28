@@ -406,8 +406,8 @@ const EXPECTED_COUNTS = {
   filesScanned: 735,
   declarationSites: 37,
   declarationFiles: 37,
-  importSites: 252,
-  importFiles: 251,
+  importSites: 253,
+  importFiles: 252,
 
   reexportSites: 4,
   similarShapeSites: 30,
