@@ -87,12 +87,14 @@ export const LOCAL_JOURNAL_CONTROL_LIMIT = 8;
 export const LOCAL_JOURNAL_CONTROL_FENCE_LIMIT = 64;
 export const LOCAL_JOURNAL_ATTEMPT_SCHEMA = 'pansphaira.local/journal-recovery-attempts/v1';
 export const LOCAL_JOURNAL_ATTEMPT_LIMIT = 16;
-// An exhausted (denied) recovery budget is retained durably and is never
-// displaced by unrelated operation churn: denied entries have retention
-// priority inside LOCAL_JOURNAL_ATTEMPT_LIMIT. When that bounded ledger can no
-// longer durably retain the counter it was asked to record, it fails closed
-// (JOURNAL_ATTEMPT_RETENTION_SATURATED_DENIED) instead of silently resetting
-// the per-operation budget.
+// A recovery budget is retained durably from the moment it exhausts its allowed
+// reads (attempts >= bound), i.e. before the next attempted read can be refused,
+// so unrelated operation churn can never renew it. Exhausted/denied entries have
+// retention priority inside LOCAL_JOURNAL_ATTEMPT_LIMIT. When that bounded
+// ledger can no longer durably retain the counter it was asked to record, or
+// would have to evict an already-exhausted counter to admit churn, it fails
+// closed (JOURNAL_ATTEMPT_RETENTION_SATURATED_DENIED) instead of silently
+// resetting the per-operation budget.
 
 const CONTROL_FILE = 'journal-control.json';
 const ATTEMPT_FILE = 'journal-recovery-attempts.json';
@@ -247,8 +249,9 @@ export function readLocalJournalRecoveryAttempts(root) {
       || typeof record !== 'object'
       || Array.isArray(record)
       || !['attempts', 'firstAttemptMs', 'lastAttemptMs'].every((key) => Object.hasOwn(record, key))
-      || Object.keys(record).some((key) => !['attempts', 'firstAttemptMs', 'lastAttemptMs', 'denied'].includes(key))
+      || Object.keys(record).some((key) => !['attempts', 'firstAttemptMs', 'lastAttemptMs', 'denied', 'exhausted'].includes(key))
       || (record.denied !== undefined && typeof record.denied !== 'boolean')
+      || (record.exhausted !== undefined && typeof record.exhausted !== 'boolean')
       || !Number.isSafeInteger(record.attempts)
       || record.attempts < 1
       || !Number.isSafeInteger(record.firstAttemptMs)
@@ -269,29 +272,47 @@ export function recordLocalJournalRecoveryAttempt(root, { operationKey, attempte
   const current = readLocalJournalRecoveryAttempts(actual);
   const prior = current.attempts[operationKey];
   const attempts = (prior?.attempts ?? 0) + 1;
-  // A key is durably denied once its count passes the caller's bound. An
-  // already-denied key stays denied; no unrelated churn can renew it.
+  // A counter has exhausted its allowed reads the moment it reaches the bound:
+  // the very next call is refused. That boundary must be retained durably BEFORE
+  // the next attempted read, because until the refusal is materialized the
+  // counter still looks like ordinary churn to bounded retention -- and would be
+  // evicted by unrelated keys, restarting the budget for a later fourth read.
+  // `exhausted` marks the budget boundary durably; `denied` marks an actually
+  // refused call. Both are retention-protected and neither is renewable.
+  const exhausted = prior?.exhausted === true
+    || (Number.isSafeInteger(maxAttempts) && attempts >= maxAttempts);
+  const denied = prior?.denied === true
+    || (Number.isSafeInteger(maxAttempts) && attempts > maxAttempts);
   const record = {
     attempts,
     firstAttemptMs: prior?.firstAttemptMs ?? attemptedAtMs,
     lastAttemptMs: attemptedAtMs,
-    denied: prior?.denied === true
-      || (Number.isSafeInteger(maxAttempts) && attempts > maxAttempts),
+    denied,
+    exhausted,
   };
-  // Denied entries sort last so bounded retention drops only non-denied churn;
-  // an exhausted per-operation denial is never displaced by unrelated keys.
+  // Exhausted/denied counters sort last so bounded retention drops only
+  // non-exhausted churn; a per-operation counter that has already used its
+  // allowed reads is never displaced by unrelated keys.
+  const isProtected = (entry) => entry.exhausted === true || entry.denied === true;
   const entries = Object.entries({ ...current.attempts, [operationKey]: record })
-    .sort((left, right) => ((left[1].denied ? 1 : 0) - (right[1].denied ? 1 : 0))
+    .sort((left, right) => ((isProtected(left[1]) ? 1 : 0) - (isProtected(right[1]) ? 1 : 0))
       || (left[1].lastAttemptMs - right[1].lastAttemptMs)
       || left[0].localeCompare(right[0], 'en'));
   const retained = entries.length > LOCAL_JOURNAL_ATTEMPT_LIMIT
     ? entries.slice(entries.length - LOCAL_JOURNAL_ATTEMPT_LIMIT)
     : entries;
+  const retainedKeys = new Set(retained.map(([key]) => key));
   // Bounded storage must never silently drop the counter it was asked to make
-  // durable. If a full ledger of granted denials can no longer retain this
-  // operation key, fail closed rather than reset the budget on a later attempt.
-  if (!retained.some(([key]) => key === operationKey)) {
+  // durable, and it must never evict an already-exhausted/denied counter to
+  // admit churn. If the bounded ledger cannot retain both, fail closed rather
+  // than reset a budget on a later attempt.
+  if (!retainedKeys.has(operationKey)) {
     throw Error('JOURNAL_ATTEMPT_RETENTION_SATURATED_DENIED');
+  }
+  for (const [key, existing] of Object.entries(current.attempts)) {
+    if (key !== operationKey && isProtected(existing) && !retainedKeys.has(key)) {
+      throw Error('JOURNAL_ATTEMPT_RETENTION_SATURATED_DENIED');
+    }
   }
   const next = {
     schemaVersion: LOCAL_JOURNAL_ATTEMPT_SCHEMA,
