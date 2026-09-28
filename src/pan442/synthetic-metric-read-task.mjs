@@ -35,10 +35,18 @@ const DOMAIN = frozen({
   units: "EUR_MINOR_UNITS",
   authority: { readOnly: true, mutationAuthority: false, effectJournal: false },
 });
+const DOMAIN_V2 = frozen({
+  ...DOMAIN,
+  origin: "LOCAL_SYNTHETIC_KS246_KS247_V2",
+  taskRef: "ks247-net-revenue-read-v2",
+  sourceRevision: "synthetic-unfamiliar-source-v2",
+  sourceSha256: "cacd2a08d5fa5cb8603513a769362a2f7bdb700c44d700728a1fe2f1244be52e",
+});
+const DOMAINS = Object.freeze({[DOMAIN.taskRef]:DOMAIN,[DOMAIN_V2.taskRef]:DOMAIN_V2});
 const keys = (value, allowed) => value && typeof value === "object" && !Array.isArray(value)
   && Object.keys(value).sort().join("|") === [...allowed].sort().join("|");
 const requestKeys = ["tenant", "user", "taskRef", "intent", "sourceRevision", "sourceSha256", "contractSha256", "question", "period", "layout", "units", "authority"];
-export function syntheticMetricReadOrigin() { return DOMAIN; }
+export function syntheticMetricReadOrigin(variant = "v1") { if (variant === "v1") return DOMAIN; if (variant === "v2") return DOMAIN_V2; fail("SCOPE"); }
 export class SyntheticMetricReadIssuer {
   #secret;
   #now;
@@ -49,15 +57,16 @@ export class SyntheticMetricReadIssuer {
     this.#now = now;
   }
   issue({ taskRef, ttlMs = 30000 }) {
-    if (taskRef !== DOMAIN.taskRef || !Number.isSafeInteger(ttlMs) || ttlMs < 1 || ttlMs > 30000) fail("SCOPE");
+    const task = Object.hasOwn(DOMAINS,taskRef) ? DOMAINS[taskRef] : null;
+    if (task === null || !Number.isSafeInteger(ttlMs) || ttlMs < 1 || ttlMs > 30000) fail("SCOPE");
     const expiresAt = this.#now() + ttlMs;
     if (!Number.isSafeInteger(expiresAt)) fail("EXPIRY");
     const nonce = createHash("sha256").update(`${this.#now()}:${Math.random()}:${this.#issued.size}`).digest("hex");
-    const id = sha(JSON.stringify([DOMAIN, expiresAt, nonce]));
+    const id = sha(JSON.stringify([task, expiresAt, nonce]));
     const mac = createHmac("sha256", this.#secret).update(id).digest("hex");
     const handle = Buffer.from(JSON.stringify({ v: 1, id, mac })).toString("base64url");
-    this.#issued.set(id, { expiresAt, used: false });
-    return { handle, task: DOMAIN };
+    this.#issued.set(id, { expiresAt, used: false, task });
+    return { handle, task };
   }
   resolve({ handle, request }) {
     if (!keys(request, requestKeys) || !keys(request.period, ["current", "comparison"])
@@ -73,10 +82,10 @@ export class SyntheticMetricReadIssuer {
     if (issued.used) fail("REPLAY");
     if (this.#now() >= issued.expiresAt) fail("EXPIRY");
     for (const [name, value] of Object.entries(request)) {
-      const expected = name === "tenant" || name === "user" ? DOMAIN.principal[name] : DOMAIN[name];
+      const expected = name === "tenant" || name === "user" ? issued.task.principal[name] : issued.task[name];
       if (JSON.stringify(value) !== JSON.stringify(expected)) fail(name === "authority" ? "EFFECT" : "SCOPE");
     }
-    return { task: DOMAIN, commit: () => { issued.used = true; } };
+    return { task: issued.task, commit: () => { issued.used = true; } };
   }
 }
 // Read callback is injected by the public KS entry point, not delegated to model output.
