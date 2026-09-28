@@ -128,6 +128,7 @@ before(async () => {
     port: TARGET_PORT, database: TARGET_DB, user: TARGET_ADMIN, password: TARGET_ADMIN_PW,
   });
 
+  state.probeBackupBefore = performance.now();
   state.backup = await createPan462BackupV1({
     installation: state.installation,
     source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
@@ -135,8 +136,10 @@ before(async () => {
     ownedRoot: state.root,
     now: NOW, nowMs: NOW_MS,
   });
+  state.probeBackupElapsed = performance.now() - state.probeBackupBefore;
   assert.equal(state.backup.outcome, "BACKED_UP", JSON.stringify(state.backup));
 
+  state.probeRestoreBefore = performance.now();
   state.restore = await restorePan462BackupV1({
     backupDir: state.backupDir,
     targetRoot: state.targetRoot,
@@ -151,6 +154,7 @@ before(async () => {
     },
     now: NOW, nowMs: NOW_MS + 1,
   });
+  state.probeRestoreElapsed = performance.now() - state.probeRestoreBefore;
   assert.equal(state.restore.outcome, "RESTORED", JSON.stringify(state.restore));
 
   // The target grants a dedicated read-only user (the real server enforces it).
@@ -620,4 +624,123 @@ test("PAN462-CORRECTION-GUARD: unowned, unsafe and non-distinct roots are refuse
   });
   assert.equal(notDistinct.code, "DESTINATION_NOT_DISTINCT");
   rmSync(outside, { recursive: true, force: true });
+});
+
+// Parent independent AC04 counterexample. Product bytes unchanged.
+test("PAN462-AC04-MEASUREMENT-REPRO: duration is operation elapsed, not fixture age", () => {
+  const observations = {
+    backup: { reportedMs: state.backup.measurements.durationMs, observedOuterMs: state.probeBackupElapsed, record: state.backup.measurements },
+    restore: { reportedMs: state.restore.measurements.durationMs, observedOuterMs: state.probeRestoreElapsed, record: state.restore.measurements },
+    diagnosis: diagnoseRecoveryV1({backup: state.backup, restoreReadback: state.read.readback, nowMs: NOW_MS + 500}).measurements,
+  };
+  console.log("PAN462_MEASUREMENT_OBSERVATION " + JSON.stringify(observations));
+  for (const [name, record] of Object.entries(observations).filter(([name]) => name !== 'diagnosis')) {
+    assert.ok(record.reportedMs <= record.observedOuterMs + 20,
+      `${name}: reported=${record.reportedMs}ms outer=${record.observedOuterMs}ms; fixed business nowMs must not become the measured operation start`);
+  }
+});
+
+// Correction 2026-09-28 (AC04 measured duration): the measured operation time is
+// taken on the monotonic clock across the real invocation boundaries. The
+// caller business/checkpoint timestamp (`nowMs`) stays semantically separate and
+// must never become the measured start. These are REAL backup/restore operations
+// (real native PostgreSQL source/target, real disk, real released product paths)
+// driven with a HISTORICAL business time and a FUTURE business time; neither may
+// fabricate a large duration or clamp a real nonzero operation to zero.
+function timingTargetRoot(tag) {
+  const targetRoot = path.join(state.root, `target-timing-${tag}`);
+  const keyStore = path.join(state.root, `target-keys-timing-${tag}`);
+  mkdirSync(keyStore, { recursive: true });
+  writeFileSync(path.join(keyStore, "key:cfg-main.ref"), fix("key-ref-v1.txt"));
+  return { targetRoot, keyStore };
+}
+
+test("PAN462-AC04-TIMING-HISTORICAL: a historical business timestamp does not become the measured operation start", async () => {
+  const past = Date.UTC(2020, 0, 1, 0, 0, 0); // historical business time (~years old)
+  const pastIso = "2020-01-01T00:00:00Z";
+  const backupDir = path.join(state.root, "backup-timing-historical");
+  const { targetRoot, keyStore } = timingTargetRoot("historical");
+
+  const bBefore = performance.now();
+  const backup = await createPan462BackupV1({
+    installation: state.installation,
+    source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+    backupDir, ownedRoot: state.root, now: pastIso, nowMs: past,
+  });
+  const bOuterMs = performance.now() - bBefore;
+  assert.equal(backup.outcome, "BACKED_UP", JSON.stringify(backup));
+
+  const rBefore = performance.now();
+  const restore = await restorePan462BackupV1({
+    backupDir, targetRoot, ownedRoot: state.root, expectedVersion: EXPECTED.restoredVersion,
+    target: {
+      root: targetRoot, keyStore,
+      database: { client: state.target.client, host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_ADMIN, password: TARGET_ADMIN_PW },
+    },
+    now: pastIso, nowMs: past + 1,
+  });
+  const rOuterMs = performance.now() - rBefore;
+  assert.equal(restore.outcome, "RESTORED", JSON.stringify(restore));
+
+  for (const [label, record, outerMs, nowMs] of [
+    ["backup", backup.measurements, bOuterMs, past],
+    ["restore", restore.measurements, rOuterMs, past + 1],
+  ]) {
+    assert.ok(outerMs > 0, `${label}: the real operation must be a real nonzero operation`);
+    // A real nonzero operation must not be clamped to zero ...
+    assert.ok(Number.isInteger(record.durationMs) && record.durationMs >= (outerMs >= 1 ? 1 : 0),
+      `${label}: a real nonzero operation must not be clamped to zero (recorded=${record.durationMs}ms outer=${outerMs}ms)`);
+    // ... and must not fabricate a large duration from the (historical) business
+    // timestamp: the recorded duration is bounded by the real operation elapsed.
+    assert.ok(record.durationMs <= outerMs + 20,
+      `${label}: recorded=${record.durationMs}ms outer=${outerMs}ms; a historical business nowMs must not fabricate a large duration`);
+    // Business/checkpoint timestamps stay semantically separate: the measured
+    // start is the real wall-clock start, never the business nowMs.
+    assert.notEqual(record.startedAtMs, nowMs, `${label}: measured start must not be the business nowMs`);
+    assert.ok(Math.abs(record.completedAtMs - Date.now()) < 60_000, `${label}: completedAtMs must be the real observation timestamp`);
+  }
+});
+
+test("PAN462-AC04-TIMING-FUTURE: a future business timestamp clamps no real operation to zero", async () => {
+  const future = Date.now() + 3_600_000; // future business time (1 hour ahead)
+  const futureIso = new Date(future).toISOString();
+  const backupDir = path.join(state.root, "backup-timing-future");
+  const { targetRoot, keyStore } = timingTargetRoot("future");
+
+  const bBefore = performance.now();
+  const backup = await createPan462BackupV1({
+    installation: state.installation,
+    source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+    backupDir, ownedRoot: state.root, now: futureIso, nowMs: future,
+  });
+  const bOuterMs = performance.now() - bBefore;
+  assert.equal(backup.outcome, "BACKED_UP", JSON.stringify(backup));
+
+  const rBefore = performance.now();
+  const restore = await restorePan462BackupV1({
+    backupDir, targetRoot, ownedRoot: state.root, expectedVersion: EXPECTED.restoredVersion,
+    target: {
+      root: targetRoot, keyStore,
+      database: { client: state.target.client, host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_ADMIN, password: TARGET_ADMIN_PW },
+    },
+    now: futureIso, nowMs: future + 1,
+  });
+  const rOuterMs = performance.now() - rBefore;
+  assert.equal(restore.outcome, "RESTORED", JSON.stringify(restore));
+
+  for (const [label, record, outerMs, nowMs] of [
+    ["backup", backup.measurements, bOuterMs, future],
+    ["restore", restore.measurements, rOuterMs, future + 1],
+  ]) {
+    assert.ok(outerMs > 0, `${label}: the real operation must be a real nonzero operation`);
+    // With a FUTURE business timestamp the old (completedAt - businessNow) form
+    // clamped a real nonzero operation to zero; the measured duration must be a
+    // real elapsed, not zero and not a fabricated large number.
+    assert.ok(Number.isInteger(record.durationMs) && record.durationMs >= (outerMs >= 1 ? 1 : 0),
+      `${label}: a real nonzero operation must not be clamped to zero (recorded=${record.durationMs}ms outer=${outerMs}ms)`);
+    assert.ok(record.durationMs <= outerMs + 20,
+      `${label}: recorded=${record.durationMs}ms outer=${outerMs}ms; a future business nowMs must not fabricate a large duration`);
+    assert.notEqual(record.startedAtMs, nowMs, `${label}: measured start must not be the business nowMs`);
+    assert.ok(Math.abs(record.completedAtMs - Date.now()) < 60_000, `${label}: completedAtMs must be the real observation timestamp`);
+  }
 });

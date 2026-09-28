@@ -558,7 +558,12 @@ export async function createPan462BackupV1({
   // disposable, distinct local root before anything destructive happens.
   const destination = guardDisposableDestination({ dir: backupDir, ownedRoot, forbidden: [source.root] });
   if (destination.outcome !== "OK") return destination;
-  const startedAtMs = nowMs;
+  // AC04: the measured operation time is taken on the monotonic clock at the
+  // real invocation boundaries. `nowMs` (the caller business/checkpoint
+  // timestamp) is semantically separate and must never be reused as the
+  // measured start — that made the recorded duration the fixture age, not the
+  // operation elapsed.
+  const startedMonotonicMs = performance.now();
   try {
     // 1) Owned DATABASE: one consistent snapshot.
     const database = await snapshotDatabaseV1(source.database.client);
@@ -694,7 +699,8 @@ export async function createPan462BackupV1({
       checkpoint,
       manifest: { ...manifest, archiveDigest },
       measurements: measure({
-        startedAtMs, completedAtMs,
+        startedAtMs: Math.round(Date.now() - (performance.now() - startedMonotonicMs)),
+        completedAtMs,
         databaseRows: database.reduce((sum, table) => sum + table.rows.length, 0),
         fileCount: files.length,
         fileBytes: files.reduce((sum, file) => sum + file.bytes, 0),
@@ -834,6 +840,9 @@ export async function restorePan462BackupV1({
     predecessorRevoked: true,
   };
 
+  // AC04: measured operation time on the monotonic clock at the real invocation
+  // boundary; `nowMs` stays the separate business/checkpoint timestamp.
+  const startedMonotonicMs = performance.now();
   try {
     rmSync(targetRoot, { recursive: true, force: true });
     mkdirSync(path.join(targetRoot, "files"), { recursive: true });
@@ -896,7 +905,8 @@ export async function restorePan462BackupV1({
       restored,
       archiveDigest,
       measurements: measure({
-        startedAtMs: nowMs, completedAtMs,
+        startedAtMs: Math.round(Date.now() - (performance.now() - startedMonotonicMs)),
+        completedAtMs,
         databaseRows: database.reduce((sum, table) => sum + table.rows.length, 0),
         fileCount: archive.captures.files.length,
         fileBytes: archive.captures.files.reduce((sum, file) => sum + file.bytes, 0),
