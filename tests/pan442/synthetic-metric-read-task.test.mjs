@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { BoundTaskHandleResolver, useBoundTaskHandle, SyntheticMetricReadIssuer, syntheticMetricReadOrigin, BTH_ERROR, createSyntheticTrustedTaskSource, BoundTaskHandleIssuer } from "../../src/pan442/bound-task-handle.mjs";
+import { executeSyntheticMetricRead } from "../../src/pan442/synthetic-metric-read-task.mjs";
 const origin = syntheticMetricReadOrigin();
 const request = () => ({ ...origin.principal, ...Object.fromEntries(Object.entries(origin).filter(([k]) => !["schemaVersion", "origin", "principal"].includes(k))) });
 const issuer = () => new SyntheticMetricReadIssuer({ secret: "local-synthetic-read-secret-2026" });
@@ -79,4 +80,129 @@ test("second frozen source grants a distinct one-shot synthetic read, not a call
  await assert.rejects(useBoundTaskHandle({issuer:i,handle:issued.handle,operationInput:request2(),operation:{read:async()=>{calls++;return result2();}}}),/MRT_REPLAY_DENIED/);
  assert.equal(calls,1);
  const old=issuer().issue({taskRef:origin.taskRef});assert.equal(old.task,origin);
+});
+
+// -------------------------------------------------------------------------------------
+// PAN486 METRIC-READ-01: structural read-scope equality (AC01) + explicit finite
+// safe-integer issuance/resolution clock (AC02) + actual executeSyntheticMetricRead
+// callback-count boundary (AC03). Reuses the existing structural comparator
+// (canonicalJson) and the existing fail-closed codes; adds no generic framework, no new
+// keys/types and no new effect authority.
+// -------------------------------------------------------------------------------------
+const metricIssuer = (now) => new SyntheticMetricReadIssuer({ secret: "public-synthetic-regression-only", now });
+// Byte-identical values to the frozen origin, in origin key order (a valid baseline).
+const metricRequest = (o) => ({
+  tenant: o.principal.tenant, user: o.principal.user, taskRef: o.taskRef, intent: o.intent,
+  sourceRevision: o.sourceRevision, sourceSha256: o.sourceSha256, contractSha256: o.contractSha256,
+  question: o.question,
+  period: { current: { start: o.period.current.start, end: o.period.current.end }, comparison: { start: o.period.comparison.start, end: o.period.comparison.end } },
+  layout: o.layout, units: o.units,
+  authority: { readOnly: o.authority.readOnly, mutationAuthority: o.authority.mutationAuthority, effectJournal: o.authority.effectJournal },
+});
+const metricResult = (o) => ({ executed: true, authority: { mutationAuthority: "NONE", publicWrites: false, arbitrarySql: false }, binding: { releasedContractSha256: o.contractSha256, sourceRevision: o.sourceRevision, sourceSha256: o.sourceSha256, profileId: o.layout }, acceptance: { executionState: "COMPLETE", reconcilesToIndependentExpectedResult: true } });
+// Same values, different JSON object-key insertion order at each supported nested object.
+const metricReorders = (o) => ([
+  ["authority", { ...metricRequest(o), authority: { effectJournal: o.authority.effectJournal, mutationAuthority: o.authority.mutationAuthority, readOnly: o.authority.readOnly } }],
+  ["period", { ...metricRequest(o), period: { comparison: { start: o.period.comparison.start, end: o.period.comparison.end }, current: { start: o.period.current.start, end: o.period.current.end } } }],
+  ["period.current", { ...metricRequest(o), period: { ...metricRequest(o).period, current: { end: o.period.current.end, start: o.period.current.start } } }],
+  ["period.comparison", { ...metricRequest(o), period: { ...metricRequest(o).period, comparison: { end: o.period.comparison.end, start: o.period.comparison.start } } }],
+  ["all-nested", { ...metricRequest(o), authority: { effectJournal: o.authority.effectJournal, mutationAuthority: o.authority.mutationAuthority, readOnly: o.authority.readOnly }, period: { comparison: { end: o.period.comparison.end, start: o.period.comparison.start }, current: { end: o.period.current.end, start: o.period.current.start } } }],
+]);
+
+test("METRIC-READ-AC01: meaning-preserving key reorders at each supported nested object are accepted for both synthetic task variants", async () => {
+  for (const variant of ["v1", "v2"]) {
+    const o = syntheticMetricReadOrigin(variant);
+    const i = metricIssuer(() => 1000);
+    let calls = 0;
+    const op = { read: async () => { calls++; return metricResult(o); } };
+    for (const [name, q] of metricReorders(o)) {
+      const { handle } = i.issue({ taskRef: o.taskRef, ttlMs: 30000 });
+      const out = await executeSyntheticMetricRead({ issuer: i, handle, request: q, operation: op }, `AC01 ${variant}/${name}`);
+      assert.equal(out.status, "READ_COMPLETE", `AC01 ${variant}/${name}`);
+      assert.equal(out.effectStatus, "NO_EFFECT_AUTHORIZED", `AC01 ${variant}/${name}`);
+    }
+    assert.equal(calls, metricReorders(o).length, `AC01 ${variant}: every reordered read reached the trusted callback exactly once`);
+  }
+});
+
+test("METRIC-READ-AC02: issuance and resolution enforce an explicit finite safe-integer clock before any callback or successful resolution", async () => {
+  const badClocks = [NaN, 0.5, Infinity, -Infinity, Number.MAX_SAFE_INTEGER + 1, Number.MIN_SAFE_INTEGER - 1, null, undefined, "1000", true];
+  for (const value of badClocks) assert.throws(() => metricIssuer(() => value).issue({ taskRef: origin.taskRef }), /MRT_EXPIRY_DENIED/, `AC02 issue now=${String(value)}`);
+  { // Reproducible two-read step: a valid issuance timestamp must be the only clock read.
+    let calls = 0;
+    const i = metricIssuer(() => ++calls === 1 ? 1000 : NaN);
+    const issued = i.issue({ taskRef: origin.taskRef, ttlMs: 10 });
+    assert.equal(typeof issued.handle, "string");
+    assert.equal(calls, 1, "AC02 issue must not consult a second unchecked clock for its nonce");
+  }
+  for (const value of badClocks) {
+    let nowVal = 1000;
+    const i = metricIssuer(() => nowVal);
+    const { handle } = i.issue({ taskRef: origin.taskRef, ttlMs: 30000 });
+    nowVal = value;
+    let calls = 0;
+    await assert.rejects(executeSyntheticMetricRead({ issuer: i, handle, request: metricRequest(origin), operation: { read: async () => { calls++; return result(); } } }), /MRT_EXPIRY_DENIED/, `AC02 resolve now=${String(value)}`);
+    assert.equal(calls, 0, `AC02 invalid clock ${String(value)} must not reach the callback`);
+  }
+  // Documented controls retained: before-expiry accepts, exact-expiry rejects.
+  {
+    let nowVal = 1000;
+    const i = metricIssuer(() => nowVal);
+    const a = i.issue({ taskRef: origin.taskRef, ttlMs: 10 });
+    nowVal = 1009;
+    assert.ok(i.resolve({ handle: a.handle, request: metricRequest(origin) }), "AC02 before-expiry accepted");
+    nowVal = 1010;
+    assert.throws(() => i.resolve({ handle: a.handle, request: metricRequest(origin) }), /MRT_EXPIRY_DENIED/, "AC02 exact-expiry rejected");
+    const b = i.issue({ taskRef: origin.taskRef, ttlMs: 30000 });
+    nowVal = 1000;
+    let calls = 0;
+    await executeSyntheticMetricRead({ issuer: i, handle: b.handle, request: metricRequest(origin), operation: { read: async () => { calls++; return result(); } } });
+    assert.equal(calls, 1);
+  }
+});
+
+test("METRIC-READ-AC03: a permitted reordered request reaches the trusted callback once and an invalid clock zero times, through executeSyntheticMetricRead", async () => {
+  {
+    const o = syntheticMetricReadOrigin();
+    const i = metricIssuer(() => 1000);
+    const { handle } = i.issue({ taskRef: o.taskRef, ttlMs: 30000 });
+    const q = { ...metricRequest(o), authority: { effectJournal: false, mutationAuthority: false, readOnly: true } };
+    let calls = 0;
+    const out = await executeSyntheticMetricRead({ issuer: i, handle, request: q, operation: { read: async () => { calls++; return metricResult(o); } } });
+    assert.equal(out.status, "READ_COMPLETE", "AC03 permitted reordered read");
+    assert.equal(out.effectStatus, "NO_EFFECT_AUTHORIZED");
+    assert.equal(calls, 1, "AC03 permitted reordered request reached the callback exactly once");
+  }
+  {
+    let nowVal = 1000;
+    const i = metricIssuer(() => nowVal);
+    const { handle } = i.issue({ taskRef: origin.taskRef, ttlMs: 30000 });
+    nowVal = NaN;
+    let calls = 0;
+    await assert.rejects(executeSyntheticMetricRead({ issuer: i, handle, request: metricRequest(origin), operation: { read: async () => { calls++; return result(); } } }), /MRT_EXPIRY_DENIED/, "AC03 invalid clock read");
+    assert.equal(calls, 0, "AC03 invalid clock reached the callback zero times");
+  }
+  // Preserved fail-closed: real scope/principal/source/authority mutations, malformed
+  // input and replay still deny before any callback (single-use reservation untouched).
+  {
+    for (const [name, change, code] of [
+      ["tenant", { tenant: "other" }, "SCOPE"], ["user", { user: "other" }, "SCOPE"],
+      ["source", { sourceSha256: "0".repeat(64) }, "SCOPE"], ["revision", { sourceRevision: "old" }, "SCOPE"],
+      ["write", { authority: { readOnly: false, mutationAuthority: true, effectJournal: true } }, "EFFECT"],
+      ["extra", { sql: "DELETE FROM x" }, "SHAPE"],
+    ]) {
+      const i = metricIssuer(() => 1000);
+      const { handle } = i.issue({ taskRef: origin.taskRef, ttlMs: 30000 });
+      let calls = 0;
+      await assert.rejects(executeSyntheticMetricRead({ issuer: i, handle, request: { ...metricRequest(origin), ...change }, operation: { read: async () => { calls++; return result(); } } }), new RegExp(`MRT_${code}_DENIED`), `AC03 preserved ${name}`);
+      assert.equal(calls, 0, `AC03 preserved ${name} reached the callback`);
+    }
+    const i = metricIssuer(() => 1000);
+    const { handle } = i.issue({ taskRef: origin.taskRef, ttlMs: 30000 });
+    let calls = 0;
+    await executeSyntheticMetricRead({ issuer: i, handle, request: metricRequest(origin), operation: { read: async () => { calls++; return result(); } } });
+    assert.equal(calls, 1);
+    await assert.rejects(executeSyntheticMetricRead({ issuer: i, handle, request: metricRequest(origin), operation: { read: async () => { calls++; return result(); } } }), /MRT_REPLAY_DENIED/, "AC03 replay denied");
+    assert.equal(calls, 1, "AC03 replay did not reach the callback a second time");
+  }
 });

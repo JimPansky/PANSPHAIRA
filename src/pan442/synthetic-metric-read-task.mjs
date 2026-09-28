@@ -1,6 +1,7 @@
 // PAN452 successor: a distinct, LOCAL_SYNTHETIC read-only task, never an Order operation.
 // This fixed origin qualifies only the released KS246/247 synthetic fixture domain.
 import { createHmac, createHash, timingSafeEqual } from "node:crypto";
+import { canonicalJson } from "../../demo/runtime/enforcement-gate.mjs";
 
 export const METRIC_READ_SCHEMA = "pansphaira.contract/synthetic-metric-read-task/v1";
 const sha = (value) => createHash("sha256").update(value).digest("hex");
@@ -59,9 +60,11 @@ export class SyntheticMetricReadIssuer {
   issue({ taskRef, ttlMs = 30000 }) {
     const task = Object.hasOwn(DOMAINS,taskRef) ? DOMAINS[taskRef] : null;
     if (task === null || !Number.isSafeInteger(ttlMs) || ttlMs < 1 || ttlMs > 30000) fail("SCOPE");
-    const expiresAt = this.#now() + ttlMs;
+    const issuedAt = this.#now();
+    if (!Number.isSafeInteger(issuedAt)) fail("EXPIRY");
+    const expiresAt = issuedAt + ttlMs;
     if (!Number.isSafeInteger(expiresAt)) fail("EXPIRY");
-    const nonce = createHash("sha256").update(`${this.#now()}:${Math.random()}:${this.#issued.size}`).digest("hex");
+    const nonce = createHash("sha256").update(`${issuedAt}:${Math.random()}:${this.#issued.size}`).digest("hex");
     const id = sha(JSON.stringify([task, expiresAt, nonce]));
     const mac = createHmac("sha256", this.#secret).update(id).digest("hex");
     const handle = Buffer.from(JSON.stringify({ v: 1, id, mac })).toString("base64url");
@@ -80,10 +83,12 @@ export class SyntheticMetricReadIssuer {
     const issued = this.#issued.get(token.id);
     if (!issued) fail("ORIGIN");
     if (issued.used) fail("REPLAY");
-    if (this.#now() >= issued.expiresAt) fail("EXPIRY");
+    const resolvedAt = this.#now();
+    if (!Number.isSafeInteger(resolvedAt)) fail("EXPIRY");
+    if (resolvedAt >= issued.expiresAt) fail("EXPIRY");
     for (const [name, value] of Object.entries(request)) {
       const expected = name === "tenant" || name === "user" ? issued.task.principal[name] : issued.task[name];
-      if (JSON.stringify(value) !== JSON.stringify(expected)) fail(name === "authority" ? "EFFECT" : "SCOPE");
+      if (canonicalJson(value) !== canonicalJson(expected)) fail(name === "authority" ? "EFFECT" : "SCOPE");
     }
     return { task: issued.task, commit: () => { issued.used = true; } };
   }

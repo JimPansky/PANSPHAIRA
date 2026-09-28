@@ -4831,7 +4831,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "2da5418e9438d115d74621cb4052b3ff8200cc06adb5945d2f88ea5c94517ac9"
+          "sha256": "3eb2d68dd8961f1be035f5145e98686be1403ff93560465dc31f80d7351d79ae"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4931,7 +4931,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "cd4f88a9122da7631074ef8a00cc40a3c28ce52fb449756c5b7103a68a10e345"
+          "sha256": "7bf01e5920c4f3026f5a266b54b5db288acb9e159a01e1580f5cba746a8ec166"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -6669,7 +6669,7 @@
         {
           "path": "src/pan442/synthetic-metric-read-task.mjs",
           "role": "SOURCE",
-          "sha256": "bbc81e177a299a9da3108ac24a7cd6a085ebdb0e8a28b1715374d10560d9e20c"
+          "sha256": "f94b6858e9cede8b5c01ea371f41fbf12fbfd0a33e366130e6dd27c105acea89"
         },
         {
           "path": "tests/pan442/bound-task-handle.test.mjs",
@@ -6679,7 +6679,7 @@
         {
           "path": "tests/pan442/synthetic-metric-read-task.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "d609ee0f9bdf7e192da38a5c893c9fcc43580632c0adaadcc9a683b270b10861"
+          "sha256": "e92fcbbd2a3bc10367848100221dc22bc1037e95783e4e0825242fed1c2ccc26"
         },
         {
           "path": "verification/pan442-bound-task-handle-boundary-v1.json",

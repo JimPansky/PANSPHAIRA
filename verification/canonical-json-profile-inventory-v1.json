@@ -392,8 +392,8 @@
     "filesScanned": 735,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 252,
-    "importFiles": 251,
+    "importSites": 253,
+    "importFiles": 252,
     "reexportSites": 4,
     "similarShapeSites": 30,
     "ledgerEntries": 2046,
@@ -777,6 +777,11 @@
     },
     {
       "owner": "local-knowledge",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
+      "owner": "pan442",
       "importSites": 1,
       "importFiles": 1
     },
