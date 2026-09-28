@@ -1648,6 +1648,7 @@ tests/ks238/order-source-handoff.test.mjs	tests/ks238/order-source-handoff.test.
 verification/ks238-order-source-handoff-boundary-v1.json	verification/ks238-order-source-handoff-boundary-v1.json	0644
 demo/runtime/local-journal-owner.mjs	demo/runtime/local-journal-owner.mjs	0644
 tests/pan453/composed-ambiguity.test.mjs	tests/pan453/composed-ambiguity.test.mjs	0644
+tests/pan453/ac04-stop-revoke-retention.test.mjs	tests/pan453/ac04-stop-revoke-retention.test.mjs	0644
 tests/pan453/crash-fixture.mjs	tests/pan453/crash-fixture.mjs	0644
 tests/pan453/adoption-race-fixture.mjs	tests/pan453/adoption-race-fixture.mjs	0644
 docs/architecture/pan453-owned-synthetic-journal-v2.md	docs/architecture/pan453-owned-synthetic-journal-v2.md	0644
