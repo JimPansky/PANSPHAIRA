@@ -1654,3 +1654,13 @@ docs/architecture/pan453-owned-synthetic-journal-v2.md	docs/architecture/pan453-
 src/pan442/synthetic-metric-read-task.mjs	src/pan442/synthetic-metric-read-task.mjs	0644
 tests/pan442/synthetic-metric-read-task.test.mjs	tests/pan442/synthetic-metric-read-task.test.mjs	0644
 docs/architecture/pan442-synthetic-metric-read-v1.md	docs/architecture/pan442-synthetic-metric-read-v1.md	0644
+docs/architecture/pan462-native-backup-restore-v1.md	docs/architecture/pan462-native-backup-restore-v1.md	0644
+schemas/contracts/pan462-native-backup-restore-v1.schema.json	schemas/contracts/pan462-native-backup-restore-v1.schema.json	0644
+src/pan462/native-backup-restore.mjs	src/pan462/native-backup-restore.mjs	0644
+tests/fixtures/pan462/config-source-v1.json	tests/fixtures/pan462/config-source-v1.json	0644
+tests/fixtures/pan462/content-note-v1.txt	tests/fixtures/pan462/content-note-v1.txt	0644
+tests/fixtures/pan462/expected-facts-v1.json	tests/fixtures/pan462/expected-facts-v1.json	0644
+tests/fixtures/pan462/installation-content-v1.json	tests/fixtures/pan462/installation-content-v1.json	0644
+tests/fixtures/pan462/key-ref-v1.txt	tests/fixtures/pan462/key-ref-v1.txt	0644
+tests/pan462/native-backup-restore.test.mjs	tests/pan462/native-backup-restore.test.mjs	0644
+verification/pan462-native-backup-restore-boundary-v1.json	verification/pan462-native-backup-restore-boundary-v1.json	0644

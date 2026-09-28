@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "f87a8bccb24fc0abb2365b48b6d42428f2b8896d7112fea382989524b0a6cbe8"
+        "sha256": "05c0b7623234df766013962de119a95977b66592dc5c4ce1dbdf621397e8e0ff"
       }
     ]
   },
@@ -323,6 +323,14 @@
       "fromSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
       "toSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
       "reason": "Bind the separately scoped synthetic metric read task to the existing bound resolver and register its validator while preserving PAN453 v5 source and all earlier byte obligations."
+    },
+    {
+      "migrationId": "PAN462-NATIVE-BACKUP-RESTORE/INTEGRITY-GENERATOR/V32",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 32,
+      "fromSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
+      "toSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
+      "reason": "Bind the bounded PAN462 native backup/restore family (source, validator, schema, docs, boundary record and fixtures) to its own bounded owner; the integration owner keeps only the inputs no bounded node owns, so its input list stays inside the frozen Evidence-DAG schema bound without relaxing the schema. Admitted v1 and reviewed v2-v31 digests remain immutable."
     }
   ],
   "scanScope": {
@@ -365,15 +373,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 720,
+    "filesScanned": 722,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 247,
-    "importFiles": 246,
+    "importSites": 248,
+    "importFiles": 247,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2011,
-    "ledgerUniquePaths": 2011
+    "ledgerEntries": 2021,
+    "ledgerUniquePaths": 2021
   },
   "profiles": [
     {
@@ -446,7 +454,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d"
+      "sha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -778,8 +786,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 57,
-      "importFiles": 56
+      "importSites": 58,
+      "importFiles": 57
     },
     {
       "owner": "usage-insights",
@@ -1072,7 +1080,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
+      "sha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
       "basis": "profile-version-migration"
     },
     {

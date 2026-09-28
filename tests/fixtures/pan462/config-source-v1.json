@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "pansphaira.pan462/installation-config/v1",
+  "installationId": "install:synthetic-cm",
+  "featureFlags": { "adaptiveRouting": false, "externalEffects": false },
+  "contentRoot": "/data/files"
+}

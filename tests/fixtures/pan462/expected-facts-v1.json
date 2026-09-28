@@ -1,0 +1,9 @@
+{
+  "rowCount": 3,
+  "order": ["rechnung:101", "rechnung:102", "rechnung:103"],
+  "floorEur": 30,
+  "totalMinor": 8499,
+  "belowThreshold": ["rechnung:101", "rechnung:103"],
+  "configGoal": "the restored configuration names the same owned installation",
+  "restoredVersion": "0.2.0"
+}

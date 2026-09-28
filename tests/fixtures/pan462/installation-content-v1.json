@@ -1,0 +1,35 @@
+{
+  "installationId": "install:synthetic-cm",
+  "releaseId": "0.2.0",
+  "version": "0.2.0",
+  "versionAxes": {
+    "core": "v1",
+    "policies": "v2",
+    "schemas": "v1"
+  },
+  "authorityProfile": {
+    "profileId": "profile:safe-guided",
+    "digest": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+  },
+  "components": [
+    {
+      "componentId": "core:engine",
+      "version": "0.2.0",
+      "digest": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
+  ],
+  "stores": [
+    { "storeId": "store:database", "kind": "DATABASE", "path": "/data/postgres", "required": true },
+    { "storeId": "store:files", "kind": "FILE", "path": "/data/files", "required": true },
+    { "storeId": "store:config", "kind": "CONFIG", "path": "/config/config.json", "required": true },
+    { "storeId": "store:keys", "kind": "KEY", "path": "/keys", "required": true }
+  ],
+  "keyRefs": [
+    { "refId": "key:cfg-main", "role": "CONFIG", "path": "/keys/key:cfg-main.ref", "required": true },
+    { "refId": "key:db-cred", "role": "CREDENTIAL", "path": "/keys/key:db-cred.ref", "required": false }
+  ],
+  "services": [
+    { "serviceId": "api", "state": "RUNNING", "health": "HEALTHY" }
+  ],
+  "externalEffects": "DISABLED"
+}
