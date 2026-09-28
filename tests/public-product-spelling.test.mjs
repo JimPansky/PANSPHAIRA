@@ -92,6 +92,11 @@ function classify(path, line) {
       || line.includes(`${legacyDisplay}_INDEPENDENT_ADJUDICATION`))
   ) return "quoted-stable-technical-identifier";
   if (path === "demo/manifests/network/local-egress-policy-v1.json") return "technical-fixture-identifier";
+  // The extractor has to recognize the byte-frozen fixture's display prefix.
+  // Permit only this exact fixture-bound constant, never arbitrary new branding.
+  if (path === "packages/contracts/src/incoming-invoice-extraction-dataflow-v2.ts"
+    && line.trim() === `export const AP02_BOUNDED_EXTRACTION_LINE_PREFIX_V1 = "${legacyDisplay} SYNTHETIC SUPPLIER INVOICE" as const;`)
+    return "frozen-synthetic-fixture-display";
   if (path === "tests/fixtures/incoming-invoice/supplier-invoice-v1.txt") return "frozen-synthetic-fixture-display";
   if (path.startsWith("schemas/")) return "stable-schema";
   if (path === "release/governance.json") {
