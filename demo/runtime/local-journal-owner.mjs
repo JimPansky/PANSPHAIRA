@@ -321,3 +321,101 @@ export function recordLocalJournalRecoveryAttempt(root, { operationKey, attempte
   writeOwnedJson(actual, ATTEMPT_FILE, next);
   return attempts;
 }
+
+
+// ---------------------------------------------------------------------------
+// PAN453 AC01 durable task operation identity fence (owned v2 namespace only).
+// Binds the immutable task operation identity (task identity digest) to the
+// durable local journal BEFORE any effect, so a reissued valid handle for the
+// SAME immutable task cannot dispatch a second provider mutation even when the
+// approval snapshot lags the actual target. It is a bounded, fail-closed local
+// synthetic binding: NOT an OS/host authority, an operator identity provider or
+// a cross-host lock. Legacy (non-owned) roots are untouched.
+// ---------------------------------------------------------------------------
+export const LOCAL_JOURNAL_TASK_IDENTITY_SCHEMA = 'pansphaira.local/journal-task-identity/v1';
+// The task identity directory is bounded; admitting a brand-new task identity
+// once the directory is saturated fails closed
+// (JOURNAL_TASK_IDENTITY_RETENTION_SATURATED_DENIED) rather than evicting a
+// retained binding or silently forgetting an already-fenced task identity.
+export const LOCAL_JOURNAL_TASK_IDENTITY_LIMIT = 256;
+
+const TASK_IDENTITY_FILE = 'journal-task-identity.json';
+const TASK_IDENTITY_KEYS = Object.freeze([
+  'boundAtMs','handleDigest','operationKey','taskIdentityDigest',
+]);
+
+function emptyTaskIdentities() {
+  return { schemaVersion: LOCAL_JOURNAL_TASK_IDENTITY_SCHEMA, identities: {} };
+}
+
+function isHexDigest(value) {
+  return typeof value === 'string' && /^[a-f0-9]{64}$/.test(value);
+}
+
+function validateTaskIdentityRecord(digest, record) {
+  if (
+    record === null
+    || typeof record !== 'object'
+    || Array.isArray(record)
+    || Object.keys(record).sort().join('|') !== [...TASK_IDENTITY_KEYS].sort().join('|')
+    || !isHexDigest(record.taskIdentityDigest)
+    || record.taskIdentityDigest !== digest
+    || !isHexDigest(record.handleDigest)
+    || typeof record.operationKey !== 'string'
+    || !/^admin-ai:poc:[a-zA-Z0-9:._-]{8,140}$/.test(record.operationKey)
+    || !Number.isSafeInteger(record.boundAtMs)
+    || record.boundAtMs < 0
+  ) throw Error('JOURNAL_TASK_IDENTITY_INVALID_DENIED');
+}
+
+export function readLocalJournalTaskIdentity(root) {
+  if (!isOwnedSyntheticPath(root)) throw Error('JOURNAL_OWNED_NAMESPACE_REQUIRED_DENIED');
+  const value = readOwnedJson(root, TASK_IDENTITY_FILE, emptyTaskIdentities, 'JOURNAL_TASK_IDENTITY_INVALID_DENIED');
+  if (
+    value.schemaVersion !== LOCAL_JOURNAL_TASK_IDENTITY_SCHEMA
+    || value.identities === null
+    || typeof value.identities !== 'object'
+    || Array.isArray(value.identities)
+  ) throw Error('JOURNAL_TASK_IDENTITY_INVALID_DENIED');
+  const identities = {};
+  for (const [digest, record] of Object.entries(value.identities)) {
+    validateTaskIdentityRecord(digest, record);
+    identities[digest] = { ...record };
+  }
+  return { schemaVersion: LOCAL_JOURNAL_TASK_IDENTITY_SCHEMA, identities };
+}
+
+// Bind an immutable task identity to the durable journal BEFORE effect. The
+// FIRST valid handle for a task identity binds it; a later valid handle for the
+// SAME identity is refused (JOURNAL_TASK_IDENTITY_CONFLICT_DENIED) without
+// writing anything, so the caller fails closed before any snapshot, approval,
+// lease or provider effect. Re-recording the SAME handle is idempotent, so the
+// existing same-handle bounded read-only reconciliation path is preserved, and
+// a genuinely different task identity is admitted while the directory has room.
+export function recordLocalJournalTaskIdentity(root, {
+  taskIdentityDigest,
+  operationKey,
+  handleDigest,
+  boundAtMs,
+}) {
+  const record = { boundAtMs, handleDigest, operationKey, taskIdentityDigest };
+  validateTaskIdentityRecord(taskIdentityDigest, record);
+  const actual = assertOwnedRoot(root);
+  const current = readLocalJournalTaskIdentity(actual);
+  const prior = current.identities[taskIdentityDigest];
+  if (prior !== undefined) {
+    if (prior.handleDigest !== record.handleDigest) {
+      throw Error('JOURNAL_TASK_IDENTITY_CONFLICT_DENIED');
+    }
+    return prior;
+  }
+  if (Object.keys(current.identities).length >= LOCAL_JOURNAL_TASK_IDENTITY_LIMIT) {
+    throw Error('JOURNAL_TASK_IDENTITY_RETENTION_SATURATED_DENIED');
+  }
+  const next = {
+    schemaVersion: LOCAL_JOURNAL_TASK_IDENTITY_SCHEMA,
+    identities: { ...current.identities, [taskIdentityDigest]: record },
+  };
+  writeOwnedJson(actual, TASK_IDENTITY_FILE, next);
+  return record;
+}

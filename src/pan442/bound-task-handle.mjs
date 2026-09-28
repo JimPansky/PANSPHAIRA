@@ -5,7 +5,10 @@ import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { AdminAiPoc } from "../../demo/runtime/admin-ai-poc.mjs";
-import { acquireLocalJournalOwner } from "../../demo/runtime/local-journal-owner.mjs";
+import {
+  acquireLocalJournalOwner,
+  recordLocalJournalTaskIdentity,
+} from "../../demo/runtime/local-journal-owner.mjs";
 import { ApprovalWorkbench } from "../../demo/runtime/approval-workbench.mjs";
 import {
   createAuthoritativeApprovalSnapshot,
@@ -39,6 +42,7 @@ export const BTH_ERROR = Object.freeze({
   TASK_REF_UNKNOWN: "BTH_TASK_REF_UNKNOWN_DENIED",
   TRUSTED_SOURCE_DIGEST_MISMATCH: "BTH_TRUSTED_SOURCE_DIGEST_MISMATCH_DENIED",
   HANDLE_REISSUED: "BTH_HANDLE_REISSUED_DENIED",
+  TASK_IDENTITY_REISSUE: "BTH_TASK_IDENTITY_REISSUE_DENIED",
   BINDING_UNSUPPORTED: "BTH_BINDING_UNSUPPORTED_DENIED",
   BINDING_DIGEST_MISMATCH: "BTH_BINDING_DIGEST_MISMATCH_DENIED",
 });
@@ -280,6 +284,29 @@ export class BoundTaskHandleIssuer {
 }
 
 /**
+ * Immutable task operation identity for the owned synthetic seam.
+ *
+ * It is derived ONLY from the attested task identity (taskRef, runId, tenant,
+ * user and the trusted source digest) and deliberately EXCLUDES the per-issue
+ * binding fields (issuedAtMs, expiresAtMs) and the per-handle digest. Two valid
+ * handles issued for the SAME immutable task at different times therefore
+ * resolve to the SAME task operation identity, which is bound to the durable
+ * owned journal BEFORE any effect (see createOwnedSyntheticBusinessOperation).
+ * Bound-task-handle scope/capability is resolved separately from the trusted
+ * caller input, so a genuinely different task identity is unaffected.
+ */
+function boundTaskIdentityDigest(binding) {
+  return sha256(canonicalJson({
+    schemaVersion: "pansphaira.contract/bound-task-handle-task-identity/v1",
+    taskRef: binding.taskRef,
+    runId: binding.runId,
+    tenant: binding.tenant,
+    user: binding.user,
+    sourceDigest: binding.sourceDigest,
+  }));
+}
+
+/**
  * Local business operation seam. Composes the accepted demo Order journey:
  * AdminAiPoc decides (SYNTHETIC_DOLIBARR_ORDER_CREATE -> OWNER_ESCALATION),
  * the ApprovalWorkbench registers and the local owner approves, and the
@@ -460,6 +487,27 @@ export function createOwnedSyntheticBusinessOperation({ provider, now, root }) {
     }).decision;
     if (decision.outcome !== "OWNER_ESCALATION") {
       fail("BTH_COMPOSE_FAILED", "COMPOSE");
+    }
+    // PAN453 AC01: one immutable task operation identity is bound to the
+    // durable owned journal BEFORE any snapshot, approval, lease or provider
+    // effect. A reissued valid handle for the SAME immutable task therefore
+    // cannot dispatch a second provider mutation even when the approval
+    // snapshot lags the actual target. The existing bounded read-only
+    // reconciliation path (same handle) stays eligible because re-recording the
+    // SAME handle is idempotent; a genuinely different task identity is a
+    // distinct fence key and is admitted while the bounded directory has room.
+    try {
+      recordLocalJournalTaskIdentity(dir, {
+        taskIdentityDigest: boundTaskIdentityDigest(binding),
+        operationKey: decision.action.replayKey,
+        handleDigest: binding.handleDigest,
+        boundAtMs: now(),
+      });
+    } catch (error) {
+      if (error?.message === "JOURNAL_TASK_IDENTITY_CONFLICT_DENIED") {
+        fail(BTH_ERROR.TASK_IDENTITY_REISSUE, "COMPOSE");
+      }
+      throw error;
     }
     // A response may be lost AFTER the provider committed. A fresh snapshot then
     // shows the target and rightly prevents a NEW approval. Recover only from

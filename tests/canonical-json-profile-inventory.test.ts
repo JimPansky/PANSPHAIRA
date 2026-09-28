@@ -382,6 +382,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
     toSha256: "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
     reason: "Bind the bounded owned synthetic STOP/REVOKE control, durable retry-exhaustion fences and read-only recovery to the existing gate; retain reviewed v1-v8 bytes and make no host or external authority claim.",
   }),
+  Object.freeze({
+    migrationId: "PAN453-AC03-AUTHORITATIVE-TARGET-READBACK/GATE-PROFILE/V10",
+    path: "demo/runtime/enforcement-gate.mjs",
+    profileVersion: 10,
+    fromSha256: "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
+    toSha256: "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
+    reason: "Bind the owned synthetic ambiguous reconciliation to an independently read persisted target before confirming success; preserve reviewed v1-v9 gate bytes, legacy semantics and unresolved safety without host or production authority.",
+  }),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -395,7 +403,7 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 725,
+  filesScanned: 728,
   declarationSites: 37,
   declarationFiles: 37,
   importSites: 248,
@@ -406,7 +414,7 @@ const EXPECTED_COUNTS = {
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2029, uniquePaths: 2029, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2032, uniquePaths: 2032, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
