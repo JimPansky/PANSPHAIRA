@@ -78,8 +78,21 @@ export function assertLocalJournalOwner(receiptPath, token) {
 // ---------------------------------------------------------------------------
 export const LOCAL_JOURNAL_CONTROL_SCHEMA = 'pansphaira.local/journal-control/v1';
 export const LOCAL_JOURNAL_CONTROL_LIMIT = 8;
+// Detailed control records are bounded (LOCAL_JOURNAL_CONTROL_LIMIT); every
+// admitted control is ALSO retained as a compact per-key denial fence so a
+// bounded ledger can never silently drop an active stop/revoke. The fence map
+// is itself bounded; admitting a brand-new key once the fence map is saturated
+// fails closed (JOURNAL_CONTROL_RETENTION_SATURATED_DENIED) rather than
+// evicting a retained active control.
+export const LOCAL_JOURNAL_CONTROL_FENCE_LIMIT = 64;
 export const LOCAL_JOURNAL_ATTEMPT_SCHEMA = 'pansphaira.local/journal-recovery-attempts/v1';
 export const LOCAL_JOURNAL_ATTEMPT_LIMIT = 16;
+// An exhausted (denied) recovery budget is retained durably and is never
+// displaced by unrelated operation churn: denied entries have retention
+// priority inside LOCAL_JOURNAL_ATTEMPT_LIMIT. When that bounded ledger can no
+// longer durably retain the counter it was asked to record, it fails closed
+// (JOURNAL_ATTEMPT_RETENTION_SATURATED_DENIED) instead of silently resetting
+// the per-operation budget.
 
 const CONTROL_FILE = 'journal-control.json';
 const ATTEMPT_FILE = 'journal-recovery-attempts.json';
@@ -88,7 +101,7 @@ const CONTROL_KEYS = Object.freeze([
 ]);
 
 function emptyControl() {
-  return { schemaVersion: LOCAL_JOURNAL_CONTROL_SCHEMA, records: [] };
+  return { schemaVersion: LOCAL_JOURNAL_CONTROL_SCHEMA, records: [], fences: {} };
 }
 
 function emptyAttempts() {
@@ -127,10 +140,12 @@ function validateControlRecord(record) {
   ) throw Error('JOURNAL_CONTROL_INVALID_DENIED');
 }
 
-// Bounded retention: the ledger retains at most `limit` records, dropping the
-// oldest by (stopEpoch, issuedAtMs) first. Dropping a record ends its control
-// window; a later record with an older epoch for that key may then be admitted,
-// which is the documented trade-off of a bounded retention window.
+// Bounded retention: the ledger retains at most `limit` detailed records,
+// dropping the oldest by (stopEpoch, issuedAtMs) first. Dropping a *detail*
+// record is safe only because the durable per-key fence (see
+// LOCAL_JOURNAL_CONTROL_FENCE_LIMIT) keeps the control binding: the control
+// window never ends under unrelated churn, and the monotonic stop epoch for a
+// key survives even after its detail record is pruned.
 function pruneControlRecords(records, limit) {
   if (records.length <= limit) return records;
   return [...records]
@@ -171,11 +186,26 @@ export function readLocalJournalControl(root) {
   if (value.schemaVersion !== LOCAL_JOURNAL_CONTROL_SCHEMA || !Array.isArray(value.records)) {
     throw Error('JOURNAL_CONTROL_INVALID_DENIED');
   }
+  const rawFences = value.fences ?? {};
+  if (rawFences === null || typeof rawFences !== 'object' || Array.isArray(rawFences)) {
+    throw Error('JOURNAL_CONTROL_INVALID_DENIED');
+  }
   const records = value.records.map((record) => {
     validateControlRecord(record);
     return { ...record };
   });
-  return { schemaVersion: LOCAL_JOURNAL_CONTROL_SCHEMA, records };
+  const fences = {};
+  for (const [key, fence] of Object.entries(rawFences)) {
+    validateControlRecord(fence);
+    if (controlKey(fence) !== key) throw Error('JOURNAL_CONTROL_INVALID_DENIED');
+    fences[key] = { ...fence };
+  }
+  return {
+    schemaVersion: LOCAL_JOURNAL_CONTROL_SCHEMA,
+    records,
+    fences,
+    saturated: Object.keys(fences).length >= LOCAL_JOURNAL_CONTROL_FENCE_LIMIT,
+  };
 }
 
 export function recordLocalJournalControl(root, record) {
@@ -183,14 +213,19 @@ export function recordLocalJournalControl(root, record) {
   const actual = assertOwnedRoot(root);
   const current = readLocalJournalControl(actual);
   const key = controlKey(record);
-  for (const existing of current.records) {
-    if (existing.kind === record.kind && controlKey(existing) === key && existing.stopEpoch >= record.stopEpoch) {
-      throw Error('JOURNAL_CONTROL_EPOCH_REGRESSION_DENIED');
-    }
+  const fence = current.fences[key];
+  const recordMax = current.records
+    .filter((existing) => controlKey(existing) === key)
+    .reduce((max, existing) => Math.max(max, existing.stopEpoch), 0);
+  const retainedMax = Math.max(fence?.stopEpoch ?? 0, recordMax);
+  if (retainedMax >= record.stopEpoch) throw Error('JOURNAL_CONTROL_EPOCH_REGRESSION_DENIED');
+  if (fence === undefined && Object.keys(current.fences).length >= LOCAL_JOURNAL_CONTROL_FENCE_LIMIT) {
+    throw Error('JOURNAL_CONTROL_RETENTION_SATURATED_DENIED');
   }
   const next = {
     schemaVersion: LOCAL_JOURNAL_CONTROL_SCHEMA,
     records: pruneControlRecords([...current.records, { ...record }], LOCAL_JOURNAL_CONTROL_LIMIT),
+    fences: { ...current.fences, [key]: { ...record } },
   };
   writeOwnedJson(actual, CONTROL_FILE, next);
   return next;
@@ -211,7 +246,9 @@ export function readLocalJournalRecoveryAttempts(root) {
       record === null
       || typeof record !== 'object'
       || Array.isArray(record)
-      || Object.keys(record).sort().join('|') !== 'attempts|firstAttemptMs|lastAttemptMs'
+      || !['attempts', 'firstAttemptMs', 'lastAttemptMs'].every((key) => Object.hasOwn(record, key))
+      || Object.keys(record).some((key) => !['attempts', 'firstAttemptMs', 'lastAttemptMs', 'denied'].includes(key))
+      || (record.denied !== undefined && typeof record.denied !== 'boolean')
       || !Number.isSafeInteger(record.attempts)
       || record.attempts < 1
       || !Number.isSafeInteger(record.firstAttemptMs)
@@ -222,27 +259,44 @@ export function readLocalJournalRecoveryAttempts(root) {
   return { schemaVersion: LOCAL_JOURNAL_ATTEMPT_SCHEMA, attempts };
 }
 
-export function recordLocalJournalRecoveryAttempt(root, { operationKey, attemptedAtMs }) {
+export function recordLocalJournalRecoveryAttempt(root, { operationKey, attemptedAtMs, maxAttempts }) {
   if (!isBoundIdentity(operationKey)) throw Error('JOURNAL_ATTEMPT_INVALID_DENIED');
   if (!Number.isSafeInteger(attemptedAtMs) || attemptedAtMs < 0) throw Error('JOURNAL_ATTEMPT_INVALID_DENIED');
+  if (maxAttempts !== undefined && (!Number.isSafeInteger(maxAttempts) || maxAttempts < 1)) {
+    throw Error('JOURNAL_ATTEMPT_INVALID_DENIED');
+  }
   const actual = assertOwnedRoot(root);
   const current = readLocalJournalRecoveryAttempts(actual);
   const prior = current.attempts[operationKey];
+  const attempts = (prior?.attempts ?? 0) + 1;
+  // A key is durably denied once its count passes the caller's bound. An
+  // already-denied key stays denied; no unrelated churn can renew it.
   const record = {
-    attempts: (prior?.attempts ?? 0) + 1,
+    attempts,
     firstAttemptMs: prior?.firstAttemptMs ?? attemptedAtMs,
     lastAttemptMs: attemptedAtMs,
+    denied: prior?.denied === true
+      || (Number.isSafeInteger(maxAttempts) && attempts > maxAttempts),
   };
+  // Denied entries sort last so bounded retention drops only non-denied churn;
+  // an exhausted per-operation denial is never displaced by unrelated keys.
   const entries = Object.entries({ ...current.attempts, [operationKey]: record })
-    .sort((left, right) => (left[1].lastAttemptMs - right[1].lastAttemptMs)
+    .sort((left, right) => ((left[1].denied ? 1 : 0) - (right[1].denied ? 1 : 0))
+      || (left[1].lastAttemptMs - right[1].lastAttemptMs)
       || left[0].localeCompare(right[0], 'en'));
   const retained = entries.length > LOCAL_JOURNAL_ATTEMPT_LIMIT
     ? entries.slice(entries.length - LOCAL_JOURNAL_ATTEMPT_LIMIT)
     : entries;
+  // Bounded storage must never silently drop the counter it was asked to make
+  // durable. If a full ledger of granted denials can no longer retain this
+  // operation key, fail closed rather than reset the budget on a later attempt.
+  if (!retained.some(([key]) => key === operationKey)) {
+    throw Error('JOURNAL_ATTEMPT_RETENTION_SATURATED_DENIED');
+  }
   const next = {
     schemaVersion: LOCAL_JOURNAL_ATTEMPT_SCHEMA,
     attempts: Object.fromEntries(retained),
   };
   writeOwnedJson(actual, ATTEMPT_FILE, next);
-  return record.attempts;
+  return attempts;
 }

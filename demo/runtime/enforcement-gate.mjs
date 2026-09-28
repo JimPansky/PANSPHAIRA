@@ -804,7 +804,13 @@ export class DemoMutationGate {
     const control = readLocalJournalControl(dirname(this.receiptPath));
     const source = mutationSourceIdentity(action);
     const target = mutationTargetIdentity(action);
-    for (const record of control.records) {
+    // A control binding is durable: it is observed from BOTH the bounded detail
+    // records and the compact per-key denial fences. Pruning a detail record
+    // under unrelated churn can therefore never end an active stop/revoke or
+    // lower a retained stop epoch. A saturated fence map means the owned root
+    // can no longer durably admit a new control, so new effects fail closed.
+    const controls = [...control.records, ...Object.values(control.fences)];
+    for (const record of controls) {
       if (
         record.kind === "REVOKE"
         && (
@@ -814,8 +820,9 @@ export class DemoMutationGate {
       ) throw new Error("EFFECT_REVOKED_DENIED");
     }
     if (reconcileEligible) return;
+    if (control.saturated) throw new Error("EFFECT_CONTROL_LEDGER_SATURATED_DENIED");
     if (
-      control.records.some((record) =>
+      controls.some((record) =>
         record.kind === "STOP"
         && record.sourceIdentity === source
         && record.targetIdentity === target)
@@ -853,6 +860,7 @@ export class DemoMutationGate {
       const attempts = recordLocalJournalRecoveryAttempt(dirname(this.receiptPath), {
         operationKey,
         attemptedAtMs: this.now(),
+        maxAttempts: this.maxReconcileAttempts,
       });
       if (attempts > this.maxReconcileAttempts) {
         throw new Error("EFFECT_RECOVERY_ATTEMPTS_EXHAUSTED_DENIED");
