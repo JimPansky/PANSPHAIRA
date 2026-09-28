@@ -744,3 +744,70 @@ test("PAN462-AC04-TIMING-FUTURE: a future business timestamp clamps no real oper
     assert.ok(Math.abs(record.completedAtMs - Date.now()) < 60_000, `${label}: completedAtMs must be the real observation timestamp`);
   }
 });
+
+// INDEPENDENT-CLOCK-STEP: the two wall observations may step while the actual
+// native operation's monotonic elapsed remains positive. This test intercepts
+// ONLY the two Date.now calls in the PAN462 backup measurement lines.
+test("PAN462-AC04-INDEPENDENT-CLOCK-STEP: wall adjustment cannot clamp a positive measured operation", async () => {
+  const realNow = Date.now;
+  const wall = realNow();
+  let completedHits = 0, derivedStartHits = 0;
+  const backupDir = path.join(state.root, "backup-timing-independent-clock-step");
+  let result, elapsed;
+  try {
+    Date.now = () => {
+      const stack = new Error().stack ?? "";
+      if (stack.includes("native-backup-restore.mjs:691")) { completedHits++; return wall; }
+      if (stack.includes("native-backup-restore.mjs:702")) { derivedStartHits++; return wall + 1000; }
+      return realNow();
+    };
+    const began = performance.now();
+    result = await createPan462BackupV1({
+      installation: state.installation,
+      source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+      backupDir, ownedRoot: state.root, now: NOW, nowMs: NOW_MS,
+    });
+    elapsed = performance.now() - began;
+  } finally { Date.now = realNow; }
+  assert.equal(result.outcome, "BACKED_UP", JSON.stringify(result));
+  assert.equal(completedHits, 1, "intercepted exactly the native completed wall call");
+  assert.equal(derivedStartHits, 1, "intercepted exactly the native derived-start wall call");
+  console.log("PAN462_INDEPENDENT_CLOCK_STEP " + JSON.stringify({elapsed, measurements:result.measurements}));
+  assert.ok(elapsed >= 1, "real PostgreSQL backup operation elapsed nonzero time");
+  assert.ok(result.measurements.durationMs >= 1, "monotonic operation elapsed cannot clamp to zero under wall-clock step");
+});
+
+// Independent AC04 companion to the backup clock-step regression: the released
+// restore path has the same two-wall-observation structure. Real native target.
+test("PAN462-AC04-INDEPENDENT-RESTORE-CLOCK-STEP: restored operation duration remains measured across wall adjustment", async () => {
+  const realNow = Date.now;
+  const wall = realNow();
+  let completedHits = 0, derivedStartHits = 0;
+  const { targetRoot, keyStore } = timingTargetRoot("independent-restore-clock-step");
+  let result, elapsed;
+  try {
+    Date.now = () => {
+      const stack = new Error().stack ?? "";
+      if (stack.includes("native-backup-restore.mjs:880")) { completedHits++; return wall; }
+      if (stack.includes("native-backup-restore.mjs:908")) { derivedStartHits++; return wall + 1000; }
+      return realNow();
+    };
+    const began = performance.now();
+    result = await restorePan462BackupV1({
+      backupDir: state.backupDir, targetRoot, ownedRoot: state.root,
+      expectedVersion: EXPECTED.restoredVersion,
+      target: {
+        root: targetRoot, keyStore,
+        database: { client: state.target.client, host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_ADMIN, password: TARGET_ADMIN_PW },
+      },
+      now: NOW, nowMs: NOW_MS + 1,
+    });
+    elapsed = performance.now() - began;
+  } finally { Date.now = realNow; }
+  assert.equal(result.outcome, "RESTORED", JSON.stringify(result));
+  assert.equal(completedHits, 1, "intercepted exactly the native completed wall call");
+  assert.equal(derivedStartHits, 1, "intercepted exactly the native derived-start wall call");
+  console.log("PAN462_INDEPENDENT_RESTORE_CLOCK_STEP " + JSON.stringify({elapsed, measurements: result.measurements}));
+  assert.ok(elapsed >= 1, "real PostgreSQL restore operation elapsed nonzero time");
+  assert.ok(result.measurements.durationMs >= 1, "monotonic restore elapsed cannot clamp to zero under wall-clock step");
+});

@@ -6993,12 +6993,12 @@
         {
           "path": "src/pan462/native-backup-restore.mjs",
           "role": "SOURCE",
-          "sha256": "bc7a8d4a58ec77bb588ca35a91ca385f4976cc1426389773e3ac076822f30359"
+          "sha256": "b8b46865f0b697ea1f6280de9c77245f74dbedc36c991de45ab89fca28a8808b"
         },
         {
           "path": "tests/pan462/native-backup-restore.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "6325c0082b9d53855dded7c02dca096c93988ac264d7632ebcd8fcd4571e4f8d"
+          "sha256": "2655b8658aa2f9a4991ec5f72e5d148d390f2019c4492232487d2d853ce9160a"
         },
         {
           "path": "verification/pan462-native-backup-restore-boundary-v1.json",

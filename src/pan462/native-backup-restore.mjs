@@ -558,11 +558,11 @@ export async function createPan462BackupV1({
   // disposable, distinct local root before anything destructive happens.
   const destination = guardDisposableDestination({ dir: backupDir, ownedRoot, forbidden: [source.root] });
   if (destination.outcome !== "OK") return destination;
-  // AC04: the measured operation time is taken on the monotonic clock at the
-  // real invocation boundaries. `nowMs` (the caller business/checkpoint
-  // timestamp) is semantically separate and must never be reused as the
-  // measured start — that made the recorded duration the fixture age, not the
-  // operation elapsed.
+  // AC04: measured operation time on the monotonic clock across the real
+  // invocation boundaries. `nowMs` (the caller business/checkpoint timestamp)
+  // is semantically separate and never the measured start. durationMs is the
+  // integer monotonic elapsed bound by measure(); the reported start is the
+  // single completion observation minus that elapsed (wall-step safe).
   const startedMonotonicMs = performance.now();
   try {
     // 1) Owned DATABASE: one consistent snapshot.
@@ -699,14 +699,14 @@ export async function createPan462BackupV1({
       checkpoint,
       manifest: { ...manifest, archiveDigest },
       measurements: measure({
-        startedAtMs: Math.round(Date.now() - (performance.now() - startedMonotonicMs)),
+        startedAtMs: Math.round(Date.now() - (performance.now() - startedMonotonicMs)), // second wall observation (retained); measure() binds the record
         completedAtMs,
         databaseRows: database.reduce((sum, table) => sum + table.rows.length, 0),
         fileCount: files.length,
         fileBytes: files.reduce((sum, file) => sum + file.bytes, 0),
         configBytes: config.bytes,
-        totalBytes: statSync(path.join(backupDir, "objects", "database.json")).size
-          + config.bytes + files.reduce((sum, file) => sum + file.bytes, 0),
+        totalBytes: statSync(path.join(backupDir, "objects", "database.json")).size + config.bytes + files.reduce((sum, file) => sum + file.bytes, 0),
+        elapsedMs: Math.max(0, Math.round(performance.now() - startedMonotonicMs)),
       }),
     };
   } catch (error) {
@@ -731,16 +731,16 @@ function readWriterAuthority(root) {
   };
 }
 
-function measure({ startedAtMs, completedAtMs, databaseRows, fileCount, fileBytes, configBytes, totalBytes }) {
+function measure({ startedAtMs, completedAtMs, elapsedMs, databaseRows, fileCount, fileBytes, configBytes, totalBytes }) {
+  // AC04 (2026-09-28): durationMs is the integer monotonic elapsed (same
+  // start/end samples), never wall time; start = completion observation minus
+  // that elapsed, so a wall step cannot clamp or invert a real operation.
+  const durationMs = Number.isSafeInteger(elapsedMs) ? Math.max(0, elapsedMs)
+    : Math.max(0, completedAtMs - startedAtMs);
   return {
-    startedAtMs,
-    completedAtMs,
-    durationMs: Math.max(0, completedAtMs - startedAtMs),
-    databaseRows,
-    fileCount,
-    fileBytes,
-    configBytes,
-    totalBytes,
+    startedAtMs: completedAtMs - durationMs,
+    completedAtMs, durationMs,
+    databaseRows, fileCount, fileBytes, configBytes, totalBytes,
   };
 }
 
@@ -840,8 +840,8 @@ export async function restorePan462BackupV1({
     predecessorRevoked: true,
   };
 
-  // AC04: measured operation time on the monotonic clock at the real invocation
-  // boundary; `nowMs` stays the separate business/checkpoint timestamp.
+  // AC04: measured operation time on the monotonic clock across the real
+  // invocation boundaries; `nowMs` stays the separate business/checkpoint timestamp.
   const startedMonotonicMs = performance.now();
   try {
     rmSync(targetRoot, { recursive: true, force: true });
@@ -905,13 +905,14 @@ export async function restorePan462BackupV1({
       restored,
       archiveDigest,
       measurements: measure({
-        startedAtMs: Math.round(Date.now() - (performance.now() - startedMonotonicMs)),
+        startedAtMs: Math.round(Date.now() - (performance.now() - startedMonotonicMs)), // second wall observation (retained); measure() binds the record
         completedAtMs,
         databaseRows: database.reduce((sum, table) => sum + table.rows.length, 0),
         fileCount: archive.captures.files.length,
         fileBytes: archive.captures.files.reduce((sum, file) => sum + file.bytes, 0),
         configBytes: archive.captures.config.bytes,
         totalBytes: archive.captures.files.reduce((sum, file) => sum + file.bytes, 0) + archive.captures.config.bytes,
+        elapsedMs: Math.max(0, Math.round(performance.now() - startedMonotonicMs)),
       }),
     };
   } catch (error) {
