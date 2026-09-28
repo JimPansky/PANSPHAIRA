@@ -4921,7 +4921,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "26d9101a694564ea459f3149aad6d7656f29c4e82225e6161839e64c0fe9cdfd"
+          "sha256": "1528e3134bb367f3471da096bd16066143bf3801503dd6acb2e385be7e3738a8"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
