@@ -91,6 +91,12 @@ jobs:
             head: 792e5e38cd4fb612ee034b3edc62aa8b4f58fe0f
           - profile: pr235
             head: bb52b249feb5968eee286963989f98f3bb673996
+          # Retained historical current pair (the retained PAN346 source candidate, 994ac801).
+          - profile: current-ks
+            head: 994ac80113af284ffe9fde93bb11f2341aaace91
+          # Frozen current release pair (PAN 4330cd26 x KS 72d9a4af, release 2026_09_28_v1).
+          - profile: current-frozen
+            head: 72d9a4af87fbbc5b23cb52835cd2f85415b8ddc7
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:

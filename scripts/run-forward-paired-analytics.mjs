@@ -11,6 +11,10 @@ import {createHash} from 'node:crypto';
 export function forwardExecutionProfile(name='main') {
   if(name==='main')return Object.freeze({name,head:'792e5e38cd4fb612ee034b3edc62aa8b4f58fe0f',producer:'generateForwardProducerAnalyticsManifestV1',pair:'validateForwardAnalyticsPairV1'});
   if(name==='pr235')return Object.freeze({name,head:'bb52b249feb5968eee286963989f98f3bb673996',producer:'generateForwardPrProducerAnalyticsManifestV1',pair:'validateForwardPrAnalyticsPairV1'});
+  // Retained historical current pair (the retained PAN346 source candidate).
+  if(name==='current-ks')return Object.freeze({name,head:'994ac80113af284ffe9fde93bb11f2341aaace91',tree:'b3b033b02a3e35d1d30646856409011ce625def6',producer:'generateCurrentProducerAnalyticsManifestV1',pair:'validateCurrentAnalyticsPairV1'});
+  // Frozen current release pair (PAN 4330cd26 x KS 72d9a4af, release 2026_09_28_v1).
+  if(name==='current-frozen')return Object.freeze({name,head:'72d9a4af87fbbc5b23cb52835cd2f85415b8ddc7',tree:'3ef9faab703c8a44b39b2d32f11d6abd641ee35f',producer:'generateFrozenCurrentProducerAnalyticsManifestV1',pair:'validateFrozenCurrentAnalyticsPairV1'});
   throw new Error('FORWARD_EXECUTION_PROFILE_UNQUALIFIED');
 }
 const KS_TREE='759baccaa077d24f2f78c7e82d6fab801050bc63';
@@ -41,7 +45,7 @@ async function execute(root,ks,expectedPanHead,profile) {
   verifyForwardEnvironment();
   const panHead=verifyForwardCheckout(root,expectedPanHead);
   const ksHead=verifyForwardCheckout(ks,profile.head);
-  assert.equal(ksHead.treeOid,KS_TREE,'FORWARD_EXECUTION_TREE_MISMATCH');
+  assert.equal(ksHead.treeOid,profile.tree??KS_TREE,'FORWARD_EXECUTION_TREE_MISMATCH');
   command(root,'npm',['run','build','--silent']);
   // Imports happen only after a fresh source build, in this dedicated process.
   const load=path=>import(pathToFileURL(resolve(root,path)).href);

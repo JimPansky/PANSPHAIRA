@@ -1,3 +1,4 @@
+import {readFileSync} from "node:fs";
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {mkdtempSync, mkdirSync, writeFileSync, rmSync} from 'node:fs';
@@ -6,10 +7,19 @@ import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
 import {verifyForwardCheckout, verifyForwardEnvironment, forwardExecutionProfile} from '../scripts/run-forward-paired-analytics.mjs';
 
-test('only code-owned Main and PR235 execution profiles are admitted',()=>{
+test('only code-owned Main, PR235 and current-KS execution profiles are admitted',()=>{
   assert.equal(forwardExecutionProfile('main').head,'792e5e38cd4fb612ee034b3edc62aa8b4f58fe0f');
   assert.equal(forwardExecutionProfile('pr235').head,'bb52b249feb5968eee286963989f98f3bb673996');
+  assert.equal(forwardExecutionProfile('current-ks').head,'994ac80113af284ffe9fde93bb11f2341aaace91');
+  assert.equal(forwardExecutionProfile('current-frozen').head,'72d9a4af87fbbc5b23cb52835cd2f85415b8ddc7');
   for(const bad of ['HEAD','main ', '__proto__', '792e5e38cd4fb612ee034b3edc62aa8b4f58fe0f']) assert.throws(()=>forwardExecutionProfile(bad),/PROFILE_UNQUALIFIED/);
+});
+
+test("public paired CI pins the current counterpart profiles",()=>{
+  const workflow=readFileSync(join(import.meta.dirname,"../.github/workflows/paired-analytics-parity.yml"),"utf8");
+  assert.match(workflow,/profile: current-ks\n\s+head: 994ac80113af284ffe9fde93bb11f2341aaace91/);
+  assert.match(workflow,/profile: current-frozen\n\s+head: 72d9a4af87fbbc5b23cb52835cd2f85415b8ddc7/);
+  assert.match(workflow,/--profile .*matrix.profile.* --counterpart/);
 });
 
 test('forward execution binds the actual root, exact head and clean sources', () => {

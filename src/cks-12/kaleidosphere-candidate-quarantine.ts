@@ -1015,7 +1015,42 @@ export function adjudicateNativeForwardPrCandidateV1(input: unknown) {
   return adjudicateNativeForwardProfile(input, "pr235");
 }
 
-function adjudicateNativeForwardProfile(input: unknown, profile: true | "pr235") {
+/**
+ * Frozen current-pair profiles. Each binds an exact KaleidoSphere service head
+ * (commit + tree) and the environment identity the service reports at that
+ * head. The native-projection analysis is head-independent in content (it is
+ * re-derived from the frozen projection input, not the head), so only the KS
+ * head binding and the environment identity move between current pairs. The
+ * historical current pair (994ac801, the retained PAN346 source candidate) is
+ * the default; the frozen current release pair (72d9a4af, release
+ * 2026_09_28_v1) is added without disturbing it.
+ */
+export const CURRENT_KS_PROFILES_V1 = freeze({
+  "current-994ac801": {
+    commitOid: "994ac80113af284ffe9fde93bb11f2341aaace91",
+    treeOid: "b3b033b02a3e35d1d30646856409011ce625def6",
+    environmentSha256: "dbdf8bef805d77bc3158409184042b44e6dcd0abe6645efab8f7b82d7630d002",
+  },
+  "current-frozen-72d9a4af": {
+    commitOid: "72d9a4af87fbbc5b23cb52835cd2f85415b8ddc7",
+    treeOid: "3ef9faab703c8a44b39b2d32f11d6abd641ee35f",
+    environmentSha256: "dbdf8bef805d77bc3158409184042b44e6dcd0abe6645efab8f7b82d7630d002",
+  },
+} as const);
+
+export type CurrentKsProfileNameV1 = keyof typeof CURRENT_KS_PROFILES_V1;
+
+/** Historical current pair (retained PAN346 source candidate): exact 994ac801 head. */
+export function adjudicateNativeCurrentCandidateV1(input: unknown) {
+  return adjudicateNativeForwardProfile(input, "current-994ac801");
+}
+
+/** Frozen current release pair: exact 72d9a4af head (release 2026_09_28_v1). */
+export function adjudicateNativeFrozenCurrentCandidateV1(input: unknown) {
+  return adjudicateNativeForwardProfile(input, "current-frozen-72d9a4af");
+}
+
+function adjudicateNativeForwardProfile(input: unknown, profile: true | "pr235" | CurrentKsProfileNameV1) {
   const envelope = exactRecord(input, ["canonicalTransportBytes", "candidate", "context", "rawArtifactBytes", "qualifiedHeads"]);
   const result = adjudicateNativeCandidateForProfile(envelope === undefined ? undefined : {
     canonicalTransportBytes: envelope.canonicalTransportBytes,
@@ -1042,8 +1077,12 @@ const FORWARD_PR_HEAD_V1 = freeze({
   treeOid: "759baccaa077d24f2f78c7e82d6fab801050bc63",
 });
 
-function adjudicateNativeCandidateForProfile(input: unknown, forward: boolean | "pr235"): NativeAdjudicationV1 {
-  const expectedServiceHead = forward === "pr235" ? FORWARD_PR_HEAD_V1 : FORWARD_SERVICE_HEAD_V1;
+function adjudicateNativeCandidateForProfile(input: unknown, forward: boolean | "pr235" | CurrentKsProfileNameV1): NativeAdjudicationV1 {
+  const currentProfile: CurrentKsProfileNameV1 | null =
+    typeof forward === "string" && (forward in CURRENT_KS_PROFILES_V1) ? (forward as CurrentKsProfileNameV1) : null;
+  const expectedServiceHead = currentProfile !== null
+    ? freeze({ commitOid: CURRENT_KS_PROFILES_V1[currentProfile].commitOid, treeOid: CURRENT_KS_PROFILES_V1[currentProfile].treeOid })
+    : forward === "pr235" ? FORWARD_PR_HEAD_V1 : FORWARD_SERVICE_HEAD_V1;
   const expectedHeads = forward ? { ...FORWARD_QUALIFIED_HEADS_V1, kaleidoSphere: expectedServiceHead.commitOid } : RECONCILED_RELEASED_HEADS_V1;
   const authoritative = buildAuthoritativeAdjudicationInputs();
   const fields = {
@@ -1108,7 +1147,10 @@ function adjudicateNativeCandidateForProfile(input: unknown, forward: boolean | 
   if (digestBytes(transportBytes) !== rawDigests.canonicalTransportSha256) return outcome("DENIED", "NATIVE_FORGED_CANDIDATE_DENIED");
 
   const bindings = candidate.bindings as PlainRecord;
-  if (forward && bindings.environmentSha256 !== "eee228014a53272b822c6b9872c2dc93dcb8a5ef62abae206e8ee32343990f05") {
+  const expectedEnvironmentSha256 = currentProfile !== null
+    ? CURRENT_KS_PROFILES_V1[currentProfile].environmentSha256
+    : "eee228014a53272b822c6b9872c2dc93dcb8a5ef62abae206e8ee32343990f05";
+  if (forward && bindings.environmentSha256 !== expectedEnvironmentSha256) {
     return outcome("DENIED", "NATIVE_FORGED_CANDIDATE_DENIED");
   }
   if (
