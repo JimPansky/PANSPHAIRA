@@ -4791,7 +4791,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "ba56312d10b7cbda03af8aecc0f9d64919aa21e5fa2a8acd32216f3dd8613cdd"
+          "sha256": "e0d4bac62dc1d43aae7fc15a0a47d0487530468f7f2fc94dd40962d5518e0131"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4831,7 +4831,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "4c1ffcc5df71002fa1a6a9658a0e9d5f7733d222ccc0905dc4c86d51c0df691e"
+          "sha256": "ed5dd0f26de7715b673e5eaeaaa9be17e98c193ccd8aa0e86080c40b3bb17d5b"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4931,7 +4931,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "f57f613a62b137026b880410abcaa37d2f6bb35cb96f59d36269488b7bcbef41"
+          "sha256": "9bc4468d54a9579160dce1ac706087920a45421546a8f065c0a4bff942db3722"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5546,7 +5546,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "a182b58d881dd7b2b710142cf7771c6fbdf5d5c50896a18244058539a103951b"
+          "sha256": "1220a3557f1e1a3205edc8cae9d706848c28ac5835c424a723bb0fb02f16ebe1"
         },
         {
           "path": "package-lock.json",
@@ -5906,7 +5906,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "4b7069d2f375fb0558629da7ab887095cbb4242a6eeb01d76df7de01311e062f"
+          "sha256": "c4759a0bcee6232ed11edca0adb98dc1fac9ffbca45b7fefbeac29f5036ce864"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6171,7 +6171,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "e1bd3a1754a0446e4139a8a01ee25d1b5ed2b80d1c7c1292b57be22d5326aad4"
+          "sha256": "81e946956e4c0ab94919e8b8d083e70bb75719f5910c09c488a5654f158f44de"
         }
       ],
       "ownedTests": [

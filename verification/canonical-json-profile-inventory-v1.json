@@ -339,6 +339,14 @@
       "fromSha256": "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
       "toSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
       "reason": "Bind the bounded owned synthetic STOP/REVOKE control, durable retry-exhaustion fences and read-only recovery to the existing gate; retain reviewed v1-v8 bytes and make no host or external authority claim."
+    },
+    {
+      "migrationId": "PAN453-AC03-AUTHORITATIVE-TARGET-READBACK/GATE-PROFILE/V10",
+      "path": "demo/runtime/enforcement-gate.mjs",
+      "profileVersion": 10,
+      "fromSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
+      "toSha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
+      "reason": "Bind the owned synthetic ambiguous reconciliation to an independently read persisted target before confirming success; preserve reviewed v1-v9 gate bytes, legacy semantics and unresolved safety without host or production authority."
     }
   ],
   "scanScope": {
@@ -381,15 +389,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 725,
+    "filesScanned": 728,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 248,
     "importFiles": 247,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2029,
-    "ledgerUniquePaths": 2029
+    "ledgerEntries": 2032,
+    "ledgerUniquePaths": 2032
   },
   "profiles": [
     {
@@ -398,7 +406,7 @@
       "classification": "implementation",
       "owner": "demo",
       "pinned": true,
-      "sha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a"
+      "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea"
     },
     {
       "file": "packages/contracts/src/asf-synthetic-lifecycle-harness.ts",
@@ -1023,7 +1031,7 @@
   "byteObligations": [
     {
       "path": "demo/runtime/enforcement-gate.mjs",
-      "sha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
+      "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
       "basis": "profile-version-migration"
     },
     {
