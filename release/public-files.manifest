@@ -394,6 +394,8 @@ packages/contracts/src/injection-trust-boundary.ts	packages/contracts/src/inject
 packages/contracts/src/incoming-invoice-adaptive-ui.ts	packages/contracts/src/incoming-invoice-adaptive-ui.ts	0644
 packages/contracts/src/incoming-invoice-ap05-receipt-manifest.ts	packages/contracts/src/incoming-invoice-ap05-receipt-manifest.ts	0644
 packages/contracts/src/incoming-invoice-ap06-proof-probe.ts	packages/contracts/src/incoming-invoice-ap06-proof-probe.ts	0644
+packages/contracts/src/incoming-invoice-ap06-proof-probe-v2.ts	packages/contracts/src/incoming-invoice-ap06-proof-probe-v2.ts	0644
+packages/contracts/src/incoming-invoice-extraction-dataflow-v2.ts	packages/contracts/src/incoming-invoice-extraction-dataflow-v2.ts	0644
 packages/contracts/src/incoming-invoice-blueprint.ts	packages/contracts/src/incoming-invoice-blueprint.ts	0644
 packages/contracts/src/incoming-invoice-erv-analytics.ts	packages/contracts/src/incoming-invoice-erv-analytics.ts	0644
 packages/contracts/src/incoming-invoice-erv-relational-v2.ts	packages/contracts/src/incoming-invoice-erv-relational-v2.ts	0644
@@ -536,6 +538,8 @@ schemas/contracts/incoming-invoice-erv-relational-v2.schema.json	schemas/contrac
 schemas/contracts/incoming-invoice-erv-v1.schema.json	schemas/contracts/incoming-invoice-erv-v1.schema.json	0644
 schemas/contracts/incoming-invoice-extraction-benchmark-v1.schema.json	schemas/contracts/incoming-invoice-extraction-benchmark-v1.schema.json	0644
 schemas/contracts/incoming-invoice-intake-v1.schema.json	schemas/contracts/incoming-invoice-intake-v1.schema.json	0644
+schemas/contracts/incoming-invoice-ap06-proof-probe-v2.schema.json	schemas/contracts/incoming-invoice-ap06-proof-probe-v2.schema.json	0644
+schemas/contracts/incoming-invoice-extraction-dataflow-v2.schema.json	schemas/contracts/incoming-invoice-extraction-dataflow-v2.schema.json	0644
 schemas/contracts/integration-profile-v1.schema.json	schemas/contracts/integration-profile-v1.schema.json	0644
 schemas/contracts/issue-candidate-v1.schema.json	schemas/contracts/issue-candidate-v1.schema.json	0644
 schemas/contracts/knowledge-contribution-envelope-v1.schema.json	schemas/contracts/knowledge-contribution-envelope-v1.schema.json	0644
@@ -607,6 +611,7 @@ scripts/extension-dynamic-process-lifecycle.mjs	scripts/extension-dynamic-proces
 scripts/extension-dynamic-synthetic.mjs	scripts/extension-dynamic-synthetic.mjs	0644
 scripts/generate-incoming-invoice-ap05-receipt-manifest.mjs	scripts/generate-incoming-invoice-ap05-receipt-manifest.mjs	0644
 scripts/generate-incoming-invoice-ap06-proof-probe.mjs	scripts/generate-incoming-invoice-ap06-proof-probe.mjs	0644
+scripts/generate-incoming-invoice-ap06-proof-probe-v2.mjs	scripts/generate-incoming-invoice-ap06-proof-probe-v2.mjs	0644
 scripts/generate-incoming-invoice-erv-analytics.mjs	scripts/generate-incoming-invoice-erv-analytics.mjs	0644
 scripts/learning-routing-baseline.mjs	scripts/learning-routing-baseline.mjs	0644
 scripts/measure-node-pure-compute.mjs	scripts/measure-node-pure-compute.mjs	0644
@@ -1150,6 +1155,7 @@ tests/fixtures/issue-candidate/positive-v1.json	tests/fixtures/issue-candidate/p
 tests/fixtures/issue-candidate/quarantine-v1.json	tests/fixtures/issue-candidate/quarantine-v1.json	0644
 tests/fixtures/incoming-invoice/source-manifest-v1.json	tests/fixtures/incoming-invoice/source-manifest-v1.json	0644
 tests/fixtures/incoming-invoice/ap-03-holdout-v1.json	tests/fixtures/incoming-invoice/ap-03-holdout-v1.json	0644
+tests/fixtures/incoming-invoice/ap-02-extraction-dataflow-expectations-v1.json	tests/fixtures/incoming-invoice/ap-02-extraction-dataflow-expectations-v1.json	0644
 tests/fixtures/incoming-invoice/ap-04-erv-cases-v1.json	tests/fixtures/incoming-invoice/ap-04-erv-cases-v1.json	0644
 tests/fixtures/incoming-invoice/ap-04-erv-relational-cases-v2.json	tests/fixtures/incoming-invoice/ap-04-erv-relational-cases-v2.json	0644
 tests/fixtures/incoming-invoice/ap-05-adaptive-release-v1/INCOMING-INVOICE-APPLICATION-GUIDE.md	tests/fixtures/incoming-invoice/ap-05-adaptive-release-v1/INCOMING-INVOICE-APPLICATION-GUIDE.md	0644
@@ -1280,6 +1286,8 @@ tests/injection-trust-boundary.test.ts	tests/injection-trust-boundary.test.ts	06
 tests/incoming-invoice-adaptive-ui.test.ts	tests/incoming-invoice-adaptive-ui.test.ts	0644
 tests/incoming-invoice-ap05-receipt-manifest.test.ts	tests/incoming-invoice-ap05-receipt-manifest.test.ts	0644
 tests/incoming-invoice-ap06-proof-probe.test.ts	tests/incoming-invoice-ap06-proof-probe.test.ts	0644
+tests/incoming-invoice-ap06-proof-probe-v2.test.ts	tests/incoming-invoice-ap06-proof-probe-v2.test.ts	0644
+tests/incoming-invoice-extraction-dataflow.test.ts	tests/incoming-invoice-extraction-dataflow.test.ts	0644
 tests/incoming-invoice-blueprint.test.ts	tests/incoming-invoice-blueprint.test.ts	0644
 tests/incoming-invoice-erv-analytics.test.ts	tests/incoming-invoice-erv-analytics.test.ts	0644
 tests/incoming-invoice-extraction-benchmark.test.ts	tests/incoming-invoice-extraction-benchmark.test.ts	0644
@@ -1518,6 +1526,7 @@ verification/intake-001-evidence-v1.json	verification/intake-001-evidence-v1.jso
 verification/lkc-qual-01-m0-evidence-v1.json	verification/lkc-qual-01-m0-evidence-v1.json	0644
 verification/incoming-invoice-ap05-receipt-manifest-v1.json	verification/incoming-invoice-ap05-receipt-manifest-v1.json	0644
 verification/incoming-invoice-ap06-proof-probe-v1.json	verification/incoming-invoice-ap06-proof-probe-v1.json	0644
+verification/incoming-invoice-ap06-proof-probe-v2.json	verification/incoming-invoice-ap06-proof-probe-v2.json	0644
 verification/incoming-invoice-erv-analytics-v1.json	verification/incoming-invoice-erv-analytics-v1.json	0644
 verification/pansphaira-kaleidosphere-analytics-slice-v1.json	verification/pansphaira-kaleidosphere-analytics-slice-v1.json	0644
 verification/pansphaira-kaleidosphere-analytics-slice-v2.json	verification/pansphaira-kaleidosphere-analytics-slice-v2.json	0644

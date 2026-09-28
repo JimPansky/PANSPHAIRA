@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.dev/schemas/contracts/incoming-invoice-extraction-dataflow-v2.schema.json",
+  "title": "Local synthetic incoming-invoice extraction-to-ERV-decision dataflow v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "dataflowVersion", "document", "extraction", "counterparty",
+    "matchingMode", "tolerancePolicy", "ervCase", "decision", "layers", "authority",
+    "nonclaims", "dataflowDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "chimpmaera.incoming-invoice/extraction-dataflow/v2" },
+    "dataflowVersion": { "const": "2.0.0" },
+    "document": { "$ref": "#/$defs/document" },
+    "extraction": { "$ref": "#/$defs/extraction" },
+    "counterparty": { "$ref": "#/$defs/counterparty" },
+    "matchingMode": { "$ref": "#/$defs/variantSelection" },
+    "tolerancePolicy": { "$ref": "#/$defs/variantSelection" },
+    "ervCase": { "$ref": "#/$defs/ervCase" },
+    "decision": { "$ref": "#/$defs/ervDecision" },
+    "layers": { "type": "array", "minItems": 5, "maxItems": 5, "items": { "$ref": "#/$defs/layer" } },
+    "authority": {
+      "type": "object", "additionalProperties": false,
+      "required": ["mode", "customerDataAuthorized", "productivePostingAuthorized", "bookingAuthorityGranted", "externalCallsAuthorized"],
+      "properties": {
+        "mode": { "const": "LOCAL_SYNTHETIC_PROOF" },
+        "customerDataAuthorized": { "const": false },
+        "productivePostingAuthorized": { "const": false },
+        "bookingAuthorityGranted": { "const": false },
+        "externalCallsAuthorized": { "const": false }
+      }
+    },
+    "nonclaims": {
+      "type": "array", "minItems": 5, "maxItems": 5, "uniqueItems": true,
+      "prefixItems": [
+        { "const": "NO_CUSTOMER_DATA_EVALUATED" },
+        { "const": "NO_EXTERNAL_PROVIDER_EVALUATED" },
+        { "const": "NO_PRODUCTIVE_ALLOCATION_OR_POSTING_AUTHORIZED" },
+        { "const": "NO_OCR_OR_MODEL_ACCURACY_CLAIM" },
+        { "const": "NO_LIVE_ERP_SYSTEM_CLAIM" }
+      ],
+      "items": false
+    },
+    "dataflowDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "document": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "documentId", "versionId", "versionOrdinal", "contentSha256", "byteLength",
+        "recordDigest", "supplierId", "invoiceNumber", "sourceId", "sourceKind", "synthetic", "customerData"
+      ],
+      "properties": {
+        "documentId": { "type": "string", "minLength": 1 },
+        "versionId": { "type": "string", "minLength": 1 },
+        "versionOrdinal": { "const": 1 },
+        "contentSha256": { "$ref": "#/$defs/sha256" },
+        "byteLength": { "type": "integer", "minimum": 1 },
+        "recordDigest": { "$ref": "#/$defs/sha256" },
+        "supplierId": { "type": "string", "minLength": 1 },
+        "invoiceNumber": { "type": "string", "minLength": 1 },
+        "sourceId": { "type": "string", "minLength": 1 },
+        "sourceKind": { "const": "LOCAL_SYNTHETIC_FIXTURE" },
+        "synthetic": { "const": true },
+        "customerData": { "const": false }
+      }
+    },
+    "knownNumber": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "value", "evidence"],
+      "properties": {
+        "state": { "const": "KNOWN" },
+        "value": { "type": "integer", "minimum": 0 },
+        "evidence": { "$ref": "#/$defs/extractionEvidence" }
+      }
+    },
+    "knownString": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "value", "evidence"],
+      "properties": {
+        "state": { "const": "KNOWN" },
+        "value": { "type": "string", "minLength": 1 },
+        "evidence": { "$ref": "#/$defs/extractionEvidence" }
+      }
+    },
+    "unknownField": {
+      "type": "object", "additionalProperties": false,
+      "required": ["state", "reasonCode"],
+      "properties": { "state": { "const": "UNKNOWN" }, "reasonCode": { "const": "NOT_EXTRACTED" } }
+    },
+    "extractionEvidence": {
+      "type": "object", "additionalProperties": false,
+      "required": ["stage", "extractorId", "sourceVersionId"],
+      "properties": {
+        "stage": { "const": "EXTRACTION" },
+        "extractorId": { "const": "ap-02-bounded-key-value-extraction/v1" },
+        "sourceVersionId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "extraction": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schemaVersion", "documentKind", "extractorId", "sourceVersionId", "extractionInputSha256",
+        "deterministicSyntheticExtraction", "fields", "observedFieldsDigest", "nonclaims"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "chimpmaera.incoming-invoice/bounded-extraction-report/v1" },
+        "documentKind": { "const": "AP02_SYNTHETIC_SUPPLIER_INVOICE_KEY_VALUE_V1" },
+        "extractorId": { "const": "ap-02-bounded-key-value-extraction/v1" },
+        "sourceVersionId": { "type": "string", "minLength": 1 },
+        "extractionInputSha256": { "$ref": "#/$defs/sha256" },
+        "deterministicSyntheticExtraction": { "const": true },
+        "fields": {
+          "type": "object", "additionalProperties": false,
+          "required": ["grossAmountMinor", "purchaseOrderNumber", "receiptReference"],
+          "properties": {
+            "grossAmountMinor": { "anyOf": [{ "$ref": "#/$defs/knownNumber" }, { "$ref": "#/$defs/unknownField" }] },
+            "purchaseOrderNumber": { "anyOf": [{ "$ref": "#/$defs/knownString" }, { "$ref": "#/$defs/unknownField" }] },
+            "receiptReference": { "anyOf": [{ "$ref": "#/$defs/knownString" }, { "$ref": "#/$defs/unknownField" }] }
+          }
+        },
+        "observedFieldsDigest": { "$ref": "#/$defs/sha256" },
+        "nonclaims": {
+          "type": "array", "minItems": 3, "maxItems": 3, "uniqueItems": true,
+          "prefixItems": [
+            { "const": "NO_OCR_OR_MODEL_INFERENCE" },
+            { "const": "NO_DOCUMENT_AI_ACCURACY_CLAIM" },
+            { "const": "NO_UNIVERSAL_EXTRACTION_QUALITY_CLAIM" }
+          ],
+          "items": false
+        }
+      }
+    },
+    "counterparty": {
+      "type": "object", "additionalProperties": false,
+      "required": ["supplierId", "purchaseOrderReferenceId", "receiptReferenceId", "purchaseOrderAmountMinor", "receiptAmountMinor"],
+      "properties": {
+        "supplierId": { "type": "string", "minLength": 1 },
+        "purchaseOrderReferenceId": { "type": "string", "minLength": 1 },
+        "receiptReferenceId": { "type": "string", "minLength": 1 },
+        "purchaseOrderAmountMinor": { "type": "integer", "minimum": 0 },
+        "receiptAmountMinor": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "variantSelection": {
+      "type": "object", "additionalProperties": false,
+      "required": ["variantId", "version"],
+      "properties": {
+        "variantId": { "type": "string", "minLength": 1 },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "ervReference": {
+      "type": "object", "additionalProperties": false,
+      "required": ["body", "evidence"],
+      "properties": {
+        "body": {
+          "type": "object", "additionalProperties": false,
+          "required": ["referenceKind", "referenceId", "supplierId", "matchAmountMinor", "quantity"],
+          "properties": {
+            "referenceKind": { "enum": ["SUPPLIER", "PURCHASE_ORDER", "RECEIPT", "INVOICE"] },
+            "referenceId": { "type": "string", "minLength": 1 },
+            "supplierId": { "type": "string", "minLength": 1 },
+            "matchAmountMinor": { "type": "integer", "minimum": 0 },
+            "quantity": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "evidence": {
+          "type": "object", "additionalProperties": false,
+          "required": ["sourceKind", "locator", "generator", "contentSha256"],
+          "properties": {
+            "sourceKind": { "const": "LOCAL_SYNTHETIC_FIXTURE" },
+            "locator": { "type": "string", "minLength": 1 },
+            "generator": { "type": "string", "minLength": 1 },
+            "contentSha256": { "$ref": "#/$defs/sha256" }
+          }
+        }
+      }
+    },
+    "ervCase": {
+      "type": "object", "additionalProperties": false,
+      "required": ["caseId", "matchingMode", "tolerancePolicy", "requestedEffects", "references"],
+      "properties": {
+        "caseId": { "type": "string", "minLength": 1 },
+        "matchingMode": { "$ref": "#/$defs/variantSelection" },
+        "tolerancePolicy": { "$ref": "#/$defs/variantSelection" },
+        "requestedEffects": {
+          "type": "array", "minItems": 2, "maxItems": 2,
+          "prefixItems": [{ "const": "READ_SYNTHETIC" }, { "const": "WRITE_LOCAL_PROOF" }],
+          "items": false
+        },
+        "references": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "$ref": "#/$defs/ervReference" } }
+      }
+    },
+    "ervDecision": {
+      "type": "object",
+      "required": ["caseId", "outcome", "variant", "evidenceCitations", "advisor", "authority"],
+      "properties": {
+        "caseId": { "type": "string", "minLength": 1 },
+        "outcome": { "enum": ["MATCHED", "CONFLICT", "EXCEPTION", "DENIED"] },
+        "variant": {
+          "type": "object",
+          "required": ["matchingModeId", "matchingModeVersion", "tolerancePolicyId", "tolerancePolicyVersion"],
+          "properties": {
+            "matchingModeId": { "type": "string", "minLength": 1 },
+            "matchingModeVersion": { "type": "string", "minLength": 1 },
+            "tolerancePolicyId": { "type": "string", "minLength": 1 },
+            "tolerancePolicyVersion": { "type": "string", "minLength": 1 }
+          }
+        },
+        "evidenceCitations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["referenceKind", "referenceId", "contentSha256", "verified"],
+            "properties": {
+              "referenceKind": { "enum": ["SUPPLIER", "PURCHASE_ORDER", "RECEIPT", "INVOICE"] },
+              "referenceId": { "type": "string", "minLength": 1 },
+              "contentSha256": { "$ref": "#/$defs/sha256" },
+              "verified": { "type": "boolean" }
+            }
+          }
+        },
+        "advisor": {
+          "type": "object",
+          "required": ["questions", "advisorAuthority", "bookingAuthorityGranted"],
+          "properties": {
+            "questions": { "type": "array", "minItems": 1 },
+            "advisorAuthority": { "const": "EVIDENCE_CITING_ONLY" },
+            "bookingAuthorityGranted": { "const": false }
+          }
+        },
+        "authority": {
+          "type": "object", "additionalProperties": false,
+          "required": ["productivePostingAuthorized", "bookingAuthorityGranted", "riskDCapability"],
+          "properties": {
+            "productivePostingAuthorized": { "const": false },
+            "bookingAuthorityGranted": { "const": false },
+            "riskDCapability": { "const": "SEPARATELY_AUTHORIZED" }
+          }
+        }
+      }
+    },
+    "layer": {
+      "type": "object", "additionalProperties": false,
+      "required": ["layerId", "capabilityId", "evidenceClass", "executed", "evidenceClassBasis", "observed"],
+      "properties": {
+        "layerId": { "enum": ["SOURCE", "DOCUMENT", "EXTRACTION", "VALIDATION", "MATCHING"] },
+        "capabilityId": { "type": "string", "minLength": 1 },
+        "evidenceClass": { "enum": ["SOURCE_BOUND", "SCHEMA_VALIDATED", "EXECUTED"] },
+        "executed": { "type": "boolean" },
+        "evidenceClassBasis": { "type": "string", "minLength": 1 },
+        "observed": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

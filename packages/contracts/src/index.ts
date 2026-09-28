@@ -112,6 +112,8 @@ export * from "./incoming-invoice-erv-relational-v2.js";
 export * from "./incoming-invoice-adaptive-ui.js";
 export * from "./incoming-invoice-ap05-receipt-manifest.js";
 export * from "./incoming-invoice-ap06-proof-probe.js";
+export * from "./incoming-invoice-extraction-dataflow-v2.js";
+export * from "./incoming-invoice-ap06-proof-probe-v2.js";
 export * from "./incoming-invoice-erv-analytics.js";
 export * from "./voice-local-ptt.js";
 export * from "./usage-insights.js";

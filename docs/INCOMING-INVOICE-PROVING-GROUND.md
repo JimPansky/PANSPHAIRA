@@ -124,7 +124,14 @@ Any of them fails the variant proof.
 6. **AP-06 — End-to-end verdict**
    Exercise positive, duplicate, tamper, mismatch, `UNKNOWN`, cancellation, and
    replay cases and emit `GO`, `NARROW_GO`, or
-   `FALSIFIED_WITH_EVIDENCE`.
+   `FALSIFIED_WITH_EVIDENCE`. Each released chain layer is reported with an
+   explicit evidence class — `SOURCE_BOUND` (bytes bound by digest only),
+   `SCHEMA_VALIDATED` (released contract shape validated) or `EXECUTED` (the
+   released implementation actually ran over the bound input). A layer that was
+   not executed is never reported as executed. The successor probe v2 additionally
+   carries the bounded synthetic extraction-to-ERV-decision dataflow, so the
+   EXTRACTION layer is execution evidence over the ingested document rather than
+   only a frozen benchmark/holdout binding.
 
 ## Current status
 
@@ -144,6 +151,16 @@ evidence.
 The `34/34` count adds six acceptance identifiers—four on AP-05
 (`AP-05-AC05`–`AP-05-AC08`) and two on AP-06 (`AP-06-AC06`–`AP-06-AC07`)—
 exercised by the released AP-05 receipt manifest and the AP-06 proof probe.
+
+The current AP-06 proof is the evidence-class successor
+`verification/incoming-invoice-ap06-proof-probe-v2.json`
+(`npm run incoming-invoice-ap06-proof-probe-v2:test`): it re-binds the released
+predecessor bytes unchanged, classifies every chain layer as `SOURCE_BOUND`,
+`SCHEMA_VALIDATED` or `EXECUTED`, and carries the bounded synthetic
+extraction-to-ERV-decision dataflow. The frozen
+`verification/incoming-invoice-ap06-proof-probe-v1.json` is retained byte-for-byte
+and explicitly scoped to its historical release line; its generic `exercised`
+flag is superseded and is not reused by any current layer claim.
 
 ## Dependencies and promotion
 

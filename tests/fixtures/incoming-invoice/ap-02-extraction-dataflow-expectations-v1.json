@@ -1,0 +1,37 @@
+{
+  "schemaVersion": "chimpmaera.incoming-invoice/ap02-extraction-expectations/v1",
+  "fixtureId": "ap-02-bounded-extraction-expectations-v1",
+  "provenance": "HAND_AUTHORED_INDEPENDENT_EXPECTATION_NOT_PRODUCED_BY_THE_EXTRACTOR",
+  "note": "Expected fields and results are authored independently of the bounded extractor under test: grossAmountMinor is derived by hand from the frozen document line gross_amount=123.45, and the absent purchase-order/receipt keys are expected to stay explicit UNKNOWN rather than be inferred.",
+  "documentPath": "tests/fixtures/incoming-invoice/supplier-invoice-v1.txt",
+  "documentSha256": "fad5979234e5ca8d31e2a10e7a9650c5f4f32693610c2fcf2678b0ab5a5f525b",
+  "ervCasePackPath": "tests/fixtures/incoming-invoice/ap-04-erv-cases-v1.json",
+  "ervCasePackSha256": "136bbdfcb61bf48ab0043d828dbf797e9b9156f58d284cc7f9b921da59040845",
+  "expectedExtraction": {
+    "grossAmountMinor": 12345,
+    "purchaseOrderNumber": { "state": "UNKNOWN", "reasonCode": "NOT_EXTRACTED" },
+    "receiptReference": { "state": "UNKNOWN", "reasonCode": "NOT_EXTRACTED" }
+  },
+  "counterparty": {
+    "supplierId": "SYN-SUP-001",
+    "purchaseOrderReferenceId": "PO-2026-0001",
+    "receiptReferenceId": "RCV-2026-0001",
+    "purchaseOrderAmountMinor": 12345,
+    "receiptAmountMinor": 12345
+  },
+  "matchingMode": { "variantId": "THREE_WAY_INVOICE_PO_RECEIPT_V1", "version": "1.0.0" },
+  "tolerancePolicy": { "variantId": "STRICT_ZERO_V1", "version": "1.0.0" },
+  "expectedDecision": "MATCHED",
+  "controls": {
+    "materialFieldChangeDeltaMinor": 1,
+    "materialFieldChangeExpectedDecision": "CONFLICT",
+    "toleratedTolerancePolicy": { "variantId": "ABS_MINOR_V1", "version": "1.0.0" },
+    "toleratedFieldChangeDeltaMinor": 45,
+    "toleratedExpectedDecision": "MATCHED",
+    "missingInformationDocument": "supplier_id=SYN-SUP-001\ncurrency=EUR\n",
+    "missingInformationExpectedReasonCode": "EXTRACTION_FIELD_UNKNOWN",
+    "unsupportedFieldDocument": "gross_amount=1.00\ninvented_field=1\n",
+    "unsupportedFieldExpectedReasonCode": "UNSUPPORTED_EXTRACTION_FIELD_DENIED",
+    "contradictorySubstitutionExpectedReasonCode": "DATAFLOW_IDENTITY_MISMATCH"
+  }
+}

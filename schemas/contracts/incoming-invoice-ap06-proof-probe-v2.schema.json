@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.dev/schemas/contracts/incoming-invoice-ap06-proof-probe-v2.schema.json",
+  "title": "Incoming-invoice AP-06 proof probe v2 with explicit evidence classes",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion", "proofProbeVersion", "taskId", "issue", "evidenceClasses", "historicalScoping",
+    "predecessorBinding", "chain", "frozenInputsExcluded", "dataflow", "caseMatrix", "verdict",
+    "acceptanceCriteria", "nonclaims", "proofProbeDigest"
+  ],
+  "properties": {
+    "schemaVersion": { "const": "chimpmaera.incoming-invoice/ap06-proof-probe/v2" },
+    "proofProbeVersion": { "const": "2.0.0" },
+    "taskId": { "const": "PS488-AP-DATAFLOW-01" },
+    "issue": { "const": "JoFe2/PANSPHAIRA#488" },
+    "evidenceClasses": {
+      "type": "array", "minItems": 3, "maxItems": 3,
+      "prefixItems": [{ "const": "SOURCE_BOUND" }, { "const": "SCHEMA_VALIDATED" }, { "const": "EXECUTED" }],
+      "items": false
+    },
+    "historicalScoping": {
+      "type": "object", "additionalProperties": false,
+      "required": ["probeV1Path", "probeV1Identity", "scope", "note"],
+      "properties": {
+        "probeV1Path": { "const": "verification/incoming-invoice-ap06-proof-probe-v1.json" },
+        "probeV1Identity": { "$ref": "#/$defs/identity" },
+        "scope": { "const": "HISTORICAL_RELEASE_LINE_NOT_CURRENT_SOURCE" },
+        "note": { "type": "string", "minLength": 1 }
+      }
+    },
+    "predecessorBinding": {
+      "type": "array", "minItems": 10, "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["releaseId", "path", "sha256", "bytes"],
+        "properties": {
+          "releaseId": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "minLength": 1 },
+          "sha256": { "$ref": "#/$defs/sha256" },
+          "bytes": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "chain": {
+      "type": "array", "minItems": 8, "maxItems": 8, "items": { "$ref": "#/$defs/layer" }
+    },
+    "frozenInputsExcluded": {
+      "type": "array", "minItems": 2, "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["releaseId", "path", "role", "excludedFromProofInputs", "note"],
+        "properties": {
+          "releaseId": { "type": "string", "minLength": 1 },
+          "path": { "type": "string", "minLength": 1 },
+          "role": { "type": "string", "minLength": 1 },
+          "excludedFromProofInputs": { "const": true },
+          "note": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "dataflow": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "schemaVersion", "documentVersionId", "documentContentSha256", "recordDigest", "extractionInputSha256",
+        "extractorId", "observedFieldsDigest", "observedGrossAmountMinor", "purchaseOrderNumberState",
+        "receiptReferenceState", "ervCaseId", "ervDecision", "dataflowDigest", "verified"
+      ],
+      "properties": {
+        "schemaVersion": { "const": "chimpmaera.incoming-invoice/extraction-dataflow/v2" },
+        "documentVersionId": { "type": "string", "minLength": 1 },
+        "documentContentSha256": { "$ref": "#/$defs/sha256" },
+        "recordDigest": { "$ref": "#/$defs/sha256" },
+        "extractionInputSha256": { "$ref": "#/$defs/sha256" },
+        "extractorId": { "const": "ap-02-bounded-key-value-extraction/v1" },
+        "observedFieldsDigest": { "$ref": "#/$defs/sha256" },
+        "observedGrossAmountMinor": { "type": "integer", "minimum": 0 },
+        "purchaseOrderNumberState": { "enum": ["KNOWN", "UNKNOWN"] },
+        "receiptReferenceState": { "enum": ["KNOWN", "UNKNOWN"] },
+        "ervCaseId": { "type": "string", "minLength": 1 },
+        "ervDecision": { "enum": ["MATCHED", "CONFLICT", "EXCEPTION", "DENIED"] },
+        "dataflowDigest": { "$ref": "#/$defs/sha256" },
+        "verified": { "const": true }
+      }
+    },
+    "caseMatrix": {
+      "type": "array", "minItems": 11, "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["caseType", "layerId", "observed", "oracle", "matchesOracle"],
+        "properties": {
+          "caseType": { "type": "string", "minLength": 1 },
+          "layerId": { "type": "string", "minLength": 1 },
+          "observed": { "type": "string" },
+          "oracle": { "type": "string" },
+          "matchesOracle": { "const": true }
+        }
+      }
+    },
+    "verdict": {
+      "type": "object", "additionalProperties": false,
+      "required": ["value", "reasons"],
+      "properties": {
+        "value": { "enum": ["NARROW_GO", "FALSIFIED_WITH_EVIDENCE"] },
+        "reasons": { "type": "array", "minItems": 5, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array", "minItems": 5, "maxItems": 5,
+      "prefixItems": [
+        { "const": "AP-DATAFLOW-AC01" },
+        { "const": "AP-DATAFLOW-AC02" },
+        { "const": "AP-DATAFLOW-AC03" },
+        { "const": "AP-DATAFLOW-AC04" },
+        { "const": "AP-DATAFLOW-AC05" }
+      ],
+      "items": false
+    },
+    "nonclaims": { "type": "array", "minItems": 7, "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "proofProbeDigest": { "$ref": "#/$defs/sha256" }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "identity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["byteLength", "sha256"],
+      "properties": {
+        "byteLength": { "type": "integer", "minimum": 1 },
+        "sha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "layer": {
+      "type": "object", "additionalProperties": false,
+      "required": [
+        "ordinal", "layerId", "capabilityId", "modulePath", "moduleIdentity", "evidenceClass",
+        "executed", "evidenceClassBasis", "observed"
+      ],
+      "properties": {
+        "ordinal": { "type": "integer", "minimum": 1, "maximum": 8 },
+        "layerId": {
+          "enum": [
+            "SOURCE", "DOCUMENT", "EXTRACTION", "VALIDATION", "MATCHING",
+            "EXCEPTION_ADVISOR", "ADAPTIVE_UI", "RECEIPT_EVIDENCE_VERDICT"
+          ]
+        },
+        "capabilityId": { "type": "string", "minLength": 1 },
+        "modulePath": { "type": "string", "minLength": 1 },
+        "moduleIdentity": { "$ref": "#/$defs/identity" },
+        "evidenceClass": { "enum": ["SOURCE_BOUND", "SCHEMA_VALIDATED", "EXECUTED", "EXCLUDED_FROM_PROOF_INPUTS"] },
+        "executed": { "type": "boolean" },
+        "evidenceClassBasis": { "type": "string", "minLength": 1 },
+        "observed": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}
