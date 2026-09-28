@@ -1083,7 +1083,7 @@ e2d5fba3fdd8ce038e1e3a4be7588112c3897e0a63dd7cf9f62b1eba42eb2303  ./src/pan433/d
 a458c0b1e9e83b0851657ec8f28e419b89360719a5347b1d5588ab5db3063bd9  ./src/pan442/bound-task-handle.mjs
 bbc81e177a299a9da3108ac24a7cd6a085ebdb0e8a28b1715374d10560d9e20c  ./src/pan442/synthetic-metric-read-task.mjs
 8e341e1f928186a7d36aaaa87fde334b98ed2a6016d6853d56f413a6d09a52a5  ./src/pan461/lifecycle-inventory.mjs
-fd99e0c9dc9b36d74992c79343ccaca69a5b7f3d8dbbec81175d9baae315e073  ./src/pan462/native-backup-restore.mjs
+b8b46865f0b697ea1f6280de9c77245f74dbedc36c991de45ab89fca28a8808b  ./src/pan462/native-backup-restore.mjs
 a99c14d9a66d771f880c9a7b47436af411522b45c75873afa456c53f5dbc2f0f  ./src/pan469/contribution-views.mjs
 4986fa3de86fb4963c1cb191ba65f181aa7dab4e3af4222068cc2df17d3b7f40  ./src/pan470/handoff-effort.mjs
 7eeab48ef9a74f498e6e4fdc83095745a467f595120688691400f602f2cc975f  ./src/pan471/capability-inventory.mjs
@@ -1787,7 +1787,7 @@ a5617f6a9a5cbd28e474525165c39b45b3d0cb09dd63bb04ca5576b5a77daff7  ./tests/pan453
 8ca3c09af881090cd8c470539b757c23f1fbac635224b4dfa0c1c568c712b523  ./tests/pan453/composed-ambiguity.test.mjs
 1940bccf92be0eb2c58fc5fb1f1505f3938ebb52ef0e0ab3d9376e77f67b394e  ./tests/pan453/crash-fixture.mjs
 2b24ab68ec90fbfb9cdfb3cf5f669dfa9c26a64c3d7b8e58ab42bcb599540c08  ./tests/pan461/lifecycle-inventory.test.mjs
-a6eed624ce4a451d1cfa83a5b8505441f6323aa07c745449ff0e48643046b5cc  ./tests/pan462/native-backup-restore.test.mjs
+2655b8658aa2f9a4991ec5f72e5d148d390f2019c4492232487d2d853ce9160a  ./tests/pan462/native-backup-restore.test.mjs
 225adc4679349fe2b7b83c221f9b6c104f8d577f3d110373ffbe4291af4a61d1  ./tests/pan468/pan468-impact-selection.test.mjs
 88e9afa49dbc930c76fb81117889f9b57acbbe08eaf20928f624f1ec15ea96de  ./tests/pan469/pan469-contribution-views.test.mjs
 efdca64f15650f5785d78f190fa9a65d926d3d42efa6cea74b76e1818fb985cb  ./tests/pan470/handoff-effort.test.mjs
@@ -2025,5 +2025,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-e5331f30e8043644d60eead291d27290756759d84c04e882ff4cba2e78b9e904  ./verification/verification-dag-v2.json
+a4b5f5e68374e46ebbf1a7fc6063b455f2e182eabadcdd527eb3d9ef540e5c5b  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
