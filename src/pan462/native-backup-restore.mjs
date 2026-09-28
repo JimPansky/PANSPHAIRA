@@ -40,6 +40,7 @@
 import { createHash } from "node:crypto";
 import {
   existsSync,
+  lstatSync,
   mkdirSync,
   readFileSync,
   readdirSync,
@@ -72,6 +73,10 @@ export const PAN462_BACKUP_SCHEMA_V1 = "pansphaira.pan462/backup-archive/v1";
 export const PAN462_RESTORE_SCHEMA_V1 = "pansphaira.pan462/restore-receipt/v1";
 export const PAN462_SCHEMA_V1 = "pansphaira.pan462/native-backup-restore/v1";
 export const PAN462_CONSUMER_CONTRACT_V1 = "pan462.installation.native-backup-restore/v1";
+// Correction 2026-09-28: the closed shapes the corrected readback/diagnosis use.
+export const PAN462_READBACK_SCHEMA_V1 = "pansphaira.pan462/restore-readback/v1";
+export const PAN462_RESTORED_STATE_SCHEMA_V1 = "pansphaira.pan462/restored-installation-state/v1";
+export const PAN462_DESTINATION_SCHEMA_V1 = "pansphaira.pan462/destination-receipt/v1";
 
 // The only backup boundary this slice produces: one quiesced, transaction-
 // consistent snapshot of the owned state. It is a LOCAL COPY (same controller
@@ -116,6 +121,182 @@ const bytesSha = (value) =>
 
 const deny = (code) => ({ outcome: "DENIED", code });
 const safeCopy = (value) => JSON.parse(canonicalJson(value));
+
+// ---------------------------------------------------------------------------
+// Owned/disposable destination guard (correction 2026-09-28).
+// ---------------------------------------------------------------------------
+// Destructive removal of a backup or restore root is allowed ONLY inside an
+// explicitly owned, disposable scratch root. The path must be an absolute,
+// normalized STRICT descendant of `ownedRoot`, must not be a symlink (or
+// contain a symlinked component), must not be a filesystem root, and must be
+// distinct from every related root. Anything else is refused BEFORE any
+// destructive write, so unrelated contents are never touched.
+function isStrictDescendant(parent, child) {
+  const relative = path.relative(parent, child);
+  return relative !== "" && !relative.startsWith("..") && !path.isAbsolute(relative);
+}
+
+function symlinkComponentBetween(parent, child) {
+  let current = parent;
+  for (const part of path.relative(parent, child).split(path.sep)) {
+    if (part === "" || part === ".") continue;
+    current = path.join(current, part);
+    try {
+      if (lstatSync(current).isSymbolicLink()) return true;
+    } catch {
+      // A component that does not exist yet cannot be a symlink: the destructive
+      // op creates it fresh, so traversal into pre-existing data is impossible.
+      return false;
+    }
+  }
+  return false;
+}
+
+function guardDisposableDestination({ dir, ownedRoot, forbidden = [] }) {
+  if (typeof dir !== "string" || dir.length === 0) return deny("INPUT_REQUIRED");
+  if (typeof ownedRoot !== "string" || ownedRoot.length === 0) return deny("OWNED_ROOT_REQUIRED");
+  const resolved = path.resolve(dir);
+  if (!path.isAbsolute(dir) || resolved === path.parse(resolved).root) return deny("DESTINATION_UNSAFE_PATH");
+  // `path.resolve` would silently repair `..`/`.`; a repaired path is not the
+  // path the caller named, so it is refused rather than normalized.
+  if (dir !== resolved || dir.includes("..")) return deny("DESTINATION_UNSAFE_PATH");
+  const owned = path.resolve(ownedRoot);
+  if (!path.isAbsolute(ownedRoot) || owned === path.parse(owned).root) return deny("OWNED_ROOT_REQUIRED");
+  let ownedStat;
+  try { ownedStat = lstatSync(owned); } catch { return deny("OWNED_ROOT_REQUIRED"); }
+  if (ownedStat.isSymbolicLink() || !ownedStat.isDirectory()) return deny("OWNED_ROOT_REQUIRED");
+  if (!isStrictDescendant(owned, resolved)) return deny("DESTINATION_NOT_OWNED");
+  if (symlinkComponentBetween(owned, resolved)) return deny("DESTINATION_IS_SYMLINK");
+  try {
+    const leaf = lstatSync(resolved);
+    if (leaf.isSymbolicLink() || !leaf.isDirectory()) return deny("DESTINATION_IS_SYMLINK");
+  } catch { /* not created yet — a fresh owned leaf is fine */ }
+  for (const other of forbidden) {
+    if (typeof other !== "string" || other.length === 0) continue;
+    const otherResolved = path.resolve(other);
+    if (otherResolved === resolved
+      || isStrictDescendant(otherResolved, resolved)
+      || isStrictDescendant(resolved, otherResolved)) {
+      return deny("DESTINATION_NOT_DISTINCT");
+    }
+  }
+  return { outcome: "OK", code: "OK", resolved };
+}
+
+// ---------------------------------------------------------------------------
+// Read-only observation of the ACTUAL restored target (correction 2026-09-28).
+// ---------------------------------------------------------------------------
+const COMPOSE_STATES_V1 = Object.freeze(["RUNNING", "STOPPED", "UNAVAILABLE"]);
+const COMPOSE_HEALTH_V1 = Object.freeze(["HEALTHY", "UNHEALTHY", "NOT_AVAILABLE"]);
+
+function observeRestoredTargetState({ restored, targetRoot, requiredServiceIds }) {
+  const readEntry = (relativePath) => {
+    const full = path.join(targetRoot, relativePath);
+    if (!existsSync(full)) return { present: false, bytes: null, json: null };
+    try {
+      const bytes = readFileSync(full);
+      let json = null;
+      try { json = JSON.parse(bytes.toString("utf8")); } catch { json = null; }
+      return { present: true, bytes, json };
+    } catch {
+      return { present: false, bytes: null, json: null };
+    }
+  };
+
+  const config = readEntry(path.join("config", "config.json"));
+  const observedConfigDigest = config.bytes === null ? null : bytesSha(config.bytes);
+  const files = restored.files.map((file) => {
+    const observed = readEntry(path.join("files", file.path));
+    return {
+      path: file.path,
+      expectedSha256: file.sha256,
+      present: observed.present,
+      observedSha256: observed.bytes === null ? null : bytesSha(observed.bytes),
+    };
+  });
+  const state = readEntry("installation-state.json").json;
+  const authorityEntry = readEntry("writer-authority.json");
+  const effectEntry = readEntry("effect-policy.json");
+  const authority = isRecord(authorityEntry.json) ? authorityEntry.json : null;
+  const effectPolicy = isRecord(effectEntry.json) ? effectEntry.json : null;
+
+  // The restored copy's persisted service-state records. Invalid-valued entries
+  // are dropped (they then count as missing), so a mutated state file degrades
+  // to a non-PASS observation instead of throwing.
+  const declaredServices = isRecord(state) && isDenseArray(state.services) ? state.services : null;
+  const observedServices = declaredServices === null ? null : declaredServices
+    .filter((service) => isRecord(service)
+      && requiredServiceIds.includes(service.serviceId)
+      && COMPOSE_STATES_V1.includes(service.state)
+      && COMPOSE_HEALTH_V1.includes(service.health))
+    .map((service) => ({ serviceId: service.serviceId, state: service.state, health: service.health }));
+
+  return {
+    observedLockDigest: isRecord(state) && sha256Hex(state.installationDigest) ? state.installationDigest : null,
+    observedVersion: isRecord(state) && typeof state.version === "string" ? state.version : null,
+    observedConfigDigest,
+    files,
+    authority,
+    effectPolicy,
+    observedServices,
+    servicesPresent: declaredServices !== null,
+    publicView: {
+      targetRoot,
+      configPresent: config.present,
+      observedConfigDigest,
+      files: files.map((file) => ({ path: file.path, present: file.present, observedSha256: file.observedSha256 })),
+      authorityEpoch: authority !== null && Number.isSafeInteger(authority.epoch) ? authority.epoch : null,
+      authorityState: authority !== null && typeof authority.state === "string" ? authority.state : null,
+      predecessorRevoked: authority !== null && authority.predecessorRevoked === true,
+      externalEffects: effectPolicy !== null && typeof effectPolicy.externalEffects === "string" ? effectPolicy.externalEffects : null,
+      serviceIds: observedServices === null ? [] : observedServices.map((service) => service.serviceId),
+    },
+  };
+}
+
+function restoredReadDenialCode({ observed, filesMatch, configMatch, authorityMatch, effectMatch, servicesMatch }) {
+  if (observed.observedConfigDigest === null) return "RESTORED_CONFIG_MISSING";
+  if (!configMatch) return "RESTORED_CONFIG_MISMATCH";
+  if (observed.files.some((file) => !file.present)) return "RESTORED_FILE_MISSING";
+  if (!filesMatch) return "RESTORED_FILE_MISMATCH";
+  if (observed.effectPolicy === null) return "RESTORED_EFFECT_POLICY_MISSING";
+  if (!effectMatch) return "RESTORED_EFFECT_POLICY_MALFORMED";
+  if (observed.authority === null) return "RESTORED_AUTHORITY_MISSING";
+  if (!authorityMatch) return "RESTORED_AUTHORITY_MISMATCH";
+  if (observed.servicesPresent !== true) return "RESTORED_SERVICE_STATE_MISSING";
+  if (!servicesMatch) return "RESTORED_SERVICE_STATE_UNAVAILABLE";
+  return "RESTORED_STATE_UNVERIFIED";
+}
+
+// An independent/offhost destination receipt binds a DIFFERENT destination to
+// the SAME archive. This slice never produces one, so the class stays held;
+// only a source-bound receipt — never a caller boolean — can earn it.
+function verifyDestinationReceipt(receipt, backup) {
+  if (!isRecord(receipt) || receipt.schemaVersion !== PAN462_DESTINATION_SCHEMA_V1) return false;
+  if (receipt.independent !== true || receipt.authorizedInfrastructure !== true) return false;
+  if (typeof receipt.destinationId !== "string" || receipt.destinationId.length === 0) return false;
+  if (typeof backup.archiveDigest !== "string" || receipt.archiveDigest !== backup.archiveDigest) return false;
+  const { receiptDigest, ...content } = receipt;
+  return typeof receiptDigest === "string" && sha(content) === receiptDigest;
+}
+
+// VERIFIED_RESTORE is earned only by the independently re-checked native readback
+// receipt (produced by readRestoredInstallationV1), cross-bound to the SAME
+// archive. A caller boolean is never evidence.
+function verifyRestoreReadback(receipt, backup) {
+  if (!isRecord(receipt) || receipt.schemaVersion !== PAN462_READBACK_SCHEMA_V1) return false;
+  if (receipt.outcome !== "READ" || receipt.doctorStatus !== "PASS") return false;
+  const captures = isRecord(backup.manifest) ? backup.manifest.captures : undefined;
+  if (!isRecord(captures) || !isRecord(captures.config) || !isDenseArray(captures.files)) return false;
+  if (receipt.installationDigest !== backup.manifest.installationDigest) return false;
+  if (receipt.observedConfigDigest !== captures.config.sha256) return false;
+  if (!isDenseArray(receipt.observedFiles) || receipt.observedFiles.length !== captures.files.length) return false;
+  for (const file of captures.files) {
+    if (!receipt.observedFiles.some((observed) => observed.path === file.path && observed.sha256 === file.sha256)) return false;
+  }
+  const { readbackDigest, ...content } = receipt;
+  return typeof readbackDigest === "string" && sha(content) === readbackDigest;
+}
 
 // ---------------------------------------------------------------------------
 // AC01 — the owned synthetic installation descriptor (closed shape).
@@ -295,6 +476,7 @@ export async function createPan462BackupV1({
   installation,
   source,
   backupDir,
+  ownedRoot,
   now,
   nowMs,
   checkpointOrdinal = 1,
@@ -308,6 +490,10 @@ export async function createPan462BackupV1({
     || typeof source.database.client !== "object") {
     return deny("SOURCE_STORAGE_REQUIRED");
   }
+  // The backup root is removed recursively below: prove it is an owned,
+  // disposable, distinct local root before anything destructive happens.
+  const destination = guardDisposableDestination({ dir: backupDir, ownedRoot, forbidden: [source.root] });
+  if (destination.outcome !== "OK") return destination;
   const startedAtMs = nowMs;
   try {
     // 1) Owned DATABASE: one consistent snapshot.
@@ -415,7 +601,16 @@ export async function createPan462BackupV1({
       versionAxes: installation.versionAxes,
       authorityProfile: installation.authorityProfile,
       installationDigest: installation.installationDigest,
-      captures: { database: { tables: database.map((table) => table.table), digest: bytesSha(databaseBytes) }, files, config, keyRefs },
+      captures: {
+        database: { tables: database.map((table) => table.table), digest: bytesSha(databaseBytes) },
+        files,
+        config,
+        keyRefs,
+        // The owned installation's declared service state, captured at the same
+        // consistent boundary and restored into the target (readback observes
+        // the restored copy's persisted records, never the caller's request).
+        services: installation.services.map((service) => ({ ...service })),
+      },
       writerAuthority,
       externalEffects: installation.externalEffects,
       checkpoint,
@@ -485,6 +680,7 @@ function measure({ startedAtMs, completedAtMs, databaseRows, fileCount, fileByte
 export async function restorePan462BackupV1({
   backupDir,
   targetRoot,
+  ownedRoot,
   target,
   expectedVersion,
   now,
@@ -523,6 +719,16 @@ export async function restorePan462BackupV1({
 
   // AC01: the restored copy must run at the MATCHING executable version.
   if (archive.version !== expectedVersion) return deny("WRONG_VERSION");
+
+  // A manifest without the captured service state cannot be restored faithfully.
+  if (!isRecord(archive.captures) || !isDenseArray(archive.captures.services)) return deny("CORRUPT_ARCHIVE");
+
+  // The restore root is removed recursively below: prove it is an owned,
+  // disposable, distinct local root before anything destructive happens.
+  const destination = guardDisposableDestination({
+    dir: targetRoot, ownedRoot, forbidden: [archive.sourceRoot, backupDir],
+  });
+  if (destination.outcome !== "OK") return destination;
 
   // Recompute every captured object digest; a missing or altered object refuses
   // completion (missing store / corrupt archive).
@@ -584,6 +790,19 @@ export async function restorePan462BackupV1({
     // Persist the restored copy's effect policy + writer authority fence.
     writeFileSync(path.join(targetRoot, "effect-policy.json"), `${JSON.stringify({ externalEffects: "DISABLED" }, null, 2)}\n`);
     writeFileSync(path.join(targetRoot, "writer-authority.json"), `${JSON.stringify(restoredWriterAuthority, null, 2)}\n`);
+    // Persist the restored installation state (identity + declared services) so
+    // the readback observes the restored copy itself, not the caller's request.
+    writeFileSync(path.join(targetRoot, "installation-state.json"), `${JSON.stringify({
+      schemaVersion: PAN462_RESTORED_STATE_SCHEMA_V1,
+      installationId: archive.installationId,
+      releaseId: archive.releaseId,
+      version: archive.version,
+      versionAxes: archive.versionAxes,
+      installationDigest: archive.installationDigest,
+      externalEffects: "DISABLED",
+      writerAuthority: restoredWriterAuthority,
+      services: archive.captures.services.map((service) => ({ ...service })),
+    }, null, 2)}\n`);
 
     const completedAtMs = Date.now();
     const restored = {
@@ -599,6 +818,7 @@ export async function restorePan462BackupV1({
       keyRefs: availableKeyRefs,
       files: archive.captures.files.map((file) => ({ path: file.path, sha256: file.sha256, bytes: file.bytes })),
       config: archive.captures.config,
+      services: archive.captures.services.map((service) => ({ ...service })),
       targetRoot,
       restoredAtMs: nowMs,
     };
@@ -636,6 +856,8 @@ export async function readRestoredInstallationV1({
     || typeof target.database.password !== "string" || !isDenseArray(requiredServiceIds)) {
     return deny("INPUT_REQUIRED");
   }
+  const targetRoot = typeof target.root === "string" && target.root.length > 0 ? target.root : restored.targetRoot;
+  if (typeof targetRoot !== "string" || targetRoot.length === 0) return deny("INPUT_REQUIRED");
   try {
     // 1) Native product read of the restored DATABASE objects: the released
     //    read-only PostgreSQL connector reads them back over the wire protocol
@@ -648,18 +870,27 @@ export async function readRestoredInstallationV1({
         database: target.database.name, user: target.database.user, password: target.database.password,
       }),
     });
-    // 2) Native product read of the restored installation STATE: the released
-    //    read-only observer + doctor report against the restored copy.
+
+    // 2) Observe the ACTUAL restored target from disk, read-only. Nothing here
+    //    is copied from the restored receipt, and no service state is inferred
+    //    from the requested service list.
+    const observed = observeRestoredTargetState({ restored, targetRoot, requiredServiceIds });
+    if (observed.observedLockDigest === null) {
+      return deny("RESTORED_STATE_UNAVAILABLE");
+    }
+
+    // 3) The RELEASED observer + doctor over the genuine, independently read
+    //    observations of the restored copy.
     const snapshot = {
       schemaVersion: DOCTOR_COMPOSE_OBSERVATION_SCHEMA_V1,
       source: "LOCAL_COMPOSE_SNAPSHOT",
       readOnly: true,
       mutationCount: 0,
-      observedLockDigest: restored.installationDigest,
-      composeVersion: "v2.39.1",
+      observedLockDigest: observed.observedLockDigest,
+      composeVersion: observed.observedVersion,
       expectedConfigDigest: restored.config.sha256,
-      observedConfigDigest: restored.config.sha256,
-      services: requiredServiceIds.map((serviceId) => ({ serviceId, state: "RUNNING", health: "HEALTHY" })),
+      observedConfigDigest: observed.observedConfigDigest,
+      services: observed.observedServices ?? [],
     };
     const fixture = adaptComposeDoctorObservationV1({ requiredServiceIds, snapshot });
     const report = runFixtureDoctorV1({
@@ -670,11 +901,53 @@ export async function readRestoredInstallationV1({
       timeoutMs: 30_000,
       fixture,
     });
-    return {
-      outcome: "READ",
-      code: "OK",
+    const doctorStatus = report.checks.every((check) => check.status === "PASS") ? "PASS" : "FAIL";
+
+    const filesMatch = observed.files.every((file) => file.present && file.observedSha256 === file.expectedSha256);
+    const configMatch = observed.observedConfigDigest !== null && observed.observedConfigDigest === restored.config.sha256;
+    const authorityMatch = observed.authority !== null
+      && observed.authority.epoch === restored.writerAuthority.epoch
+      && observed.authority.state === "RESTORED_READ_ONLY"
+      && observed.authority.predecessorRevoked === true;
+    const effectMatch = observed.effectPolicy !== null && observed.effectPolicy.externalEffects === "DISABLED";
+    const servicesMatch = observed.servicesPresent === true
+      && requiredServiceIds.every((serviceId) => (observed.observedServices ?? []).some((service) => service.serviceId === serviceId));
+
+    // A READ is only a verified restoration when the released doctor passed AND
+    // every observed value matches the archive. Mutated/deleted config, files,
+    // effect policy or authority therefore never yield a verified restoration.
+    const verified = doctorStatus === "PASS" && filesMatch && configMatch && authorityMatch && effectMatch && servicesMatch;
+    const shared = {
       database: { rowCount: readback.rowCount, statement: readback.statement, pack },
-      doctor: { status: report.checks.every((check) => check.status === "PASS") ? "PASS" : "FAIL", report },
+      doctor: { status: doctorStatus, report },
+      observations: observed.publicView,
+    };
+    if (verified) {
+      const readbackContent = {
+        schemaVersion: PAN462_READBACK_SCHEMA_V1,
+        consumerContract: PAN462_CONSUMER_CONTRACT_V1,
+        outcome: "READ",
+        installationId: restored.installationId,
+        installationDigest: observed.observedLockDigest,
+        observedConfigDigest: observed.observedConfigDigest,
+        observedFiles: observed.files.map((file) => ({ path: file.path, sha256: file.observedSha256 })),
+        observedAuthorityEpoch: observed.authority.epoch,
+        observedExternalEffects: observed.effectPolicy.externalEffects,
+        doctorStatus,
+        targetRoot,
+        observedAtMs: nowMs,
+      };
+      return {
+        outcome: "READ",
+        code: "OK",
+        ...shared,
+        readback: { ...readbackContent, readbackDigest: sha(readbackContent) },
+      };
+    }
+    return {
+      ...deny(restoredReadDenialCode({ observed, filesMatch, configMatch, authorityMatch, effectMatch, servicesMatch })),
+      ...shared,
+      readback: null,
     };
   } catch (error) {
     return deny(`RESTORED_READ_FAILED:${error instanceof Error ? error.message : String(error)}`);
@@ -718,27 +991,31 @@ export async function attemptControlledEffectV1({ restored, writerAuthority, req
 // ---------------------------------------------------------------------------
 // AC04 — standalone read-only recovery diagnosis + measured record.
 // ---------------------------------------------------------------------------
-export function diagnoseRecoveryV1({ backup, restored, diagnosis, nowMs } = {}) {
-  if (backup === undefined || restored === undefined || !isRecord(diagnosis)
-    || typeof diagnosis.ownsIndependentDestination !== "boolean" || !Number.isSafeInteger(nowMs)) {
+const DIAGNOSIS_INPUT_KEYS_V1 = Object.freeze(["backup", "restoreReadback", "destinationReceipt", "nowMs"]);
+
+export function diagnoseRecoveryV1(options = {}) {
+  // Closed shape: an unknown field (e.g. a caller boolean such as
+  // `ownsIndependentDestination`/`restored.verified`) is refused outright, so a
+  // caller assertion can never be read as evidence.
+  if (!isRecord(options) || !Object.keys(options).every((key) => DIAGNOSIS_INPUT_KEYS_V1.includes(key))) {
+    return deny("DIAGNOSIS_INPUT_MALFORMED");
+  }
+  const { backup, restoreReadback, destinationReceipt, nowMs } = options;
+  if (backup === undefined || !Number.isSafeInteger(nowMs)) return deny("INPUT_REQUIRED");
+  if (!isRecord(backup) || !isRecord(backup.manifest) || !isRecord(backup.measurements)
+    || typeof backup.manifest.backupClass !== "string" || !Number.isSafeInteger(backup.measurements.totalBytes)) {
     return deny("INPUT_REQUIRED");
   }
-  // A local copy on the same controller as the source is LOCAL_COPY. An
-  // INDEPENDENT_BACKUP requires a separately supplied authorized destination;
-  // this slice never mints one. A VERIFIED_RESTORE is only claimed when the
-  // restored copy was read back through the native product paths.
-  const classification = {
-    backupClass: backup.manifest.backupClass,
-    boundary: backup.boundary,
-    onSameControllerAsSource: true,
-    independentDestinationSupplied: diagnosis.ownsIndependentDestination === true,
-    restoreVerified: restored.verified === true,
-  };
-  const localCopy = classification.backupClass === "LOCAL_COPY" && !classification.independentDestinationSupplied;
-  const independentBackup = classification.independentDestinationSupplied === true;
-  const verifiedRestore = classification.restoreVerified === true;
+  // LOCAL_COPY is a local copy on the same controller as the source. An
+  // INDEPENDENT_BACKUP requires a source-bound, authorized offhost destination
+  // receipt — this slice never mints one, so the class stays held. A
+  // VERIFIED_RESTORE requires the independently re-checked native readback
+  // receipt, never a caller boolean.
+  const independentBackup = backup.manifest.backupClass === "INDEPENDENT_BACKUP"
+    && verifyDestinationReceipt(destinationReceipt, backup);
+  const verifiedRestore = verifyRestoreReadback(restoreReadback, backup);
   const classes = [];
-  if (localCopy) classes.push("LOCAL_COPY");
+  if (backup.manifest.backupClass === "LOCAL_COPY") classes.push("LOCAL_COPY");
   if (independentBackup) classes.push("INDEPENDENT_BACKUP");
   if (verifiedRestore) classes.push("VERIFIED_RESTORE");
   return {
@@ -746,20 +1023,27 @@ export function diagnoseRecoveryV1({ backup, restored, diagnosis, nowMs } = {}) 
     code: "OK",
     readOnly: true,
     classes,
-    classification,
+    classification: {
+      backupClass: backup.manifest.backupClass,
+      boundary: backup.boundary ?? backup.manifest.boundary ?? null,
+      onSameControllerAsSource: backup.manifest.backupClass === "LOCAL_COPY",
+      independentDestinationReceiptVerified: independentBackup,
+      restoreReadbackReceiptVerified: verifiedRestore,
+    },
     // Measured observations only — no retrospective or invented timing.
     measurements: {
       backup: backup.measurements,
-      restore: restored.measurements ?? null,
+      restore: isRecord(restoreReadback) && isRecord(restoreReadback.measurements) ? restoreReadback.measurements : null,
       totalBytes: backup.measurements.totalBytes,
     },
     heldClaims: [
-      "INDEPENDENT_BACKUP: requires separately supplied authorized infrastructure; not satisfied by a local copy.",
+      "INDEPENDENT_BACKUP: requires separately supplied authorized infrastructure and a source-bound destination receipt; not satisfied by a local copy or a caller boolean.",
       "PRODUCTION_RTO: no host-disaster or production recovery-time objective is claimed.",
     ],
     nonClaims: [
       "Local copy is not offhost or disaster proof.",
       "Synthetic evidence only; no production or customer data.",
+      "A caller boolean is never accepted as independent-backup or verified-restore evidence.",
     ],
   };
 }

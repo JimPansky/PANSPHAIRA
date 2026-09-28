@@ -63,6 +63,25 @@ of the **distinct target server**, and the restored installation state is read
 back through the released doctor. Independent expectations (row count, order,
 threshold) come from a committed fixture, not from the adapter.
 
+**Correction 2026-09-28 — the readback observes the target, it does not restate
+the request.** `readRestoredInstallationV1` reads the *actual* restored target
+from disk, read-only: the config bytes (`config/config.json`), every restored
+file, the effect policy, the writer-authority fence and the restored copy's
+persisted installation state (`installation-state.json`). The observed config and
+file digests are computed from those bytes and compared to the archive; the
+released doctor is fed the *observed* `observedConfigDigest`, the *observed*
+service records and the *observed* lock digest. Nothing is copied from the
+restored receipt and no service state is inferred from `requiredServiceIds`. A
+READ (and its readback receipt) is returned only when the released doctor is
+`PASS` **and** every observed value matches the archive; a mutated or deleted
+config/file/authority/effect-policy instead yields `DENIED` with an exact code
+(`RESTORED_CONFIG_MISMATCH`, `RESTORED_CONFIG_MISSING`, `RESTORED_FILE_MISMATCH`,
+`RESTORED_FILE_MISSING`, `RESTORED_AUTHORITY_MISMATCH`,
+`RESTORED_EFFECT_POLICY_MALFORMED`, `RESTORED_SERVICE_STATE_UNAVAILABLE`) and a
+non-`PASS` doctor report. The restored service records are the restored copy's
+persisted declared state observed from disk — not a live process probe — and are
+stated here as a limit, not a production runtime claim.
+
 Every boundary refuses composition:
 
 | Condition | Result |
@@ -91,14 +110,39 @@ Every boundary refuses composition:
 `INDEPENDENT_BACKUP` and `PRODUCTION_RTO` claims explicitly: a local copy on the
 same controller as the source is **not** offhost or disaster proof.
 
+**Correction 2026-09-28 — caller booleans are not evidence.** The diagnosis has a
+closed input shape (`backup`, `restoreReadback`, `destinationReceipt`, `nowMs`);
+any other field — e.g. a caller `ownsIndependentDestination` or a bare
+`restored.verified` — is refused (`DIAGNOSIS_INPUT_MALFORMED`). `VERIFIED_RESTORE`
+is earned only by the *independently re-checked native readback receipt* produced
+by `readRestoredInstallationV1` (`outcome: READ`, `doctorStatus: PASS`, self-
+consistent `readbackDigest`, and observed config/file digests that re-bind to the
+same archive). `INDEPENDENT_BACKUP` requires both an `INDEPENDENT_BACKUP` manifest
+and a source-bound, authorized destination receipt that binds the same
+`archiveDigest`; this slice never mints one, so an unqualified destination class
+stays unavailable/held.
+
+## Owned/disposable destination guard (correction 2026-09-28)
+
+Destructive removal of a backup or restore root is allowed only inside an
+explicit, owned scratch root. `createPan462BackupV1` and
+`restorePan462BackupV1` take an `ownedRoot`; before any `rmSync` the target must
+be an absolute, normalized **strict descendant** of `ownedRoot` (`DESTINATION_NOT_OWNED`),
+must not be a filesystem root or a resolution-repairing path such as one
+containing `..` (`DESTINATION_UNSAFE_PATH`), must not be a symlink or contain a
+symlinked component (`DESTINATION_IS_SYMLINK`), must be distinct from the source
+and sibling roots (`DESTINATION_NOT_DISTINCT`), and `ownedRoot` itself must be a
+real existing directory (`OWNED_ROOT_REQUIRED`). A refusal happens *before* any
+destructive write, so unrelated contents are never touched.
+
 ## Public entry points
 
 - `makeOwnedInstallation(input)` — build a valid owned-installation descriptor.
-- `createPan462BackupV1({installation, source, backupDir, now, nowMs, checkpointOrdinal})`
-- `restorePan462BackupV1({backupDir, targetRoot, target, expectedVersion, now, nowMs})`
-- `readRestoredInstallationV1({restored, target, requiredServiceIds, nowMs})`
+- `createPan462BackupV1({installation, source, backupDir, ownedRoot, now, nowMs, checkpointOrdinal})`
+- `restorePan462BackupV1({backupDir, targetRoot, ownedRoot, target, expectedVersion, now, nowMs})`
+- `readRestoredInstallationV1({restored, target, requiredServiceIds, nowMs})` — returns a verified `readback` receipt on success.
 - `attemptControlledEffectV1({restored, writerAuthority, request})`
-- `diagnoseRecoveryV1({backup, restored, diagnosis, nowMs})`
+- `diagnoseRecoveryV1({backup, restoreReadback, destinationReceipt, nowMs})`
 
 ## Boundary and nonclaims
 
@@ -115,3 +159,5 @@ same controller as the source is **not** offhost or disaster proof.
 
 Focused proof: `node --test tests/pan462/native-backup-restore.test.mjs`
 (registered as `npm run pan462:test`). Canonical command: `npm test`.
+The correction's named regressions are
+`PAN462-CORRECTION-AC02`, `PAN462-CORRECTION-AC04` and `PAN462-CORRECTION-GUARD`.

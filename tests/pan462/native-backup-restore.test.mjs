@@ -8,7 +8,7 @@
 // adapter with a mock, and no probe outcome is caller-minted.
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync, cpSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test, { after, before } from "node:test";
@@ -130,6 +130,7 @@ before(async () => {
     installation: state.installation,
     source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
     backupDir: state.backupDir,
+    ownedRoot: state.root,
     now: NOW, nowMs: NOW_MS,
   });
   assert.equal(state.backup.outcome, "BACKED_UP", JSON.stringify(state.backup));
@@ -137,6 +138,7 @@ before(async () => {
   state.restore = await restorePan462BackupV1({
     backupDir: state.backupDir,
     targetRoot: state.targetRoot,
+    ownedRoot: state.root,
     expectedVersion: EXPECTED.restoredVersion,
     target: {
       root: state.targetRoot, keyStore: state.targetKeyStore,
@@ -232,7 +234,7 @@ test("PAN462-AC02 negative: missing store, wrong version, corrupt archive and un
     root: state.targetRoot, keyStore: state.targetKeyStore,
     database: { client: state.target.client, host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_ADMIN, password: TARGET_ADMIN_PW },
   };
-  const base = { targetRoot: state.targetRoot, expectedVersion: EXPECTED.restoredVersion, target, now: NOW, nowMs: NOW_MS + 10 };
+  const base = { targetRoot: state.targetRoot, ownedRoot: state.root, expectedVersion: EXPECTED.restoredVersion, target, now: NOW, nowMs: NOW_MS + 10 };
 
   // (a) Wrong version: a restore at a different executable version is refused.
   const wrongVersion = await restorePan462BackupV1({ ...base, backupDir: state.backupDir, expectedVersion: "9.9.9" });
@@ -304,16 +306,18 @@ test("PAN462-AC03 negative: obsolete writer authority and effect replay are refu
 });
 
 test("PAN462-AC04 positive: a standalone read-only recovery diagnosis distinguishes local copy, independent backup and verified restore", () => {
-  const restoredVerified = { ...state.restore.restored, verified: true, measurements: state.restore.measurements };
+  // VERIFIED_RESTORE is earned by the independently re-checked native readback
+  // receipt produced by readRestoredInstallationV1 — not a caller boolean.
   const diagnosis = diagnoseRecoveryV1({
-    backup: state.backup, restored: restoredVerified,
-    diagnosis: { ownsIndependentDestination: false }, nowMs: NOW_MS + 100,
+    backup: state.backup, restoreReadback: state.read.readback, nowMs: NOW_MS + 100,
   });
   assert.equal(diagnosis.outcome, "DIAGNOSED");
   assert.equal(diagnosis.readOnly, true);
   // A local copy on the same controller is LOCAL_COPY, never independent.
   assert.ok(diagnosis.classes.includes("LOCAL_COPY"));
   assert.ok(!diagnosis.classes.includes("INDEPENDENT_BACKUP"));
+  assert.equal(state.read.readback.doctorStatus, "PASS");
+  assert.equal(state.read.readback.observedConfigDigest, state.backup.manifest.captures.config.sha256);
   // A read-back restore is VERIFIED_RESTORE; local copy is not offhost proof.
   assert.ok(diagnosis.classes.includes("VERIFIED_RESTORE"));
   assert.ok(diagnosis.heldClaims.some((claim) => claim.startsWith("INDEPENDENT_BACKUP")));
@@ -325,15 +329,21 @@ test("PAN462-AC04 positive: a standalone read-only recovery diagnosis distinguis
 });
 
 test("PAN462-AC04 negative: an unverified restore is not classed as VERIFIED_RESTORE and missing inputs are refused", () => {
-  const unverified = diagnoseRecoveryV1({
-    backup: state.backup, restored: { ...state.restore.restored, verified: false },
-    diagnosis: { ownsIndependentDestination: false }, nowMs: NOW_MS + 101,
+  // A tampered readback receipt (digest no longer self-consistent) is not evidence.
+  const tampered = diagnoseRecoveryV1({
+    backup: state.backup, restoreReadback: { ...state.read.readback, readbackDigest: "0".repeat(64) },
+    nowMs: NOW_MS + 101,
   });
-  assert.ok(unverified.classes.includes("LOCAL_COPY"));
-  assert.ok(!unverified.classes.includes("VERIFIED_RESTORE"));
-  const missing = diagnoseRecoveryV1({ backup: state.backup, restored: undefined, diagnosis: { ownsIndependentDestination: false }, nowMs: NOW_MS });
-  assert.equal(missing.outcome, "DENIED");
-  assert.equal(missing.code, "INPUT_REQUIRED");
+  assert.ok(tampered.classes.includes("LOCAL_COPY"));
+  assert.ok(!tampered.classes.includes("VERIFIED_RESTORE"));
+  // No readback at all: only LOCAL_COPY, nothing inferred.
+  const missing = diagnoseRecoveryV1({ backup: state.backup, nowMs: NOW_MS });
+  assert.equal(missing.outcome, "DIAGNOSED");
+  assert.deepEqual(missing.classes, ["LOCAL_COPY"]);
+  // A boolean-only diagnosis-style input is refused outright (closed shape).
+  const none = diagnoseRecoveryV1({ nowMs: NOW_MS });
+  assert.equal(none.outcome, "DENIED");
+  assert.equal(none.code, "INPUT_REQUIRED");
 });
 
 test("PAN462 boundary: malformed inputs are refused with exact codes and the published schema validates the actual archive", async () => {
@@ -342,7 +352,7 @@ test("PAN462 boundary: malformed inputs are refused with exact codes and the pub
   const bad = await createPan462BackupV1({
     installation: badInstallation,
     source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
-    backupDir: path.join(state.root, "backup-bad"), now: NOW, nowMs: NOW_MS,
+    backupDir: path.join(state.root, "backup-bad"), ownedRoot: state.root, now: NOW, nowMs: NOW_MS,
   });
   assert.equal(bad.code, "INSTALLATION_MALFORMED");
   // A declared config digest that does not bind the captured config is refused.
@@ -352,12 +362,12 @@ test("PAN462 boundary: malformed inputs are refused with exact codes and the pub
   const mismatched = await createPan462BackupV1({
     installation: misleadingInstallation,
     source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
-    backupDir: path.join(state.root, "backup-mismatch"), now: NOW, nowMs: NOW_MS,
+    backupDir: path.join(state.root, "backup-mismatch"), ownedRoot: state.root, now: NOW, nowMs: NOW_MS,
   });
   assert.equal(mismatched.code, "DECLARED_OBSERVED_CONFIG_BINDING_MISMATCH");
   // A restore into a non-distinct target is refused.
   const sameTarget = await restorePan462BackupV1({
-    backupDir: state.backupDir, targetRoot: state.installRoot, expectedVersion: EXPECTED.restoredVersion,
+    backupDir: state.backupDir, targetRoot: state.installRoot, ownedRoot: state.root, expectedVersion: EXPECTED.restoredVersion,
     target: { root: state.installRoot, database: { client: state.target.client } }, now: NOW, nowMs: NOW_MS,
   });
   assert.equal(sameTarget.code, "TARGET_NOT_DISTINCT");
@@ -371,4 +381,159 @@ test("PAN462 boundary: malformed inputs are refused with exact codes and the pub
 
 test("PAN462: the closed vocabulary exports are code-owned and never widened", () => {
   assert.deepEqual(DIAGNOSIS_CLASSES_V1, ["LOCAL_COPY", "INDEPENDENT_BACKUP", "VERIFIED_RESTORE"]);
+});
+
+// ---------------------------------------------------------------------------
+// Correction 2026-09-28 — the three review blockers, as named tests.
+// ---------------------------------------------------------------------------
+
+test("PAN462-CORRECTION-AC02: a mutated restored config is NOT a verified restoration and the doctor is not PASS", async () => {
+  const configPath = path.join(state.targetRoot, "config", "config.json");
+  const original = readFileSync(configPath);
+  try {
+    writeFileSync(configPath, Buffer.concat([original, Buffer.from("\n")]));
+    const read = await readRestoredInstallationV1({
+      restored: state.restore.restored,
+      target: { database: { host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_RO, password: TARGET_RO_PW } },
+      requiredServiceIds: ["api"], nowMs: NOW_MS + 300,
+    });
+    assert.notEqual(read.outcome, "READ", JSON.stringify(read).slice(0, 400));
+    assert.equal(read.code, "RESTORED_CONFIG_MISMATCH");
+    assert.equal(read.doctor.status, "FAIL");
+    assert.notEqual(read.observations.observedConfigDigest, state.restore.restored.config.sha256);
+    assert.equal(read.readback, null);
+  } finally {
+    writeFileSync(configPath, original);
+  }
+});
+
+test("PAN462-CORRECTION-AC02: a deleted restored config is NOT a verified restoration and the doctor is not PASS", async () => {
+  const configPath = path.join(state.targetRoot, "config", "config.json");
+  const original = readFileSync(configPath);
+  try {
+    rmSync(configPath);
+    const read = await readRestoredInstallationV1({
+      restored: state.restore.restored,
+      target: { database: { host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_RO, password: TARGET_RO_PW } },
+      requiredServiceIds: ["api"], nowMs: NOW_MS + 301,
+    });
+    assert.notEqual(read.outcome, "READ");
+    assert.equal(read.code, "RESTORED_CONFIG_MISSING");
+    assert.equal(read.doctor.status, "FAIL");
+    assert.equal(read.observations.observedConfigDigest, null);
+  } finally {
+    writeFileSync(configPath, original);
+  }
+});
+
+test("PAN462-CORRECTION-AC02: a mutated restored file is NOT a verified restoration and the doctor is not PASS", async () => {
+  const filePath = path.join(state.targetRoot, "files", "content-note-v1.txt");
+  const original = readFileSync(filePath);
+  try {
+    writeFileSync(filePath, Buffer.concat([original, Buffer.from("tampered")]));
+    const read = await readRestoredInstallationV1({
+      restored: state.restore.restored,
+      target: { database: { host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_RO, password: TARGET_RO_PW } },
+      requiredServiceIds: ["api"], nowMs: NOW_MS + 302,
+    });
+    assert.notEqual(read.outcome, "READ");
+    assert.equal(read.code, "RESTORED_FILE_MISMATCH");
+    assert.equal(read.readback, null);
+  } finally {
+    writeFileSync(filePath, original);
+  }
+});
+
+test("PAN462-CORRECTION-AC02: the restored service observation comes from the target state, never the requested list", async () => {
+  const statePath = path.join(state.targetRoot, "installation-state.json");
+  const original = readFileSync(statePath);
+  try {
+    const mutated = JSON.parse(original.toString("utf8"));
+    mutated.services = [{ serviceId: "api", state: "STOPPED", health: "UNHEALTHY" }];
+    writeFileSync(statePath, `${JSON.stringify(mutated)}\n`);
+    const read = await readRestoredInstallationV1({
+      restored: state.restore.restored,
+      target: { database: { host: "127.0.0.1", port: TARGET_PORT, name: TARGET_DB, user: TARGET_RO, password: TARGET_RO_PW } },
+      requiredServiceIds: ["api"], nowMs: NOW_MS + 303,
+    });
+    assert.notEqual(read.outcome, "READ");
+    assert.equal(read.doctor.status, "FAIL");
+  } finally {
+    writeFileSync(statePath, original);
+  }
+});
+
+test("PAN462-CORRECTION-AC04: caller booleans on a LOCAL_COPY manifest mint no class", () => {
+  const reviewReproducer = diagnoseRecoveryV1({
+    backup: { manifest: { backupClass: "LOCAL_COPY" }, boundary: BACKUP_BOUNDARY_V1, measurements: { totalBytes: 7 } },
+    restored: { verified: true, measurements: {} },
+    diagnosis: { ownsIndependentDestination: true },
+    nowMs: 1,
+  });
+  assert.equal(reviewReproducer.outcome, "DENIED");
+  assert.equal(reviewReproducer.code, "DIAGNOSIS_INPUT_MALFORMED");
+  // Even on the accepted closed shape, a LOCAL_COPY manifest never yields
+  // INDEPENDENT_BACKUP and an absent readback receipt never yields VERIFIED_RESTORE.
+  const held = diagnoseRecoveryV1({
+    backup: { manifest: { backupClass: "LOCAL_COPY" }, boundary: BACKUP_BOUNDARY_V1, measurements: { totalBytes: 7 } },
+    destinationReceipt: { independent: true, authorizedInfrastructure: true },
+    nowMs: 1,
+  });
+  assert.equal(held.outcome, "DIAGNOSED");
+  assert.deepEqual(held.classes, ["LOCAL_COPY"]);
+  assert.ok(held.heldClaims.some((claim) => claim.startsWith("INDEPENDENT_BACKUP")));
+});
+
+test("PAN462-CORRECTION-GUARD: a symlinked backup root is refused and unrelated contents are preserved", async () => {
+  const unrelated = path.join(state.root, "unrelated-contents");
+  mkdirSync(unrelated, { recursive: true });
+  writeFileSync(path.join(unrelated, "sentinel.txt"), "do-not-delete");
+  const linkDir = path.join(state.root, "backup-symlink");
+  rmSync(linkDir, { recursive: true, force: true });
+  symlinkSync(unrelated, linkDir);
+  const refused = await createPan462BackupV1({
+    installation: state.installation,
+    source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+    backupDir: linkDir, ownedRoot: state.root, now: NOW, nowMs: NOW_MS,
+  });
+  assert.equal(refused.outcome, "DENIED");
+  assert.equal(refused.code, "DESTINATION_IS_SYMLINK");
+  assert.equal(readFileSync(path.join(unrelated, "sentinel.txt"), "utf8"), "do-not-delete");
+});
+
+test("PAN462-CORRECTION-GUARD: unowned, unsafe and non-distinct roots are refused before removal", async () => {
+  const outside = mkdtempSync(path.join(os.tmpdir(), "pan462-outside-"));
+  const outsideBackup = path.join(outside, "backup");
+  mkdirSync(outsideBackup, { recursive: true });
+  writeFileSync(path.join(outsideBackup, "other.txt"), "keep");
+  // Not inside the declared owned root.
+  const notOwned = await createPan462BackupV1({
+    installation: state.installation,
+    source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+    backupDir: outsideBackup, ownedRoot: state.root, now: NOW, nowMs: NOW_MS,
+  });
+  assert.equal(notOwned.code, "DESTINATION_NOT_OWNED");
+  assert.equal(readFileSync(path.join(outsideBackup, "other.txt"), "utf8"), "keep");
+  // Missing owned root.
+  const noRoot = await createPan462BackupV1({
+    installation: state.installation,
+    source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+    backupDir: path.join(state.root, "backup-noroot"), now: NOW, nowMs: NOW_MS,
+  });
+  assert.equal(noRoot.code, "OWNED_ROOT_REQUIRED");
+  // Unsafe (resolution-repairing) path.
+  const unsafe = await createPan462BackupV1({
+    installation: state.installation,
+    source: { root: state.installRoot, database: { client: state.source.admin, name: PG_DATABASE } },
+    backupDir: `${state.root}/../${path.basename(state.root)}/backup-unsafe`, ownedRoot: state.root, now: NOW, nowMs: NOW_MS,
+  });
+  assert.equal(unsafe.code, "DESTINATION_UNSAFE_PATH");
+  // A restore root that is not distinct from the backup root is refused.
+  const notDistinct = await restorePan462BackupV1({
+    backupDir: state.backupDir, targetRoot: state.backupDir, ownedRoot: state.root,
+    target: { root: state.backupDir, database: { client: state.target.client } },
+    expectedVersion: EXPECTED.restoredVersion, now: NOW, nowMs: NOW_MS,
+  });
+  assert.equal(notDistinct.code, "DESTINATION_NOT_DISTINCT");
+  rmSync(outside, { recursive: true, force: true });
 });

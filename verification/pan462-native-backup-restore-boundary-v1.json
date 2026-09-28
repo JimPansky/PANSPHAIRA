@@ -8,19 +8,34 @@
   "module": "src/pan462/native-backup-restore.mjs",
   "consumerContract": "pan462.installation.native-backup-restore/v1",
   "reusedModules": [
-    { "path": "packages/contracts/src/update-doctor.ts", "role": "RELEASED_OBSERVER_AND_DOCTOR_CONTRACT" },
-    { "path": "packages/contracts/src/update-migration-checkpoint.ts", "role": "RELEASED_CONSISTENT_BOUNDARY_CHECKPOINT" },
-    { "path": "packages/knowledge-solution/src/postgres-source.ts", "role": "RELEASED_READ_ONLY_PRODUCT_CONNECTOR" },
-    { "path": "packages/knowledge-solution/src/pg-harness.ts", "role": "REAL_LOCAL_FIXTURE_STORAGE_ENTRYPOINTS" },
-    { "path": "dist/packages/contracts/src/index.js", "role": "RELEASED_CANONICAL_JSON_AND_DOCTOR_OPS" }
+    {
+      "path": "packages/contracts/src/update-doctor.ts",
+      "role": "RELEASED_OBSERVER_AND_DOCTOR_CONTRACT"
+    },
+    {
+      "path": "packages/contracts/src/update-migration-checkpoint.ts",
+      "role": "RELEASED_CONSISTENT_BOUNDARY_CHECKPOINT"
+    },
+    {
+      "path": "packages/knowledge-solution/src/postgres-source.ts",
+      "role": "RELEASED_READ_ONLY_PRODUCT_CONNECTOR"
+    },
+    {
+      "path": "packages/knowledge-solution/src/pg-harness.ts",
+      "role": "REAL_LOCAL_FIXTURE_STORAGE_ENTRYPOINTS"
+    },
+    {
+      "path": "dist/packages/contracts/src/index.js",
+      "role": "RELEASED_CANONICAL_JSON_AND_DOCTOR_OPS"
+    }
   ],
   "publicEntryPoints": {
     "makeOwnedInstallation": "makeOwnedInstallation(input)",
-    "create": "createPan462BackupV1({installation, source, backupDir, now, nowMs, checkpointOrdinal})",
-    "restore": "restorePan462BackupV1({backupDir, targetRoot, target, expectedVersion, now, nowMs})",
+    "create": "createPan462BackupV1({installation, source, backupDir, ownedRoot, now, nowMs, checkpointOrdinal})",
+    "restore": "restorePan462BackupV1({backupDir, targetRoot, ownedRoot, target, expectedVersion, now, nowMs})",
     "read": "readRestoredInstallationV1({restored, target, requiredServiceIds, nowMs})",
     "controlledEffect": "attemptControlledEffectV1({restored, writerAuthority, request})",
-    "diagnosis": "diagnoseRecoveryV1({backup, restored, diagnosis, nowMs})"
+    "diagnosis": "diagnoseRecoveryV1({backup, restoreReadback, destinationReceipt, nowMs})"
   },
   "storage": {
     "kind": "REAL_LOCAL_POSTGRESQL",
@@ -28,13 +43,19 @@
     "sourceDatabase": "kts_pg on 127.0.0.1:54431 (released KTS harness)",
     "restoreTarget": "pan462_restore on a DISTINCT 127.0.0.1:54432 instance and data directory",
     "mockReplacementOfAffectedAdapter": false,
-    "callerMintedProbeOutcomeAccepted": false
+    "callerMintedProbeOutcomeAccepted": false,
+    "destructiveRemovalGuard": "ownedRoot strict-descendant, absolute/normalized, non-symlink, distinct; refusal before removal"
   },
   "acceptanceMap": {
     "LIFE-02-AC01": {
       "evidence": "tests/pan462/native-backup-restore.test.mjs (AC01 positive capture + distinct-target restore at matching version)",
       "observed": "BACKED_UP at CONSISTENT_QUIESCED_SNAPSHOT with CHECKPOINT_RECORDED; RESTORED into a distinct target at version 0.2.0",
-      "dataClasses": ["DATABASE", "FILE", "CONFIG", "KEY_REFERENCE"],
+      "dataClasses": [
+        "DATABASE",
+        "FILE",
+        "CONFIG",
+        "KEY_REFERENCE"
+      ],
       "keyReferencesOnly": true,
       "secretValuesExported": false
     },
@@ -44,7 +65,20 @@
         "readMarginContextFromPostgresV1 (released read-only PostgreSQL connector)",
         "runFixtureDoctorV1 (released read-only doctor report)"
       ],
-      "negativeCodes": ["MISSING_STORE", "WRONG_VERSION", "CORRUPT_ARCHIVE", "KEY_UNAVAILABLE"]
+      "negativeCodes": [
+        "MISSING_STORE",
+        "WRONG_VERSION",
+        "CORRUPT_ARCHIVE",
+        "KEY_UNAVAILABLE",
+        "RESTORED_CONFIG_MISMATCH",
+        "RESTORED_CONFIG_MISSING",
+        "RESTORED_FILE_MISMATCH",
+        "RESTORED_FILE_MISSING",
+        "RESTORED_AUTHORITY_MISMATCH",
+        "RESTORED_EFFECT_POLICY_MALFORMED",
+        "RESTORED_SERVICE_STATE_UNAVAILABLE"
+      ],
+      "observedReadback": "config/file/authority/effect-policy/service observations read from the actual restored target; mutated/deleted input refuses verified restoration with an exact code"
     },
     "LIFE-02-AC03": {
       "evidence": "tests/pan462/native-backup-restore.test.mjs (AC03 positive + negatives)",
@@ -56,7 +90,9 @@
     "LIFE-02-AC04": {
       "evidence": "tests/pan462/native-backup-restore.test.mjs (AC04 positive diagnosis + unverified negative)",
       "diagnosis": "standalone read-only; classes over LOCAL_COPY / INDEPENDENT_BACKUP / VERIFIED_RESTORE",
-      "measurements": "real durationMs + data sizes recorded at backup and restore; no retrospective or invented timing"
+      "measurements": "real durationMs + data sizes recorded at backup and restore; no retrospective or invented timing",
+      "verifiedRestoreEvidence": "independently re-checked native readback receipt (readRestoredInstallationV1), cross-bound to the same archive; caller booleans refused",
+      "independentBackupEvidence": "requires an INDEPENDENT_BACKUP manifest plus a source-bound authorized destination receipt; not produced by this slice (HELD)"
     }
   },
   "holds": [
@@ -67,8 +103,18 @@
   "nonClaims": [
     "No publication, private source, host admin, install-on-host, Docker socket, arbitrary shell capability or new platform.",
     "No real external business effect; the controlled outbound attempt is a fail-closed denial inside the isolated synthetic target.",
-    "Independent review, integration, CI, release and public readback remain owned by the maintainer/delivery owner."
+    "Independent review, integration, CI, release and public readback remain owned by the maintainer/delivery owner.",
+    "The restored service records are the restored copy's persisted declared state observed from disk, not a live process runtime probe; no production service-health claim."
   ],
   "focusedTest": "node --test tests/pan462/native-backup-restore.test.mjs",
-  "registeredCommand": "npm run pan462:test"
+  "registeredCommand": "npm run pan462:test",
+  "correction": {
+    "of": "c0a8ebdb72154419a86a5d1102dcf94501bd6214",
+    "at": "2026-09-28",
+    "fixed": [
+      "AC02: readRestoredInstallationV1 observes the actual restored target (config/file digests, effect policy, writer authority, persisted installation state) read-only; the released doctor is fed the observed values and a READ/verified restoration is returned only on PASS + full match. Mutated/deleted config or file yields DENIED with an exact code and a non-PASS doctor.",
+      "AC04: diagnoseRecoveryV1 has a closed input shape; caller booleans are refused. VERIFIED_RESTORE is derived only from the independently re-checked native readback receipt; INDEPENDENT_BACKUP requires an INDEPENDENT_BACKUP manifest plus a source-bound destination receipt (never minted by this slice).",
+      "Guard: createPan462BackupV1/restorePan462BackupV1 prove an owned, disposable, distinct, non-symlink destination inside ownedRoot before any destructive rmSync."
+    ]
+  }
 }
