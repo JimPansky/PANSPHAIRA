@@ -33,7 +33,7 @@ function context() {
   let mutations = 0;
   let reconcileReads = 0;
   let lose = true;
-  const time = 1000000;
+  let time = 1000000;
   const provider = {
     async readAuthoritativeSnapshot(action) { return createAuthoritativeApprovalSnapshot(action, target); },
     async mutate(action) {
@@ -56,6 +56,7 @@ function context() {
   });
   return {
     run, dir, provider, target, issuer, handle, input, operationKey,
+    advanceTime: (ms) => { time += ms; },
     mutations: () => mutations, reconcileReads: () => reconcileReads,
     // A pending (null) reconciliation read that still counts as a provider read.
     pendingReconcile: () => { provider.reconcile = async () => { reconcileReads += 1; return null; }; },
@@ -376,4 +377,23 @@ test('AC04 backup/restore retains a pruned stop as a durable fence and refuses t
     await assert.rejects(x.run(restored), /BTH_COMPOSE_FAILED/);
     assert.equal(x.mutations(), 0);
   } finally { x.close(); rmSync(restored, { recursive: true, force: true }); }
+});
+
+// Independent red: a key with exactly max attempts has not yet been marked denied.
+// Unrelated churn must not silently grant it a fourth provider reconciliation read.
+test('independent-red-pre-denial-attempt-eviction: exactly exhausted counter survives churn before next call', async () => {
+  const x = context();
+  try {
+    await assert.rejects(x.run(), /BTH_COMPOSE_FAILED/);
+    x.pendingReconcile();
+    for (let i = 0; i < 3; i += 1) await assert.rejects(x.run(), /BTH_COMPOSE_FAILED/);
+    assert.equal(x.reconcileReads(), 3);
+    assert.equal(readLocalJournalRecoveryAttempts(x.dir).attempts[x.operationKey].attempts, 3);
+    for (let i = 0; i < LOCAL_JOURNAL_ATTEMPT_LIMIT; i += 1) {
+      recordLocalJournalRecoveryAttempt(x.dir, { operationKey: `other-before-denial-${i}`, attemptedAtMs: 1000001 + i });
+    }
+    x.advanceTime(100); // within the same signed handle lifetime, later than unrelated ledger entries
+    await assert.rejects(x.run(), /BTH_COMPOSE_FAILED/);
+    assert.equal(x.reconcileReads(), 3, 'a fourth provider read is forbidden even when the fourth denial was not pre-materialized');
+  } finally { x.close(); }
 });
