@@ -5500,7 +5500,7 @@
         {
           "path": "security/secure-default-proof-v1.json",
           "role": "CONTRACT",
-          "sha256": "75e4ce4ac327c9272dbeb377ffaa5c9122ff3e139bedc42d94eb5037db6d9da2"
+          "sha256": "f85cf02b491edeaffebaf6973ad5117663ee61533c5aa63e3491e96791cdac6a"
         },
         {
           "path": "schemas/security/secure-default-proof-v1.schema.json",
@@ -5510,7 +5510,7 @@
         {
           "path": "security/secure-default-proof-evidence-v1.json",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "67749558c2cc14f7e56cec9f38e9cf90e832524ec5ae98f350439d1bf5ea7955"
+          "sha256": "06c163fb446d8928ae33637e295fe5b6822f6b8beeb679fea63fcdc808e38b6c"
         },
         {
           "path": "scripts/verify-secure-default-proof.mjs",
@@ -5546,7 +5546,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "658cd39498b2bba3d0fda9a571e0054eb8f258db64a02f6265c35110869c5072"
+          "sha256": "a182b58d881dd7b2b710142cf7771c6fbdf5d5c50896a18244058539a103951b"
         },
         {
           "path": "package-lock.json",
@@ -6664,7 +6664,7 @@
         {
           "path": "src/pan442/bound-task-handle.mjs",
           "role": "SOURCE",
-          "sha256": "a458c0b1e9e83b0851657ec8f28e419b89360719a5347b1d5588ab5db3063bd9"
+          "sha256": "d93046c1935e72739caab7cdcabe09eb06fe62d81da9d313c019806ec4f7474e"
         },
         {
           "path": "src/pan442/synthetic-metric-read-task.mjs",
