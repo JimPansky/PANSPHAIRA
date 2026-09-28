@@ -1001,7 +1001,65 @@ for (const [inputPath, role] of pan461Inputs) {
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan461:test")) repositoryIntegrityNode.ownedTests.push("npm run pan461:test");
 repositoryIntegrityNode.inputs.sort((left, right) => left.path.localeCompare(right.path, "en"));
 
+const pan462Inputs = [
+  ["docs/architecture/pan462-native-backup-restore-v1.md", "DERIVED_EVIDENCE"],
+  ["schemas/contracts/pan462-native-backup-restore-v1.schema.json", "SCHEMA"],
+  ["src/pan462/native-backup-restore.mjs", "SOURCE"],
+  ["tests/pan462/native-backup-restore.test.mjs", "VALIDATOR"],
+  ["verification/pan462-native-backup-restore-boundary-v1.json", "DERIVED_EVIDENCE"],
+  ["tests/fixtures/pan462/config-source-v1.json", "FIXTURE"],
+  ["tests/fixtures/pan462/content-note-v1.txt", "FIXTURE"],
+  ["tests/fixtures/pan462/expected-facts-v1.json", "FIXTURE"],
+  ["tests/fixtures/pan462/installation-content-v1.json", "FIXTURE"],
+  ["tests/fixtures/pan462/key-ref-v1.txt", "FIXTURE"],
+];
+let pan462Node = dag.nodes.find(({ id }) => id === "pan462-native-backup-restore-v1");
+if (pan462Node === undefined) {
+  pan462Node = {
+    id: "pan462-native-backup-restore-v1",
+    dependsOn: [],
+    inputs: [],
+    ownedTests: ["npm run pan462:test"],
+    invariants: [
+      "PAN462 is a bounded native backup/restore of ONE strictly container-owned synthetic installation over the released checkpoint, doctor and read-only PostgreSQL product surfaces; no second doctor, installer, updater, database or storage mechanism is introduced and no mock replaces the affected storage adapter.",
+      "Owned database, files, configuration and needed key references are captured at ONE consistent boundary (a REPEATABLE READ / READ ONLY database snapshot, byte-exact files/config, and key references only); the released checkpoint contract binds and independently re-verifies the boundary, and no secret value is exported.",
+      "Restore lands in a DISTINCT isolated target at a MATCHING executable version; missing store, wrong version, corrupt archive and an unavailable required key reference each refuse completion with an exact code, and the restored objects are read back through the actual released native product paths.",
+      "The restored copy disables real external effects (a controlled outbound attempt is denied), the pre-backup writer authority is revoked and cannot be reactivated, effect replay is refused, and a standalone read-only diagnosis distinguishes LOCAL_COPY / INDEPENDENT_BACKUP / VERIFIED_RESTORE while a local copy remains no offhost or disaster proof.",
+    ],
+    riskClass: "HIGH",
+    globalInvalidation: false,
+  };
+  dag.nodes.push(pan462Node);
+}
+pan462Node.dependsOn = [];
+pan462Node.inputs = pan462Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+pan462Node.ownedTests = ["npm run pan462:test"];
+for (const [inputPath, role] of pan462Inputs) {
+  const matches = repositoryIntegrityNode.inputs.filter(({ path: candidatePath }) => candidatePath === inputPath);
+  if (matches.length > 1 || (matches.length === 1 && matches[0].role !== role)) throw new Error(`PAN462_INTEGRITY_OWNERSHIP_DENIED:${inputPath}`);
+  if (matches.length === 0) repositoryIntegrityNode.inputs.push({ path: inputPath, role, sha256: digest(inputPath) });
+}
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan462:test")) repositoryIntegrityNode.ownedTests.push("npm run pan462:test");
+repositoryIntegrityNode.inputs.sort((left, right) => left.path.localeCompare(right.path, "en"));
+
 dag.graphVersion = 62;
+
+// PAN462 canonical CI hard-gate correction: bounded integration ownership.
+// A byte that already has its own bounded task owner is OWNED THERE and must
+// not be duplicated on the integration owner. The integration owner keeps
+// exactly the inputs no other bounded node owns, so its input list stays inside
+// the frozen Evidence-DAG schema bound (inputs maxItems 128) without relaxing
+// the schema, weakening a hard ownership role or dropping any selection.
+const ownedByBoundedNodes = new Set(
+  dag.nodes
+    .filter((node) => node !== repositoryIntegrityNode)
+    .flatMap((node) => node.inputs.map(({ path: ownedPath }) => ownedPath)),
+);
+repositoryIntegrityNode.inputs = repositoryIntegrityNode.inputs.filter(
+  ({ path: ownedPath }) => !ownedByBoundedNodes.has(ownedPath),
+);
+repositoryIntegrityNode.inputs.sort((left, right) => left.path.localeCompare(right.path, "en"));
+
 for (const node of dag.nodes) {
   node.inputs = node.inputs.map((input) => ({ ...input, sha256: digest(input.path) }));
 }
@@ -1043,6 +1101,16 @@ for (const relative of [
   "tests/fixtures/pan461/observed-stopped-v1.json",
   "tests/fixtures/pan461/observed-unknown-v1.json",
   "tests/fixtures/pan461/stores-v1.json",
+  "docs/architecture/pan462-native-backup-restore-v1.md",
+  "schemas/contracts/pan462-native-backup-restore-v1.schema.json",
+  "src/pan462/native-backup-restore.mjs",
+  "tests/pan462/native-backup-restore.test.mjs",
+  "verification/pan462-native-backup-restore-boundary-v1.json",
+  "tests/fixtures/pan462/config-source-v1.json",
+  "tests/fixtures/pan462/content-note-v1.txt",
+  "tests/fixtures/pan462/expected-facts-v1.json",
+  "tests/fixtures/pan462/installation-content-v1.json",
+  "tests/fixtures/pan462/key-ref-v1.txt",
   "docs/architecture/pan471-capability-inventory-v1.md",
   "schemas/contracts/pan471-capability-inventory-v1.schema.json",
   "src/pan471/capability-inventory.mjs",
