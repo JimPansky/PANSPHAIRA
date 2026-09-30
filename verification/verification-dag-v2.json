@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 62,
+  "graphVersion": 63,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -4791,7 +4791,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "014f78feb55d1906fa5db0b3c0800e714bdaa60572d9d4710d35ab068fe2963c"
+          "sha256": "05659523a37d8db47fe31b4e3e7baef7cca0f1dac14edc6f549d22b6a07545fa"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4831,7 +4831,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "9e08c266446eb41bfde851c1bad9d1438d25b0e05a29e28bc31c5b4bbe5c17a1"
+          "sha256": "cc3f6750fa1095bd33931f0b563a7ebdd8ed170f254587261b27d614ee492b02"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4931,7 +4931,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "0691811a78fbecaab349342aeb67b394e332ec69ad7182f31206f148e1126574"
+          "sha256": "ec139f11bf139cde7caec3f26deeca9eb1886d8207aa105461b0aaaf7e155522"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -4991,7 +4991,8 @@
         "npm run pan470:test",
         "npm run pan471:test",
         "npm run pan461:test",
-        "npm run pan462:test"
+        "npm run pan462:test",
+        "npm run pan463:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5546,7 +5547,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "05df8663e237b5a121cf5a6eb075839c3b85615f3579907cfbac65010ea57010"
+          "sha256": "f5c8067a37a0fc0eebbb2dcd6eae8680499e94c4e29086ded99c9e686983ab14"
         },
         {
           "path": "package-lock.json",
@@ -5906,7 +5907,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "c933d37635a15d8454d1e3aa1c3564a3a5e06f9bfe23d4935e5fded4924aef8e"
+          "sha256": "6067da39c51ce543e1fcfa35901f73cf5fb4b5011b90304d95fa35b86bdd1379"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7054,6 +7055,70 @@
         "Owned database, files, configuration and needed key references are captured at ONE consistent boundary (a REPEATABLE READ / READ ONLY database snapshot, byte-exact files/config, and key references only); the released checkpoint contract binds and independently re-verifies the boundary, and no secret value is exported.",
         "Restore lands in a DISTINCT isolated target at a MATCHING executable version; missing store, wrong version, corrupt archive and an unavailable required key reference each refuse completion with an exact code, and the restored objects are read back through the actual released native product paths.",
         "The restored copy disables real external effects (a controlled outbound attempt is denied), the pre-backup writer authority is revoked and cannot be reactivated, effect replay is refused, and a standalone read-only diagnosis distinguishes LOCAL_COPY / INDEPENDENT_BACKUP / VERIFIED_RESTORE while a local copy remains no offhost or disaster proof."
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false
+    },
+    {
+      "id": "pan463-native-update-v1",
+      "dependsOn": [],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan463-native-update-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "5f359ba5501bee61513d6cff6407351523cc229d525a58ea17b7baa12ea4e32a"
+        },
+        {
+          "path": "schemas/contracts/pan463-native-update-v1.schema.json",
+          "role": "SCHEMA",
+          "sha256": "41e105317b5f2341355c6be2b4394cb8ecd7461a532acefbb8b0be21f0f78317"
+        },
+        {
+          "path": "src/pan463/native-update-executor.mjs",
+          "role": "SOURCE",
+          "sha256": "15f33f4d821a933b1df0d12017b356df6019bc022ef8e6529cf6581298a6d425"
+        },
+        {
+          "path": "tests/pan463/native-update-executor.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "15d04c0710042485820b02aace0cf4c1d9562f72c8df8c49bdad58f55d578c08"
+        },
+        {
+          "path": "tests/pan463/executor-process.mjs",
+          "role": "VALIDATOR",
+          "sha256": "e6a9550816bf91003c2fcc6ed38513482c05f7c65862e82bfc34b5f73c654f97"
+        },
+        {
+          "path": "demo/runtime/enforcement-gate.mjs",
+          "role": "SOURCE",
+          "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea"
+        },
+        {
+          "path": "demo/runtime/local-journal-owner.mjs",
+          "role": "SOURCE",
+          "sha256": "a537cc46046ebd84c03c7ac00478b48ba984ed5e52a5f12ec807d2c849f56e6b"
+        },
+        {
+          "path": "packages/contracts/src/update-doctor.ts",
+          "role": "CONTRACT",
+          "sha256": "53b5b60cae5eb223dd7eb1e960956aadf11fcea03774474a1067d742787b1e99"
+        },
+        {
+          "path": "schemas/contracts/update-operation-contract-v1.schema.json",
+          "role": "SCHEMA",
+          "sha256": "841261a0c03495925a09547e5c014be93c4fa8f8d41ad6d68d985b01c83b361c"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan463:test",
+        "npm run pan453:test",
+        "node --test dist/tests/update-doctor.test.js"
+      ],
+      "invariants": [
+        "A separate controller-bound native plan and live exact grant authorize one fixed local synthetic PostgreSQL DDL step; CHECK_ONLY contracts and the existing provider gateway remain unchanged and non-authorizing.",
+        "PAN453 ownership, v4 durable reservations, receipt persistence and stop/revoke are reused; no replacement controller journal or arbitrary SQL/shell capability is introduced.",
+        "Real process kills before dispatch, during a real transaction and after commit before receipt are resolved by retained-target readback; NOT_APPLIED and UNKNOWN stay held without automatic dispatch.",
+        "Competing native executors, wrong owner, stale fences, expired/revoked grants, substituted plans and contradictory or unavailable target states never imply completion."
       ],
       "riskClass": "HIGH",
       "globalInvalidation": false

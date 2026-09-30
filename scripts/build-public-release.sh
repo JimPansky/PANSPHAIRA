@@ -295,6 +295,12 @@ repository_only_files = {
     "docs/architecture/pan470-handoff-effort.md",
     "verification/pan470-handoff-effort-boundary-v1.json",
     "tests/fixtures/pan470/evidence-selfcheck-v1.txt",
+    # PAN463 isolated native-update source evidence; not a deployed updater.
+    "src/pan463/native-update-executor.mjs",
+    "tests/pan463/native-update-executor.test.mjs",
+    "tests/pan463/executor-process.mjs",
+    "schemas/contracts/pan463-native-update-v1.schema.json",
+    "docs/architecture/pan463-native-update-v1.md",
 }
 repository_only_prefixes = (
     "archive/cm-bi-legacy-v1/",
