@@ -4791,7 +4791,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "50e356db1d3c2f8eccb64766110978adc8ad705985349506c450993b01fa688f"
+          "sha256": "014f78feb55d1906fa5db0b3c0800e714bdaa60572d9d4710d35ab068fe2963c"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4831,7 +4831,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "3eb2d68dd8961f1be035f5145e98686be1403ff93560465dc31f80d7351d79ae"
+          "sha256": "9e08c266446eb41bfde851c1bad9d1438d25b0e05a29e28bc31c5b4bbe5c17a1"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4931,7 +4931,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "7bf01e5920c4f3026f5a266b54b5db288acb9e159a01e1580f5cba746a8ec166"
+          "sha256": "0691811a78fbecaab349342aeb67b394e332ec69ad7182f31206f148e1126574"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5546,7 +5546,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "308f15107cac4321253d212597c415b198a74b2a7f77ff9392170a14ea930de2"
+          "sha256": "05df8663e237b5a121cf5a6eb075839c3b85615f3579907cfbac65010ea57010"
         },
         {
           "path": "package-lock.json",
@@ -6789,17 +6789,22 @@
         {
           "path": "docs/architecture/pan470-handoff-effort.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "8b7d3e4034d4faa87bb168012b808156a59c171a390bd94925d2581ad16f5515"
+          "sha256": "d264a82f2a401a9c160db192faf51203b2abad819fa66a550666d1e690b0d584"
         },
         {
           "path": "schemas/contracts/pan470-handoff-effort-v1.schema.json",
           "role": "SCHEMA",
-          "sha256": "234aaaec1ca16f5a9d9944d44a6fe2201e91f105a66c45dbe12ebbdd4e31293c"
+          "sha256": "ba2e7412a360e621c4e9d851ca58438165ecbe509ba4602905c6a3480b89d9ee"
         },
         {
           "path": "src/pan470/handoff-effort.mjs",
           "role": "SOURCE",
-          "sha256": "4986fa3de86fb4963c1cb191ba65f181aa7dab4e3af4222068cc2df17d3b7f40"
+          "sha256": "a95aff6354bd879b484feea6759c6608bab2daaeaf0350fbe8c16919075e34ee"
+        },
+        {
+          "path": "src/pan470/producer-handoff-v2.mjs",
+          "role": "SOURCE",
+          "sha256": "f8ac41de748d5f1c72277abe23c01091d8b1a9fce6ef4207702a93b00582749a"
         },
         {
           "path": "tests/fixtures/pan470/evidence-selfcheck-v1.txt",
@@ -6807,9 +6812,19 @@
           "sha256": "eda7bcb4baf93aab7f262f8442b17678bfeb7ec17b46296ce9844da1f58b3d91"
         },
         {
+          "path": "tests/fixtures/pan470/producer-evidence-v2.txt",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "99fb275a62ddfe2defe42ec70e51a9b0aca555861ae1cee56bfe88ba65fc65d8"
+        },
+        {
           "path": "tests/pan470/handoff-effort.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "efdca64f15650f5785d78f190fa9a65d926d3d42efa6cea74b76e1818fb985cb"
+          "sha256": "43aaa349f9c5b33d7b5412538184a0677613bc71c5383775e6209cb807db9330"
+        },
+        {
+          "path": "tests/pan470/producer-handoff-v2.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "b1bb3c66d8d2e9a29e4191f629ab1e9a7b72450db0f9847a01f0ee0d870dcdb3"
         },
         {
           "path": "verification/pan470-handoff-effort-boundary-v1.json",

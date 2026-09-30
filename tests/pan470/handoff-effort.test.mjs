@@ -18,6 +18,7 @@ import {
   aggregateEffort,
   generateHandoffReport,
   composeCompletedHandoff,
+  validateProducerBoundHandoff,
   EFFORT_PHASES_V1,
   PASSIVE_STATES_V1,
   RECEIPT_DENIALS,
@@ -27,6 +28,7 @@ import {
   syntheticWorkOrder,
   runSyntheticDevelopmentWorker,
   validateReceiptDigest,
+  sha256 as controllerSha256,
 } from "../../dist/packages/dev-worker/src/controller.js";
 
 const sha = (input) => createHash("sha256").update(input, "utf8").digest("hex");
@@ -205,7 +207,7 @@ test("AC02 negative: an unknown passive state is refused", () => {
   );
 });
 
-test("AC03 positive: report generation from one real completed handoff (released entry points) + non-retrospective", () => {
+test("AC03 synthetic self-check report (not producer completion) + non-retrospective", () => {
   const { workOrder, receipt } = orderAndReceipt();
   const composed = composeCompletedHandoff({
     workOrder,
@@ -283,4 +285,30 @@ test("review negative: symlinked evidence cannot escape the selected root", () =
 test("review negative: across-phase overlapping intervals are refused", () => {
   const intervals = { IMPLEMENTATION: [{ startMs: 0, endMs: 1000 }], SELF_CHECK: [], REVIEW: [{ startMs: 500, endMs: 1200 }], CORRECTION: [], FINALIZATION: [] };
   assert.throws(() => measureEffort({ deliverableId: "D1", modelAlias: "synthetic", harnessDigest: sha("h"), intervals, passive: { CI_WAIT: 0, IDLE: 0, UNKNOWN: 0 } }), /EFFORT_INTERVAL_OVERLAP/);
+});
+
+test("producer boundary refuses the real synthetic worker null candidate", () => {
+  const { workOrder, receipt } = orderAndReceipt();
+  const handoff = baseHandoff(workOrder, receipt, { baseCommit: workOrder.base.commit });
+  assert.throws(() => validateProducerBoundHandoff({ order: workOrder, receipt, handoff, evidenceRoot: ROOT }), /PRODUCER_CANDIDATE_MISSING/);
+});
+test("producer boundary rejects substituted order, base and rehashed candidate assertion", () => {
+  const { workOrder, receipt } = orderAndReceipt();
+  const handoff = baseHandoff(workOrder, receipt, { baseCommit: workOrder.base.commit });
+  assert.throws(() => validateProducerBoundHandoff({ order: { ...workOrder, workOrderDigest: "f".repeat(64) }, receipt, handoff, evidenceRoot: ROOT }), /PRODUCER_ORDER_MISMATCH/);
+  assert.throws(() => validateProducerBoundHandoff({ order: workOrder, receipt, handoff: baseHandoff(workOrder, receipt), evidenceRoot: ROOT }), /PRODUCER_BASE_MISMATCH/);
+  assert.throws(() => validateProducerBoundHandoff({ order: { ...workOrder, issue: { iid: workOrder.issue.iid + 1, snapshotDigest: workOrder.issue.snapshotDigest } }, receipt, handoff, evidenceRoot: ROOT }), /PRODUCER_ORDER_MISMATCH/);
+  assert.throws(() => validateProducerBoundHandoff({ order: workOrder, receipt, handoff }), /PRODUCER_EVIDENCE_ROOT_REQUIRED/);
+  assert.throws(() => validateProducerBoundHandoff({ order: workOrder, receipt: { ...receipt, candidateCommit: "b".repeat(40) }, handoff, evidenceRoot: ROOT }), /PRODUCER_RECEIPT_INVALID/);
+});
+
+test("AC03 boundary: re-digesting a claimed head cannot turn a null-only worker receipt into a producer completion",()=>{
+  const {workOrder,receipt}=orderAndReceipt();
+  const {receiptDigest:_ignore,...unsigned}=receipt;
+  const altered={...unsigned,candidateCommit:"b".repeat(40)};
+  const rehashed={...altered,receiptDigest:controllerSha256(altered)};
+  assert.equal(receipt.candidateCommit,null);
+  assert.equal(validateReceiptDigest(rehashed),false); // WorkReceiptV1 schema binds null; digest alone is insufficient.
+  const handoff=baseHandoff(workOrder,rehashed,{baseCommit:workOrder.base.commit,headCommit:altered.candidateCommit});
+  assert.throws(()=>validateProducerBoundHandoff({order:workOrder,receipt:rehashed,handoff,evidenceRoot:ROOT}),/PRODUCER_RECEIPT_INVALID/);
 });

@@ -885,8 +885,11 @@ const pan470Inputs = [
   ["docs/architecture/pan470-handoff-effort.md", "DERIVED_EVIDENCE"],
   ["schemas/contracts/pan470-handoff-effort-v1.schema.json", "SCHEMA"],
   ["src/pan470/handoff-effort.mjs", "SOURCE"],
+  ["src/pan470/producer-handoff-v2.mjs", "SOURCE"],
   ["tests/fixtures/pan470/evidence-selfcheck-v1.txt", "DERIVED_EVIDENCE"],
+  ["tests/fixtures/pan470/producer-evidence-v2.txt", "DERIVED_EVIDENCE"],
   ["tests/pan470/handoff-effort.test.mjs", "VALIDATOR"],
+  ["tests/pan470/producer-handoff-v2.test.mjs", "VALIDATOR"],
   ["verification/pan470-handoff-effort-boundary-v1.json", "DERIVED_EVIDENCE"],
 ];
 let pan470Node = dag.nodes.find(({ id }) => id === "pan470-handoff-effort-v1");
@@ -900,6 +903,7 @@ if (pan470Node === undefined) {
       "PAN470 composes a complete worker handoff from the existing work-order and receipt surfaces by driving the released development-worker entry points (runSyntheticDevelopmentWorker + validateReceiptDigest); a malformed or stale receipt (digest mismatch, missing or stale evidence bytes, overlapping AC ids) never implies completion.",
       "Finalization effort is recorded as exact per-phase intervals (IMPLEMENTATION, SELF_CHECK, REVIEW, CORRECTION, FINALIZATION), kept strictly separate from CI wait, idle and unknown, and aggregated by accepted deliverable and by model/harness; no effort percentage is inferred from tokens, commit counts or overlapping wall time.",
       "Existing mandatory gates are retained and reused; unchanged exact-byte evidence is reused and any byte change is refused; bounded correction findings are passed back with a failing reproducer; synthetic local evidence only, no production/customer/host data and no credentials.",
+      "The explicit versioned producer adapter (producer-adapter/v1) binds an ACTUAL completed local public-code handoff to independently observed Git state (base a strict ancestor of HEAD, clean tree), executed command exits with re-derived output digests and current evidence bytes; the base WorkReceiptV1 keeps null-only candidateCommit (validateReceiptDigest re-run), caller-attested head/base are refused, unobserved phases are never inferred; no new scheduler, supervisor, dashboard, framework or authority.",
     ],
     riskClass: "HIGH",
     globalInvalidation: false,
@@ -1155,8 +1159,11 @@ for (const relative of [
   "docs/architecture/pan470-handoff-effort.md",
   "schemas/contracts/pan470-handoff-effort-v1.schema.json",
   "src/pan470/handoff-effort.mjs",
+  "src/pan470/producer-handoff-v2.mjs",
   "tests/fixtures/pan470/evidence-selfcheck-v1.txt",
+  "tests/fixtures/pan470/producer-evidence-v2.txt",
   "tests/pan470/handoff-effort.test.mjs",
+  "tests/pan470/producer-handoff-v2.test.mjs",
   "verification/pan470-handoff-effort-boundary-v1.json",
 ]) entries.set(relative, null);
 for (const relative of [...entries.keys()]) {
