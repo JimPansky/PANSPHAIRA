@@ -287,7 +287,10 @@ repository_only_files = {
     # not the runnable product-increment file set). Declared here so the fail-closed
     # completeness gate classifies them; they are NOT added to release/public-files.manifest.
     "src/pan470/handoff-effort.mjs",
+    "src/pan470/producer-handoff-v2.mjs",
     "tests/pan470/handoff-effort.test.mjs",
+    "tests/pan470/producer-handoff-v2.test.mjs",
+    "tests/fixtures/pan470/producer-evidence-v2.txt",
     "schemas/contracts/pan470-handoff-effort-v1.schema.json",
     "docs/architecture/pan470-handoff-effort.md",
     "verification/pan470-handoff-effort-boundary-v1.json",

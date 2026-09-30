@@ -308,11 +308,11 @@ export function aggregateEffort(records) {
 }
 
 /**
- * Compose ONE real completed handoff by driving the ACTUAL released entry points:
- * (1) runSyntheticDevelopmentWorker() -> the base WorkReceiptV1 (the self-check gate);
+ * Compose ONE structural synthetic self-check handoff using released entry points:
+ * (1) runSyntheticDevelopmentWorker() -> WorkReceiptV1 with candidateCommit=null;
  * (2) validateReceiptDigest(baseReceipt) -> the existing mandatory receipt gate is
  *     retained and must pass; (3) buildHandoffReceipt -> the complete PAN470 handoff
- *     bound to that base receipt. Returns { baseReceipt, handoff, baseSha256 }.
+ *     bound to that base receipt. NOT producer completion; see validateProducerBoundHandoff.
  */
 export function composeCompletedHandoff({
   workOrder,
@@ -381,4 +381,21 @@ export function generateHandoffReport({ handoff, effortRecords, evidenceRoot }) 
     nonRetrospective: true,
   };
   return { ...unsigned, reportDigest: digestOf(unsigned) };
+}
+
+/** Strict producer boundary: caller head assertions are not worker candidates. */
+export function validateProducerBoundHandoff({ order, receipt, handoff, evidenceRoot }) {
+  if (!order || !receipt || !handoff || !validateReceiptDigest(receipt)) throw new Error("PRODUCER_RECEIPT_INVALID");
+  if (evidenceRoot === undefined) throw new Error("PRODUCER_EVIDENCE_ROOT_REQUIRED");
+  const { workOrderDigest: recordedOrderDigest, ...unsignedOrder } = order;
+  if (controllerSha256(unsignedOrder) !== recordedOrderDigest) throw new Error("PRODUCER_ORDER_MISMATCH");
+  if (!isSha256(order.workOrderDigest) || order.workOrderDigest !== receipt.workOrderDigest ||
+      order.workOrderDigest !== handoff.workOrderDigest || order.issue?.iid !== handoff.issueIid) throw new Error("PRODUCER_ORDER_MISMATCH");
+  if (!isSha1(order.base?.commit) || order.base.commit !== receipt.baseCommit ||
+      order.base.commit !== handoff.baseCommit) throw new Error("PRODUCER_BASE_MISMATCH");
+  if (!isSha1(receipt.candidateCommit)) throw new Error("PRODUCER_CANDIDATE_MISSING");
+  if (receipt.candidateCommit !== handoff.headCommit || receipt.receiptDigest !== handoff.baseReceiptDigest) throw new Error("PRODUCER_HEAD_OR_RECEIPT_MISMATCH");
+  if (receipt.outcome !== "SUCCEEDED" || receipt.review?.outcome !== "PASS" ||
+      receipt.tests?.some((entry) => entry.outcome !== "PASS")) throw new Error("PRODUCER_NOT_COMPLETED");
+  return validateHandoffReceipt(handoff, { evidenceRoot });
 }

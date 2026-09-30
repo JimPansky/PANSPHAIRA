@@ -1,0 +1,1 @@
+PAN470 producer-bound self-check evidence: actual local completed run, PASS

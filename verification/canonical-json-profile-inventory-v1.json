@@ -347,6 +347,14 @@
       "fromSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
       "toSha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
       "reason": "Bind the owned synthetic ambiguous reconciliation to an independently read persisted target before confirming success; preserve reviewed v1-v9 gate bytes, legacy semantics and unresolved safety without host or production authority."
+    },
+    {
+      "migrationId": "PAN470-PRODUCER-HANDOFF/INTEGRITY-GENERATOR/V33",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 33,
+      "fromSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
+      "toSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
+      "reason": "Register the PAN470 local producer adapter, synthetic fixture and actual-entry validator under the existing bounded handoff owner; preserve all prior immutable migrations and synthetic WorkReceiptV1 semantics."
     }
   ],
   "scanScope": {
@@ -389,15 +397,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 735,
+    "filesScanned": 737,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 253,
     "importFiles": 252,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2046,
-    "ledgerUniquePaths": 2046
+    "ledgerEntries": 2049,
+    "ledgerUniquePaths": 2049
   },
   "profiles": [
     {
@@ -470,7 +478,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2"
+      "sha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1106,7 +1114,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
+      "sha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
       "basis": "profile-version-migration"
     },
     {

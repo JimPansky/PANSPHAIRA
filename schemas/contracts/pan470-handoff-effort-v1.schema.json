@@ -2,121 +2,489 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://schemas.chimpmaera.dev/pan470-handoff-effort-v1.schema.json",
   "title": "PAN470 Complete Worker Handoff + Finalization Effort v1",
-  "description": "Bounded first slice for CONTRIB-03. A complete handoff names exact base/head, completed and unmet AC IDs, commands/exits, evidence locations, integration surfaces and nonclaims; malformed or stale receipts do not imply completion. Finalization effort is measured as exact recorded intervals per active phase, kept separate from CI wait/idle/unknown, and aggregated by accepted deliverable and by model/harness. No percentage is inferred from tokens, commit counts or overlapping wall time.",
+  "description": "Bounded first slice for CONTRIB-03. A complete handoff names exact base/head, completed and unmet AC IDs, commands/exits, evidence locations, integration surfaces and nonclaims; malformed or stale receipts do not imply completion. Finalization effort is measured as exact recorded intervals per active phase, kept separate from CI wait/idle/unknown, and aggregated by accepted deliverable and by model/harness. No percentage is inferred from tokens, commit counts or overlapping wall time. v2 extension (same versioned file): adds the explicit producer-adapter document types (producer-bound-handoff + producer-bound-report) that bind an ACTUAL completed local public-code handoff to its independently observed Git base/head, executed commands/exits and current evidence bytes; the V1 synthetic null-candidate semantics and all V1 document types are unchanged and every V1 gate is retained.",
   "oneOf": [
-    {"$ref": "#/$defs/handoffReceipt"},
-    {"$ref": "#/$defs/effortIntervals"},
-    {"$ref": "#/$defs/effortReport"}
+    {
+      "$ref": "#/$defs/handoffReceipt"
+    },
+    {
+      "$ref": "#/$defs/effortIntervals"
+    },
+    {
+      "$ref": "#/$defs/effortReport"
+    },
+    {
+      "$ref": "#/$defs/producerBundle"
+    },
+    {
+      "$ref": "#/$defs/producerReport"
+    }
   ],
   "$defs": {
-    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
-    "sha1": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
-    "nonEmptyString": {"type": "string", "minLength": 1},
-    "nonNegInt": {"type": "integer", "minimum": 0},
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sha1": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonNegInt": {
+      "type": "integer",
+      "minimum": 0
+    },
     "phaseStat": {
-      "type": "object", "additionalProperties": false,
-      "required": ["intervals", "totalMs"],
-      "properties": {"intervals": {"type": "integer", "minimum": 0}, "totalMs": {"$ref": "#/$defs/nonNegInt"}}
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intervals",
+        "totalMs"
+      ],
+      "properties": {
+        "intervals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "totalMs": {
+          "$ref": "#/$defs/nonNegInt"
+        }
+      }
     },
     "passiveTotals": {
-      "type": "object", "additionalProperties": false,
-      "required": ["CI_WAIT", "IDLE", "UNKNOWN"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "CI_WAIT",
+        "IDLE",
+        "UNKNOWN"
+      ],
       "properties": {
-        "CI_WAIT": {"$ref": "#/$defs/nonNegInt"},
-        "IDLE": {"$ref": "#/$defs/nonNegInt"},
-        "UNKNOWN": {"$ref": "#/$defs/nonNegInt"}
+        "CI_WAIT": {
+          "$ref": "#/$defs/nonNegInt"
+        },
+        "IDLE": {
+          "$ref": "#/$defs/nonNegInt"
+        },
+        "UNKNOWN": {
+          "$ref": "#/$defs/nonNegInt"
+        }
       }
     },
     "handoffReceipt": {
-      "type": "object", "additionalProperties": false,
-      "required": ["schemaVersion", "workOrderSchema", "receiptSchema", "workOrderDigest", "baseCommit", "headCommit", "issueIid", "outcome", "completedAcIds", "unmetAc", "commands", "evidence", "integrationSurfaces", "nonClaims", "baseReceiptDigest", "handoffDigest"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "workOrderSchema",
+        "receiptSchema",
+        "workOrderDigest",
+        "baseCommit",
+        "headCommit",
+        "issueIid",
+        "outcome",
+        "completedAcIds",
+        "unmetAc",
+        "commands",
+        "evidence",
+        "integrationSurfaces",
+        "nonClaims",
+        "baseReceiptDigest",
+        "handoffDigest"
+      ],
       "properties": {
-        "schemaVersion": {"const": "pansphaira.pan470/handoff-receipt/v1"},
-        "workOrderSchema": {"const": "chimpmaera.dev/work-order/v1"},
-        "receiptSchema": {"const": "chimpmaera.dev/work-receipt/v1"},
-        "workOrderDigest": {"$ref": "#/$defs/sha256"},
-        "baseCommit": {"$ref": "#/$defs/sha1"},
-        "headCommit": {"$ref": "#/$defs/sha1"},
-        "issueIid": {"type": "integer", "minimum": 1},
-        "outcome": {"enum": ["SUCCEEDED", "DENIED", "FAILED"]},
-        "completedAcIds": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmptyString"}, "uniqueItems": true},
+        "schemaVersion": {
+          "const": "pansphaira.pan470/handoff-receipt/v1"
+        },
+        "workOrderSchema": {
+          "const": "chimpmaera.dev/work-order/v1"
+        },
+        "receiptSchema": {
+          "const": "chimpmaera.dev/work-receipt/v1"
+        },
+        "workOrderDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "baseCommit": {
+          "$ref": "#/$defs/sha1"
+        },
+        "headCommit": {
+          "$ref": "#/$defs/sha1"
+        },
+        "issueIid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "outcome": {
+          "enum": [
+            "SUCCEEDED",
+            "DENIED",
+            "FAILED"
+          ]
+        },
+        "completedAcIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
         "unmetAc": {
           "type": "array",
           "items": {
-            "type": "object", "additionalProperties": false,
-            "required": ["id", "owner", "resumeCondition", "nextAction"],
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "owner",
+              "resumeCondition",
+              "nextAction"
+            ],
             "properties": {
-              "id": {"$ref": "#/$defs/nonEmptyString"},
-              "owner": {"$ref": "#/$defs/nonEmptyString"},
-              "resumeCondition": {"$ref": "#/$defs/nonEmptyString"},
-              "nextAction": {"$ref": "#/$defs/nonEmptyString"}
+              "id": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "owner": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "resumeCondition": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "nextAction": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
             }
           }
         },
         "commands": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
-            "type": "object", "additionalProperties": false,
-            "required": ["command", "exit", "outputDigest"],
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "command",
+              "exit",
+              "outputDigest"
+            ],
             "properties": {
-              "command": {"$ref": "#/$defs/nonEmptyString"},
-              "exit": {"type": "integer"},
-              "outputDigest": {"$ref": "#/$defs/sha256"}
+              "command": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "exit": {
+                "type": "integer"
+              },
+              "outputDigest": {
+                "$ref": "#/$defs/sha256"
+              }
             }
           }
         },
         "evidence": {
-          "type": "array", "minItems": 1,
+          "type": "array",
+          "minItems": 1,
           "items": {
-            "type": "object", "additionalProperties": false,
-            "required": ["path", "sha256"],
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256"
+            ],
             "properties": {
-              "path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"},
-              "sha256": {"$ref": "#/$defs/sha256"}
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+              },
+              "sha256": {
+                "$ref": "#/$defs/sha256"
+              }
             }
           }
         },
-        "integrationSurfaces": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmptyString"}, "uniqueItems": true},
-        "nonClaims": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/nonEmptyString"}, "uniqueItems": true},
-        "baseReceiptDigest": {"$ref": "#/$defs/sha256"},
-        "handoffDigest": {"$ref": "#/$defs/sha256"}
+        "integrationSurfaces": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "nonClaims": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "baseReceiptDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "handoffDigest": {
+          "$ref": "#/$defs/sha256"
+        }
       }
     },
     "effortIntervals": {
-      "type": "object", "additionalProperties": false,
-      "required": ["schemaVersion", "deliverableId", "modelAlias", "harnessDigest", "byPhase", "passive", "activeTotalMs", "effortDigest"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "deliverableId",
+        "modelAlias",
+        "harnessDigest",
+        "byPhase",
+        "passive",
+        "activeTotalMs",
+        "effortDigest"
+      ],
       "properties": {
-        "schemaVersion": {"const": "pansphaira.pan470/effort-intervals/v1"},
-        "deliverableId": {"$ref": "#/$defs/nonEmptyString"},
-        "modelAlias": {"$ref": "#/$defs/nonEmptyString"},
-        "harnessDigest": {"$ref": "#/$defs/sha256"},
+        "schemaVersion": {
+          "const": "pansphaira.pan470/effort-intervals/v1"
+        },
+        "deliverableId": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "modelAlias": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "harnessDigest": {
+          "$ref": "#/$defs/sha256"
+        },
         "byPhase": {
-          "type": "object", "additionalProperties": false,
-          "required": ["IMPLEMENTATION", "SELF_CHECK", "REVIEW", "CORRECTION", "FINALIZATION"],
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "IMPLEMENTATION",
+            "SELF_CHECK",
+            "REVIEW",
+            "CORRECTION",
+            "FINALIZATION"
+          ],
           "properties": {
-            "IMPLEMENTATION": {"$ref": "#/$defs/phaseStat"},
-            "SELF_CHECK": {"$ref": "#/$defs/phaseStat"},
-            "REVIEW": {"$ref": "#/$defs/phaseStat"},
-            "CORRECTION": {"$ref": "#/$defs/phaseStat"},
-            "FINALIZATION": {"$ref": "#/$defs/phaseStat"}
+            "IMPLEMENTATION": {
+              "$ref": "#/$defs/phaseStat"
+            },
+            "SELF_CHECK": {
+              "$ref": "#/$defs/phaseStat"
+            },
+            "REVIEW": {
+              "$ref": "#/$defs/phaseStat"
+            },
+            "CORRECTION": {
+              "$ref": "#/$defs/phaseStat"
+            },
+            "FINALIZATION": {
+              "$ref": "#/$defs/phaseStat"
+            }
           }
         },
-        "passive": {"$ref": "#/$defs/passiveTotals"},
-        "activeTotalMs": {"$ref": "#/$defs/nonNegInt"},
-        "effortDigest": {"$ref": "#/$defs/sha256"}
+        "passive": {
+          "$ref": "#/$defs/passiveTotals"
+        },
+        "activeTotalMs": {
+          "$ref": "#/$defs/nonNegInt"
+        },
+        "effortDigest": {
+          "$ref": "#/$defs/sha256"
+        }
       }
     },
     "effortReport": {
-      "type": "object", "additionalProperties": false,
-      "required": ["schemaVersion", "recordCount", "activeTotalMs", "byDeliverable", "byModelHarness", "passiveTotals", "reportDigest"],
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "recordCount",
+        "activeTotalMs",
+        "byDeliverable",
+        "byModelHarness",
+        "passiveTotals",
+        "reportDigest"
+      ],
       "properties": {
-        "schemaVersion": {"const": "pansphaira.pan470/effort-report/v1"},
-        "recordCount": {"type": "integer", "minimum": 1},
+        "schemaVersion": {
+          "const": "pansphaira.pan470/effort-report/v1"
+        },
+        "recordCount": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "activeTotalMs": {
+          "$ref": "#/$defs/nonNegInt"
+        },
+        "byDeliverable": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/nonNegInt"
+          }
+        },
+        "byModelHarness": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/nonNegInt"
+          }
+        },
+        "passiveTotals": {
+          "$ref": "#/$defs/passiveTotals"
+        },
+        "reportDigest": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "phase": {
+      "enum": [
+        "IMPLEMENTATION",
+        "SELF_CHECK",
+        "REVIEW",
+        "CORRECTION",
+        "FINALIZATION"
+      ]
+    },
+    "observedGit": {
+      "type": "object", "additionalProperties": false,
+      "required": ["baseCommit", "headCommit", "tree", "baseSubject", "headSubject"],
+      "properties": {
+        "baseCommit": {"$ref": "#/$defs/sha1"},
+        "headCommit": {"$ref": "#/$defs/sha1"},
+        "tree": {"$ref": "#/$defs/sha1"},
+        "baseSubject": {"type": "string"},
+        "headSubject": {"type": "string"}
+      }
+    },
+    "nullableMs": {"type": ["integer", "null"], "minimum": 0, "maximum": 9007199254740991},
+    "observedEffort": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "deliverableId", "modelAlias", "harnessDigest", "observations", "byPhase", "passive", "activeTotalMs", "unobservedPhases", "effortDigest"],
+      "properties": {
+        "schemaVersion": {"const": "pansphaira.pan470/observed-effort/v1"},
+        "deliverableId": {"$ref": "#/$defs/nonEmptyString"},
+        "modelAlias": {"$ref": "#/$defs/nonEmptyString"},
+        "harnessDigest": {"$ref": "#/$defs/sha256"},
+        "observations": {
+          "type": "object", "propertyNames": {"$ref": "#/$defs/phase"},
+          "required": ["IMPLEMENTATION", "SELF_CHECK", "REVIEW", "CORRECTION", "FINALIZATION"],
+          "additionalProperties": {"type": "array", "items": {
+            "type": "object", "additionalProperties": false, "required": ["startMs", "endMs"],
+            "properties": {"startMs": {"$ref": "#/$defs/nonNegInt"}, "endMs": {"$ref": "#/$defs/nonNegInt"}}
+          }}
+        },
+        "byPhase": {
+          "type": "object", "propertyNames": {"$ref": "#/$defs/phase"},
+          "required": ["IMPLEMENTATION", "SELF_CHECK", "REVIEW", "CORRECTION", "FINALIZATION"],
+          "additionalProperties": {"type": "object", "additionalProperties": false, "required": ["intervals", "totalMs"],
+            "properties": {"intervals": {"$ref": "#/$defs/nonNegInt"}, "totalMs": {"$ref": "#/$defs/nullableMs"}}}
+        },
+        "passive": {"type": "object", "additionalProperties": false, "required": ["CI_WAIT", "IDLE", "UNKNOWN"],
+          "properties": {"CI_WAIT": {"$ref": "#/$defs/nullableMs"}, "IDLE": {"$ref": "#/$defs/nullableMs"}, "UNKNOWN": {"$ref": "#/$defs/nullableMs"}}},
         "activeTotalMs": {"$ref": "#/$defs/nonNegInt"},
+        "unobservedPhases": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/phase"}},
+        "effortDigest": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "producerBundle": {
+      "type": "object", "additionalProperties": false,
+      "required": ["schemaVersion", "adapterVersion", "handoff", "commandsWithOutput", "effort", "git"],
+      "properties": {
+        "schemaVersion": {"const": "pansphaira.pan470/producer-bound-handoff/v1"},
+        "adapterVersion": {"const": "pansphaira.pan470/producer-adapter/v1"},
+        "handoff": {"$ref": "#/$defs/handoffReceipt"},
+        "commandsWithOutput": {"type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false, "required": ["command", "exit", "outputDigest", "outputText"],
+          "properties": {"command": {"$ref": "#/$defs/nonEmptyString"}, "exit": {"type": "integer"}, "outputDigest": {"$ref": "#/$defs/sha256"}, "outputText": {"type": "string"}}
+        }},
+        "effort": {"$ref": "#/$defs/observedEffort"},
+        "git": {"$ref": "#/$defs/observedGit"}
+      }
+    },
+    "producerReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tree", "effort", "byDeliverable", "byModelHarness", "acceptance", "acceptedDeliverableTotals",
+        "schemaVersion",
+        "adapterVersion",
+        "handoffDigest",
+        "baseCommit",
+        "headCommit",
+        "baseSubject",
+        "headSubject",
+        "completedAcIds",
+        "unmetAcIds",
+        "v1ReportDigest",
+        "effortDigest",
+        "unobservedPhases",
+        "nonRetrospective",
+        "reportDigest"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.pan470/producer-bound-report/v1"
+        },
+        "tree": {"$ref": "#/$defs/sha1"},
+        "effort": {"$ref": "#/$defs/observedEffort"},
         "byDeliverable": {"type": "object", "additionalProperties": {"$ref": "#/$defs/nonNegInt"}},
         "byModelHarness": {"type": "object", "additionalProperties": {"$ref": "#/$defs/nonNegInt"}},
-        "passiveTotals": {"$ref": "#/$defs/passiveTotals"},
-        "reportDigest": {"$ref": "#/$defs/sha256"}
+        "acceptance": {"const": "PENDING_INDEPENDENT_ACCEPTANCE"},
+        "acceptedDeliverableTotals": {"type": "null"},
+        "adapterVersion": {
+          "const": "pansphaira.pan470/producer-adapter/v1"
+        },
+        "handoffDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "baseCommit": {
+          "$ref": "#/$defs/sha1"
+        },
+        "headCommit": {
+          "$ref": "#/$defs/sha1"
+        },
+        "baseSubject": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "headSubject": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "completedAcIds": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "unmetAcIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "v1ReportDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "effortDigest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "unobservedPhases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/phase"
+          },
+          "uniqueItems": true
+        },
+        "nonRetrospective": {
+          "const": true
+        },
+        "reportDigest": {
+          "$ref": "#/$defs/sha256"
+        }
       }
     }
   }
