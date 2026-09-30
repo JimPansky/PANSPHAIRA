@@ -6789,7 +6789,7 @@
         {
           "path": "docs/architecture/pan470-handoff-effort.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "d264a82f2a401a9c160db192faf51203b2abad819fa66a550666d1e690b0d584"
+          "sha256": "793594fe6662bd7ddfd459685373598e2751e1db45475e8f71ebaafbe5ea744f"
         },
         {
           "path": "schemas/contracts/pan470-handoff-effort-v1.schema.json",

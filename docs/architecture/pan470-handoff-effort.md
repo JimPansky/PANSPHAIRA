@@ -26,8 +26,8 @@ the ACTUAL released entry points:
 | `validateHandoffReceipt(handoff, {evidenceRoot})` | Fail-closed validation; malformed receipts and stale evidence (recorded sha256 no longer matches current bytes / missing file) do NOT imply completion. |
 | `measureEffort({deliverableId, modelAlias, harnessDigest, intervals, passive})` | Exact recorded intervals per active phase (IMPLEMENTATION, SELF_CHECK, REVIEW, CORRECTION, FINALIZATION) separate from passive (CI_WAIT, IDLE, UNKNOWN); `activeTotalMs`. |
 | `aggregateEffort(records)` | Aggregate by accepted deliverable and by model/harness; passive summed separately. |
-| `composeCompletedHandoff({workOrder, frozenBaseCommit, candidateHeadCommit, ...})` | Compose ONE real completed handoff through the released entry points (self-check gate retained). |
-| `generateHandoffReport({handoff, effortRecords, evidenceRoot})` | Report generation from one real completed handoff + effort; `nonRetrospective: true`. |
+| `composeCompletedHandoff({workOrder, frozenBaseCommit, candidateHeadCommit, ...})` | Compose one synthetic self-check handoff through the released entry points; not proof of a real code candidate. |
+| `generateHandoffReport({handoff, effortRecords, evidenceRoot})` | Structural report generation from a validated handoff and recorded effort; provenance depends on the producer adapter, not this helper; `nonRetrospective: true`. |
 
 ## Denial codes (fail-closed)
 
