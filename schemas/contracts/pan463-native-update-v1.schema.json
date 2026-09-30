@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.org/schemas/pan463-native-update-v1.schema.json",
+  "title": "PAN463 isolated native update admission (not CHECK_ONLY authority)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "mode", "installationId", "checkPlan", "fromGeneration", "toGeneration", "steps", "planDigest"],
+  "properties": {
+    "schemaVersion": {"const": "pansphaira.pan463/native-update-plan/v1"},
+    "mode": {"const": "LOCAL_SYNTHETIC_NATIVE_UPDATE"},
+    "installationId": {"type": "string", "pattern": "^[a-z][a-z0-9-]{2,63}$"},
+    "checkPlan": {"$ref": "https://chimpmaera.org/schemas/update-operation-contract-v1.schema.json#/$defs/plan"},
+    "fromGeneration": {"type": "integer", "minimum": 1, "maximum": 9007199254740990},
+    "toGeneration": {"type": "integer", "minimum": 2, "maximum": 9007199254740991},
+    "steps": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"type": "object", "additionalProperties": false, "required": ["kind"], "properties": {"kind": {"const": "ADD_INVOICE_REVISION_NOTE_V1"}}}},
+    "planDigest": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

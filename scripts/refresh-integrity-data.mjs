@@ -1046,7 +1046,35 @@ for (const [inputPath, role] of pan462Inputs) {
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan462:test")) repositoryIntegrityNode.ownedTests.push("npm run pan462:test");
 repositoryIntegrityNode.inputs.sort((left, right) => left.path.localeCompare(right.path, "en"));
 
-dag.graphVersion = 62;
+const pan463Inputs = [
+  ["docs/architecture/pan463-native-update-v1.md", "DERIVED_EVIDENCE"],
+  ["schemas/contracts/pan463-native-update-v1.schema.json", "SCHEMA"],
+  ["src/pan463/native-update-executor.mjs", "SOURCE"],
+  ["tests/pan463/native-update-executor.test.mjs", "VALIDATOR"],
+  ["tests/pan463/executor-process.mjs", "VALIDATOR"],
+  ["demo/runtime/enforcement-gate.mjs", "SOURCE"],
+  ["demo/runtime/local-journal-owner.mjs", "SOURCE"],
+  ["packages/contracts/src/update-doctor.ts", "CONTRACT"],
+  ["schemas/contracts/update-operation-contract-v1.schema.json", "SCHEMA"],
+];
+let pan463Node = dag.nodes.find(({ id }) => id === "pan463-native-update-v1");
+if (pan463Node === undefined) {
+  pan463Node = {
+    id: "pan463-native-update-v1", dependsOn: [], inputs: [],
+    ownedTests: ["npm run pan463:test", "npm run pan453:test", "node --test dist/tests/update-doctor.test.js"],
+    invariants: [
+      "A separate controller-bound native plan and live exact grant authorize one fixed local synthetic PostgreSQL DDL step; CHECK_ONLY contracts and the existing provider gateway remain unchanged and non-authorizing.",
+      "PAN453 ownership, v4 durable reservations, receipt persistence and stop/revoke are reused; no replacement controller journal or arbitrary SQL/shell capability is introduced.",
+      "Real process kills before dispatch, during a real transaction and after commit before receipt are resolved by retained-target readback; NOT_APPLIED and UNKNOWN stay held without automatic dispatch.",
+      "Competing native executors, wrong owner, stale fences, expired/revoked grants, substituted plans and contradictory or unavailable target states never imply completion.",
+    ],
+    riskClass: "HIGH", globalInvalidation: false,
+  };
+  dag.nodes.push(pan463Node);
+}
+pan463Node.inputs = pan463Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan463:test")) repositoryIntegrityNode.ownedTests.push("npm run pan463:test");
+dag.graphVersion = 63;
 
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
@@ -1078,6 +1106,7 @@ const entries = new Map(readFileSync(sumsPath, "utf8").trimEnd().split("\n").map
 for (const line of readFileSync(path.join(root, "release/public-files.manifest"), "utf8").split("\n")) {
   if (line && !line.startsWith("#")) entries.set(line.split("\t")[0], null);
 }
+for (const [inputPath] of pan463Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

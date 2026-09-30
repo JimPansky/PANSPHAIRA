@@ -355,6 +355,14 @@
       "fromSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
       "toSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
       "reason": "Register the PAN470 local producer adapter, synthetic fixture and actual-entry validator under the existing bounded handoff owner; preserve all prior immutable migrations and synthetic WorkReceiptV1 semantics."
+    },
+    {
+      "migrationId": "PAN463-NATIVE-UPDATE/INTEGRITY-GENERATOR/V34",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 34,
+      "fromSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
+      "toSha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
+      "reason": "Advance graph to v63 and register the bounded PAN463 native update adapter, real process/transaction tests and reused PAN453/doctor dependencies; preserve every prior byte obligation and authority boundary."
     }
   ],
   "scanScope": {
@@ -397,15 +405,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 737,
+    "filesScanned": 740,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 253,
-    "importFiles": 252,
+    "importSites": 254,
+    "importFiles": 253,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2049,
-    "ledgerUniquePaths": 2049
+    "ledgerEntries": 2054,
+    "ledgerUniquePaths": 2054
   },
   "profiles": [
     {
@@ -478,7 +486,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d"
+      "sha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -799,6 +807,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan463",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "procurement-434",
       "importSites": 1,
       "importFiles": 1
@@ -1114,7 +1127,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
+      "sha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
       "basis": "profile-version-migration"
     },
     {
