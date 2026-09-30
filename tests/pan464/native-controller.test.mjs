@@ -110,6 +110,28 @@ for(const fault of ['rehashed-checkpoint','modified-copy','changed-permission','
     assert.equal(retainedTreeV1(x.state).digest,before);assert.equal((await x.controller.readRecovery()).containers.length,0);
   });
 }
+for(const [kind,when] of [['STOP','before-call'],['STOP','before-dispatch'],['REVOKE','before-call']]){
+  test(`AC02/05 ${kind} ${when}: post-activation new writes are denied before dispatch; recovery stays observational`,async t=>{
+    const control=f=>recordLocalJournalControl(f.control,{kind,operationKey:kind==='STOP'?null:edge.nativePlan.checkPlan.operationId,
+      sourceIdentity:'local-synthetic|installer:local-retained-pair',targetIdentity:'native-pair|PairGeneration|pan464-synthetic',
+      stopEpoch:1,issuedAtMs:Date.now(),reason:'synthetic post-activation control boundary'});
+    const x=fixture(t,async(phase,f)=>{if(when==='before-dispatch'&&phase==='POST_ACTIVATION_WRITE_INTENT')control(f);});
+    await ready(x);assert.equal((await x.controller.upgrade(x.request)).outcome,'ACTIVE');
+    const before=retainedTreeV1(x.state).digest,checkpoint=retainedTreeV1(join(x.root,'checkpoint')).digest;
+    const logs=retainedTreeV1(join(x.root,'internal-logs')).digest;
+    if(when==='before-call')control(x);
+    await assert.rejects(x.controller.writeAfterActivation(),{message:kind==='STOP'?'EFFECT_STOPPED_DENIED':'EFFECT_REVOKED_DENIED'});
+    assert.equal(retainedTreeV1(x.state).digest,before,'denied new effects must not touch retained state');
+    assert.equal(retainedTreeV1(join(x.root,'internal-logs')).digest,logs,'no native job may start or emit completion');
+    const recovery=await x.controller.readRecovery();
+    assert.equal(recovery.outcome,'HELD_NO_AUTOMATIC_RESTORE');assert.equal(recovery.containers.length,0);
+    assert.equal(recovery.phase,when==='before-call'?'ACTIVE':'POST_ACTIVATION_WRITE_INTENT');
+    assert.equal(recovery.retainedDigest,before);assert.equal(retainedTreeV1(x.state).digest,before);
+    assert.equal(retainedTreeV1(join(x.root,'checkpoint')).digest,checkpoint,'observational recovery must not change checkpoint');
+    assert.equal(retainedTreeV1(join(x.root,'internal-logs')).digest,logs);
+  });
+}
+
 test('AC04 healthy actual HTTP wrong metric is rejected and stopped pre-activation source copy is restored',async t=>{
   const x=fixture(t,async(phase,f)=>{if(phase==='VALIDATING')mutateMetric(f);});
   const source=await ready(x);const result=await x.controller.upgrade(x.request);
