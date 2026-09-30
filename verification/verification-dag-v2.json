@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "7b9662413e0bc5f45781ef3264ac172aa57c0ec93b2ac0299b192f9549ae7716"
+          "sha256": "660730534f08d039fec1098d54ebad291d0af651a450d7a8bc81c7fb549d905c"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "ed5e62df14826ed1c6015df3c8de2ff52705e58399e62f32314679c4107fecff"
+          "sha256": "317bcd505a272c8a02d0fccb5e85283a65e59805c7471f6dca16984089a545d7"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "a6e4d73c78b88a739989f88ed1f99679988b13e479b1b698ea6915a2b1b48d05"
+          "sha256": "31e807974d56ef0bd02030d43e85123a7601f6b352cd0a0dbce54d38e4291dd8"
         }
       ],
       "ownedTests": [
