@@ -125,7 +125,7 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
   async function observations(){await success('producer','observe');await success('consumer','observe');return {producer:json(join(state,'producer-observed.json')),consumer:json(join(state,'consumer-observed.json'))};}
   function checkpointContext(saved){return {expectedOperationDigest:edge.nativePlan.planDigest,expectedMigrationEdgeDigest:edge.edgeDigest,expectedCurrentTupleDigest:digestV1(edge.from),
     expectedSnapshotDigest:saved.snapshotDigest,expectedSnapshotContentDigest:saved.snapshotDigest,expectedOwnerStateDigest:saved.ownerDigest,expectedCheckpointOrdinal:1,
-    expectedAuthorityProfileDigest:edge.authorityProfileDigest,expectedRecorder:{recorderId:'pan464-checkpoint',recorderVersion:'1.0.0'},expectedCapturedAtMs:saved.capturedAtMs};}
+    expectedAuthorityProfileDigest:edge.authorityProfileDigest,expectedRecorder:{recorderId:'recorder:checkpoint-recorder',recorderVersion:'1.0.0'},expectedCapturedAtMs:saved.capturedAtMs};}
   async function admissionGuard(gate,saved,binding){
     identities();const grant=await authority();if(digestV1(grant)!==binding)fail('PERMISSION_CHANGED_DENIED');
     gate.assertEffectControl({action,operationKey:operation,reconcileEligible:false});
@@ -174,7 +174,7 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
       const saved={snapshotDigest:snapshot.digest,ownerDigest:digestV1({writers,namespace,edgeDigest:edge.edgeDigest}),capturedAtMs:Date.now()};
       const cp=buildUpdateMigrationCheckpointV1({operationDigest:edge.nativePlan.planDigest,migrationEdgeDigest:edge.edgeDigest,currentTupleDigest:digestV1(edge.from),rollbackTargetTupleDigest:digestV1(edge.from),
         snapshotDigest:saved.snapshotDigest,snapshotContentDigest:saved.snapshotDigest,ownerStateDigest:saved.ownerDigest,checkpointOrdinal:1,authorityProfileDigest:edge.authorityProfileDigest,
-        recorder:{recorderId:'pan464-checkpoint',recorderVersion:'1.0.0'},capturedAtMs:saved.capturedAtMs});
+        recorder:{recorderId:'recorder:checkpoint-recorder',recorderVersion:'1.0.0'},capturedAtMs:saved.capturedAtMs});
       durable(join(control,'checkpoint.json'),cp);
       gate.reserveOperation({operationKey:operation,action,computedDigest:edge.nativePlan.planDigest,authorityBinding:binding,authorityKind:'INSTALLER_APPROVAL_V1',reservedAtMs:Date.now()});
       await phase('CHECKPOINTED',saved);
