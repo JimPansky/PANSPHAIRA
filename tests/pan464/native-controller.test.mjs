@@ -87,7 +87,7 @@ test('AC02 authority, request substitution and concurrent owner cannot dispatch 
   const writer=docker(['run','-d',...containerArgs(x),imageId,'bash','/opt/chimpmaera-bi/start.sh']);
   try{
     const info=JSON.parse(docker(['inspect',writer]))[0];assert.equal(info.State.Running,true);
-    await waitUntil(()=>{const processes=docker(['top',writer,'-eo','args']);return processes.includes('materializer_server.py')&&processes.includes('gunicorn');});
+    await waitUntil(()=>{const processes=docker(['top',writer,'-eo','pid,args']);return processes.includes('materializer_server.py')&&processes.includes('gunicorn');});
     await assert.rejects(x.controller.upgrade(x.request),/WRITERS_NOT_QUIESCENT_HELD/);
     assert.equal(existsSync(join(x.root,'checkpoint')),false);
   }finally{docker(['rm','-f',writer]);}
@@ -141,7 +141,7 @@ test('AC05 kill the real container during native Superset db upgrade: no orphan,
   const id=await waitUntil(()=>{
     const ids=docker(['ps','-q','--filter',`label=io.pansphaira.pan464.owner=${x.controller.namespace}`]);
     for(const id of ids.split(/\s+/).filter(Boolean)){
-      const processes=docker(['top',id,'-eo','args']);
+      const processes=docker(['top',id,'-eo','pid,args']);
       if(processes.includes('/app/.venv/bin/superset db upgrade'))return id;
     }
     return null;

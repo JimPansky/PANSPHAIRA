@@ -199,10 +199,18 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
         // Durable intent precedes every post-validation writer capability. Any
         // loss after here is conservatively HELD; no old snapshot replay.
         await phase('ACTIVATION_INTENT');
-        gate.state.effects[operation]={actionDigest:edge.nativePlan.planDigest,providerResult:{generation:2},readback:observed,receipt:{outcome:'LOCAL_RETAINED_PAIR_VERIFIED'}};
+        const receiptCore={schemaVersion:'pansphaira.pan464/retained-pair-receipt/v1',replayKey:operation,actionDigest:edge.nativePlan.planDigest,
+          outcome:'LOCAL_RETAINED_PAIR_VERIFIED',readbackDigest:digestV1(observed),checkpointDigest:cp.checkpointDigest};
+        const receipt={...receiptCore,receiptDigest:digestV1(receiptCore)};
+        gate.state.effects[operation]={actionDigest:edge.nativePlan.planDigest,providerResult:{generation:2},readback:observed,receipt};
         gate.state.reservations[operation].status='APPLIED';gate.state.reservations[operation].recovery='NONE';gate.persist();
         await phase('ACTIVE');return {outcome:'ACTIVE',observed,oracle,checkpointDigest:cp.checkpointDigest};
-      }catch(error){gate.markAmbiguous(operation);throw error;}
+      }catch(error){
+        // Never make an APPLIED effect inconsistent with its durable v4
+        // reservation. Lost activation acknowledgement remains held by intent.
+        if(gate.state.reservations[operation]?.status!=='APPLIED')gate.markAmbiguous(operation);
+        throw error;
+      }
     });},
     async readRecovery(){
       // No lock adoption, container kill, native replay, restore or file write.
