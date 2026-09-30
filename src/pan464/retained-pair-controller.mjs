@@ -21,6 +21,7 @@ function durable(path,value){
 }
 const environment=()=>Object.fromEntries(['PATH','HOME','LANG','LC_ALL','TMPDIR'].filter(k=>process.env[k]!==undefined).map(k=>[k,process.env[k]]));
 const pairedCache=new Map();
+function freeze(value){if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;}
 export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksRoot,targetHead,imageId,readPermission,observePhase=async()=>{}}) {
   verifyForwardEnvironment();
   for(const path of [ownedRoot,panRoot,sourceRoot,ksRoot]){
@@ -37,7 +38,7 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
   const logRoot=join(root,'internal-logs');mkdirSync(logRoot,{recursive:true,mode:0o700});
   const recordFile=join(control,'pair-state.json');
   const namespace='pan464-'+digestV1(root).slice(0,24);
-  const edge=retainedPairPlanV1({sourcePan:SOURCE_PAN_V1,targetPan:targetHead,consumerKs:CONSUMER_KS_V1,imageId,issuedAtMs:1});
+  const edge=freeze(retainedPairPlanV1({sourcePan:SOURCE_PAN_V1,targetPan:targetHead,consumerKs:CONSUMER_KS_V1,imageId,issuedAtMs:1}));
   const operation=edge.nativePlan.checkPlan.operationId;
   const action={actor:'installer:local-retained-pair',scope:{tenant:'local-synthetic',provider:'native-pair',entity:'PairGeneration'},payload:{body:{ref_client:'pan464-synthetic'}}};
   let running=false,serial=0;
@@ -110,7 +111,9 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
       writeFileSync(join(logRoot,`${serial}-${kind}-${mode}.log`),result.stdout+result.stderr,{mode:0o600});
       const [after]=JSON.parse(await checked(['inspect',id]));
       if(result.timedOut||after.State.Running||after.State.Pid!==0)fail('NATIVE_JOB_UNKNOWN_HELD');
-      return {exitCode:after.State.ExitCode,cliExit:result.code,timedOut:result.timedOut};
+      const completion={exitCode:after.State.ExitCode,cliExit:result.code,timedOut:result.timedOut};
+      durable(join(logRoot,`${serial}-${kind}-${mode}-exit.json`),completion);
+      return completion;
     } finally {
       if(id){
         const [before]=JSON.parse(await checked(['inspect',id]));
@@ -209,10 +212,12 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
       return {outcome:'HELD_NO_AUTOMATIC_RESTORE',phase:recordValue?.phase??'UNKNOWN',containers:await containers(),
         retainedDigest,checkpointPresent:existsSync(checkpoint)};
     },
-    async writeAfterActivation(){return exclusive(async()=>{
+    async writeAfterActivation(){return exclusive(async owner=>{
       const recordValue=json(recordFile);if(recordValue.phase!=='ACTIVE')fail('ACTIVATION_REQUIRED');
-      await authority();await quiescent();await phase('POST_ACTIVATION_WRITE_INTENT');
-      await success('producer','new-write');await success('consumer','new-write');
+      const gate=journal(owner);
+      const guard=async()=>{await authority();gate.assertEffectControl({action,operationKey:operation,reconcileEligible:true});await quiescent();};
+      await guard();await phase('POST_ACTIVATION_WRITE_INTENT');
+      await success('producer','new-write',{beforeStart:guard});await success('consumer','new-write',{beforeStart:guard});
       const observed={producer:json(join(state,'producer-observed.json')),consumer:json(join(state,'consumer-observed.json'))};
       if(verifyRetainedBusinessV1(observed,recordValue.sourceIdentity,{postActivation:true}).outcome!=='PASS')fail('POST_ACTIVATION_ORACLE_HELD');
       await phase('ACTIVE_WITH_NEW_WRITES');return observed;
