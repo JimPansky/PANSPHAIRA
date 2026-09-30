@@ -301,6 +301,24 @@ repository_only_files = {
     "tests/pan463/executor-process.mjs",
     "schemas/contracts/pan463-native-update-v1.schema.json",
     "docs/architecture/pan463-native-update-v1.md",
+    # PAN464 owned retained native pair qualification — source evidence only.
+    # Not included in the runnable product-increment allowlist.
+    "docs/architecture/pan464-retained-pair-v1.md",
+    "src/pan464/native-producer.mjs",
+    "src/pan464/native-consumer.py",
+    "src/pan464/protected-oracle.mjs",
+    "src/pan464/retained-snapshot.mjs",
+    "src/pan464/retained-pair-plan.mjs",
+    "src/pan464/retained-pair-controller.mjs",
+    "scripts/run-retained-pair-upgrade.mjs",
+    "scripts/run-pan464-native-qualification.mjs",
+    "tests/pan464/protected-oracle.test.mjs",
+    "tests/pan464/retained-snapshot.test.mjs",
+    "tests/pan464/retained-pair-plan.test.mjs",
+    "tests/pan464/native-controller.test.mjs",
+    "tests/pan464/controller-process.mjs",
+    "tests/pan464/runtime/Dockerfile",
+    ".github/workflows/retained-native-pair.yml",
 }
 repository_only_prefixes = (
     "archive/cm-bi-legacy-v1/",

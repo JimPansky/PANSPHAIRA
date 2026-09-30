@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 63,
+  "graphVersion": 64,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "660730534f08d039fec1098d54ebad291d0af651a450d7a8bc81c7fb549d905c"
+          "sha256": "f95d3d9dc009f3be1e484b69d85954faa0b290129cdbd859c28e6949806a2a9b"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "31e807974d56ef0bd02030d43e85123a7601f6b352cd0a0dbce54d38e4291dd8"
+          "sha256": "17fce0a891e8bd848373bd62a010a74f5c67265c9fcb1194bf3729452ba5b495"
         }
       ],
       "ownedTests": [
@@ -4791,7 +4791,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "05659523a37d8db47fe31b4e3e7baef7cca0f1dac14edc6f549d22b6a07545fa"
+          "sha256": "536856e4d732a13d3a259f235b01e3e5b8545079d8a224693c5b3f53dc99738f"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4802,11 +4802,6 @@
           "path": "scripts/paired-analytics-execution.mjs",
           "role": "VALIDATOR",
           "sha256": "0cd16675e6f5af09f5c8165344cd64d2daff57dbd79f15514cf9899137132f90"
-        },
-        {
-          "path": "scripts/run-forward-paired-analytics.mjs",
-          "role": "VALIDATOR",
-          "sha256": "aa9b54f94635024ba8c992299848f16547c1c1fd21a0cfaffd1fcd5c160a69b4"
         },
         {
           "path": "scripts/run-paired-analytics-parity.mjs",
@@ -4831,7 +4826,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "cc3f6750fa1095bd33931f0b563a7ebdd8ed170f254587261b27d614ee492b02"
+          "sha256": "f19cb565de2b2b0373b49df5fec018d22b144a528065067be6b3277c3533c737"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4931,7 +4926,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "ec139f11bf139cde7caec3f26deeca9eb1886d8207aa105461b0aaaf7e155522"
+          "sha256": "9319a277a5281c262a765e2cf69981911a55f9bdfb087435f18497a0f66eced9"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -4992,7 +4987,8 @@
         "npm run pan471:test",
         "npm run pan461:test",
         "npm run pan462:test",
-        "npm run pan463:test"
+        "npm run pan463:test",
+        "npm run pan464:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5547,7 +5543,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "f5c8067a37a0fc0eebbb2dcd6eae8680499e94c4e29086ded99c9e686983ab14"
+          "sha256": "eb92ccb43e0e1f91776030a9eb76a6cdc094be7e880cf21bc36b4012d1fe2899"
         },
         {
           "path": "package-lock.json",
@@ -5907,7 +5903,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "6067da39c51ce543e1fcfa35901f73cf5fb4b5011b90304d95fa35b86bdd1379"
+          "sha256": "e52034b3e207fb86d7222958dc46bdb7c9e4ae5731c28440447ddb0b9a838110"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7119,6 +7115,144 @@
         "PAN453 ownership, v4 durable reservations, receipt persistence and stop/revoke are reused; no replacement controller journal or arbitrary SQL/shell capability is introduced.",
         "Real process kills before dispatch, during a real transaction and after commit before receipt are resolved by retained-target readback; NOT_APPLIED and UNKNOWN stay held without automatic dispatch.",
         "Competing native executors, wrong owner, stale fences, expired/revoked grants, substituted plans and contradictory or unavailable target states never imply completion."
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false
+    },
+    {
+      "id": "pan464-retained-pair-v1",
+      "dependsOn": [],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan464-retained-pair-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "b9dddc552931e80680e9870937fad81b2685013d700fe398b5e68d8d243257b1"
+        },
+        {
+          "path": "src/pan464/retained-pair-controller.mjs",
+          "role": "SOURCE",
+          "sha256": "8c697fb85fe3b1220804e024fd1996d3cbbac6fa897ba80ff2a7cab37b09845f"
+        },
+        {
+          "path": "src/pan464/retained-pair-plan.mjs",
+          "role": "SOURCE",
+          "sha256": "8748be20c9ce8e2fccd23d88cfebc4379a6c1010d0567e66707495a23aa50d56"
+        },
+        {
+          "path": "src/pan464/retained-snapshot.mjs",
+          "role": "SOURCE",
+          "sha256": "7575eda9666b650b86e36e366bd2027f0d3c7f380097726315416df3b2f36b6f"
+        },
+        {
+          "path": "src/pan464/protected-oracle.mjs",
+          "role": "SOURCE",
+          "sha256": "4f55e65b7a18a67f07e8d8a12d5329f80e12b2c43f9a6a5ad6ac85c9d9741187"
+        },
+        {
+          "path": "src/pan464/native-producer.mjs",
+          "role": "SOURCE",
+          "sha256": "f254fa878ed4b75b814392945a52d1b1bbccd4c3ac53622451fb74574f213c2e"
+        },
+        {
+          "path": "src/pan464/native-consumer.py",
+          "role": "SOURCE",
+          "sha256": "da1e991a4de3510499cb6f445e0395e2a31609dfd007b744853987f87cf1df03"
+        },
+        {
+          "path": "scripts/run-retained-pair-upgrade.mjs",
+          "role": "SOURCE",
+          "sha256": "b29eae867a1b5010f274100b15703cb3409112778e4ea63847e89ac81d14a6fd"
+        },
+        {
+          "path": "scripts/run-pan464-native-qualification.mjs",
+          "role": "SOURCE",
+          "sha256": "4368edcc68bf972d5cae12f1403f83e4eefeb7489aff3a7d13929ff04283dd5d"
+        },
+        {
+          "path": "tests/pan464/protected-oracle.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "fc598ba857ff4048f12b46f5d594f44c9fb723faaca1e07bcfe3bf97fbd06514"
+        },
+        {
+          "path": "tests/pan464/retained-pair-plan.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "93db2fd624bf04836084ab1b313d327a44ed736f91bf9df8d8a61ac88c2691f2"
+        },
+        {
+          "path": "tests/pan464/retained-snapshot.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7ad6d3f006c1e2a9528e33a34bbd39a6f7d314ec37278911f9a3747556acd9f8"
+        },
+        {
+          "path": "tests/pan464/native-controller.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "18d54c16f628bf42547ed39f2863947ac43b40deb390343bbfb20859895f964e"
+        },
+        {
+          "path": "tests/pan464/controller-process.mjs",
+          "role": "VALIDATOR",
+          "sha256": "4f2eaaf957e062fb06de3fc8a38db09aafb7737b9d91521066408de39ef589c9"
+        },
+        {
+          "path": "tests/pan464/runtime/Dockerfile",
+          "role": "SOURCE",
+          "sha256": "f377cdb5a64c95fb2fd1e15f2a381b2936f159ac9cf76a76f4de6bb19cb04355"
+        },
+        {
+          "path": ".github/workflows/retained-native-pair.yml",
+          "role": "SOURCE",
+          "sha256": "ad9731b95c77fc57b962bccc90d4dc594fd3e91e7bc6c4940f486fb7ada3fdb7"
+        },
+        {
+          "path": "src/pan463/native-update-executor.mjs",
+          "role": "SOURCE",
+          "sha256": "15f33f4d821a933b1df0d12017b356df6019bc022ef8e6529cf6581298a6d425"
+        },
+        {
+          "path": "demo/runtime/enforcement-gate.mjs",
+          "role": "SOURCE",
+          "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea"
+        },
+        {
+          "path": "demo/runtime/local-journal-owner.mjs",
+          "role": "SOURCE",
+          "sha256": "a537cc46046ebd84c03c7ac00478b48ba984ed5e52a5f12ec807d2c849f56e6b"
+        },
+        {
+          "path": "packages/contracts/src/update-migration-checkpoint.ts",
+          "role": "CONTRACT",
+          "sha256": "01c1d78a17ff98a034307cfa19bb23e0d478478c072158baacb532879e162e55"
+        },
+        {
+          "path": "packages/knowledge-solution/src/pg-harness.ts",
+          "role": "SOURCE",
+          "sha256": "5a02fa90540a756e3ac70330cb95b4192b35da3e507a1efb92d05ed631e22da4"
+        },
+        {
+          "path": "packages/knowledge-solution/src/postgres-source.ts",
+          "role": "SOURCE",
+          "sha256": "6217ee914846c8f57dedcda798aa470250f9d0d793e5affc09d9b8ca6630a9cf"
+        },
+        {
+          "path": "tests/fixtures/pan462/expected-facts-v1.json",
+          "role": "SOURCE",
+          "sha256": "2bb05e29a6fc7012d79051f94ff54e2bb1c92809a3eb2e950b2e4a1790e8c594"
+        },
+        {
+          "path": "scripts/run-forward-paired-analytics.mjs",
+          "role": "SOURCE",
+          "sha256": "aa9b54f94635024ba8c992299848f16547c1c1fd21a0cfaffd1fcd5c160a69b4"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan464:test"
+      ],
+      "invariants": [
+        "The exact historical source creates retained native PostgreSQL/Superset state; the existing source and target paired runner remains mandatory and no historical pair is widened.",
+        "Native startup receives writable retained mounts only after current controller permission, real Docker quiescence and independently bound whole-pair checkpoint; raw unadmitted native init has read-only stores and no Docker socket.",
+        "A protected business oracle rejects healthy wrong native HTTP results; known pre-activation rejection preserves the rejected copy and verifies the restored source through actual native paths.",
+        "Durable activation intent and unknown/crashed states never automatically restore an old snapshot over new valid producer or metadata work; PAN453 owner/journal/revoke and PAN463 typed native step are reused.",
+        "The lightweight ownership checks do not substitute for the mandatory separate exact-head Retained Native Pair CI workflow; raw keys, grants, state and internal logs are not public evidence."
       ],
       "riskClass": "HIGH",
       "globalInvalidation": false

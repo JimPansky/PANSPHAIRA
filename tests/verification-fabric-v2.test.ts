@@ -64,7 +64,7 @@ test("PAN463 native adapter and reused journal inputs select actual process/tran
   assert.ok(node);
   const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string, string> };
   assert.equal(pkg.scripts["pan463:test"], "node --test tests/pan463/native-update-executor.test.mjs");
-  assert.ok(pkg.scripts.posttest?.endsWith("&& npm run pan463:test"));
+  assert.ok(pkg.scripts.posttest?.includes("&& npm run pan463:test && npm run pan464:test"));
   for (const changed of ["src/pan463/native-update-executor.mjs", "demo/runtime/enforcement-gate.mjs", "demo/runtime/local-journal-owner.mjs", "schemas/contracts/update-operation-contract-v1.schema.json"]) {
     assert.ok(node.inputs.some((input) => input.path === changed));
     const impact = plan([changed]);
@@ -72,6 +72,29 @@ test("PAN463 native adapter and reused journal inputs select actual process/tran
     assert.ok(impact.selectedTests.includes("npm run pan453:test"));
     assert.deepEqual(impact.hardGates, [...graph().hardGates].sort((a, b) => a.localeCompare(b, "en")));
   }
+});
+
+test("PAN464 retains native ownership and its mandatory separate exact-head Docker gate without weakening hard gates", () => {
+  const node = graph().nodes.find(({ id }) => id === "pan464-retained-pair-v1");
+  assert.ok(node);
+  const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string, string> };
+  assert.equal(pkg.scripts["pan464:test"], "node --test tests/pan464/protected-oracle.test.mjs tests/pan464/retained-snapshot.test.mjs tests/pan464/retained-pair-plan.test.mjs");
+  assert.equal(pkg.scripts["pan464:native"], "node --test --test-concurrency=1 tests/pan464/native-controller.test.mjs");
+  assert.ok(pkg.scripts.posttest?.endsWith("&& npm run pan463:test && npm run pan464:test"));
+  for (const changed of ["src/pan464/retained-pair-controller.mjs", "src/pan464/native-consumer.py", "src/pan464/protected-oracle.mjs", "tests/pan464/native-controller.test.mjs", ".github/workflows/retained-native-pair.yml", "demo/runtime/local-journal-owner.mjs"]) {
+    assert.ok(node.inputs.some((input) => input.path === changed));
+    const impact = plan([changed]);
+    assert.ok(impact.selectedTests.includes("npm run pan464:test"));
+    assert.deepEqual(impact.hardGates, [...graph().hardGates].sort((a, b) => a.localeCompare(b, "en")));
+  }
+  const workflow = readFileSync(".github/workflows/retained-native-pair.yml", "utf8");
+  for (const required of ["pull_request:", "branches: [main]", "persist-credentials: false", "scripts/run-pan464-native-qualification.mjs", "EXPECTED_PAN_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}", "if-no-files-found: error", "QUALIFICATION_UID", "--network none"]) assert.ok(workflow.includes(required), required);
+  assert.ok(!workflow.includes("continue-on-error"));
+  assert.ok(!workflow.includes("paths-ignore"));
+  const runner = readFileSync("scripts/run-pan464-native-qualification.mjs", "utf8");
+  assert.ok(runner.includes("--test-reporter=tap"));
+  assert.ok(runner.includes("skipped!==0"));
+  assert.ok(runner.includes("sanitizeArtifactText"));
 });
 
 test("REL-TRUTH release authority is canonically owned by repository integrity", () => {
@@ -121,7 +144,7 @@ test("#377 current-head Docker E2E is a focused repository-integrity obligation"
   const manifest = graph();
   const node = manifest.nodes.find(({ id }) => id === "repository-integrity");
   assert.ok(node);
-  assert.equal(manifest.graphVersion, 63);
+  assert.equal(manifest.graphVersion, 64);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
@@ -155,7 +178,7 @@ test("AWI-03 knowledge changes select the bounded critical owner and hard gates"
   const result = plan(["packages/contracts/src/knowledge-envelope.ts"]);
   assert.equal(result.mode, "IMPACTED_SHADOW");
   assert.deepEqual(result.selectedNodes, ["awi-03-knowledge-envelope", "awi-plugin-01-knowledge-harvest-v1", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "lkc-files-01-local-file-corpus", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof"]);
-  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
+  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
   assert.deepEqual(result.hardGates, [...graph().hardGates].sort((a, b) => a.localeCompare(b, "en")));
 });
 
@@ -407,7 +430,7 @@ test("FND-PS-02 edge-evidence focused family is canonical and selects its owner 
 
 test("CSCL-11 serial holdout gate is a registered DAG node bound to the frozen reconciled pilot", () => {
   const manifest = graph();
-  assert.equal(manifest.graphVersion, 63);
+  assert.equal(manifest.graphVersion, 64);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
