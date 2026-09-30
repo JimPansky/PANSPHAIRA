@@ -805,7 +805,7 @@ test("independent schema oracle accepts every shipped job, descriptor and emitte
 
 test("independent DAG oracle binds every local file, both video commands, and security fallback", async () => {
   const dag = await json(join(REPOSITORY_ROOT, "verification", "verification-dag-v2.json"));
-  assert.equal(dag.graphVersion, 63);
+  assert.equal(dag.graphVersion, 64);
   const node = dag.nodes.find(({ id }) => id === "know-media-m1-audience-learning-v1");
   assert.ok(node);
   assert.deepEqual(node.inputs.slice(0, 3).map(({ path }) => path), [

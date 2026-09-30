@@ -1074,7 +1074,50 @@ if (pan463Node === undefined) {
 }
 pan463Node.inputs = pan463Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan463:test")) repositoryIntegrityNode.ownedTests.push("npm run pan463:test");
-dag.graphVersion = 63;
+const pan464Inputs = [
+  ["docs/architecture/pan464-retained-pair-v1.md", "DERIVED_EVIDENCE"],
+  ["src/pan464/retained-pair-controller.mjs", "SOURCE"],
+  ["src/pan464/retained-pair-plan.mjs", "SOURCE"],
+  ["src/pan464/retained-snapshot.mjs", "SOURCE"],
+  ["src/pan464/protected-oracle.mjs", "SOURCE"],
+  ["src/pan464/native-producer.mjs", "SOURCE"],
+  ["src/pan464/native-consumer.py", "SOURCE"],
+  ["scripts/run-retained-pair-upgrade.mjs", "SOURCE"],
+  ["scripts/run-pan464-native-qualification.mjs", "SOURCE"],
+  ["tests/pan464/protected-oracle.test.mjs", "VALIDATOR"],
+  ["tests/pan464/retained-pair-plan.test.mjs", "VALIDATOR"],
+  ["tests/pan464/retained-snapshot.test.mjs", "VALIDATOR"],
+  ["tests/pan464/native-controller.test.mjs", "VALIDATOR"],
+  ["tests/pan464/controller-process.mjs", "VALIDATOR"],
+  ["tests/pan464/runtime/Dockerfile", "SOURCE"],
+  [".github/workflows/retained-native-pair.yml", "SOURCE"],
+  ["src/pan463/native-update-executor.mjs", "SOURCE"],
+  ["demo/runtime/enforcement-gate.mjs", "SOURCE"],
+  ["demo/runtime/local-journal-owner.mjs", "SOURCE"],
+  ["packages/contracts/src/update-migration-checkpoint.ts", "CONTRACT"],
+  ["packages/knowledge-solution/src/pg-harness.ts", "SOURCE"],
+  ["packages/knowledge-solution/src/postgres-source.ts", "SOURCE"],
+  ["tests/fixtures/pan462/expected-facts-v1.json", "SOURCE"],
+  ["scripts/run-forward-paired-analytics.mjs", "SOURCE"],
+];
+let pan464Node = dag.nodes.find(({ id }) => id === "pan464-retained-pair-v1");
+if (pan464Node === undefined) {
+  pan464Node = {
+    id: "pan464-retained-pair-v1", dependsOn: [], inputs: [], ownedTests: ["npm run pan464:test"],
+    invariants: [
+      "The exact historical source creates retained native PostgreSQL/Superset state; the existing source and target paired runner remains mandatory and no historical pair is widened.",
+      "Native startup receives writable retained mounts only after current controller permission, real Docker quiescence and independently bound whole-pair checkpoint; raw unadmitted native init has read-only stores and no Docker socket.",
+      "A protected business oracle rejects healthy wrong native HTTP results; known pre-activation rejection preserves the rejected copy and verifies the restored source through actual native paths.",
+      "Durable activation intent and unknown/crashed states never automatically restore an old snapshot over new valid producer or metadata work; PAN453 owner/journal/revoke and PAN463 typed native step are reused.",
+      "The lightweight ownership checks do not substitute for the mandatory separate exact-head Retained Native Pair CI workflow; raw keys, grants, state and internal logs are not public evidence.",
+    ],
+    riskClass: "HIGH", globalInvalidation: false,
+  };
+  dag.nodes.push(pan464Node);
+}
+pan464Node.inputs = pan464Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan464:test")) repositoryIntegrityNode.ownedTests.push("npm run pan464:test");
+dag.graphVersion = 64;
 
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
@@ -1107,6 +1150,7 @@ for (const line of readFileSync(path.join(root, "release/public-files.manifest")
   if (line && !line.startsWith("#")) entries.set(line.split("\t")[0], null);
 }
 for (const [inputPath] of pan463Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan464Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
