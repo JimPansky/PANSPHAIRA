@@ -22,7 +22,7 @@ Before native writable startup, actual Docker IDs, state/PIDs, restart policy an
 
 Unadmitted raw shell init and direct Python installer run with the **actual retained stores read-only** and real prerequisites available. Qualification requires a filesystem write denial and unchanged retained digest, not merely an unavailable binary, health check or wrapper denial.
 
-This does not constrain Docker/host administrators, arbitrary same-UID host code or malicious code already admitted into a writable runtime principal. Standalone frozen-KS Compose deployments do not thereby become PAN-aware. In-flight revocation is not an instantaneous native transaction cancellation claim: authority is rechecked before dispatch/activation, and current STOP/REVOKE also gates post-activation fixture writes.
+This does not constrain Docker/host administrators, arbitrary same-UID host code or malicious code already admitted into a writable runtime principal. Standalone frozen-KS Compose deployments do not thereby become PAN-aware. In-flight revocation is not an instantaneous native transaction cancellation claim: authority is rechecked before dispatch/activation, and current STOP/REVOKE also gates post-activation fixture writes. Those writes are new effects, never read-only reconciliation: a durable STOP recorded before the request or before native dispatch denies them without changing retained data. Observational recovery stays available and does not replay, restore or discard work.
 
 ## Business oracle and recovery
 

@@ -28,7 +28,7 @@ console.log(sanitizeArtifactText(transcript,{privateRoots:[pan,source,consumer,s
 const count=name=>Number(transcript.match(new RegExp(`^# ${name} (\\d+)$`,'m'))?.[1]??NaN);
 const tests=count('tests'),passed=count('pass'),failed=count('fail'),skipped=count('skipped');
 const checks=[...transcript.matchAll(/^ok \d+ - (.+)$/gm)].map(match=>match[1]);
-if(result.code!==0||result.timedOut||failed!==0||skipped!==0||tests!==11||passed!==tests||checks.length!==tests)throw Error('PAN464_NATIVE_GATE_FAILED');
+if(result.code!==0||result.timedOut||failed!==0||skipped!==0||tests!==14||passed!==tests||checks.length!==tests)throw Error('PAN464_NATIVE_GATE_FAILED');
 verifyForwardCheckout(pan,head);verifyForwardCheckout(source,SOURCE_PAN_V1);verifyForwardCheckout(consumer,CONSUMER_KS_V1);
 const bindings=Object.fromEntries(['src/pan464/retained-pair-controller.mjs','src/pan464/native-producer.mjs','src/pan464/native-consumer.py','src/pan464/protected-oracle.mjs','tests/pan464/native-controller.test.mjs'].map(path=>[path,createHash('sha256').update(readFileSync(resolve(pan,path))).digest('hex')]));
 const summary={schemaVersion:'pansphaira.pan464/native-qualification-summary/v1',classification:'LOCAL_SYNTHETIC_RETAINED_PAIR_EXECUTION',outcome:'PASS',identities,

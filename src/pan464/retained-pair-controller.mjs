@@ -223,7 +223,9 @@ export function createRetainedPairControllerV1({ownedRoot,panRoot,sourceRoot,ksR
     async writeAfterActivation(){return exclusive(async owner=>{
       const recordValue=json(recordFile);if(recordValue.phase!=='ACTIVE')fail('ACTIVATION_REQUIRED');
       const gate=journal(owner);
-      const guard=async()=>{await authority();gate.assertEffectControl({action,operationKey:operation,reconcileEligible:true});await quiescent();};
+      // New producer/metadata effects are not observational reconciliation.
+      // Recheck durable STOP/REVOKE before allocation and before native start.
+      const guard=async()=>{await authority();gate.assertEffectControl({action,operationKey:operation,reconcileEligible:false});await quiescent();};
       await guard();await phase('POST_ACTIVATION_WRITE_INTENT');
       await success('producer','new-write',{beforeStart:guard});await success('consumer','new-write',{beforeStart:guard});
       const observed={producer:json(join(state,'producer-observed.json')),consumer:json(join(state,'consumer-observed.json'))};
