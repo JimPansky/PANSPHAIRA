@@ -3,6 +3,12 @@
 
 Local process-crash diagnosis only. Never switches a slot, adopts ownership,
 replays an effect, migrates a journal or restores business state.
+
+STABLE describes the selected executable slot and journal, not integrity of
+every historical bundle/slot or cryptographic validity of retained signatures.
+Historical preservation is tested with before/after byte inventories; this
+reader is not a complete archive-integrity audit. Native execution separately
+re-admits its current signed bundle using the protected external trust root.
 """
 import argparse
 import hashlib

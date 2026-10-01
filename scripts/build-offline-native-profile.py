@@ -74,7 +74,11 @@ def dependencies(root, output):
             relative = path.relative_to(root).as_posix()
             R.relative_path(relative)
             if path.is_symlink():
-                R.require(dependencies in path.resolve(strict=True).parents, "DEPENDENCY_LINK_ESCAPE_DENIED")
+                try:
+                    resolved = path.resolve(strict=True)
+                except (OSError, RuntimeError):
+                    raise ValueError("DEPENDENCY_LINK_RESOLUTION_DENIED") from None
+                R.require(dependencies in resolved.parents, "DEPENDENCY_LINK_ESCAPE_DENIED")
             elif path.is_file():
                 total += path.stat().st_size
             else:

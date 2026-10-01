@@ -80,7 +80,7 @@ class UpdaterBaselineTests(Base):
         self.assertEqual(json.loads(result.stdout), receipt)
         self.assertEqual(before, self.inventory())
 
-    def test_historical_bundle_and_journal_tampering_blocks_execution(self):
+    def test_journal_record_tampering_blocks_status_launch(self):
         self.initialize()
         record = self.install/"journal"/"00000000000000000001.json"
         os.chmod(record, 0o600)

@@ -68,7 +68,13 @@ def extract_dependencies(archive_path, destination):
                 os.chmod(path,item.mode & 0o777)
         for name in links:
             path = destination/name
-            R.require((destination/"node_modules") in path.resolve(strict=True).parents,
+            try:
+                resolved = path.resolve(strict=True)
+            except (OSError, RuntimeError):
+                # Python 3.11 reports a link cycle as RuntimeError. Normalize
+                # both cycles and dangling links before the public CLI boundary.
+                raise ValueError("DEPENDENCY_LINK_RESOLUTION_DENIED") from None
+            R.require((destination/"node_modules") in resolved.parents,
                       "DEPENDENCY_RESOLVED_LINK_ESCAPE_DENIED")
 
 
