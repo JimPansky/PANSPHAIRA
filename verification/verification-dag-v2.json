@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "785b83070eafaac1673d36eb1ecab666cd0436163f4e8548316d2ca7ccba5e5a"
+          "sha256": "402fab2da1a1c20c878df15cfc031633135b5c02ba8c8e74de4c4b0083602e09"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "17fce0a891e8bd848373bd62a010a74f5c67265c9fcb1194bf3729452ba5b495"
+          "sha256": "8a81f0345b7e3973f781d4c786617d35060a3e50fa2fea4688c430f0c91d8d47"
         }
       ],
       "ownedTests": [
@@ -7297,7 +7297,7 @@
         {
           "path": "scripts/verify-offline-release.py",
           "role": "VALIDATOR",
-          "sha256": "580a036881dc7c675c952e2bd6f5d94badcf27bdbd482f3d5b747a52641bf740"
+          "sha256": "0779befa727dd0439e71d5c6be89eb26266f33168939328a6fe17da154643215"
         },
         {
           "path": "scripts/run-pan465-tests.mjs",
@@ -7332,7 +7332,7 @@
         {
           "path": "tests/pan465/distribution-envelope.test.py",
           "role": "VALIDATOR",
-          "sha256": "5ad05e27ebf22e56330b29197303c18ea20946a31c77e86a5b4cee79aaf3f4f3"
+          "sha256": "c7c3f129df622c11a4b71de2b51c590a8fba3948da9248cacfcbb4e8527af755"
         },
         {
           "path": "tests/fixtures/pan465/updater-v1/source.json",

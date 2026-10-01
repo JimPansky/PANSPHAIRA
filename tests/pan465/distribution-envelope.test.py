@@ -71,11 +71,13 @@ class EnvelopeTests(unittest.TestCase):
         self.output = self.root / "verified"
         self.archive = self.root / "distribution.tar.gz"
 
-    def compose(self, extra=None, duplicate=None, symlink=False):
+    def compose(self, extra=None, duplicate=None, symlink=False, inventory_as_list=False):
         entries = dict(self.entries)
         declaration = dict(self.declaration)
         declaration["files"] = {name: {"sha256": hashlib.sha256(data).hexdigest(), "size": len(data)}
                                 for name, data in self.entries.items()}
+        if inventory_as_list:
+            declaration["files"] = sorted(self.entries)
         entries["distribution.json"] = json.dumps(declaration).encode()
         entries["SHA256SUMS"] = "".join(f"{hashlib.sha256(data).hexdigest()}  {name}\n"
                                        for name, data in sorted(entries.items())).encode()
@@ -121,6 +123,9 @@ class EnvelopeTests(unittest.TestCase):
 
     def test_private_material_extra_member_before_output(self):
         self.denied(extra="qualification-signing.pem")
+
+    def test_inventory_list_is_structured_denial_not_path_traceback(self):
+        self.denied(inventory_as_list=True)
 
     def test_duplicate_member_before_output(self):
         self.denied(duplicate="distribution.json")

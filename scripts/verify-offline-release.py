@@ -50,7 +50,8 @@ def contents(data):
     A.require(declaration["schema"] == "pansphaira.offline-distribution/v1" and
               declaration["profile"] == "PAN465_OFFLINE_RETAINED_NATIVE" and
               declaration["productionAuthority"] is False, "DISTRIBUTION_SCOPE_DENIED")
-    A.require(set(declaration["files"]) == PAYLOAD, "DISTRIBUTION_INVENTORY_DENIED")
+    A.require(isinstance(declaration["files"], dict) and set(declaration["files"]) == PAYLOAD,
+              "DISTRIBUTION_INVENTORY_DENIED")
     for name, identity in declaration["files"].items():
         A.keys(identity, ("sha256", "size"))
         A.require(identity["sha256"] == A.digest(files[name]) and identity["size"] == len(files[name]),
