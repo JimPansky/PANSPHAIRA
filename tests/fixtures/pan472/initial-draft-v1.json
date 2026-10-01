@@ -1,0 +1,5 @@
+[
+  {"id":"synthetic:customer-7","kind":"customer","revision":1,"deleted":false,"body":{"nativeId":7,"name":"Synthetic Customer"}},
+  {"id":"synthetic:order-42","kind":"order","revision":1,"deleted":false,"body":{"customerId":"synthetic:customer-7","date":1767225600,"refClient":"CM-ADMIN-AI-ESCALATION-001","status":"DRAFT","currency":"EUR","amountMinor":2500}},
+  {"id":"synthetic:line-1","kind":"line","revision":1,"deleted":false,"body":{"orderId":"synthetic:order-42","quantityMicros":2000000,"unit":"piece","priceMinor":1250}}
+]

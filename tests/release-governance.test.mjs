@@ -530,7 +530,18 @@ test("public release builder binds its exact file count to the manifest", () => 
   ];
   assert.equal(semanticPaths.length, 9);
   for (const path of semanticPaths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
-  assert.equal(count, 1760);
+  const mig02Paths = [
+    "src/pan472/draft-profile.mjs",
+    "src/pan472/persistent-draft-transfer.mjs",
+    "src/pan472/independent-draft-reconciliation.mjs",
+    "scripts/run-pan472-draft-transfer.mjs",
+    "tests/pan472/persistent-draft-transfer.test.mjs",
+    "tests/fixtures/pan472/initial-draft-v1.json",
+    "docs/architecture/pan472-persistent-draft-transfer-v1.md",
+  ];
+  assert.equal(mig02Paths.length, 7);
+  for (const path of mig02Paths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
+  assert.equal(count, 1767);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -578,7 +589,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1760, "Retained LIFE-06/R1 plus nine explicit bounded semantic successor source/public contract/calibration/test files");
+  assert.equal(publicCount, 1767, "Retained LIFE-06/R1/SEM-HOLDOUT-01 plus seven explicit bounded MIG-02 source/fixture/test/guide files");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
