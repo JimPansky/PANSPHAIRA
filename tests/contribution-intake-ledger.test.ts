@@ -764,9 +764,30 @@ test("CCP-M1-INT-025 bounded nonclaims are explicit and whole-issue completion i
 test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph version", () => {
   const dag = JSON.parse(readFileSync("verification/verification-dag-v2.json", "utf8")) as {
     graphVersion: number;
-    nodes: Array<{ id: string }>;
+    nodes: Array<{ id: string; inputs: Array<{ path: string; role: string; sha256: string }>; ownedTests: string[] }>;
   };
-  assert.equal(dag.graphVersion, 65);
+  // v66 expands the existing owner for R1, not the node inventory or authority.
+  assert.equal(dag.graphVersion, 66);
+  const integrity = dag.nodes.filter(({ id }) => id === "repository-integrity");
+  assert.equal(integrity.length, 1);
+  const r1Bindings: ReadonlyArray<readonly [string, string]> = [
+    ["docs/.vitepress/config.mts", "SOURCE"],
+    ["tests/docs-site.test.mjs", "VALIDATOR"],
+    ["docs/README.md", "DERIVED_EVIDENCE"],
+    ...["overview", "architecture-tour", "knowledge-and-reuse", "research-questions"]
+      .map((name) => [`docs/explanation/${name}.md`, "DERIVED_EVIDENCE"] as const),
+    ["docs/use-cases/index.md", "DERIVED_EVIDENCE"],
+    ...["concept-loop", "controlled-effect", "knowledge-lifecycle", "provider-adaptation"]
+      .flatMap((name) => ["mmd", "svg"].map((extension) => [`docs/diagrams/${name}.${extension}`, "DERIVED_EVIDENCE"] as const)),
+  ];
+  assert.equal(r1Bindings.length, 16);
+  for (const [path, role] of r1Bindings) {
+    assert.deepEqual(dag.nodes.filter((node) => node.inputs.some((input) => input.path === path)).map(({ id }) => id), ["repository-integrity"], path);
+    const matches = integrity[0]!.inputs.filter((input) => input.path === path);
+    assert.equal(matches.length, 1, path);
+    assert.deepEqual(matches[0], { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
+  }
+  assert.equal(integrity[0]!.ownedTests.filter((command) => command === "npm run docs:test").length, 1);
   assert.equal(dag.nodes.length, 72);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan465-offline-updater-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan463-native-update-v1").length, 1);

@@ -71,8 +71,10 @@ needs no runtime cleanup.
 
 ## Lightweight video-reference smoke
 
-**Prerequisites:** Python 3 and the checked-in repository. This command does
-not build a GPU image or download a model.
+**Prerequisites:** The checked-in repository, Node.js 24 and npm 11 within the
+[declared ranges](../package.json), installed dependencies (`npm ci`), and
+Python 3. The npm command builds TypeScript and runs the bounded Node/Python
+tests; it does not build a GPU image or download a model.
 
 ```sh
 npm run external-video-service:test

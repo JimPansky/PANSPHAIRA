@@ -379,6 +379,14 @@
       "fromSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
       "toSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
       "reason": "Advance graph to v65 and own the bounded PAN465 external-trust signature, executable-slot/journal, authentic native bundle and closed distribution tests/guide without weakening retained native gates or any prior immutable byte obligation."
+    },
+    {
+      "migrationId": "DOC-README-03-R1/INTEGRITY-GENERATOR/V37",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 37,
+      "fromSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
+      "toSha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
+      "reason": "Advance graph to v66 and bind the approved R1 explanation routes, source-bound diagrams, VitePress configuration and docs validator to existing repository integrity; preserve every admitted and reviewed profile migration, hard gate and runtime nonclaim."
     }
   ],
   "scanScope": {
@@ -428,8 +436,8 @@
     "importFiles": 256,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2089,
-    "ledgerUniquePaths": 2089
+    "ledgerEntries": 2102,
+    "ledgerUniquePaths": 2102
   },
   "profiles": [
     {
@@ -502,7 +510,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291"
+      "sha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1148,7 +1156,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
+      "sha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
       "basis": "profile-version-migration"
     },
     {

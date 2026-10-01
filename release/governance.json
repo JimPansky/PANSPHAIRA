@@ -284,6 +284,11 @@
     "docs/roadmap.md",
     "docs/use-cases/crm-erp-approval-readback.md",
     "docs/use-cases/governed-agent-actions.md",
+    "docs/explanation/overview.md",
+    "docs/explanation/architecture-tour.md",
+    "docs/explanation/knowledge-and-reuse.md",
+    "docs/explanation/research-questions.md",
+    "docs/use-cases/index.md",
     "docs/RELEASE-GOVERNANCE.md",
     "release/governance.json"
   ],

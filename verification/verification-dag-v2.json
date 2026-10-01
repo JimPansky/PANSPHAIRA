@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 65,
+  "graphVersion": 66,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "176995d8224ae6e5ae08666c20933ed3a1d399b01f04b53962249658a3fc4ce5"
+          "sha256": "32fad743c101317849f46e1efe36b8d9b2141933eb33944565ceb951d2613170"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "402fab2da1a1c20c878df15cfc031633135b5c02ba8c8e74de4c4b0083602e09"
+          "sha256": "2a38c24009653de568ccc4de7981300261c5647010ef5e36a2645498a2b52d3d"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "8a81f0345b7e3973f781d4c786617d35060a3e50fa2fea4688c430f0c91d8d47"
+          "sha256": "edd31bb31a3f1b97447e7234ebf79449ddc36aa564a9a6549a467b99f3c4a797"
         }
       ],
       "ownedTests": [
@@ -4739,6 +4739,11 @@
           "sha256": "e72bf4f86af24b0017497dcaca63927c64aab9fa558b83970d1d2d8240b972bb"
         },
         {
+          "path": "docs/.vitepress/config.mts",
+          "role": "SOURCE",
+          "sha256": "820ba32f8c0b5c801b8581c5e923425c2002798cb70b7c091692573b326e1727"
+        },
+        {
           "path": "docs/architecture/canonical-json-profile-inventory.md",
           "role": "DERIVED_EVIDENCE",
           "sha256": "ca2f72b3d7a4028c8dd2ca9b7d2a4c1afe7b12e861d977db510920e305099074"
@@ -4749,9 +4754,69 @@
           "sha256": "e1d1c42aa6639ab2733111cfa3c43f50bb656b49d176e2827bd5239e95ec339e"
         },
         {
+          "path": "docs/diagrams/concept-loop.mmd",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "2a86f15037bb6c15998b539f7aa08f457124ade36038cbbd66695b22bd99e0cc"
+        },
+        {
+          "path": "docs/diagrams/concept-loop.svg",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "5c9a83a01a031cf5df8b49d7b06ba7be40fd4e2f0eb4c3edf2d50bb2ac151b44"
+        },
+        {
+          "path": "docs/diagrams/controlled-effect.mmd",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "a1b81f19cf0b5f652376b556592059e2907723557bb55ab134fe636cfef532cd"
+        },
+        {
+          "path": "docs/diagrams/controlled-effect.svg",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "62e41dfdfbec5964a14590d5bebc032e6a899cc48e829edd6f1015f7cda8ea30"
+        },
+        {
+          "path": "docs/diagrams/knowledge-lifecycle.mmd",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "8cabc05c76449399df6d257f5a4bb4811cf385727c901380165e72f0288d8ee2"
+        },
+        {
+          "path": "docs/diagrams/knowledge-lifecycle.svg",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "7eb50f45f2bc6a8c0309189a3bef94ab779e787f0c6009ab7f47a2bdb9bf65c3"
+        },
+        {
+          "path": "docs/diagrams/provider-adaptation.mmd",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "256c4914ead1ba49a1508258125beb2b268beefa935de766282a058bf0020878"
+        },
+        {
+          "path": "docs/diagrams/provider-adaptation.svg",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "67f098119c8550c2fedc615259286fb1ea4b0ea991516fb1830e171cc750c93e"
+        },
+        {
+          "path": "docs/explanation/architecture-tour.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "ecd2cabbe1a86fe18c84ba0370d97c8da976a67dc670f3207f41239d28351115"
+        },
+        {
+          "path": "docs/explanation/knowledge-and-reuse.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "857d2b1a3b4b314fd7fd58818577c9065b04d5577a7ca5bd621fceb5cc8cdf9d"
+        },
+        {
+          "path": "docs/explanation/overview.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "b692337244a7bf30fd32d80d6fc920262cacff04b2a1f44067d9bb9a24af5bff"
+        },
+        {
+          "path": "docs/explanation/research-questions.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "4c24306b10f1f5a26f5481f0a3233cbddc06ada58b3b47b15e25c10077edf722"
+        },
+        {
           "path": "docs/index.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "cbc3875f09b2d6629deb6e943d3ab1de3405b33f28f2bd665a79f9b6809731df"
+          "sha256": "79d46a5e688a46ad583d1a3221ca4940a06b3fd9c7a2e9679342c2c0d90d0264"
         },
         {
           "path": "docs/MODULE-CONTRIBUTION.md",
@@ -4766,7 +4831,7 @@
         {
           "path": "docs/README.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "c9d48b0771c127eedbdce9f930f16272b6f9aee097cba376fc2c7ad3b2d73a26"
+          "sha256": "fbcc38b075c995ad72b8b9fccf3077634e3078b5f8d3f20a2a56519021d45508"
         },
         {
           "path": "docs/RELEASE-GOVERNANCE.md",
@@ -4774,14 +4839,19 @@
           "sha256": "d3bdda9d78aef688e215b5879b6e1bca95a5b8bfb0f56aee2c14a5732634ebb2"
         },
         {
+          "path": "docs/use-cases/index.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "a9441ffaa65763f53935aef6de326ae2a43c6d4c23649a2b185057b4916757e0"
+        },
+        {
           "path": "README.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "0a38be0ac9bc0dc552a560c395dea68a977bcfdfa75216a926e4eb9637580e18"
+          "sha256": "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f"
         },
         {
           "path": "release/governance.json",
           "role": "CONTRACT",
-          "sha256": "a0885f810bbbadca8dc6c6cafbb0e8d163fcb1bbe6fcc99ae4dae571f7a66219"
+          "sha256": "40a7867c9982771212a7ceec840bca9339c277944bbbbac62fd7d767f1c3765a"
         },
         {
           "path": "schemas/contracts/incoming-invoice-adaptive-ui-v1.schema.json",
@@ -4791,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "20fe8bbc93ae312902a0fe55972013f712384450b1f511206a36effc67f0d241"
+          "sha256": "f86ac3f99e291e01d4ecb331f61f5a95778741f27c2872b1d4d78fbce34cec2d"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4811,7 +4881,7 @@
         {
           "path": "scripts/verify-release-governance.mjs",
           "role": "SECURITY",
-          "sha256": "535321485615e41559e44b15821b6e83a454fc179ee9fe673816b32767bb4f22"
+          "sha256": "d470cb419b880fa5719de4ef644c805c970142111d3e6023f3729a5819c5da6f"
         },
         {
           "path": "scripts/verify-supply-chain.mjs",
@@ -4826,12 +4896,17 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "8bb19c3f30e362e558563415494c4dc0af16646cfa67e40fcf324b38ac1a1cd0"
+          "sha256": "319bfa9f63a35542f87fdcb5e101900d5fb0a4564bed32e70179f8df0618b0db"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
           "role": "VALIDATOR",
           "sha256": "7d1b9e6cf8faba4198c9950d8d1be16feb2e0562d23002b2035f11e681566e25"
+        },
+        {
+          "path": "tests/docs-site.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "30457237ff593af3c546fa819bb8343747dcc369057be1de4cea3ae0c4e2dd10"
         },
         {
           "path": "tests/fixtures/canonical-json-profile-base-obligations-v1.json",
@@ -4911,12 +4986,12 @@
         {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "68e5ade29ec1ea67098daec128640c50d15fd9863d87b5c7be8360ca0099bebf"
+          "sha256": "04c37cba2efedb118ef1b669e5d238573e64b755d5dce7cc9a30c789cda5be4f"
         },
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "9cfc33485c82418373199891ff143ac0b034545677518b8046c1531c245e181c"
+          "sha256": "f1d50183e36aa23aa09ae8435064bfdb57e166aa01ca78c769b932875e617243"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -4926,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "e2f4079560d919f814db671cbbbfccba8b698685f28067fdcaeb3a4b1ce1e755"
+          "sha256": "cad2a8d9d72755808aeed856df100b3a5f5aac84e0262384c36ecc0da5e08f0f"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -4989,7 +5064,8 @@
         "npm run pan462:test",
         "npm run pan463:test",
         "npm run pan464:test",
-        "npm run pan465:test"
+        "npm run pan465:test",
+        "npm run docs:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5904,7 +5980,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "31efac8eb2c660f3a7330e067218e4ebb9e390081cba4d9da48448a5a04215a2"
+          "sha256": "e9be56d7cfc7af2be6874342df7c15679f07007c3526d50b3fea315f03f5fa16"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6169,7 +6245,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "8f215dac13e78082eabb90cb7096ca6f180144c081eb95eb4b7c299ec90cd7dd"
+          "sha256": "df5bfa6819496fec539d34960e8b1f0c39218f59759673758bfcc3d43e26c5a6"
         }
       ],
       "ownedTests": [

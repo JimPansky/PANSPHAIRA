@@ -140,7 +140,7 @@ Any of them fails the variant proof.
 | Work-package specifications | `6/6` frozen and executed |
 | Acceptance identifiers | `34/34` preserved (28 + 6 exercised) |
 | Scenario packs | `3/3` defined |
-| Public AP implementation issues | `6/6` open |
+| Public AP implementation issues | [#361](https://github.com/JoFe2/PANSPHAIRA/issues/361)–[#366](https://github.com/JoFe2/PANSPHAIRA/issues/366): `6/6` closed/completed at the 2026-10-01 readback; broader product and real-pilot criteria remain separate |
 | Product implementation | Bounded local-synthetic proof released; general product not started |
 | Product release | Public local-synthetic PoC release (AP-06); general product none |
 

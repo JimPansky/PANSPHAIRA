@@ -1159,7 +1159,28 @@ if (pan465Node === undefined) {
 }
 pan465Node.inputs = pan465Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan465:test")) repositoryIntegrityNode.ownedTests.push("npm run pan465:test");
-dag.graphVersion = 65;
+dag.graphVersion = 66;
+
+// DOC-README-03 R1: explicit bounded ownership of the entry-route additions.
+// No runtime qualification or arbitrary repository-coverage claim follows.
+const readmeR1Inputs = [
+  ["docs/.vitepress/config.mts", "SOURCE"],
+  ["tests/docs-site.test.mjs", "VALIDATOR"],
+  ["docs/README.md", "DERIVED_EVIDENCE"],
+  ["docs/explanation/overview.md", "DERIVED_EVIDENCE"],
+  ["docs/explanation/architecture-tour.md", "DERIVED_EVIDENCE"],
+  ["docs/explanation/knowledge-and-reuse.md", "DERIVED_EVIDENCE"],
+  ["docs/explanation/research-questions.md", "DERIVED_EVIDENCE"],
+  ["docs/use-cases/index.md", "DERIVED_EVIDENCE"],
+  ...["concept-loop", "controlled-effect", "knowledge-lifecycle", "provider-adaptation"]
+    .flatMap((name) => ["mmd", "svg"].map((extension) => [`docs/diagrams/${name}.${extension}`, "DERIVED_EVIDENCE"])),
+];
+for (const [inputPath, role] of readmeR1Inputs) {
+  const matches = repositoryIntegrityNode.inputs.filter(({ path: candidatePath }) => candidatePath === inputPath);
+  if (matches.length > 1 || matches.some((input) => input.role !== role)) throw new Error(`README_R1_INTEGRITY_OWNERSHIP_DENIED:${inputPath}`);
+  if (matches.length === 0) repositoryIntegrityNode.inputs.push({ path: inputPath, role, sha256: digest(inputPath) });
+}
+if (!repositoryIntegrityNode.ownedTests.includes("npm run docs:test")) repositoryIntegrityNode.ownedTests.push("npm run docs:test");
 
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must

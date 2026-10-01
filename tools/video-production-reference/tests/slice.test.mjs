@@ -805,7 +805,32 @@ test("independent schema oracle accepts every shipped job, descriptor and emitte
 
 test("independent DAG oracle binds every local file, both video commands, and security fallback", async () => {
   const dag = await json(join(REPOSITORY_ROOT, "verification", "verification-dag-v2.json"));
-  assert.equal(dag.graphVersion, 65);
+  // v66 adds the approved R1 docs bindings to the existing integrity owner;
+  // it does not change the video owner, commands or security fallback below.
+  assert.equal(dag.graphVersion, 66);
+  const integrity = dag.nodes.filter(({ id }) => id === "repository-integrity");
+  assert.equal(integrity.length, 1);
+  const r1Inputs = [
+    ["docs/.vitepress/config.mts", "SOURCE"],
+    ["tests/docs-site.test.mjs", "VALIDATOR"],
+    ["docs/README.md", "DERIVED_EVIDENCE"],
+    ["docs/explanation/overview.md", "DERIVED_EVIDENCE"],
+    ["docs/explanation/architecture-tour.md", "DERIVED_EVIDENCE"],
+    ["docs/explanation/knowledge-and-reuse.md", "DERIVED_EVIDENCE"],
+    ["docs/explanation/research-questions.md", "DERIVED_EVIDENCE"],
+    ["docs/use-cases/index.md", "DERIVED_EVIDENCE"],
+    ...["concept-loop", "controlled-effect", "knowledge-lifecycle", "provider-adaptation"]
+      .flatMap((name) => ["mmd", "svg"].map((extension) => [`docs/diagrams/${name}.${extension}`, "DERIVED_EVIDENCE"])),
+  ];
+  assert.equal(r1Inputs.length, 16);
+  for (const [path, role] of r1Inputs) {
+    const owners = dag.nodes.filter((owner) => owner.inputs.some((input) => input.path === path));
+    assert.deepEqual(owners.map(({ id }) => id), ["repository-integrity"], path);
+    const matches = integrity[0].inputs.filter((input) => input.path === path);
+    assert.equal(matches.length, 1, path);
+    assert.deepEqual(matches[0], { path, role, sha256: sha(await readFile(join(REPOSITORY_ROOT, path))) });
+  }
+  assert.equal(integrity[0].ownedTests.filter((command) => command === "npm run docs:test").length, 1);
   const node = dag.nodes.find(({ id }) => id === "know-media-m1-audience-learning-v1");
   assert.ok(node);
   assert.deepEqual(node.inputs.slice(0, 3).map(({ path }) => path), [

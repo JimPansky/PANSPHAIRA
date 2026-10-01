@@ -26,7 +26,7 @@ rendering, completeness and failure-on-partial-data behavior are fixed by the
 ## Now — verify and harden the released local proof
 
 - Reproduce the released [CRM-to-ERP approval and readback path](./use-cases/crm-erp-approval-readback.md)
-  and its [`CM-SEC-007` evidence](./SECURITY-ASSURANCE.md#claim-evidence-matrix).
+  and its [`CM-SEC-007` evidence](./SECURITY-ASSURANCE.md#locally-validated-synthetic-evidence).
 - Continue the finite inactive capability/action catalogue in
   [issue #3](https://github.com/JoFe2/PANSPHAIRA/issues/3). Its live labels
   and issue history own the work state.

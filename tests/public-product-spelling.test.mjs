@@ -168,10 +168,13 @@ test("public release surfaces preserve source/latest/runnable identity boundarie
     assert.match(surface, /v0\.2\.0-poc\.20260825\.1/);
   }
   assert.doesNotMatch(readme, /2026_09_02_v7|v0\.2\.0-poc\.20260825\.1/);
-  for (const surface of [readme, hub, index]) {
-    assert.match(surface, /source\/evidence-only/i);
-    assert.match(surface, /runnable artifact/i);
-  }
+  assert.equal(createHash("sha256").update(readme).digest("hex"), "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f");
+  assert.match(readme, /Source, runnable packaging and execution evidence are different identities/);
+  assert.match(readme, /Latest label is not itself a promise of an installable archive/);
+  assert.match(hub, /source, runnable artifacts and execution evidence must not be conflated/);
+  assert.match(index, /bounded proofs[\s\S]*development direction/);
+  assert.match(index, /\]\(capabilities\.md\)/);
+  assert.match(index, /\]\(SECURITY-ASSURANCE\.md\)/);
 });
 
 test("every retained all-caps token has an explicit KEEP classification", (t) => {
@@ -203,8 +206,9 @@ test("every retained all-caps token has an explicit KEEP classification", (t) =>
 test("active owner, Pages, release, package, issue-template, and worker routes use the canonical owner", () => {
   const repository = "https://github.com/JoFe2/PANSPHAIRA";
   const pages = "https://jofe2.github.io/PANSPHAIRA/";
-  assert.match(read("README.md"), new RegExp(`${repository}/releases/latest`));
-  assert.match(read("README.md"), new RegExp(pages.replaceAll(".", "\\.")));
+  assert.match(read("README.md"), new RegExp(`${repository}/releases`));
+  assert.match(read("docs/QUICKSTART.md"), new RegExp(`${repository}/releases/latest`));
+  assert.match(read("docs/.vitepress/config.mts"), new RegExp(pages.replaceAll(".", "\\.")));
   assert.match(read("CITATION.cff"), new RegExp(`repository-code: "${repository}"`));
   assert.match(read("package.json"), new RegExp(`${repository.replaceAll("/", "\\/")}#readme`));
   assert.match(read(".github/ISSUE_TEMPLATE/config.yml"), new RegExp(`${repository}/security/policy`));
