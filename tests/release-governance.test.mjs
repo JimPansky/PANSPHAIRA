@@ -162,6 +162,85 @@ test("regular/runnable and source/evidence-only releases pass only their class-s
   }
 });
 
+function nonLatestRunnableFixture() {
+  const input = conformingReleaseFixture("REGULAR_RUNNABLE_ARTIFACT");
+  const owner = conformingReleaseFixture("SOURCE_EVIDENCE_ONLY");
+  input.governance = owner.governance;
+  const tag = input.governance.forwardRunnableReleases.designations[0].tag;
+  const oldTag = input.release.tag_name;
+  input.release.tag_name = tag;
+  input.release.html_url = input.release.html_url.replace(oldTag, tag);
+  input.release.body = input.release.body.replace("- ISSUE: #376", "- ISSUE: #465");
+  for (const asset of input.release.assets) asset.browser_download_url = asset.browser_download_url.replace(oldTag, tag);
+  input.latest = owner.release;
+  input.latestByTag = structuredClone(owner.release);
+  input.latestTagRef = owner.tagRef;
+  return input;
+}
+
+test("PAN465 forward designated runnable remains non-Latest without promoting or rewriting historical identities", () => {
+  const input = nonLatestRunnableFixture();
+  assert.deepEqual(validateReleaseContract(input), []);
+  assert.notEqual(input.latest.tag_name, input.release.tag_name);
+  assert.equal(input.governance.releaseTaxonomy.githubLatestOwnerClass, "SOURCE_EVIDENCE_ONLY");
+  assert.equal(input.governance.currentRelease.historical, true);
+  assert.equal(input.governance.legacyReleaseExceptions.length, 2);
+});
+
+test("PAN465 non-Latest runnable does not bypass current owner, exact target, archive, or historical authority", async (t) => {
+  const probes = [
+    ["undesignated tag", "PUBLIC_NONLATEST_RUNNABLE_NOT_DESIGNATED", (x) => { x.governance.forwardRunnableReleases.designations = []; }],
+    ["owner policy weakened", "PUBLIC_NONLATEST_RUNNABLE_NOT_DESIGNATED", (x) => { x.governance.forwardRunnableReleases.requiresAnonymousLatestTagReadback = false; }],
+    ["scope substituted", "PUBLIC_NONLATEST_DESIGNATED_SCOPE_MISMATCH", (x) => { x.release.body = x.release.body.replace("- ISSUE: #465", "- ISSUE: #999"); }],
+    ["accidental promotion", "PUBLIC_NONOWNER_BECAME_LATEST", (x) => { x.latest = structuredClone(x.release); }],
+    ["owner has assets", "PUBLIC_NONLATEST_OWNER_CLASS_OR_ASSETS_INVALID", (x) => { x.latest.assets = structuredClone(x.release.assets); }],
+    ["owner class forged", "PUBLIC_NONLATEST_OWNER_CLASS_OR_ASSETS_INVALID", (x) => { x.latest.body = x.latest.body.replace("RELEASE_CLASS: SOURCE_EVIDENCE_ONLY", "RELEASE_CLASS: REGULAR_RUNNABLE_ARTIFACT"); }],
+    ["owner still draft", "PUBLIC_NONLATEST_OWNER_METADATA_INVALID", (x) => { x.latest.draft = true; }],
+    ["owner ref unavailable", "PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED", (x) => { delete x.latestTagRef; }],
+    ["owner target moved", "PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED", (x) => { x.latestTagRef.object.sha = "c".repeat(40); }],
+    ["owner metadata unavailable", "PUBLIC_NONLATEST_OWNER_TAG_READBACK_MISMATCH", (x) => { delete x.latestByTag; }],
+    ["owner id drift", "PUBLIC_NONLATEST_OWNER_TAG_READBACK_MISMATCH", (x) => { x.latestByTag.id += 1; }],
+    ["own target moved", "PUBLIC_TARGET_MISMATCH", (x) => { x.tagRef.object.sha = "c".repeat(40); }],
+    ["unlisted extra asset", "PUBLIC_ASSET_SET_OR_SIZE_MISMATCH", (x) => { x.release.assets.push({name:"invented.sig", size:7, browser_download_url:"https://example.invalid"}); }],
+    ["archive corruption", `PUBLIC_ASSET_SHA256_MISMATCH:cm-product-increment-rc-20260902-release-authority.tar.gz`, (x) => { x.downloadedAssets.set(x.release.assets[0].name, Buffer.from("corrupted")); }],
+  ];
+  for (const [name, expected, mutate] of probes) await t.test(name, () => {
+    const input = nonLatestRunnableFixture(); mutate(input);
+    assert.ok(validateReleaseContract(input).includes(expected), validateReleaseContract(input).join("\n"));
+  });
+});
+
+test("PAN465 anonymous non-Latest readback fetches both full owner metadata and exact owner tag; returns latest:false", async () => {
+  const input = nonLatestRunnableFixture();
+  const repository = input.governance.repository;
+  const api = `https://api.github.com/repos/${repository}`;
+  const rawPrefix = `https://raw.githubusercontent.com/${repository}/${input.tagRef.object.sha}/`;
+  const requested = [];
+  const response = (value, bytes = Buffer.alloc(0)) => ({ok:true, status:200,
+    async json() { return structuredClone(value); }, async text() { return bytes.toString("utf8"); },
+    async arrayBuffer() { return bytes; }});
+  const fetchImpl = async (url, options = {}) => {
+    requested.push(url);
+    assert.equal(options.headers?.Authorization, undefined);
+    assert.equal(options.headers?.authorization, undefined);
+    if (url === `${api}/releases/tags/${input.release.tag_name}`) return response(input.release);
+    if (url === `${api}/releases/latest`) return response(input.latest);
+    if (url === `${api}/git/ref/tags/${input.release.tag_name}`) return response(input.tagRef);
+    if (url === `${api}/git/ref/tags/${input.latest.tag_name}`) return response(input.latestTagRef);
+    if (url === `${api}/releases/tags/${input.latest.tag_name}`) return response(input.latestByTag);
+    if (url.startsWith(rawPrefix)) return response(undefined, readFileSync(join(ROOT, url.slice(rawPrefix.length))));
+    const asset = input.release.assets.find((item) => item.browser_download_url === url);
+    if (asset) return response(undefined, input.downloadedAssets.get(asset.name));
+    throw new Error(`UNEXPECTED_READBACK_URL:${url}`);
+  };
+  const result = await verifyPublicReadback(ROOT, {releaseTag:input.release.tag_name, requireConforming:true,
+    fetchImpl, readLocalHead:() => input.tagRef.object.sha});
+  assert.equal(result.latest, false);
+  assert.equal(result.releaseClass, "REGULAR_RUNNABLE_ARTIFACT");
+  assert.ok(requested.includes(`${api}/git/ref/tags/${input.latest.tag_name}`));
+  assert.ok(requested.includes(`${api}/releases/tags/${input.latest.tag_name}`));
+});
+
 test("bounded contradiction preflight has one closed ownership and failure matrix", () => {
   const governance = JSON.parse(readFileSync(join(ROOT, "release", "governance.json"), "utf8"));
   assert.deepEqual(governance.contradictionPreflight.requiredClaimOwnership, [

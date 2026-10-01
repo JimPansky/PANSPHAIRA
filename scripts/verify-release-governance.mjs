@@ -156,6 +156,8 @@ export function validateReleaseContract({
   release,
   latest,
   tagRef,
+  latestTagRef,
+  latestByTag,
   downloadedAssets = new Map(),
 }) {
   const issues = [];
@@ -182,13 +184,40 @@ export function validateReleaseContract({
   const releaseClass = classMatches.length === 1 ? classMatches[0][1] : "";
   const knownClasses = new Set((governance?.releaseTaxonomy?.classes ?? []).map(({ id }) => id));
   issue(issues, knownClasses.has(releaseClass), "PUBLIC_RELEASE_CLASS_INVALID");
-  issue(
-    issues,
-    releaseClass !== "" && releaseClass === governance?.releaseTaxonomy?.githubLatestOwnerClass,
-    "PUBLIC_LATEST_CLASS_MISMATCH",
-  );
-
-  issue(issues, latest?.tag_name === release?.tag_name, "PUBLIC_LATEST_MISMATCH");
+  const ownerClass = governance?.releaseTaxonomy?.githubLatestOwnerClass;
+  const nonOwnerRunnable = releaseClass === "REGULAR_RUNNABLE_ARTIFACT" && ownerClass === "SOURCE_EVIDENCE_ONLY";
+  const forwardPolicy = governance?.forwardRunnableReleases;
+  const designation = forwardPolicy?.designations?.find(({ tag }) => tag === release?.tag_name);
+  if (nonOwnerRunnable) {
+    issue(issues, forwardPolicy?.schemaVersion === "pansphaira.release/non-latest-runnable/v1"
+      && forwardPolicy.latestOwnerClass === ownerClass && forwardPolicy.requiresAnonymousLatestTagReadback === true
+      && designation !== undefined, "PUBLIC_NONLATEST_RUNNABLE_NOT_DESIGNATED");
+    issue(issues, latest?.tag_name !== release?.tag_name, "PUBLIC_NONOWNER_BECAME_LATEST");
+    const ownerSections = markdownSections(latest?.body ?? "");
+    const ownerMerge = oneSection(ownerSections, "Exact merge SHA").match(/^MERGE_SHA: ([a-f0-9]{40})$/m)?.[1];
+    issue(issues, oneSection(ownerSections, "Release class") === `RELEASE_CLASS: ${ownerClass}`
+      && oneSection(ownerSections, "Assets and checksums") === governance?.releaseBodyContract?.sourceOnlyNoAssetsMarker
+      && Array.isArray(latest?.assets) && latest.assets.length === 0,
+    "PUBLIC_NONLATEST_OWNER_CLASS_OR_ASSETS_INVALID");
+    issue(issues, /^[A-Za-z0-9._-]+$/.test(latest?.tag_name ?? "")
+      && Number.isSafeInteger(latest?.id) && latest.id > 0
+      && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(latest?.published_at ?? "")
+      && latest?.draft === false && latest?.prerelease === false
+      && latest?.html_url === `https://github.com/${governance?.repository}/releases/tag/${latest?.tag_name}`,
+    "PUBLIC_NONLATEST_OWNER_METADATA_INVALID");
+    issue(issues, /^[a-f0-9]{40}$/.test(ownerMerge ?? "") && latest?.target_commitish === ownerMerge
+      && latestTagRef?.object?.type === "commit" && latestTagRef?.object?.sha === ownerMerge,
+    "PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED");
+    issue(issues, latestByTag?.id === latest?.id && latestByTag?.tag_name === latest?.tag_name
+      && latestByTag?.body === latest?.body && latestByTag?.target_commitish === latest?.target_commitish
+      && latestByTag?.published_at === latest?.published_at && latestByTag?.html_url === latest?.html_url
+      && latestByTag?.draft === false && latestByTag?.prerelease === false
+      && Array.isArray(latestByTag?.assets) && latestByTag.assets.length === 0,
+    "PUBLIC_NONLATEST_OWNER_TAG_READBACK_MISMATCH");
+  } else {
+    issue(issues, releaseClass !== "" && releaseClass === ownerClass, "PUBLIC_LATEST_CLASS_MISMATCH");
+    issue(issues, latest?.tag_name === release?.tag_name, "PUBLIC_LATEST_MISMATCH");
+  }
   issue(issues, release?.draft === false, "PUBLIC_DRAFT_MISMATCH");
   issue(issues, release?.prerelease === false, "PUBLIC_PRERELEASE_MISMATCH");
   issue(
@@ -221,6 +250,8 @@ export function validateReleaseContract({
   const scope = oneSection(sections, "Included capabilities and issues");
   const capabilityIds = [...scope.matchAll(/^- CAPABILITY: ([A-Z0-9][A-Z0-9._:-]*)$/gm)].map((match) => match[1]);
   const issueIds = [...scope.matchAll(/^- ISSUE: #(\d+)$/gm)].map((match) => Number(match[1]));
+  if (nonOwnerRunnable) issue(issues, designation !== undefined && issueIds.includes(designation.requiredIssue),
+    "PUBLIC_NONLATEST_DESIGNATED_SCOPE_MISMATCH");
   issue(
     issues,
     capabilityIds.length > 0 && new Set(capabilityIds).size === capabilityIds.length
@@ -333,7 +364,7 @@ export function validateReleaseContract({
     const sidecars = bodyAssets.filter(({ name }) => name.endsWith(".tar.gz.sha256"));
     issue(
       issues,
-      bodyAssets.length === assetLines.length && archives.length === 1 && sidecars.length === 1
+      bodyAssets.length === 2 && bodyAssets.length === assetLines.length && archives.length === 1 && sidecars.length === 1
         && sidecars[0].name === `${archives[0].name}.sha256`,
       "PUBLIC_REGULAR_ASSET_CONTRACT_INVALID",
     );
@@ -426,6 +457,15 @@ export function validateRepository(root = process.cwd()) {
     "RELEASE_CLASS_TAXONOMY_INVALID",
   );
   issue(issues, taxonomy.githubLatestOwnerClass === "SOURCE_EVIDENCE_ONLY", "LATEST_OWNER_CLASS_INVALID");
+  const forward = governance.forwardRunnableReleases;
+  issue(issues, forward?.schemaVersion === "pansphaira.release/non-latest-runnable/v1"
+    && forward.latestOwnerClass === taxonomy.githubLatestOwnerClass && forward.requiresAnonymousLatestTagReadback === true
+    && Array.isArray(forward.designations) && forward.designations.length > 0
+    && new Set(forward.designations.map(({ tag }) => tag)).size === forward.designations.length
+    && forward.designations.every((entry) => Object.keys(entry).sort().join("|") === "profile|requiredIssue|tag"
+      && /^[A-Za-z0-9._-]+$/.test(entry.tag ?? "") && /^[A-Z][A-Z0-9_]+$/.test(entry.profile ?? "")
+      && Number.isSafeInteger(entry.requiredIssue) && entry.requiredIssue > 0),
+  "FORWARD_RUNNABLE_POLICY_INVALID");
   issue(
     issues,
     governance.releaseBodyContract?.schemaVersion === "chimpmaera.release-body/v1"
@@ -954,6 +994,15 @@ export async function verifyPublicReadback(root = process.cwd(), options = {}) {
       getJson(`${api}/git/ref/tags/${options.releaseTag}`, fetchImpl),
     ]);
     const downloadedAssets = await downloadReleaseAssets(release, fetchImpl);
+    const releaseClass = oneSection(markdownSections(release.body ?? ""), "Release class").replace("RELEASE_CLASS: ", "");
+    let latestTagRef, latestByTag;
+    if (releaseClass === "REGULAR_RUNNABLE_ARTIFACT" && governance.releaseTaxonomy.githubLatestOwnerClass === "SOURCE_EVIDENCE_ONLY") {
+      assert.match(latest?.tag_name ?? "", /^[A-Za-z0-9._-]+$/, "PUBLIC_LATEST_TAG_INVALID");
+      [latestTagRef, latestByTag] = await Promise.all([
+        getJson(`${api}/git/ref/tags/${latest.tag_name}`, fetchImpl),
+        getJson(`${api}/releases/tags/${latest.tag_name}`, fetchImpl),
+      ]);
+    }
     const localHead = options.readLocalHead === undefined
       ? execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim()
       : options.readLocalHead();
@@ -964,6 +1013,8 @@ export async function verifyPublicReadback(root = process.cwd(), options = {}) {
       release,
       latest,
       tagRef,
+      latestTagRef,
+      latestByTag,
       downloadedAssets,
     });
     assert.deepEqual(contractIssues, [], contractIssues.join("\n"));
@@ -972,7 +1023,7 @@ export async function verifyPublicReadback(root = process.cwd(), options = {}) {
       tag: release.tag_name,
       releaseClass: oneSection(markdownSections(release.body ?? ""), "Release class").replace("RELEASE_CLASS: ", ""),
       targetCommitish: release.target_commitish,
-      latest: true,
+      latest: latest.tag_name === release.tag_name,
       draft: false,
       prerelease: false,
       assets: release.assets.map(({ name, size }) => ({ name, size })),

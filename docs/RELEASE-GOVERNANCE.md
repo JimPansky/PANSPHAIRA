@@ -27,8 +27,8 @@ separate:
 - **Historical verified runnable artifact:**
   `v0.2.0-poc.20260825.1`, target
   `33d19f3e96ccc512038dbf06063f19489e067390`, with its immutable archive and
-  SHA-256 sidecar. It remains the current verified runnable artifact, but it is
-  not GitHub Latest and does not contain later Main source.
+  SHA-256 sidecar. It was the verified runnable artifact at that reconciliation
+  baseline; it is not GitHub Latest and does not contain later Main source.
 - **Earlier history:** `v0.1.0` and unlisted pre-taxonomy releases remain
   historical evidence. They are not silently reclassified or granted v2
   conformance.
@@ -44,7 +44,7 @@ A public release is named for the functional, evidence-backed increment it
 delivers. A date or editorial cadence may appear as provenance, but labels such
 as “Daily”, “today's release” or “previous Daily” must not be the identity of a
 new conforming release. Calendar-shaped historical records remain factual
-provenance rather than a naming template. The verified runnable artifact's
+provenance rather than a naming template. That historical runnable artifact's
 canonical-number hardening rejects negative zero before canonicalization in
 Verification Fabric timestamps and Extension Assurance Profile numeric
 boundaries. It performs no migration, restore, filesystem, package, schema or
@@ -84,6 +84,41 @@ two explicitly reconciled legacy records. New publication closure uses the
 release-event command documented below and never accepts a legacy exception.
 
 ## Exact release-body contract
+
+### Forward non-Latest runnable designation
+
+`pansphaira.release/non-latest-runnable/v1` adds an explicit forward-only
+designation under `forwardRunnableReleases`. It does not mutate either legacy
+record, grant retroactive conformance, or change `githubLatestOwnerClass`.
+The designated tag `v0.3.0-offline-updater.1` names the selected PAN465 offline
+retained-native profile and must include issue #465. A designation is not
+publication, runtime qualification, or issue-closure evidence.
+
+A designated `REGULAR_RUNNABLE_ARTIFACT` must be published with
+`make_latest=false`. Its independent anonymous tag readback still verifies the
+exact checkout/merge/tag commit, complete eight-section body, bounded claim
+ownership, exact archive/sidecar inventory, downloaded bytes, and raw governed
+surfaces. It must return `latest:false` rather than pretending to own Latest.
+The archive and its SHA-256 sidecar are the only custom assets; signatures and
+receipts belonging to the profile must be inventoried inside the archive.
+
+The verifier additionally reads the actual Latest owner's full release
+metadata both from `/releases/latest` and `/releases/tags/<owner-tag>`, and its
+exact `/git/ref/tags/<owner-tag>` target. The two provider observations must
+agree on ID, body, publication time, URL, target and non-draft/non-prerelease
+state. That owner must be `SOURCE_EVIDENCE_ONLY`, with the exact no-assets
+marker and no custom assets, and its body/target/tag SHA must agree. A stale
+tag-only assertion is insufficient. The new runnable tag becoming Latest,
+an undesignated tag, missing owner readback, target drift, extra assets or
+corrupt archive bytes all fail closed. Existing source-only Latest and all
+historical reconciliation gates retain their previous requirements.
+
+The standard `--release-tag ... --require-conforming` command and publication
+workflow apply unchanged. No caller may use this designation to waive exact
+CI, current-head Docker E2E, independent acceptance, privacy, public readback,
+or the original acceptance criteria.
+
+### Required body sections
 
 Every new release body uses each of these H2 headings exactly once and in the
 declared contract order:

@@ -23,6 +23,14 @@
       }
     ]
   },
+  "forwardRunnableReleases": {
+    "schemaVersion": "pansphaira.release/non-latest-runnable/v1",
+    "latestOwnerClass": "SOURCE_EVIDENCE_ONLY",
+    "requiresAnonymousLatestTagReadback": true,
+    "designations": [
+      {"tag": "v0.3.0-offline-updater.1", "profile": "PAN465_OFFLINE_RETAINED_NATIVE", "requiredIssue": 465}
+    ]
+  },
   "releaseBodyContract": {
     "schemaVersion": "chimpmaera.release-body/v1",
     "appliesTo": "EVERY_NEW_RELEASE_NO_RETROACTIVE_CONFORMANCE",
