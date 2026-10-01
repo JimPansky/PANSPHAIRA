@@ -94,6 +94,11 @@ The designated tag `v0.3.0-offline-updater.1` names the selected PAN465 offline
 retained-native profile and must include issue #465. A designation is not
 publication, runtime qualification, or issue-closure evidence.
 
+Designation is checked before choosing a release-body class branch. This tag
+cannot relabel itself `SOURCE_EVIDENCE_ONLY`, omit its issue/assets, or become
+Latest through the normal source-only path. Non-designated conforming
+source-only owner releases retain their existing path.
+
 A designated `REGULAR_RUNNABLE_ARTIFACT` must be published with
 `make_latest=false`. Its independent anonymous tag readback still verifies the
 exact checkout/merge/tag commit, complete eight-section body, bounded claim
@@ -108,10 +113,26 @@ exact `/git/ref/tags/<owner-tag>` target. The two provider observations must
 agree on ID, body, publication time, URL, target and non-draft/non-prerelease
 state. That owner must be `SOURCE_EVIDENCE_ONLY`, with the exact no-assets
 marker and no custom assets, and its body/target/tag SHA must agree. A stale
-tag-only assertion is insufficient. The new runnable tag becoming Latest,
+tag-only assertion is insufficient. The owner's merge section must contain
+exactly one unambiguous merge declaration; duplicate declarations, including
+duplicates with equal values, are denied. Requested tags, returned release
+tags, and both returned `refs/tags/<tag>` names are explicitly cross-bound.
+The new runnable tag becoming Latest,
 an undesignated tag, missing owner readback, target drift, extra assets or
 corrupt archive bytes all fail closed. Existing source-only Latest and all
 historical reconciliation gates retain their previous requirements.
+
+The explicit auxiliary-owner policy is
+`CONFORMING_NONHISTORICAL_SOURCE_ONLY`. Forward designations cannot overlap
+protected historical tags. Recognized historical tags or recorded release IDs
+cannot be treated as new conforming releases or auxiliary forward owners,
+even if fresh provider responses agree on a rewritten body or moved target.
+Their exact legacy readback path remains unchanged; no v2 conformance is
+granted retroactively. If actual Latest is a preserved legacy record rather
+than a conforming nonhistorical source-only owner, this forward publication
+path is held. Do not resolve that hold by rewriting history, inventing an
+unrelated release, or changing the owner policy silently. The finalizer must
+observe the actual supported owner anonymously again at delivery time.
 
 The standard `--release-tag ... --require-conforming` command and publication
 workflow apply unchanged. No caller may use this designation to waive exact

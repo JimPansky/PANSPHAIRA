@@ -150,6 +150,15 @@ function validateDownloadedAssets(issues, expectedAssets, downloadedAssets, asse
   }
 }
 
+function protectedHistoricalIdentity(governance, candidate) {
+  const records = [governance?.currentRelease, governance?.publicLatestRelease,
+    governance?.historicalReleasePolicy?.namedHistoricalIdentity,
+    ...(Array.isArray(governance?.legacyReleaseExceptions) ? governance.legacyReleaseExceptions : [])];
+  return records.some((record) => (typeof record?.tag === "string"
+      && record.tag === (candidate?.tag_name ?? candidate?.tag))
+    || (Number.isSafeInteger(record?.releaseId) && record.releaseId > 0 && record.releaseId === candidate?.id));
+}
+
 export function validateReleaseContract({
   root = process.cwd(),
   governance,
@@ -162,6 +171,7 @@ export function validateReleaseContract({
 }) {
   const issues = [];
   const body = typeof release?.body === "string" ? release.body : "";
+  issue(issues, !protectedHistoricalIdentity(governance, release), "PUBLIC_HISTORICAL_IDENTITY_NOT_NEW_RELEASE");
   const sections = markdownSections(body);
   const requiredSections = governance?.releaseBodyContract?.requiredSections ?? [];
   const observedHeadings = [...body.matchAll(/^## ([^\n]+)\s*$/gm)].map((match) => match[1].trim());
@@ -187,14 +197,25 @@ export function validateReleaseContract({
   const ownerClass = governance?.releaseTaxonomy?.githubLatestOwnerClass;
   const nonOwnerRunnable = releaseClass === "REGULAR_RUNNABLE_ARTIFACT" && ownerClass === "SOURCE_EVIDENCE_ONLY";
   const forwardPolicy = governance?.forwardRunnableReleases;
-  const designation = forwardPolicy?.designations?.find(({ tag }) => tag === release?.tag_name);
+  const designation = (Array.isArray(forwardPolicy?.designations) ? forwardPolicy.designations : [])
+    .find((entry) => entry?.tag === release?.tag_name);
+  // Designation is authoritative before choosing a body-class branch.
+  // Calling the designated runnable tag source-only cannot waive its scope.
+  if (designation !== undefined) {
+    issue(issues, releaseClass === "REGULAR_RUNNABLE_ARTIFACT", "PUBLIC_DESIGNATED_RELEASE_CLASS_MISMATCH");
+    issue(issues, latest?.tag_name !== release?.tag_name, "PUBLIC_NONOWNER_BECAME_LATEST");
+  }
   if (nonOwnerRunnable) {
     issue(issues, forwardPolicy?.schemaVersion === "pansphaira.release/non-latest-runnable/v1"
       && forwardPolicy.latestOwnerClass === ownerClass && forwardPolicy.requiresAnonymousLatestTagReadback === true
+      && forwardPolicy.auxiliaryOwnerPolicy === "CONFORMING_NONHISTORICAL_SOURCE_ONLY"
       && designation !== undefined, "PUBLIC_NONLATEST_RUNNABLE_NOT_DESIGNATED");
     issue(issues, latest?.tag_name !== release?.tag_name, "PUBLIC_NONOWNER_BECAME_LATEST");
+    issue(issues, !protectedHistoricalIdentity(governance, latest), "PUBLIC_NONLATEST_HISTORICAL_OWNER_NOT_SUPPORTED");
     const ownerSections = markdownSections(latest?.body ?? "");
-    const ownerMerge = oneSection(ownerSections, "Exact merge SHA").match(/^MERGE_SHA: ([a-f0-9]{40})$/m)?.[1];
+    const ownerMergeSection = oneSection(ownerSections, "Exact merge SHA");
+    const ownerMergeMatches = [...ownerMergeSection.matchAll(/^MERGE_SHA: ([a-f0-9]{40})$/gm)];
+    const ownerMerge = ownerMergeMatches.length === 1 ? ownerMergeMatches[0][1] : "";
     issue(issues, oneSection(ownerSections, "Release class") === `RELEASE_CLASS: ${ownerClass}`
       && oneSection(ownerSections, "Assets and checksums") === governance?.releaseBodyContract?.sourceOnlyNoAssetsMarker
       && Array.isArray(latest?.assets) && latest.assets.length === 0,
@@ -205,7 +226,8 @@ export function validateReleaseContract({
       && latest?.draft === false && latest?.prerelease === false
       && latest?.html_url === `https://github.com/${governance?.repository}/releases/tag/${latest?.tag_name}`,
     "PUBLIC_NONLATEST_OWNER_METADATA_INVALID");
-    issue(issues, /^[a-f0-9]{40}$/.test(ownerMerge ?? "") && latest?.target_commitish === ownerMerge
+    issue(issues, /^[a-f0-9]{40}$/.test(ownerMerge) && ownerMergeSection === `MERGE_SHA: ${ownerMerge}`
+      && latest?.target_commitish === ownerMerge && latestTagRef?.ref === `refs/tags/${latest?.tag_name}`
       && latestTagRef?.object?.type === "commit" && latestTagRef?.object?.sha === ownerMerge,
     "PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED");
     issue(issues, latestByTag?.id === latest?.id && latestByTag?.tag_name === latest?.tag_name
@@ -243,14 +265,14 @@ export function validateReleaseContract({
     mergeSha !== ""
       && release?.target_commitish === mergeSha
       && tagRef?.object?.sha === mergeSha
-      && tagRef?.object?.type === "commit",
+      && tagRef?.object?.type === "commit" && tagRef?.ref === `refs/tags/${release?.tag_name}`,
     "PUBLIC_TARGET_MISMATCH",
   );
 
   const scope = oneSection(sections, "Included capabilities and issues");
   const capabilityIds = [...scope.matchAll(/^- CAPABILITY: ([A-Z0-9][A-Z0-9._:-]*)$/gm)].map((match) => match[1]);
   const issueIds = [...scope.matchAll(/^- ISSUE: #(\d+)$/gm)].map((match) => Number(match[1]));
-  if (nonOwnerRunnable) issue(issues, designation !== undefined && issueIds.includes(designation.requiredIssue),
+  if (nonOwnerRunnable || designation !== undefined) issue(issues, designation !== undefined && issueIds.includes(designation.requiredIssue),
     "PUBLIC_NONLATEST_DESIGNATED_SCOPE_MISMATCH");
   issue(
     issues,
@@ -460,11 +482,14 @@ export function validateRepository(root = process.cwd()) {
   const forward = governance.forwardRunnableReleases;
   issue(issues, forward?.schemaVersion === "pansphaira.release/non-latest-runnable/v1"
     && forward.latestOwnerClass === taxonomy.githubLatestOwnerClass && forward.requiresAnonymousLatestTagReadback === true
+    && forward.auxiliaryOwnerPolicy === "CONFORMING_NONHISTORICAL_SOURCE_ONLY"
     && Array.isArray(forward.designations) && forward.designations.length > 0
-    && new Set(forward.designations.map(({ tag }) => tag)).size === forward.designations.length
-    && forward.designations.every((entry) => Object.keys(entry).sort().join("|") === "profile|requiredIssue|tag"
+    && new Set(forward.designations.map((entry) => entry?.tag)).size === forward.designations.length
+    && forward.designations.every((entry) => entry !== null && typeof entry === "object"
+      && Object.keys(entry).sort().join("|") === "profile|requiredIssue|tag"
       && /^[A-Za-z0-9._-]+$/.test(entry.tag ?? "") && /^[A-Z][A-Z0-9_]+$/.test(entry.profile ?? "")
-      && Number.isSafeInteger(entry.requiredIssue) && entry.requiredIssue > 0),
+      && Number.isSafeInteger(entry.requiredIssue) && entry.requiredIssue > 0
+      && !protectedHistoricalIdentity(governance, entry)),
   "FORWARD_RUNNABLE_POLICY_INVALID");
   issue(
     issues,
@@ -993,6 +1018,8 @@ export async function verifyPublicReadback(root = process.cwd(), options = {}) {
       getJson(`${api}/releases/latest`, fetchImpl),
       getJson(`${api}/git/ref/tags/${options.releaseTag}`, fetchImpl),
     ]);
+    assert.ok(release?.tag_name === options.releaseTag && tagRef?.ref === `refs/tags/${options.releaseTag}`,
+      "PUBLIC_REQUESTED_TAG_RESPONSE_MISMATCH");
     const downloadedAssets = await downloadReleaseAssets(release, fetchImpl);
     const releaseClass = oneSection(markdownSections(release.body ?? ""), "Release class").replace("RELEASE_CLASS: ", "");
     let latestTagRef, latestByTag;

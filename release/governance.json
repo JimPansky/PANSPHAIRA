@@ -27,6 +27,7 @@
     "schemaVersion": "pansphaira.release/non-latest-runnable/v1",
     "latestOwnerClass": "SOURCE_EVIDENCE_ONLY",
     "requiresAnonymousLatestTagReadback": true,
+    "auxiliaryOwnerPolicy": "CONFORMING_NONHISTORICAL_SOURCE_ONLY",
     "designations": [
       {"tag": "v0.3.0-offline-updater.1", "profile": "PAN465_OFFLINE_RETAINED_NATIVE", "requiredIssue": 465}
     ]
