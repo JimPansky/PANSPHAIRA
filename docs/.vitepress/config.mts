@@ -19,6 +19,10 @@ const curatedSitemapPaths = new Set([
   "alternatives",
   "AGENT-WORK-EVENT-CONTRACT",
   "EXTERNAL-BI-SERVICE",
+  "explanation/overview",
+  "explanation/architecture-tour",
+  "explanation/knowledge-and-reuse",
+  "explanation/research-questions",
   "capabilities",
   "CAPABILITY-CELL-ERP-ORDER",
   "examples",
@@ -33,6 +37,7 @@ const curatedSitemapPaths = new Set([
   "roadmap",
   "SECURE-DEFAULT-PROOF",
   "use-cases/crm-erp-approval-readback",
+  "use-cases",
   "use-cases/governed-agent-actions",
 ]);
 
@@ -117,9 +122,11 @@ export default defineConfig({
   },
   themeConfig: {
     nav: [
+      { text: "Understand the idea", link: "/explanation/overview" },
       {
         text: "Use cases",
         items: [
+          { text: "Application guide", link: "/use-cases/" },
           { text: "Governed agent actions", link: "/use-cases/governed-agent-actions" },
           { text: "CRM → ERP approval and readback", link: "/use-cases/crm-erp-approval-readback" },
         ],
@@ -136,6 +143,8 @@ export default defineConfig({
         text: "Start",
         items: [
           { text: "Overview", link: "/" },
+          { text: "The ecosystem idea", link: "/explanation/overview" },
+          { text: "Application guide", link: "/use-cases/" },
           { text: "Quickstart", link: "/QUICKSTART" },
           { text: "Governed agent actions", link: "/use-cases/governed-agent-actions" },
           { text: "CRM → ERP approval and readback", link: "/use-cases/crm-erp-approval-readback" },
@@ -144,6 +153,9 @@ export default defineConfig({
       {
         text: "Concepts and boundaries",
         items: [
+          { text: "Architecture tour", link: "/explanation/architecture-tour" },
+          { text: "Knowledge and reuse", link: "/explanation/knowledge-and-reuse" },
+          { text: "Research questions", link: "/explanation/research-questions" },
           { text: "Canon", link: "/CANON" },
           { text: "Architecture", link: "/ARCHITECTURE" },
           { text: "Security assurance", link: "/SECURITY-ASSURANCE" },

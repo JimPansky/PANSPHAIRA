@@ -2,224 +2,136 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/brand/pansphaira-icon-negative.svg">
     <source media="(prefers-color-scheme: light)" srcset="assets/brand/pansphaira-icon-positive.svg">
-    <img src="assets/brand/pansphaira-icon-positive.svg" width="220" alt="PanSphaira geometric icon of seven connected circles">
+    <img src="assets/brand/pansphaira-icon-positive.svg" width="112" alt="PanSphaira: seven connected circles">
   </picture>
 </p>
 
 # PanSphaira
 
-**Adapt any process. Prove what works.**
+**Enterprise software that adapts to the way your business works.**
 
-**Governed by default. Adaptable by design. Improved through evidence.**
+A new approval rule, a different data source or a change of business system should not mean starting again. Yet adapting enterprise software often means choosing between custom development and fitting the process around the software.
 
-PanSphaira is building a governed path from individual needs and source-bound
-knowledge to AI-enabled process Blueprints, system-specific adaptations,
-readback and reusable evidence. Today it proves bounded parts of that path; the general end-to-end product is
-[work in progress](https://github.com/JoFe2/PANSPHAIRA/issues/360).
+PanSphaira is building an **AI-assisted software ecosystem** around the opposite idea: start with the business need, combine reusable capabilities and adapt the parts that depend on the context. Agents help interpret requirements and propose changes; explicit controls outside the agent determine what may run.
 
-Build privately, or contribute a proven adaptation to an open
-Capability Library.
+The aim is to reuse more than code. Sources, assumptions, interfaces, tests and results should travel with a solution, so the next person or agent can understand where it fits—and what needs checking again.
 
-**Status:** [latest public evidence release](https://github.com/JoFe2/PANSPHAIRA/releases/latest)
-· proof of concept · Linux x86_64 · [Apache-2.0](LICENSE)
+> **Current stage:** An open-source development project with runnable local demonstrations and published, bounded proofs. General end-to-end adaptation across live business systems remains a development direction, not an established product capability. [Inspect capabilities and evidence](docs/capabilities.md).
 
-[**See how it adapts**](#adaptive-knowledge-engineering) ·
-[**Explore applications**](#applications) ·
-[**Run the local PoC**](#quickstart) ·
-[**Documentation**](https://jofe2.github.io/PANSPHAIRA/) ·
-[**Contribute an adaptation**](CONTRIBUTING.md)
-
-## Adaptive Knowledge Engineering
-
-**Adaptive Knowledge Engineering** starts with the required outcome, the knowledge
-available in the target environment, and the controls the process needs. It
-keeps the adaptation traceable.
-
-The product direction is to turn these inputs into a Capability or Process
-Blueprint, materialize it through governed software components, bind it to
-specific systems, and read the result back. Released local-synthetic slices
-already prove individual layers and selected complete paths; arbitrary-process
-generation and live-system adaptation remain planned.
-
-<p align="center">
-  <img src="assets/diagrams/layers/04-application-hierarchy-blueprint.png" width="1000" alt="PanSphaira application hierarchy with four shared macro layers as rows, Incoming Invoice, Connected BI, and Provider Adaptation as columns, and a bottom-up evidence axis.">
-</p>
-
-<p align="center"><em>Shared hierarchy, application-specific columns: each adaptation moves through thesis, process, software, integration, readback, and qualified reuse.</em></p>
-
-<details>
-<summary>Accessible hierarchy description</summary>
-
-The rows are Thesis and Knowledge, Capability and Process, Adaptability
-Software, and Integration and Proof. The columns instantiate those layers for
-planned incoming-invoice processing, the delivered optional KaleidoSphere BI
-contract, and delivered local-synthetic ERP provider adaptation. A right-hand
-axis returns observed state through reconciliation, receipt, verdict, and
-qualified reuse.
-
-</details>
-
-**Need → Blueprint → governed process → integration → readback → reusable
-evidence.** The [Canon](docs/CANON.md) and
-[Architecture](docs/ARCHITECTURE.md) define the boundaries behind the hierarchy.
-
-**Adapt once. Validate it. Reuse it everywhere it fits.**
-Solve → Validate → Package as Knowledge → Share → Reuse → Improve.
-Every integration can teach the system how to adapt the next one—without
-silently expanding authority.
+[**Understand the idea**](docs/explanation/overview.md) · [**Explore examples**](#applications) · [**Try the local demo**](#quickstart) · [**Discuss the underlying questions**](docs/explanation/research-questions.md)
 
 ## Applications
 
-### Adapt incoming-invoice processing to the controls the situation needs
+Each example illustrates a different part of the ecosystem, with a direct route to its own evidence.
 
-`PROVEN_LOCAL_SYNTHETIC_POC · NARROW_GO · LOCAL SYNTHETIC`
+<a id="adapt-incoming-invoice-processing-to-the-controls-the-situation-needs"></a>
 
-One AP model is designed to derive `LEAN`, `CONTROLLED`, and
-`SEGREGATED_ENTERPRISE` process variants from evidence, risk, approval, and
-separation needs—not company-size stereotypes. The short-term proof adds a
-bounded setup-agent dialogue reusing existing capability/process variants to
-configure an altered ERV requirement.
+### Check whether an invoice rule is supported
 
-Track the [AP proof epic #360](https://github.com/JoFe2/PANSPHAIRA/issues/360)
-and its delivery chain:
-[AP-01 #361](https://github.com/JoFe2/PANSPHAIRA/issues/361) →
-[AP-02 #362](https://github.com/JoFe2/PANSPHAIRA/issues/362) →
-[AP-03 #363](https://github.com/JoFe2/PANSPHAIRA/issues/363) →
-[AP-04 #364](https://github.com/JoFe2/PANSPHAIRA/issues/364) →
-[AP-05 #365](https://github.com/JoFe2/PANSPHAIRA/issues/365) →
-[AP-06 #366](https://github.com/JoFe2/PANSPHAIRA/issues/366).
-The frozen [AP-06 proof probe](https://github.com/JoFe2/PANSPHAIRA/releases/tag/ap-06-frozen-adapted-erv-proof-probe-with-narrow-go-verdict-issue-366-95ecd4d587d9) ([raw proof](https://raw.githubusercontent.com/JoFe2/PANSPHAIRA/ae765100ac731b519906bacee5ce02dbeb2680d9/verification/incoming-invoice-ap06-proof-probe-v1.json)) carries the `NARROW_GO` verdict: the baseline resolves `MATCHED` through the released core, while the changed 200-bps tolerance has no released executable variant and stays typed `UNKNOWN`—not a proven 200-bps execution or arbitrary adaptability.
+In the synthetic invoice example, the existing matching rule produces a verified match. Ask for a different price tolerance, and the changed requirement exposes a gap: there is no released executable variant for it yet.
 
-**[Explore the planned Source→Document AI→Matching→Advisor→UI→Receipt
-PoC](docs/INCOMING-INVOICE-PROVING-GROUND.md).**
-Current AP-03: synthetic extraction scoring harness. The
-[real OCR/Document-AI pilot remains separate](https://github.com/JoFe2/PANSPHAIRA/issues/378).
+**Shown today:** A bounded check against existing capabilities, with a working baseline and an explicit unsupported change—instead of a silently invented solution.
 
-### Let AI agents ask better BI questions with KaleidoSphere
+[Follow the invoice example](docs/use-cases/index.md#incoming-invoice-processing) · [Inspect its frozen proof](https://github.com/JoFe2/PANSPHAIRA/releases/tag/ap-06-frozen-adapted-erv-proof-probe-with-narrow-go-verdict-issue-366-95ecd4d587d9)
 
-`DELIVERED CONTRACT · OPTIONAL · DEFAULT-OFF`
+<a id="let-ai-agents-ask-better-bi-questions-with-kaleidosphere"></a>
 
-PanSphaira governs closed status, discovery, analyze, plan, preview, and
-readback intents. Independently released
-[KaleidoSphere](https://github.com/JoFe2/KaleidoSphere) owns BI discovery,
-adapters, semantic/KPI/graph analysis, previews, and execution.
+### Connect analysis without handing over control
 
-**[Explore connected AI-agent BI](docs/EXTERNAL-BI-SERVICE.md).**
+KaleidoSphere can help explore data and inspect analytical results. It is an independent BI system, connected through PanSphaira's optional, versioned interface. PanSphaira controls the admitted requests; KaleidoSphere owns the analytics and its runtime.
 
-### Keep the business capability stable while provider details change
+**Shown today:** A bounded compatibility and intent contract for the declared product pair. Using analytical findings to improve processes is a broader direction; a new independent release does not automatically qualify a new pairing or an autonomous improvement loop.
 
-`DELIVERED · LOCAL SYNTHETIC`
+[Understand the connection](docs/use-cases/index.md#connected-analysis) · [Inspect the exact contract](docs/EXTERNAL-BI-SERVICE.md)
 
-The `erp.order.create v1` PoC keeps its target-neutral consumer contract while
-adapting request mappings, effective rights, and compensating rollback for two
-synthetic provider bindings.
+<a id="keep-the-business-capability-stable-while-provider-details-change"></a>
 
-**[Inspect the provider-adaptation PoC](docs/CAPABILITY-CELL-ERP-ORDER.md).**
+### Keep the business function stable when a provider changes
+
+Two systems may express the same order operation using different fields, permissions and recovery actions. Reusing a business capability should not require its consumer to understand every provider detail.
+
+**Shown today:** One target-neutral order capability with two local synthetic provider bindings. ERP is an optional example of system adaptation, not a prerequisite for the ecosystem.
+
+[Explore provider adaptation](docs/use-cases/index.md#provider-adaptation) · [Inspect the local proof](docs/CAPABILITY-CELL-ERP-ORDER.md)
+
+<a id="adaptive-knowledge-engineering"></a>
+
+## How the pieces fit together
+
+The project calls this approach **Adaptive Knowledge Engineering**: connect what a process needs with reusable knowledge and software, then keep the adaptation and its results inspectable.
+
+<!-- diagram-source: docs/diagrams/concept-loop.mmd; keep the block generated from that source. -->
+```mermaid
+flowchart TD
+  accTitle: From requirements to qualified reuse
+  accDescr: Conceptual path from requirements and knowledge through a process blueprint and reusable components to controlled execution and evidence. Reviewed evidence informs a later candidate; it does not grant permission.
+  A["Requirements and knowledge"] --> B["Process blueprint"]
+  B --> C["Components and adaptations"]
+  C --> D["Controlled execution"]
+  D --> E["Results and evidence"]
+  E -->|"Review before reuse"| A
+```
+
+*Conceptual model, not a generally automated pipeline. Reviewed results inform the next candidate; they do not grant permission to activate it.*
+
+- **Knowledge and requirements:** the intended outcome, sources, assumptions and constraints.
+- **Capabilities and processes:** the business functions and process variants needed to achieve it.
+- **Software and adaptation:** implementations, configuration and system-specific bindings.
+- **Integration and verification:** permitted execution, observation of the resulting state and evidence for review.
+
+These are connected perspectives, not four mandatory services. The [overview](docs/explanation/overview.md) explains the model; the [architecture tour](docs/explanation/architecture-tour.md) follows an action through its responsibilities.
+
+## Reuse the knowledge behind a solution
+
+A successful example is not enough to establish where a component can be reused. A later developer or agent needs its sources, assumptions, tested conditions and known failures. When those conditions change, the affected conclusion needs review.
+
+Agents can help with interpretation, planning and exceptions. Deterministic software remains appropriate for precisely specified calculations and actions. Knowing how an operation works is separate from having permission to perform it.
+
+[Knowledge and reuse](docs/explanation/knowledge-and-reuse.md) explains the idea with a concrete example. The [Canon](docs/CANON.md) and [Knowledge Harvest](docs/KNOWLEDGE-HARVEST.md) retain the exact rules.
 
 ## Build privately. Extend it together.
 
-Use the method with your own processes, systems, databases, and APIs. Your
-Blueprints, adapters, tests, and receipts may remain entirely private.
+Keep your own process definitions, adaptations and evidence private, or propose selected material for shared reuse under the [contribution rules](CONTRIBUTING.md). Contributions can include domain knowledge, design questions, tests, adapters and documentation—not only code.
 
-Or contribute selected knowledge, a Blueprint, an implementation, or an
-evidence package. Community review can confirm, narrow, improve, or falsify the
-contribution before it becomes a versioned reusable option.
+The library can grow with new needs. Each contribution still needs its own applicability and evidence; adding a component does not make every combination valid.
 
-**Every contribution expands the option space. Evidence determines where it
-fits.** See [Governed Knowledge Harvest](docs/KNOWLEDGE-HARVEST.md), the
-[Capability Matrix](docs/capabilities.md), and [Contributing](CONTRIBUTING.md).
+<a id="proof-today"></a>
 
-**Share what you know. Expand what everyone can build.** The Capability Library
-is an open-ended, user-need-driven option space; each reusable option retains
-its own evidence and applicability.
+## What is available, and what comes next?
 
-## Proof today
+**Available to inspect:** Bounded local demonstrations, the examples above, their source and published evidence. The release history also includes a separately named [signed offline-updater increment](https://github.com/JoFe2/PANSPHAIRA/releases/tag/v0.3.0-offline-updater.1) for its declared local synthetic profile.
 
-Current Main contains bounded local-synthetic evidence, not a universal product
-claim:
+**Development direction:** Broader cross-system adaptation, reusable knowledge whose applicability can be reevaluated, and cooperation between process execution and analysis. Follow the [roadmap](docs/roadmap.md) and the [open research questions](docs/explanation/research-questions.md) for work beyond the published proofs.
 
-- the `SAFE_GUIDED` CRM/ERP path binds policy and approval before effect, then
-  verifies success through provider readback and a receipt;
-- Competence–Knowledge Separation preserves external knowledge, qualification,
-  and model-routing evidence without turning Knowledge into Authority;
-- edge evidence and provider-adaptation proofs keep shared meaning separate from
-  system-specific bindings;
-- the optional external-BI contract keeps PanSphaira governance separate from
-  KaleidoSphere BI ownership.
-
-Each example links to its exact contract, tests, evidence class, and limits.
-Start with the [secure-default proof](docs/SECURE-DEFAULT-PROOF.md), then inspect
-[Security Assurance](docs/SECURITY-ASSURANCE.md) and [Known
-Limitations](docs/KNOWN-LIMITATIONS.md).
+**For deeper inspection:** [Capability evidence](docs/capabilities.md), [security assurance](docs/SECURITY-ASSURANCE.md) and [known limitations](docs/KNOWN-LIMITATIONS.md) identify their own scope and, where applicable, historical evidence boundaries.
 
 ## Quickstart
 
-On Linux x86_64 with Docker Compose v2, `jq`, `curl`, OpenSSL, and `sha256sum`:
+The runnable demo is a **fictional CRM/ERP workflow**: inspect allowed, denied and escalated actions and their visible results. It is separate from the invoice proof above.
 
-```sh
-git clone https://github.com/JoFe2/PANSPHAIRA.git
-cd PANSPHAIRA
-git switch main
-./demo/install.sh
-```
+Use a development or disposable **Linux x86_64** host. The documented prerequisites include Docker Engine with Compose v2, Node.js 24 and npm 11 within the [declared version ranges](package.json), `jq`, `curl`, OpenSSL and `sha256sum`.
 
-Expected success is `READY_VERIFIED` plus loopback URLs. Remove only resources
-owned by the installer:
+Follow the [Quickstart](docs/QUICKSTART.md) to choose a source or artifact, verify it and install the demo. `READY_VERIFIED` is the documented installation-readiness result; the guide also explains the loopback entry points and how to remove only owned resources. Use fictional data, not production systems or real business records.
 
-```sh
-./demo/uninstall.sh --purge
-```
+## Choose your next step
 
-The [full Quickstart](docs/QUICKSTART.md) owns source verification, release
-identity, prerequisites, optional subsystems, and cleanup details.
+- **Understand the concept:** [Overview](docs/explanation/overview.md) → [Knowledge and reuse](docs/explanation/knowledge-and-reuse.md) → [Research questions](docs/explanation/research-questions.md).
+- **Follow an example:** [Application guide](docs/use-cases/index.md) → the selected example's exact contract and evidence.
+- **Run or extend it:** [Quickstart](docs/QUICKSTART.md) → [Architecture tour](docs/explanation/architecture-tour.md) → [Contributing](CONTRIBUTING.md).
 
-## Evidence and scope
+The [documentation hub](docs/README.md) connects these routes. Technical readers can go directly to the [Canon](docs/CANON.md) or [Architecture](docs/ARCHITECTURE.md).
 
-- [Capabilities and maturity](docs/capabilities.md)
-- [Canon](docs/CANON.md) and [Architecture](docs/ARCHITECTURE.md)
-- [Security Assurance](docs/SECURITY-ASSURANCE.md)
-- [Known Limitations](docs/KNOWN-LIMITATIONS.md)
-- [Repository documentation](docs/README.md)
+<a id="evidence-and-scope"></a>
+<a id="releases"></a>
 
-The README links claims to evidence. Detailed proof pages own versions, tests,
-falsifiers, receipts, and nonclaims.
+## Releases and evidence
 
-The public repository provides an open-source proof-of-concept control plane
-with a runnable local synthetic demo. PanSphaira's product direction is: An open, knowledge-driven operating system for governed,
-adaptable AI ecosystems.
-This broader direction is not a claim of current product maturity or universal live compatibility.
-An unverified knowledge record may exist without becoming an authoritative default.
-
-## Releases
-
-- [Latest public evidence release](https://github.com/JoFe2/PANSPHAIRA/releases/latest)
-- [All releases and history](https://github.com/JoFe2/PANSPHAIRA/releases)
-- [Releases Atom feed](https://github.com/JoFe2/PANSPHAIRA/releases.atom)
-
-Release pages own included capabilities, evidence boundaries, related
-issues/PRs, tests, assets, and SHA-256 information. [Release
-governance](docs/RELEASE-GOVERNANCE.md) defines publication and anonymous
-readback. GitHub Latest currently identifies a source/evidence-only record with
-no project-built runnable archive; it does not supersede the separately named
-historical verified runnable artifact. The [full
-Quickstart](docs/QUICKSTART.md) and machine governance own those exact moving
-and immutable identities.
+Use the [release history](https://github.com/JoFe2/PANSPHAIRA/releases) to inspect what a particular release contains. **Source, runnable packaging and execution evidence are different identities.** GitHub's Latest label is not itself a promise of an installable archive; each release page and [release governance](docs/RELEASE-GOVERNANCE.md) define the applicable artifacts and limits.
 
 ## Project and community
 
-[Contribute](CONTRIBUTING.md), [get support](SUPPORT.md), join
-[Discussions](https://github.com/JoFe2/PANSPHAIRA/discussions), or report a
-vulnerability through the [private security route](SECURITY.md). These public
-routes do not create a support SLA.
+[Discuss ideas](https://github.com/JoFe2/PANSPHAIRA/discussions), [contribute](CONTRIBUTING.md), [get support](SUPPORT.md), or report a vulnerability through the [private security route](SECURITY.md).
 
-Code is Apache-2.0 under [LICENSE](LICENSE), [NOTICE](NOTICE), and
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). See [CITATION.cff](CITATION.cff)
-for citation metadata.
+Code is [Apache-2.0](LICENSE). See [NOTICE](NOTICE), [third-party notices](THIRD_PARTY_NOTICES.md) and [citation metadata](CITATION.cff).
 
-Voluntary creator support:
-
-<p>
-  <a href="https://ko-fi.com/chimpmaera"><img src="assets/support/ko-fi.png" alt="Support PanSphaira on Ko-fi" width="180" height="33"></a>
-  &nbsp;
-  <a href="https://buymeacoffee.com/jimpansky"><img src="assets/support/buy-me-a-coffee.png" alt="Support PanSphaira on Buy Me a Coffee" width="180" height="33"></a>
-</p>
+Voluntary creator support: [Ko-fi](https://ko-fi.com/chimpmaera) · [Buy Me a Coffee](https://buymeacoffee.com/jimpansky).

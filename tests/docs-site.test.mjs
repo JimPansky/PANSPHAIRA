@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
@@ -11,6 +12,10 @@ const curatedPages = [
   ["AGENT-WORK-EVENT-CONTRACT.html", `${baseUrl}AGENT-WORK-EVENT-CONTRACT`],
   ["CAPABILITY-CELL-ERP-ORDER.html", `${baseUrl}CAPABILITY-CELL-ERP-ORDER`],
   ["EXTERNAL-BI-SERVICE.html", `${baseUrl}EXTERNAL-BI-SERVICE`],
+  ["explanation/overview.html", `${baseUrl}explanation/overview`],
+  ["explanation/architecture-tour.html", `${baseUrl}explanation/architecture-tour`],
+  ["explanation/knowledge-and-reuse.html", `${baseUrl}explanation/knowledge-and-reuse`],
+  ["explanation/research-questions.html", `${baseUrl}explanation/research-questions`],
   ["capabilities.html", `${baseUrl}capabilities`],
   ["examples.html", `${baseUrl}examples`],
   ["EXTENSION-ASSURANCE-PROFILES.html", `${baseUrl}EXTENSION-ASSURANCE-PROFILES`],
@@ -24,6 +29,7 @@ const curatedPages = [
   ["UPDATE-MIGRATION-DOCTOR-CONTRACTS.html", `${baseUrl}UPDATE-MIGRATION-DOCTOR-CONTRACTS`],
   ["USAGE-INSIGHTS-CONTRACT.html", `${baseUrl}USAGE-INSIGHTS-CONTRACT`],
   ["use-cases/crm-erp-approval-readback.html", `${baseUrl}use-cases/crm-erp-approval-readback`],
+  ["use-cases/index.html", `${baseUrl}use-cases/`],
   ["use-cases/governed-agent-actions.html", `${baseUrl}use-cases/governed-agent-actions`],
 ];
 
@@ -103,6 +109,7 @@ test("intent content stays evidence-linked, honest, and reachable from the home 
   }
 
   const home = html("index.html");
+  const homeRoutes = new Set([...home.matchAll(/href="([^"]+)"/g)].map(([, href]) => new URL(href, baseUrl).pathname.replace(/\/$/, "")));
   for (const route of [
     "/PANSPHAIRA/QUICKSTART",
     "/PANSPHAIRA/SECURE-DEFAULT-PROOF",
@@ -111,7 +118,7 @@ test("intent content stays evidence-linked, honest, and reachable from the home 
     "/PANSPHAIRA/alternatives",
     "/PANSPHAIRA/roadmap",
   ]) {
-    assert.match(home, new RegExp(`href="${route}"`));
+    assert.ok(homeRoutes.has(route), `Home route missing: ${route}`);
   }
   assert.match(home, /github\.com\/JoFe2\/PANSPHAIRA\/discussions\/categories\/q-a/);
   assert.match(home, /github\.com\/JoFe2\/PANSPHAIRA\/blob\/main\/CONTRIBUTING\.md/);
@@ -153,4 +160,39 @@ test("Pages delivery uses immutable actions and least-privilege job permissions"
     2,
   );
   assert.doesNotMatch(workflow, /permissions:\s*write-all/);
+});
+
+test("R1 reading routes retain public coverage and source-bound accessible diagrams", () => {
+  const source = (path) => readFileSync(join(process.cwd(), path), "utf8");
+  const governance = JSON.parse(source("release/governance.json"));
+  const manifest = source("release/public-files.manifest");
+  const readme = source("README.md");
+  assert.equal(createHash("sha256").update(readme).digest("hex"), "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f");
+  assert.equal(readme.match(/```mermaid\n([\s\S]*?)\n```/)[1].trim(), source("docs/diagrams/concept-loop.mmd").trim());
+  for (const alias of ["adapt-incoming-invoice-processing-to-the-controls-the-situation-needs", "let-ai-agents-ask-better-bi-questions-with-kaleidosphere", "keep-the-business-capability-stable-while-provider-details-change", "adaptive-knowledge-engineering", "proof-today", "evidence-and-scope", "releases"]) {
+    assert.ok(readme.includes(`<a id="${alias}"></a>`), `Compatibility anchor missing: ${alias}`);
+  }
+  for (const path of ["explanation/overview", "explanation/architecture-tour", "explanation/knowledge-and-reuse", "explanation/research-questions", "use-cases/index"]) {
+    assert.ok(governance.activePublicFiles.includes(`docs/${path}.md`));
+    assert.ok(manifest.includes(`docs/${path}.md\tdocs/${path}.md\t0644`));
+    assert.match(html(`${path}.html`), /class="VPDoc/);
+  }
+  const diagramPins = {
+    "concept-loop": "5c9a83a01a031cf5df8b49d7b06ba7be40fd4e2f0eb4c3edf2d50bb2ac151b44",
+    "controlled-effect": "62e41dfdfbec5964a14590d5bebc032e6a899cc48e829edd6f1015f7cda8ea30",
+    "knowledge-lifecycle": "7eb50f45f2bc6a8c0309189a3bef94ab779e787f0c6009ab7f47a2bdb9bf65c3",
+    "provider-adaptation": "67f098119c8550c2fedc615259286fb1ea4b0ea991516fb1830e171cc750c93e",
+  };
+  for (const [name, pin] of Object.entries(diagramPins)) {
+    const svg = source(`docs/diagrams/${name}.svg`);
+    const mermaid = source(`docs/diagrams/${name}.mmd`);
+    assert.equal(createHash("sha256").update(svg).digest("hex"), pin);
+    assert.match(svg, /aria-labelledby="[^"]+"/);
+    assert.match(svg, /aria-describedby="[^"]+"/);
+    assert.match(svg, /viewBox="[^"]+"/);
+    assert.ok(svg.includes(mermaid.match(/accTitle: (.+)/)[1]));
+    assert.ok(svg.includes(mermaid.match(/accDescr: (.+)/)[1]));
+    assert.doesNotMatch(svg, /<script\b|\bonload=|(?:href|src)="https?:\/\//i);
+    for (const extension of ["mmd", "svg"]) assert.ok(manifest.includes(`docs/diagrams/${name}.${extension}\tdocs/diagrams/${name}.${extension}\t0644`));
+  }
 });

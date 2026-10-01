@@ -1,0 +1,8 @@
+flowchart TD
+  accTitle: Simplified qualification before reuse
+  accDescr: Observations and sources inform a candidate, which is tested and reviewed before versioning and reevaluation in another context. This is not the exact promotion state machine and grants no execution authority.
+  A["Observations and sources"] --> B["Candidate and assumptions"]
+  B --> C["Tests, counterexamples and review"]
+  C --> D["Versioned knowledge and applicability"]
+  D --> E["Reevaluate in the next context"]
+  E -->|"New evidence or changed assumptions"| B

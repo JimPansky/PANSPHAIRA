@@ -1,0 +1,9 @@
+flowchart TD
+  accTitle: Illustrative controlled action
+  accDescr: A proposed action goes through operation validation, policy and required approval. Denial produces no effect. An allowed effect needs readback before the supported result is recorded.
+  A["Agent proposes an action"] --> B["Validate operation and context"]
+  B --> C{"Policy and required approval satisfied?"}
+  C -->|"No"| N["No effect; record the denial"]
+  C -->|"Yes"| D["Trusted binding performs the effect"]
+  D --> E["Read back the resulting state"]
+  E --> F["Record the supported result"]

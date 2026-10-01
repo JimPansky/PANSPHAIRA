@@ -1,0 +1,7 @@
+flowchart TD
+  accTitle: A common capability with separate provider bindings
+  accDescr: A target-neutral order capability connects to two distinct synthetic provider bindings. Each binding has its own mappings, rights and recovery behavior.
+  C["Common order capability"] --> A["Synthetic provider A binding"]
+  C --> B["Synthetic provider B binding"]
+  A --> A1["Mappings, rights and recovery for A"]
+  B --> B1["Mappings, rights and recovery for B"]

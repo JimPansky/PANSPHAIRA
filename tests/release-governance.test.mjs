@@ -17,12 +17,13 @@ test("DOC-AI-AC01 current entry points distinguish synthetic scoring from the re
   const readme = readFileSync(join(ROOT, "README.md"), "utf8");
   const provingGround = readFileSync(join(ROOT, "docs/INCOMING-INVOICE-PROVING-GROUND.md"), "utf8");
   const history = readFileSync(join(ROOT, "docs/evidence/PS360-SOURCE-CLOSURE-v1.md"), "utf8");
-  assert.match(readme, /Current AP-03: synthetic extraction scoring harness/);
-  assert.match(readme, /real OCR\/Document-AI pilot remains separate/);
+  assert.match(readme, /synthetic invoice example/);
+  assert.match(readme, /there is no released executable variant for it yet/);
+  assert.doesNotMatch(readme, /(?:released|proven|delivered) OCR model/i);
   assert.match(provingGround, /→ Synthetic extraction scoring harness/);
   assert.doesNotMatch(provingGround, /→ Document-AI extraction/);
   assert.match(history, /historical issue title; synthetic scoring, not model-quality evidence/);
-  for (const text of [readme, provingGround, history]) {
+  for (const text of [provingGround, history]) {
     assert.ok(text.includes("https://github.com/JoFe2/PANSPHAIRA/issues/378"));
   }
 });
@@ -508,7 +509,7 @@ test("public release builder binds its exact file count to the manifest", () => 
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), count);
-  assert.equal(count, 1728);
+  assert.equal(count, 1741);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -556,7 +557,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1728, "reconciled public count is the actual final manifest count");
+  assert.equal(publicCount, 1741, "R1 adds thirteen public explanation/diagram files to the retained manifest");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
@@ -607,63 +608,39 @@ test("README presents governed adaptability and evidence-driven improvement with
   const incomingInvoice = readFileSync(join(ROOT, "docs", "INCOMING-INVOICE-PROVING-GROUND.md"), "utf8");
   const koFi = readFileSync(join(ROOT, "assets", "support", "ko-fi.svg"), "utf8");
   const buyMeACoffee = readFileSync(join(ROOT, "assets", "support", "buy-me-a-coffee.svg"), "utf8");
-  const words = readme.replace(/<[^>]+>/g, " ").trim().split(/\s+/);
-  const h2s = readme.match(/^## /gm) ?? [];
 
-  assert.match(readme, /An open, knowledge-driven operating system for governed,\s+adaptable AI ecosystems\./);
-  assert.match(readme, /Governed by default\. Adaptable by design\. Improved through evidence\./);
+
+  // R1 is a byte-fixed, benefit-led entry route, not another generic rewrite.
+  assert.equal(createHash("sha256").update(readme).digest("hex"), "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f");
   assert.match(readme, /^# PanSphaira$/m);
+  assert.match(readme, /Enterprise software that adapts to the way your business works/);
   assert.match(readme, /srcset="assets\/brand\/pansphaira-icon-negative\.svg"/);
   assert.match(readme, /srcset="assets\/brand\/pansphaira-icon-positive\.svg"/);
-  assert.match(readme, /alt="PanSphaira geometric icon of seven connected circles"/);
-  assert.match(readme, /src="assets\/diagrams\/layers\/04-application-hierarchy-blueprint\.png"/);
-  assert.match(readme, /alt="PanSphaira application hierarchy with four shared macro layers as rows, Incoming Invoice, Connected BI, and Provider Adaptation as columns, and a bottom-up evidence axis\."/);
-  assert.doesNotMatch(readme, /src="assets\/diagrams\/layers\/02-control-architecture-v3\.png"/);
-  assert.doesNotMatch(readme, /assets\/diagrams\/layers\/01-product-canon-v3\.(?:png|svg)/);
-  assert.doesNotMatch(readme, /assets\/diagrams\/layers\/03-crm-agent-gateway-owner-erp-readback-v3\.(?:png|svg)/);
-  assert.match(readme, /<details>\s*<summary>Accessible hierarchy description<\/summary>/);
+  assert.match(readme, /alt="PanSphaira: seven connected circles"/);
   assert.doesNotMatch(readme, /^\s*Text fallback:/im);
   assert.doesNotMatch(readme, /assets\/brand\/chimpmaera-(?:master|negative)\.(?:png|svg)/);
   assert.doesNotMatch(readme, /(?:youtu\.be\/|youtube\.com\/)/);
-  assert.match(readme, /\*\*Status:\*\* \[latest public evidence release\]\(https:\/\/github\.com\/JoFe2\/PANSPHAIRA\/releases\/latest\)/);
-  assert.match(readme, /proof of concept · Linux x86_64 · \[Apache-2\.0\]\(LICENSE\)/);
-  assert.ok(readme.indexOf("## Adaptive Knowledge Engineering") < readme.indexOf("## Applications"));
-  assert.ok(readme.indexOf("## Applications") < readme.indexOf("## Proof today"));
-  assert.ok(readme.indexOf("## Proof today") < readme.indexOf("## Quickstart"));
-  assert.ok(readme.indexOf("## Evidence and scope") < readme.indexOf("## Releases"));
+  assert.ok(readme.indexOf("## Applications") < readme.indexOf("## How the pieces fit together"));
+  assert.ok(readme.indexOf("## What is available, and what comes next?") < readme.indexOf("## Quickstart"));
   assert.match(readme, /\*\*Adaptive Knowledge Engineering\*\*/);
-  assert.match(readme, /Adapt once\. Validate it\. Reuse it everywhere it fits\./);
-  assert.match(readme, /Solve → Validate → Package as Knowledge → Share → Reuse → Improve/);
-  assert.match(readme, /Share what you know\. Expand what everyone can build\./);
-  assert.match(readme, /Every integration can teach the system how to\s+adapt the\s+next one—without\s+silently expanding authority/);
-  assert.match(readme, /open-ended,\s+user-need-driven option space/);
-  assert.match(readme, /unverified knowledge record may exist without becoming an authoritative\s+default/);
-  assert.match(readme, /Adapt any process\. Prove what works\./);
-  // PS360 source closure: the stale ERV WIP marker is replaced by the
-  // proven local-synthetic status with the exact immutable public proof
-  // and release links after the public #366 NARROW_GO verdict.
-  assert.match(readme, /`PROVEN_LOCAL_SYNTHETIC_POC · NARROW_GO · LOCAL SYNTHETIC`/);
-  assert.doesNotMatch(readme, /WORK IN PROGRESS · PLANNED · SHORT-TERM PROOF/);
-  assert.doesNotMatch(readme, /WORK IN PROGRESS/);
+  assert.match(readme, /explicit controls outside the agent determine what may run/);
+  assert.match(readme, /General end-to-end adaptation[\s\S]*development direction, not an established product capability/);
+  assert.match(readme, /Conceptual model, not a generally automated pipeline/);
+  assert.match(readme, /Knowing how an operation works is separate from having permission/);
+  assert.match(readme, /Each contribution still needs its own applicability and evidence/);
+  assert.match(readme, /Source, runnable packaging and execution evidence are different identities/);
+  assert.match(readme, /Latest label is not itself a promise of an installable archive/);
   assert.match(readme, /releases\/tag\/ap-06-frozen-adapted-erv-proof-probe-with-narrow-go-verdict-issue-366-95ecd4d587d9/);
-  assert.match(readme, /raw\.githubusercontent\.com\/JoFe2\/PANSPHAIRA\/ae765100ac731b519906bacee5ce02dbeb2680d9\/verification\/incoming-invoice-ap06-proof-probe-v1\.json/);
-  assert.match(readme, /`NARROW_GO` verdict/);
-  assert.match(readme, /resolves `MATCHED`\s+through the released core/);
-  assert.match(readme, /200-bps\s+tolerance has no released executable variant and stays typed `UNKNOWN`/);
-  assert.match(readme, /not\s+a\s+proven 200-bps execution or arbitrary adaptability/);
-  // The requested 200-bps variant must never be presented as a released,
-  // supported or proven execution.
-  assert.doesNotMatch(readme, /200-bps (?:tolerance|variant) is (?:released|supported|proven)/i);
-  assert.match(readme, /PanSphaira is building a governed path from individual needs/);
-  assert.doesNotMatch(readme, /PanSphaira turns individual needs/);
-  assert.doesNotMatch(readme, /It turns these inputs into a Capability or Process Blueprint/);
-  assert.match(readme, /github\.com\/JoFe2\/PANSPHAIRA\/issues\/360/);
-  for (const issue of [361, 362, 363, 364, 365, 366]) {
-    assert.match(readme, new RegExp(`github\\.com/JoFe2/PANSPHAIRA/issues/${issue}`));
-  }
-  assert.doesNotMatch(readme, /Remove this work-in-progress marker/);
-  assert.match(readme, /docs\/INCOMING-INVOICE-PROVING-GROUND\.md/);
-  assert.match(readme, /https:\/\/github\.com\/JoFe2\/KaleidoSphere/);
+  assert.match(readme, /there is no released executable variant for it yet/);
+  assert.match(readme, /new independent release does not automatically qualify a new pairing/);
+  assert.match(readme, /two local synthetic provider bindings/);
+  assert.match(readme, /fictional CRM\/ERP workflow/);
+  assert.match(readme, /fictional data, not production systems or real business records/);
+  const applications = readFileSync(join(ROOT, "docs/use-cases/index.md"), "utf8");
+  assert.match(applications, /baseline reaches `MATCHED` through the released core/);
+  assert.match(applications, /200-bps tolerance \(2%\) has no released executable variant and remains `UNKNOWN`/);
+  assert.doesNotMatch(applications, /200-bps (?:tolerance|variant) is (?:released|supported|proven)/i);
+  assert.match(applications, /github\.com\/JoFe2\/PANSPHAIRA\/issues\/378/);
   assert.match(hierarchySource, /ROWS · SHARED HIERARCHY/);
   assert.match(hierarchySource, /COLUMNS · APPLICATION-SPECIFIC INSTANTIATIONS/);
   assert.match(hierarchySource, /t=q\.get\('theme'\)\|\|'blueprint'/);
@@ -674,14 +651,10 @@ test("README presents governed adaptability and evidence-driven improvement with
   assert.doesNotMatch(incomingInvoice, /Product release \| None/);
   assert.match(incomingInvoice, /The general end-to-end product is\s+not delivered/);
   assert.match(incomingInvoice, /Work-package specifications \| `6\/6` frozen and executed/);
-  assert.match(incomingInvoice, /Public AP implementation issues \| `6\/6` open/);
+  assert.match(incomingInvoice, /Public AP implementation issues \|[^\n]*`6\/6` closed\/completed/);
   // PS373: ERV setup-agent dialogue and baseline-vs-adapted variant proof.
-  // README teaser states the short-term proof adds a bounded setup-agent
-  // dialogue that configures an altered ERV requirement by reusing existing
-  // capability/process variants (without claiming it is delivered).
-  assert.match(readme, /bounded setup-agent dialogue/);
-  assert.match(readme, /reusing existing\s+capability\/process variants/);
-  assert.match(readme, /configure an altered ERV requirement/);
+  // The detailed setup pipeline remains in its proof document; R1 links it
+  // through the applications route without claiming general delivery.
   // The ERV doc documents the setup pipeline.
   assert.match(incomingInvoice, /requirement\s*→\s*clarification dialogue/);
   assert.match(incomingInvoice, /versioned configuration delta/);
@@ -733,8 +706,8 @@ test("README presents governed adaptability and evidence-driven improvement with
   assert.match(incomingInvoice, /github\.com\/JoFe2\/KaleidoSphere\/issues\/157/);
   assert.match(incomingInvoice, /does not gate core use/);
   assert.doesNotMatch(readme, /\b(?:infinite|one-click|minutes?|hours?|production-ready)\b/i);
-  assert.ok(words.length >= 600 && words.length <= 1000, `README_WORD_COUNT:${words.length}`);
-  assert.ok(h2s.length <= 8, `README_H2_COUNT:${h2s.length}`);
+  // DOC-README-03 explicitly has no arbitrary word limit; exact R1 bytes
+  // and the independently inspected reading order own presentation acceptance.
 
   assert.match(diagram, /role="img" aria-labelledby="caged-title caged-desc"/);
   assert.match(diagram, /<title id="caged-title">/);
@@ -802,9 +775,9 @@ test("release governance negative probes fail closed", async (t) => {
   const probes = [
     ["visible README text fallback", "PUBLIC_DOC_UNENCAPSULATED_FALLBACK_LABEL:README.md", (root) => append(root, "README.md", "Text fallback: technical architecture copy")],
     ["visible public-doc placeholder", "PUBLIC_DOC_UNENCAPSULATED_FALLBACK_LABEL:docs/index.md", (root) => append(root, "docs/index.md", "Placeholder: replace this architecture explanation")],
-    ["empty HTML image alt", "PUBLIC_DOC_IMAGE_ALT_UNUSABLE:README.md", (root) => replace(root, "README.md", "alt=\"PanSphaira application hierarchy with four shared macro layers as rows, Incoming Invoice, Connected BI, and Provider Adaptation as columns, and a bottom-up evidence axis.\"", "alt=\"\"")],
+    ["empty HTML image alt", "PUBLIC_DOC_IMAGE_ALT_UNUSABLE:README.md", (root) => replace(root, "README.md", "alt=\"PanSphaira: seven connected circles\"", "alt=\"\"")],
     ["empty Markdown image alt", "PUBLIC_DOC_IMAGE_ALT_UNUSABLE:README.md", (root) => append(root, "README.md", "![](assets/diagrams/caged-agent-gateway-constellation.svg)")],
-    ["README version-bound release link", "README_STABLE_RELEASE_NAVIGATION_MISSING", (root) => replace(root, "README.md", "[Latest public evidence release](https://github.com/JoFe2/PANSPHAIRA/releases/latest)", "[Version-bound release](https://github.com/JoFe2/PANSPHAIRA/releases/tag/v0.1.0)")],
+    ["README version-bound release link", "README_STABLE_RELEASE_NAVIGATION_MISSING", (root) => replace(root, "README.md", "[release history](https://github.com/JoFe2/PANSPHAIRA/releases)", "[Version-bound release](https://github.com/JoFe2/PANSPHAIRA/releases/tag/v0.1.0)")],
     ["README volatile release tuple", "README_VOLATILE_RELEASE_TUPLE_DENIED", (root) => append(root, "README.md", "release=v0.2.0-poc.20260825.1\narchive=cm-product-increment-rc-20260825-canonical-number.tar.gz\ncd cm-product-increment-rc-20260825-canonical-number")],
     ["Quickstart stale duplicate release tuple", "PUBLIC_QUICKSTART_RELEASE_TUPLE_STALE:docs/QUICKSTART.md", (root) => append(root, "docs/QUICKSTART.md", "release=v0.2.0-poc.20260821.1\narchive=cm-product-increment-rc-20260821-adaptive-evidence-controller.tar.gz\ncd cm-product-increment-rc-20260821-adaptive-evidence-controller")],
     ["release archive declaration drift", "PUBLIC_QUICKSTART_RELEASE_TUPLE_STALE:docs/QUICKSTART.md", (root) => { const p = join(root, "release/governance.json"); const j = JSON.parse(readFileSync(p)); j.currentRelease.assetManifest.declares = "other.tar.gz"; writeFileSync(p, JSON.stringify(j)); }],
@@ -812,8 +785,8 @@ test("release governance negative probes fail closed", async (t) => {
     ["Quickstart stale increment prose", "PUBLIC_QUICKSTART_RELEASE_TUPLE_STALE:docs/QUICKSTART.md", (root) => replace(root, "docs/QUICKSTART.md", "canonical-number hardening", "adaptive-evidence controller")],
     ["README indented release tuple", "README_VOLATILE_RELEASE_TUPLE_DENIED", (root) => append(root, "README.md", "```sh\n  release=v0.2.0-poc.20260825.1\n  archive=cm-product-increment-rc-20260825-canonical-number.tar.gz\n  cd cm-product-increment-rc-20260825-canonical-number\n```")],
     ["missing Quickstart document", "PUBLIC_QUICKSTART_MISSING:docs/QUICKSTART.md", (root) => rmSync(join(root, "docs/QUICKSTART.md"))],
-    ["README Daily identity", "README_ACTIVE_DAILY_IDENTITY_DENIED", (root) => replace(root, "README.md", "Release pages own included capabilities", "Today's Daily snapshot owns included capabilities")],
-    ["Knowledge OS promoted as current maturity", "README_POC_POSITIONING_MISSING", (root) => replace(root, "README.md", "broader direction is not a claim of current", "broader direction is current")],
+    ["README Daily identity", "README_ACTIVE_DAILY_IDENTITY_DENIED", (root) => replace(root, "README.md", "Use the [release history]", "Today's Daily snapshot owns included capabilities. Use the [release history]")],
+    ["Knowledge OS promoted as current maturity", "README_POC_POSITIONING_MISSING", (root) => replace(root, "README.md", "remains a development direction, not an established product capability", "is an established product capability")],
     ["root Security static Latest claim", "ROOT_SECURITY_VERSION_BINDING_DENIED", (root) => append(root, "SECURITY.md", "The latest tagged release is v9.9.9.")],
     ["root Security version-bound release link", "ROOT_SECURITY_STABLE_RELEASE_NAVIGATION_MISSING", (root) => replace(root, "SECURITY.md", "https://github.com/JoFe2/PANSPHAIRA/releases/latest", "https://github.com/JoFe2/PANSPHAIRA/releases/tag/v9.9.9")],
     ["root Support product-version binding", "ROOT_SUPPORT_VERSION_BINDING_DENIED", (root) => replace(root, "SUPPORT.md", "PanSphaira is provided", "PanSphaira v9.9 is provided")],

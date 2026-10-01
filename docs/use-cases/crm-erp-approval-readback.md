@@ -24,7 +24,7 @@ crossings visible with fictional EspoCRM and Dolibarr records on loopback.
    is not success.
 
 The scoped claim and its negative evidence are `CM-SEC-007` in
-[Security Assurance](../SECURITY-ASSURANCE.md#claim-evidence-matrix). The
+[Security Assurance](../SECURITY-ASSURANCE.md#locally-validated-synthetic-evidence). The
 [SAFE_GUIDED proof](../SECURE-DEFAULT-PROOF.md) checks the declared authority
 path, while the [architecture](../ARCHITECTURE.md) identifies the trusted
 boundaries.
