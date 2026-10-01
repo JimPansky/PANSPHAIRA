@@ -12,6 +12,7 @@ const cases = [
   'offline-migration.test.py',
   'retained-rescue.test.py',
   'dependency-boundaries.test.py',
+  'distribution-envelope.test.py',
 ];
 const environment = Object.fromEntries(['PATH', 'LANG', 'LC_ALL', 'TMPDIR']
   .filter((key) => process.env[key] !== undefined).map((key) => [key, process.env[key]]));

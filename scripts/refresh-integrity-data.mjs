@@ -1119,6 +1119,48 @@ pan464Node.inputs = pan464Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan464:test")) repositoryIntegrityNode.ownedTests.push("npm run pan464:test");
 dag.graphVersion = 64;
 
+// PAN465 owns the additive signature/slot/journal/distribution boundary only.
+// Historical PAN463/PAN464 nodes and their hard native gates remain unchanged.
+const pan465Inputs = [
+  ["scripts/offline-artifact.py", "SOURCE"],
+  ["scripts/offline-rescue.py", "SOURCE"],
+  ["scripts/offline-updater.py", "SOURCE"],
+  ["scripts/offline-native-profile.py", "SOURCE"],
+  ["scripts/build-offline-native-profile.py", "SOURCE"],
+  ["scripts/build-offline-release.py", "SOURCE"],
+  ["scripts/verify-offline-release.py", "VALIDATOR"],
+  ["scripts/run-pan465-tests.mjs", "VALIDATOR"],
+  ["tests/pan465/offline-artifact.test.py", "VALIDATOR"],
+  ["tests/pan465/offline-updater.test.py", "VALIDATOR"],
+  ["tests/pan465/offline-migration.test.py", "VALIDATOR"],
+  ["tests/pan465/retained-rescue.test.py", "VALIDATOR"],
+  ["tests/pan465/dependency-boundaries.test.py", "VALIDATOR"],
+  ["tests/pan465/distribution-envelope.test.py", "VALIDATOR"],
+  ["tests/fixtures/pan465/updater-v1/source.json", "FIXTURE"],
+  ["tests/fixtures/pan465/updater-v1/offline-artifact.py", "FIXTURE"],
+  ["tests/fixtures/pan465/updater-v1/offline-rescue.py", "FIXTURE"],
+  ["tests/fixtures/pan465/updater-v1/offline-updater.py", "FIXTURE"],
+  ["docs/architecture/pan465-offline-profile.txt", "DERIVED_EVIDENCE"],
+];
+let pan465Node = dag.nodes.find(({ id }) => id === "pan465-offline-updater-v1");
+if (pan465Node === undefined) {
+  pan465Node = {
+    id: "pan465-offline-updater-v1", dependsOn: ["pan464-retained-pair-v1"], inputs: [],
+    ownedTests: ["npm run pan465:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Protected external key/tool identity and actual OpenSSL signatures reject tampering, signer-role mismatch, expiry and installed-version rollback offline before slot/journal mutation.",
+      "Actual executable slots and v1-to-v2 journal migration retain historical bytes; standalone rescue observes exact interruption state without main-application imports, ownership adoption or replay.",
+      "Authentic Git bundles and locked dependency bytes drive the existing retained native profile; selected-slot code is byte-bound to actual target objects and retains original native authority checks.",
+      "Closed distribution membership binds sanitized actual native receipts to the signed artifact; key/grants/state are never copied and bundled PEM never becomes operator trust automatically.",
+      "Component tests and composition success are not native-distribution, independent acceptance, exact CI or public release evidence; SIGKILL does not qualify power loss and STABLE does not audit all historical signatures.",
+    ],
+  };
+  dag.nodes.push(pan465Node);
+}
+pan465Node.inputs = pan465Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan465:test")) repositoryIntegrityNode.ownedTests.push("npm run pan465:test");
+dag.graphVersion = 65;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1151,6 +1193,7 @@ for (const line of readFileSync(path.join(root, "release/public-files.manifest")
 }
 for (const [inputPath] of pan463Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan464Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan465Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

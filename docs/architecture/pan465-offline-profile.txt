@@ -1,0 +1,74 @@
+PAN465 offline retained-native profile
+
+Scope
+  Runnable local synthetic retained PANSPHAIRA/KaleidoSphere qualification.
+  The archive includes real source/target/consumer Git bundles and locked local
+  dependency bytes. It is not a production deployment, an organization PKI,
+  a whole-host sandbox, a registry-signature assertion or power-loss evidence.
+  The updater-v1 payload is an actual frozen executable baseline, not a claimed
+  previous public release. v2 adds actual retained journal migration and the
+  fixed native dispatcher. Historical bundle/slot/journal bytes are preserved.
+
+Prerequisites
+  Linux x64, Python 3.11, OpenSSL, Git, Node 24.19.0 (ABI 137), Docker daemon and
+  exact preloaded qualification image recorded in distribution.json.
+  The image is built using tests/pan464/runtime/Dockerfile in the authentic
+  target checkout. Its Node/Superset base images are digest-pinned. Preloading
+  is a separately authorized online provisioning step, never an offline pull
+  fallback. The Docker socket is explicit trusted host authority, not a sandbox.
+  Isolate qualification with synthetic data, a private owned root and a network
+  namespace allowing loopback only. Native jobs additionally use network none.
+
+Trust and bootstrap
+  Obtain the archive SHA256 and release-public.pem fingerprint independently
+  from the verified release/maintainer channel. The checksum sidecar or bundled
+  key alone does not establish trust. Do not let the archive choose its own key.
+  Place the independently pinned public key outside the untrusted archive.
+  Create a protected operator trust.json outside the bundle with these fields:
+    schema: pansphaira.offline-trust/v1
+    profile: local-retained-pair
+    openssl: absolute independently protected OpenSSL path
+    opensslSha256: SHA256 of that binary
+    releaseKey: absolute independently protected public-key path
+    releaseKeySha256: independently pinned SHA256 of public-key PEM bytes
+    minimumVersion: 1
+  Protect the OS, Python, Git and OpenSSL's dynamically loaded libraries too.
+  A pinned binary hash alone does not establish their whole-runtime integrity.
+  Bootstrap Python scripts must be acquired via the trusted source/release;
+  executing an unauthenticated verifier is not a trust-bootstrap solution.
+
+Commands (replace placeholders with absolute owned paths)
+  From the independently trusted repository verifier:
+    python3 -B scripts/verify-offline-release.py --archive ARCHIVE --sha256 EXPECTED_SHA --trust EXTERNAL_TRUST --output NEW_PRIVATE_DISTRIBUTION
+  Verification checks the exact external archive digest, closed membership,
+  inventory/checksums, both actual signatures and protected external key/tool.
+  It does not install or authorize native work.
+  Create INSTALLATION as an empty owner-only mode0700 directory, then:
+    python3 -B DISTRIBUTION/scripts/offline-updater.py init --root INSTALLATION --bundle DISTRIBUTION/bundles/baseline --trust EXTERNAL_TRUST
+    python3 -B INSTALLATION/current/scripts/offline-updater.py apply --root INSTALLATION --bundle DISTRIBUTION/bundles/native
+    python3 -B DISTRIBUTION/scripts/offline-rescue.py --root INSTALLATION
+  The selected executable is physically switched and exec'ed. Journal v1
+  records remain intact; v2 retains a byte-bound v1 index and partial migrations.
+  A pending operation requires explicit resume with its exact operation digest:
+    python3 -B DISTRIBUTION/scripts/offline-updater.py resume --root INSTALLATION --operation EXACT_PENDING_METADATA_SHA
+  No effect replay, ownership adoption, automatic rollback or automatic restore.
+  Native execution uses only the installed signed selected dispatcher:
+    python3 -B INSTALLATION/current/scripts/offline-updater.py run-native-profile --root INSTALLATION --owned-root NEW_PRIVATE_NATIVE_WORK --permission-file EXTERNAL_SYNTHETIC_PERMISSION --output NEW_NATIVE_RECEIPT
+  Permission must bind the actual retainedPairPlanV1 planDigest, executor, fence,
+  validity interval and revoke state. It remains outside the release. The existing
+  PAN453/PAN463/PAN464 native admission, original paired runner and protected
+  business checks are preserved; a signature alone grants no business permission.
+
+Evidence and limits
+  receipts/native-execution.json is a closed sanitized projection of actual
+  observed execution, bound to this exact signed artifact/metadata and source
+  pair. distribution.json retains the consumed original receipt digest. Local
+  raw command records remain separate; no private keys/grants/state are shipped.
+  Release-associated transition/admission receipts remain distinct evidence.
+  STABLE covers the selected executable slot and journal, NOT every historical
+  artifact/slot or cryptographic validity of all retained signatures. The native
+  dispatcher independently re-admits its current signed bundle before work.
+  Retained native rescue is observational and can require fresh native readback.
+  SIGKILL tests are process-interruption evidence, not storage/power-loss proof.
+  No release, CI, independent semantic review or original-criterion completion
+  is inferred merely because archive composition or checksum verification passed.

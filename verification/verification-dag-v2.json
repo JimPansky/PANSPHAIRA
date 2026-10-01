@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 64,
+  "graphVersion": 65,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -4771,7 +4771,7 @@
         {
           "path": "docs/RELEASE-GOVERNANCE.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "393389a34ba5ac375464dea2505f7556685751fbb6ac6790ac2c0b27391a376c"
+          "sha256": "d3bdda9d78aef688e215b5879b6e1bca95a5b8bfb0f56aee2c14a5732634ebb2"
         },
         {
           "path": "README.md",
@@ -4781,7 +4781,7 @@
         {
           "path": "release/governance.json",
           "role": "CONTRACT",
-          "sha256": "7e0ad52077d0cb3973cc02b669325ea083092c069dc95f813be16bf2dd8b9e82"
+          "sha256": "a0885f810bbbadca8dc6c6cafbb0e8d163fcb1bbe6fcc99ae4dae571f7a66219"
         },
         {
           "path": "schemas/contracts/incoming-invoice-adaptive-ui-v1.schema.json",
@@ -4791,7 +4791,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "536856e4d732a13d3a259f235b01e3e5b8545079d8a224693c5b3f53dc99738f"
+          "sha256": "20fe8bbc93ae312902a0fe55972013f712384450b1f511206a36effc67f0d241"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4811,7 +4811,7 @@
         {
           "path": "scripts/verify-release-governance.mjs",
           "role": "SECURITY",
-          "sha256": "8cebdcc5c273468241035280dac5a1179441b3ac4f5e9e6c9063b056f13621ff"
+          "sha256": "535321485615e41559e44b15821b6e83a454fc179ee9fe673816b32767bb4f22"
         },
         {
           "path": "scripts/verify-supply-chain.mjs",
@@ -4826,7 +4826,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "f19cb565de2b2b0373b49df5fec018d22b144a528065067be6b3277c3533c737"
+          "sha256": "8bb19c3f30e362e558563415494c4dc0af16646cfa67e40fcf324b38ac1a1cd0"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4916,7 +4916,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "0633aaf985b25f9e810e5cd8ab1108a6215ebc99ff1613d6502a325cfa2972c2"
+          "sha256": "9cfc33485c82418373199891ff143ac0b034545677518b8046c1531c245e181c"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -4926,7 +4926,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "9319a277a5281c262a765e2cf69981911a55f9bdfb087435f18497a0f66eced9"
+          "sha256": "e2f4079560d919f814db671cbbbfccba8b698685f28067fdcaeb3a4b1ce1e755"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -4988,7 +4988,8 @@
         "npm run pan461:test",
         "npm run pan462:test",
         "npm run pan463:test",
-        "npm run pan464:test"
+        "npm run pan464:test",
+        "npm run pan465:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5543,7 +5544,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "eb92ccb43e0e1f91776030a9eb76a6cdc094be7e880cf21bc36b4012d1fe2899"
+          "sha256": "2ab7138c59835060b2af708713882ea718aaecdb629eff3ede71f6d32c7f7bdc"
         },
         {
           "path": "package-lock.json",
@@ -6168,7 +6169,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "53c03c866d4c02c39b7e1eca55aebe3f0c56bd2f564002d6208ef0974b6b8f9e"
+          "sha256": "8f215dac13e78082eabb90cb7096ca6f180144c081eb95eb4b7c299ec90cd7dd"
         }
       ],
       "ownedTests": [
@@ -7256,6 +7257,121 @@
       ],
       "riskClass": "HIGH",
       "globalInvalidation": false
+    },
+    {
+      "id": "pan465-offline-updater-v1",
+      "dependsOn": [
+        "pan464-retained-pair-v1"
+      ],
+      "inputs": [
+        {
+          "path": "scripts/offline-artifact.py",
+          "role": "SOURCE",
+          "sha256": "bcc1e7337f6a5ea32e73c146224b5f51b079b673e27cee5126321cbd15f8435a"
+        },
+        {
+          "path": "scripts/offline-rescue.py",
+          "role": "SOURCE",
+          "sha256": "69204465dde7caa869075ee9178e92e0c2f26f9ec6b4b3b8be63c471e69e77bb"
+        },
+        {
+          "path": "scripts/offline-updater.py",
+          "role": "SOURCE",
+          "sha256": "1cbdcefb088c9f35e25a7fbb0dbfad58cec4f4e82d020d993f3aa81b7970a858"
+        },
+        {
+          "path": "scripts/offline-native-profile.py",
+          "role": "SOURCE",
+          "sha256": "50d945f6b04e5b23854b590da130612ba07e963681a41c05b2d97ce132d4dcb8"
+        },
+        {
+          "path": "scripts/build-offline-native-profile.py",
+          "role": "SOURCE",
+          "sha256": "fdce43a3eabf1d57c1d9ce2e78d3ec9bc061f7151feb222d3537e393989084eb"
+        },
+        {
+          "path": "scripts/build-offline-release.py",
+          "role": "SOURCE",
+          "sha256": "0d324ce33e9c32254d6b229a13b879609fbaecc9150149627f3b41bf31aef489"
+        },
+        {
+          "path": "scripts/verify-offline-release.py",
+          "role": "VALIDATOR",
+          "sha256": "580a036881dc7c675c952e2bd6f5d94badcf27bdbd482f3d5b747a52641bf740"
+        },
+        {
+          "path": "scripts/run-pan465-tests.mjs",
+          "role": "VALIDATOR",
+          "sha256": "18d9d1d36e5f5ed955e7757a81f35e7be99c9d549950a89f3f0c0ed6dbe4fd84"
+        },
+        {
+          "path": "tests/pan465/offline-artifact.test.py",
+          "role": "VALIDATOR",
+          "sha256": "30aadb29d6674347acb9a6e4934f331a3417ff851583a458370f9be33ffcfe4c"
+        },
+        {
+          "path": "tests/pan465/offline-updater.test.py",
+          "role": "VALIDATOR",
+          "sha256": "be79be94ca6c115c2f0d3d1afd67816a4ac6f305ec43ad46d22085c3c6a2a442"
+        },
+        {
+          "path": "tests/pan465/offline-migration.test.py",
+          "role": "VALIDATOR",
+          "sha256": "1795284a269808b71fb3fc93e82cf31ca58ccd15ce1af3658b90cfac8281fa2f"
+        },
+        {
+          "path": "tests/pan465/retained-rescue.test.py",
+          "role": "VALIDATOR",
+          "sha256": "a190eab7864c75ccc4f67cbd71404a3c6b150c7ad65761d0c027435ee368ed51"
+        },
+        {
+          "path": "tests/pan465/dependency-boundaries.test.py",
+          "role": "VALIDATOR",
+          "sha256": "d24fdaaeba9fb4c221f1bcb6514829df10bacefe7fcce3b017a3d3ee507568b0"
+        },
+        {
+          "path": "tests/pan465/distribution-envelope.test.py",
+          "role": "VALIDATOR",
+          "sha256": "5ad05e27ebf22e56330b29197303c18ea20946a31c77e86a5b4cee79aaf3f4f3"
+        },
+        {
+          "path": "tests/fixtures/pan465/updater-v1/source.json",
+          "role": "FIXTURE",
+          "sha256": "4c4aca5dcd1a1dca99c4d82848e913ddabc9cf7a2f754955d3f5460bce05cfa2"
+        },
+        {
+          "path": "tests/fixtures/pan465/updater-v1/offline-artifact.py",
+          "role": "FIXTURE",
+          "sha256": "bcc1e7337f6a5ea32e73c146224b5f51b079b673e27cee5126321cbd15f8435a"
+        },
+        {
+          "path": "tests/fixtures/pan465/updater-v1/offline-rescue.py",
+          "role": "FIXTURE",
+          "sha256": "7220dae5af045fe27bbdd83b14cfacce3f3239ed593c0ee82181c5f293cb5208"
+        },
+        {
+          "path": "tests/fixtures/pan465/updater-v1/offline-updater.py",
+          "role": "FIXTURE",
+          "sha256": "076d5c4a970e9546e39df2195b51e04f662953ed5285ac4a614a9a9016df30c5"
+        },
+        {
+          "path": "docs/architecture/pan465-offline-profile.txt",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "b16ae814efd8008659b526b873b2deedf80761cf1796a02c202dd8e92e14edb3"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan465:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Protected external key/tool identity and actual OpenSSL signatures reject tampering, signer-role mismatch, expiry and installed-version rollback offline before slot/journal mutation.",
+        "Actual executable slots and v1-to-v2 journal migration retain historical bytes; standalone rescue observes exact interruption state without main-application imports, ownership adoption or replay.",
+        "Authentic Git bundles and locked dependency bytes drive the existing retained native profile; selected-slot code is byte-bound to actual target objects and retains original native authority checks.",
+        "Closed distribution membership binds sanitized actual native receipts to the signed artifact; key/grants/state are never copied and bundled PEM never becomes operator trust automatically.",
+        "Component tests and composition success are not native-distribution, independent acceptance, exact CI or public release evidence; SIGKILL does not qualify power loss and STABLE does not audit all historical signatures."
+      ]
     }
   ]
 }

@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "4c1ffcc5df71002fa1a6a9658a0e9d5f7733d222ccc0905dc4c86d51c0df691e"
+        "sha256": "8bb19c3f30e362e558563415494c4dc0af16646cfa67e40fcf324b38ac1a1cd0"
       }
     ]
   },
@@ -371,6 +371,14 @@
       "fromSha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
       "toSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
       "reason": "Advance graph to v64 and bind the bounded PAN464 retained native pair, protected oracle, local-copy recovery, mandatory exact-head Docker workflow and reused native authorities; preserve every earlier byte obligation and hard gate."
+    },
+    {
+      "migrationId": "PAN465-OFFLINE-UPDATER/INTEGRITY-GENERATOR/V36",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 36,
+      "fromSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
+      "toSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
+      "reason": "Advance graph to v65 and own the bounded PAN465 external-trust signature, executable-slot/journal, authentic native bundle and closed distribution tests/guide without weakening retained native gates or any prior immutable byte obligation."
     }
   ],
   "scanScope": {
@@ -413,15 +421,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 752,
+    "filesScanned": 753,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 257,
     "importFiles": 256,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2070,
-    "ledgerUniquePaths": 2070
+    "ledgerEntries": 2089,
+    "ledgerUniquePaths": 2089
   },
   "profiles": [
     {
@@ -494,7 +502,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb"
+      "sha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1140,7 +1148,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
+      "sha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
       "basis": "profile-version-migration"
     },
     {
