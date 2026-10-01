@@ -1182,6 +1182,40 @@ for (const [inputPath, role] of readmeR1Inputs) {
 }
 if (!repositoryIntegrityNode.ownedTests.includes("npm run docs:test")) repositoryIntegrityNode.ownedTests.push("npm run docs:test");
 
+// LIFE-06: new bounded owner; the advisory CLI stays owned by PAN468 and the
+// unchanged native controller/workflow by PAN464. Neither pilot nor history
+// metadata grants execution, and the exact native CI remains separately hard.
+const pan466Inputs = [
+  ["docs/architecture/pan466-qualified-module-generations-v1.md", "DERIVED_EVIDENCE"],
+  ["src/pan466/module-lifecycle-descriptor.mjs", "SOURCE"],
+  ["src/pan466/module-lifecycle-check.mjs", "SOURCE"],
+  ["src/pan466/qualified-retained-module.mjs", "SOURCE"],
+  ["scripts/run-pan466-native-qualification.mjs", "VALIDATOR"],
+  ["tests/pan466/module-lifecycle-descriptor.test.mjs", "VALIDATOR"],
+  ["tests/pan466/module-lifecycle-check.test.mjs", "VALIDATOR"],
+  ["tests/pan466/qualified-module-binding.test.mjs", "VALIDATOR"],
+  ["tests/pan466/qualified-module-native.test.mjs", "VALIDATOR"],
+  ["tests/pan466/qualified-module-process.mjs", "VALIDATOR"],
+];
+let pan466Node = dag.nodes.find(({ id }) => id === "pan466-qualified-module-generations-v1");
+if (pan466Node === undefined) {
+  pan466Node = {
+    id: "pan466-qualified-module-generations-v1", dependsOn: ["pan468-impact-selection-v1", "pan464-retained-pair-v1"], inputs: [],
+    ownedTests: ["npm run pan466:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Actual module CLI keeps unowned changes and unknown consumers uncovered, retains migration-ID identity, proposes conflict-preserving three-way config and holds mismatched derived generations without dispatch or automatic authority.",
+      "Only bounded already-owned nonsemantic documentation with unchanged semantic/state/authority bindings can reuse proportionate CHECK_ONLY work; the pilot does not cover the whole repository.",
+      "The explicit fixed native module-use entry separately qualifies the accepted pair and rereads current compatibility plus the independently checked native grant before effects; history is actual observed content under a distinct read scope, never a new write grant.",
+      "Required exact-head native CI resumes the same live IPC-waiting PID across generation change, grant revocation and both, retaining historical reads while denying stale writes; independent positives execute real current and freshly rebound native writes.",
+      "Component/CLI checks do not replace native qualification, independent acceptance, exact CI or public release/readback; raw synthetic grants/history/state stay private and no scheduler, PKI, production or hostile-host claim is added.",
+    ],
+  };
+  dag.nodes.push(pan466Node);
+}
+pan466Node.inputs = pan466Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan466:test")) repositoryIntegrityNode.ownedTests.push("npm run pan466:test");
+dag.graphVersion = 67;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1215,6 +1249,7 @@ for (const line of readFileSync(path.join(root, "release/public-files.manifest")
 for (const [inputPath] of pan463Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan464Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan465Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan466Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

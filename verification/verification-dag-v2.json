@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 66,
+  "graphVersion": 67,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "32fad743c101317849f46e1efe36b8d9b2141933eb33944565ceb951d2613170"
+          "sha256": "4dc9e45690f1589a1e69494e197f716da4b2a4efa2cad5cdeadd5edd3cfdfa26"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "2a38c24009653de568ccc4de7981300261c5647010ef5e36a2645498a2b52d3d"
+          "sha256": "853a695ab1c9b48f412704eb30e477b015609af9d5d10fd59b738fc8e9c079a4"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "edd31bb31a3f1b97447e7234ebf79449ddc36aa564a9a6549a467b99f3c4a797"
+          "sha256": "71707875b5dcdd2b76bed55e74e66159e849cd48bc5a350f6573f1802399c050"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "f86ac3f99e291e01d4ecb331f61f5a95778741f27c2872b1d4d78fbce34cec2d"
+          "sha256": "d10b96f829926448c2694848d0e9f39c98b6f8bb95d91557b8605da657fb4322"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "319bfa9f63a35542f87fdcb5e101900d5fb0a4564bed32e70179f8df0618b0db"
+          "sha256": "f4a69a74a3abc9fc9d812192e234d1878f2c3f130f628c677811d8d304ccb719"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4906,7 +4906,7 @@
         {
           "path": "tests/docs-site.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "30457237ff593af3c546fa819bb8343747dcc369057be1de4cea3ae0c4e2dd10"
+          "sha256": "66038463f5ea7be551128b30ff5756c079a2116f4ce3ea6b55ad196ab7f56878"
         },
         {
           "path": "tests/fixtures/canonical-json-profile-base-obligations-v1.json",
@@ -4991,7 +4991,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f1d50183e36aa23aa09ae8435064bfdb57e166aa01ca78c769b932875e617243"
+          "sha256": "aba04df0038b822b3076ff09964c721e53568a0013559208c6f79314ae9b9dc9"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "cad2a8d9d72755808aeed856df100b3a5f5aac84e0262384c36ecc0da5e08f0f"
+          "sha256": "95d7d5232f33ab0337b72276becb286352dd487feba1bf9ba5e22a6b6df826d2"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5065,7 +5065,8 @@
         "npm run pan463:test",
         "npm run pan464:test",
         "npm run pan465:test",
-        "npm run docs:test"
+        "npm run docs:test",
+        "npm run pan466:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5620,7 +5621,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "2ab7138c59835060b2af708713882ea718aaecdb629eff3ede71f6d32c7f7bdc"
+          "sha256": "6632f02aa754769a9f8cf3b5bf4eb73240cee2e419eb9b21b6cefd94c37d915c"
         },
         {
           "path": "package-lock.json",
@@ -5980,7 +5981,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e9be56d7cfc7af2be6874342df7c15679f07007c3526d50b3fea315f03f5fa16"
+          "sha256": "68bde40619d0b4569a34cdc0e7a5e1c536967d7992bc4e8c2a884f3b2e723f54"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6245,7 +6246,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "df5bfa6819496fec539d34960e8b1f0c39218f59759673758bfcc3d43e26c5a6"
+          "sha256": "61b32c45cb67ac2377a6404f952c25516b8a32b47dd9af46f7a4b1d46daeafc5"
         }
       ],
       "ownedTests": [
@@ -6785,7 +6786,7 @@
         {
           "path": "scripts/module-contribution.mjs",
           "role": "VALIDATOR",
-          "sha256": "1f671c0dbbffc2e8d92138f7607462286179d8f5f29f1176baf12c4111066b0a"
+          "sha256": "b79d4639da9affc0cd17f1ab013236735bbf2fc0d80788dea72a34c0c464d74e"
         },
         {
           "path": "tests/module-contribution.test.mjs",
@@ -6826,7 +6827,7 @@
         {
           "path": "scripts/module-contribution.mjs",
           "role": "VALIDATOR",
-          "sha256": "1f671c0dbbffc2e8d92138f7607462286179d8f5f29f1176baf12c4111066b0a"
+          "sha256": "b79d4639da9affc0cd17f1ab013236735bbf2fc0d80788dea72a34c0c464d74e"
         },
         {
           "path": "src/pan469/contribution-views.mjs",
@@ -7278,7 +7279,7 @@
         {
           "path": ".github/workflows/retained-native-pair.yml",
           "role": "SOURCE",
-          "sha256": "ad9731b95c77fc57b962bccc90d4dc594fd3e91e7bc6c4940f486fb7ada3fdb7"
+          "sha256": "c0a28289a3202eddb6a5b034c27430b6e3b9a2add5dc4bb2fafa55e1ce2fb105"
         },
         {
           "path": "src/pan463/native-update-executor.mjs",
@@ -7447,6 +7448,77 @@
         "Authentic Git bundles and locked dependency bytes drive the existing retained native profile; selected-slot code is byte-bound to actual target objects and retains original native authority checks.",
         "Closed distribution membership binds sanitized actual native receipts to the signed artifact; key/grants/state are never copied and bundled PEM never becomes operator trust automatically.",
         "Component tests and composition success are not native-distribution, independent acceptance, exact CI or public release evidence; SIGKILL does not qualify power loss and STABLE does not audit all historical signatures."
+      ]
+    },
+    {
+      "id": "pan466-qualified-module-generations-v1",
+      "dependsOn": [
+        "pan468-impact-selection-v1",
+        "pan464-retained-pair-v1"
+      ],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan466-qualified-module-generations-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "f8cece85a2e52e4f0d1d358de9d6b73bfaf120c21aa2376842139bcc68e9ddff"
+        },
+        {
+          "path": "src/pan466/module-lifecycle-descriptor.mjs",
+          "role": "SOURCE",
+          "sha256": "88e89d2eb565259a8bb9c5dcdb2877034259c498640d3d413dc52f358b75086a"
+        },
+        {
+          "path": "src/pan466/module-lifecycle-check.mjs",
+          "role": "SOURCE",
+          "sha256": "ba3c65e8cd7d37abf53555369e9a70aa699a585e10c690f56fd3f0cabd1e3852"
+        },
+        {
+          "path": "src/pan466/qualified-retained-module.mjs",
+          "role": "SOURCE",
+          "sha256": "23a6032344532d60266f327341e29b699e25e620a3b1d1e0b89ec4e03ad49d1d"
+        },
+        {
+          "path": "scripts/run-pan466-native-qualification.mjs",
+          "role": "VALIDATOR",
+          "sha256": "3ff5cb04134187c29e56bf29f5f1f432cc23318f322405c4453a28853c8f8c91"
+        },
+        {
+          "path": "tests/pan466/module-lifecycle-descriptor.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "6dc98233a83d240b2d386d89d2cddc7de8d3958387dfb53e040a83f50cf5801a"
+        },
+        {
+          "path": "tests/pan466/module-lifecycle-check.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7c3b257f921cf3ac712588124a6f61b9dc9223d333cfc1def62aea341cb2ab02"
+        },
+        {
+          "path": "tests/pan466/qualified-module-binding.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "85242d6b0df30855e516a2a912af7e1668d54273853ed52656e51c0ec36e17a6"
+        },
+        {
+          "path": "tests/pan466/qualified-module-native.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "ed79a4dbaf386a34f01be15c59fe28656a30589556bd0b01f6690448139c3870"
+        },
+        {
+          "path": "tests/pan466/qualified-module-process.mjs",
+          "role": "VALIDATOR",
+          "sha256": "041c61233c28af36f95b73671c3263a7789376a3f7e0b5d8b3bc6677e0cda7d1"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan466:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Actual module CLI keeps unowned changes and unknown consumers uncovered, retains migration-ID identity, proposes conflict-preserving three-way config and holds mismatched derived generations without dispatch or automatic authority.",
+        "Only bounded already-owned nonsemantic documentation with unchanged semantic/state/authority bindings can reuse proportionate CHECK_ONLY work; the pilot does not cover the whole repository.",
+        "The explicit fixed native module-use entry separately qualifies the accepted pair and rereads current compatibility plus the independently checked native grant before effects; history is actual observed content under a distinct read scope, never a new write grant.",
+        "Required exact-head native CI resumes the same live IPC-waiting PID across generation change, grant revocation and both, retaining historical reads while denying stale writes; independent positives execute real current and freshly rebound native writes.",
+        "Component/CLI checks do not replace native qualification, independent acceptance, exact CI or public release/readback; raw synthetic grants/history/state stay private and no scheduler, PKI, production or hostile-host claim is added."
       ]
     }
   ]

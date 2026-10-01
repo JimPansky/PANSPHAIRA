@@ -509,7 +509,15 @@ test("public release builder binds its exact file count to the manifest", () => 
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), count);
-  assert.equal(count, 1741);
+  const life06Paths = [
+    "docs/architecture/pan466-qualified-module-generations-v1.md",
+    ...["module-lifecycle-descriptor", "module-lifecycle-check", "qualified-retained-module"].map(name => `src/pan466/${name}.mjs`),
+    "scripts/run-pan466-native-qualification.mjs",
+    ...["module-lifecycle-descriptor.test", "module-lifecycle-check.test", "qualified-module-binding.test", "qualified-module-native.test", "qualified-module-process"].map(name => `tests/pan466/${name}.mjs`),
+  ];
+  assert.equal(life06Paths.length, 10);
+  for (const path of life06Paths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
+  assert.equal(count, 1751);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -557,7 +565,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1741, "R1 adds thirteen public explanation/diagram files to the retained manifest");
+  assert.equal(publicCount, 1751, "LIFE-06 adds ten explicit source/test/guide files after the retained R1 manifest");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
