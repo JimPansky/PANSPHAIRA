@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "176995d8224ae6e5ae08666c20933ed3a1d399b01f04b53962249658a3fc4ce5"
+          "sha256": "32fad743c101317849f46e1efe36b8d9b2141933eb33944565ceb951d2613170"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
