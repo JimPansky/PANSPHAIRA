@@ -1742,3 +1742,14 @@ tests/fixtures/pan465/updater-v1/source.json	tests/fixtures/pan465/updater-v1/so
 tests/fixtures/pan465/updater-v1/offline-artifact.py	tests/fixtures/pan465/updater-v1/offline-artifact.py	0644
 tests/fixtures/pan465/updater-v1/offline-rescue.py	tests/fixtures/pan465/updater-v1/offline-rescue.py	0644
 tests/fixtures/pan465/updater-v1/offline-updater.py	tests/fixtures/pan465/updater-v1/offline-updater.py	0644
+# LIFE-06 bounded module-use implementation and executable qualification sources only.
+docs/architecture/pan466-qualified-module-generations-v1.md	docs/architecture/pan466-qualified-module-generations-v1.md	0644
+src/pan466/module-lifecycle-descriptor.mjs	src/pan466/module-lifecycle-descriptor.mjs	0644
+src/pan466/module-lifecycle-check.mjs	src/pan466/module-lifecycle-check.mjs	0644
+src/pan466/qualified-retained-module.mjs	src/pan466/qualified-retained-module.mjs	0644
+scripts/run-pan466-native-qualification.mjs	scripts/run-pan466-native-qualification.mjs	0644
+tests/pan466/module-lifecycle-descriptor.test.mjs	tests/pan466/module-lifecycle-descriptor.test.mjs	0644
+tests/pan466/module-lifecycle-check.test.mjs	tests/pan466/module-lifecycle-check.test.mjs	0644
+tests/pan466/qualified-module-binding.test.mjs	tests/pan466/qualified-module-binding.test.mjs	0644
+tests/pan466/qualified-module-native.test.mjs	tests/pan466/qualified-module-native.test.mjs	0644
+tests/pan466/qualified-module-process.mjs	tests/pan466/qualified-module-process.mjs	0644

@@ -805,9 +805,24 @@ test("independent schema oracle accepts every shipped job, descriptor and emitte
 
 test("independent DAG oracle binds every local file, both video commands, and security fallback", async () => {
   const dag = await json(join(REPOSITORY_ROOT, "verification", "verification-dag-v2.json"));
-  // v66 adds the approved R1 docs bindings to the existing integrity owner;
-  // it does not change the video owner, commands or security fallback below.
-  assert.equal(dag.graphVersion, 66);
+  // v67 adds only the explicit bounded LIFE-06 owner after R1's v66 bindings.
+  // Existing video commands, ownership and security fallback remain intact.
+  assert.equal(dag.graphVersion, 67);
+  const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
+  assert.equal(life06.length, 1);
+  assert.deepEqual(life06[0].dependsOn, ["pan468-impact-selection-v1", "pan464-retained-pair-v1"]);
+  assert.deepEqual(life06[0].ownedTests, ["npm run pan466:test"]);
+  const life06Inputs = [
+    ["docs/architecture/pan466-qualified-module-generations-v1.md", "DERIVED_EVIDENCE"],
+    ...["module-lifecycle-descriptor", "module-lifecycle-check", "qualified-retained-module"].map(name => [`src/pan466/${name}.mjs`, "SOURCE"]),
+    ["scripts/run-pan466-native-qualification.mjs", "VALIDATOR"],
+    ...["module-lifecycle-descriptor.test", "module-lifecycle-check.test", "qualified-module-binding.test", "qualified-module-native.test", "qualified-module-process"].map(name => [`tests/pan466/${name}.mjs`, "VALIDATOR"]),
+  ];
+  assert.equal(life06[0].inputs.length, life06Inputs.length);
+  for (const [path, role] of life06Inputs) {
+    assert.deepEqual(dag.nodes.filter(owner => owner.inputs.some(input => input.path === path)).map(({ id }) => id), [life06[0].id], path);
+    assert.deepEqual(life06[0].inputs.find(input => input.path === path), { path, role, sha256: sha(await readFile(join(REPOSITORY_ROOT, path))) });
+  }
   const integrity = dag.nodes.filter(({ id }) => id === "repository-integrity");
   assert.equal(integrity.length, 1);
   const r1Inputs = [

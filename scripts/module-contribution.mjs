@@ -3,6 +3,8 @@ import { readFileSync, lstatSync, readdirSync, realpathSync, mkdirSync, writeFil
 import { resolve, join } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
+import { validateModuleLifecycles } from '../src/pan466/module-lifecycle-descriptor.mjs';
+import { checkModuleLifecyclesV1 } from '../src/pan466/module-lifecycle-check.mjs';
 const DEFAULT = 'examples/module-contribution/modules.json';
 const fail = message => { throw new Error(message); };
 const sorted = values => [...new Set(values)].sort();
@@ -47,6 +49,7 @@ function load(view, descriptor, advisory = false) {
   return {...m,files};
  }).sort((a,b)=>a.id.localeCompare(b.id));
  if(new Set(modules.map(m=>m.id)).size!==modules.length)fail('Duplicate module id');
+ validateModuleLifecycles(modules, view, {advisory});
  const edges=[];for(const m of modules)for(const [to,version] of Object.entries(m.dependencies)){const target=modules.find(n=>n.id===to);if(!advisory&&!target)fail(`Missing dependency: ${to}`);if(!advisory&&target.version!==version)fail(`Version mismatch: ${to}`);edges.push({from:m.id,to,version,kind:'semantic'});}
  const relations=[];
  for(const m of modules){
@@ -177,6 +180,13 @@ function main() {
  resetTelemetry();
  const args=process.argv.slice(2);const command=args.shift();let descriptor=DEFAULT;const root=realpathSync(process.cwd());const view=disk(root);
  const index=args.indexOf('--descriptor');if(index>=0){if(!args[index+1])fail('Missing descriptor');descriptor=safe(args[index+1]);args.splice(index,2);}
+ if(command==='lifecycle-check'&&args.length===4&&args[0]==='--base'&&args[2]==='--state-root') {
+  const stateRoot=resolve(args[3]);
+  if(realpathSync(stateRoot)!==stateRoot||!lstatSync(stateRoot).isDirectory())fail('Lifecycle state root denied');
+  const plan=impact(root,descriptor,args[1]),oldView=snapshot(root,plan.base);
+  const result=checkModuleLifecyclesV1({before:load(oldView,descriptor),after:load(view,descriptor),oldView,view,stateView:disk(stateRoot),impact:plan,descriptor});
+  return {...result,diagnostics:{gitCommands:telemetry.gitCommands,gitContentReads:telemetry.gitContentReads}};
+ }
  if(command==='scaffold'&&args.length===1)return scaffold(root,args[0]);
  if(command==='test'&&args.length===2&&args[0]==='--base') {
   load(view,descriptor);

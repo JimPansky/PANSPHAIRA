@@ -162,6 +162,21 @@ test("Pages delivery uses immutable actions and least-privilege job permissions"
   assert.doesNotMatch(workflow, /permissions:\s*write-all/);
 });
 
+test("R1 assurance deep-links resolve to actual built fragment IDs for all three routes", () => {
+  const target = html("SECURITY-ASSURANCE.html").replace(/<script\b[\s\S]*?<\/script>/gi, "");
+  const targetIds = new Set([...target.matchAll(/<[A-Za-z][^>]*\bid="([^"]+)"/g)].map((match) => match[1]));
+  for (const path of ["capabilities.html", "roadmap.html", "use-cases/crm-erp-approval-readback.html"]) {
+    const links = [...html(path).matchAll(/\bhref="([^"]+)"/g)]
+      .map((match) => new URL(match[1], `${baseUrl}${path}`))
+      .filter((link) => ["/PANSPHAIRA/SECURITY-ASSURANCE", "/PANSPHAIRA/SECURITY-ASSURANCE.html"].includes(link.pathname) && link.hash);
+    assert.equal(links.length, 1, `Expected the existing assurance fragment route in ${path}`);
+    for (const link of links) {
+      assert.equal(link.hash, "#locally-validated-synthetic-evidence", `Compatible assurance fragment must not silently change in ${path}`);
+      assert.ok(targetIds.has(link.hash.slice(1)), `${path} assurance fragment has no actual built target: ${link.hash}`);
+    }
+  }
+});
+
 test("R1 reading routes retain public coverage and source-bound accessible diagrams", () => {
   const source = (path) => readFileSync(join(process.cwd(), path), "utf8");
   const governance = JSON.parse(source("release/governance.json"));

@@ -84,6 +84,8 @@ that ceiling.
 | `CM-SEC-008` | Verified audit explanations are built only from signed, ordered, digest-linked facts and an exact head/count checkpoint; tampered, missing, reordered or forked facts do not render verified success. | [audit tests](../tests/protected-audit-timeline.test.ts); `npm run build && node --test dist/tests/protected-audit-timeline.test.js` | **4/4 PASS**; AAS-023 full suite **132/132 PASS** | Synthetic Ed25519/local checkpoint. Not hostile-host tamper-proof storage, an independent witness, trusted time, production key custody or retention compliance. |
 | `CM-SEC-009` | The stock demo publishes only loopback ports, keeps databases on internal networks, mounts no Docker socket, and runs PanSphaira non-root with a read-only root, dropped capabilities and no-new-privileges. | [Compose contract](../demo/compose.yaml); [supply-chain verifier tests](../tests/supply-chain-verifier.test.mjs); `npm run supply-chain:verify` | **6/6 PASS** declaration/runtime-posture checks | Repository and local Compose posture only. It does not resist a compromised host kernel or Docker daemon and does not establish production network isolation. |
 
+<a id="locally-validated-synthetic-evidence"></a>
+
 ### LOCALLY VALIDATED — SYNTHETIC EVIDENCE
 
 | Claim ID | Exact claim | Evidence / reproduce | Recorded result | Boundary |

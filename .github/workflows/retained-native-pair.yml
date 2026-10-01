@@ -75,3 +75,65 @@ jobs:
           path: ${{ runner.temp }}/pan464-native-summary.json
           if-no-files-found: error
           retention-days: 14
+
+  pan466-native:
+    name: Exact-head qualified module generation and deferred native use
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out exact candidate without persisted credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Set up qualified Node runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.19.0
+          architecture: x64
+      - name: Fetch unchanged immutable public source pair anonymously
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          git init "$RUNNER_TEMP/pan466-source"
+          git -C "$RUNNER_TEMP/pan466-source" -c credential.helper= fetch --depth=1 https://github.com/JoFe2/PANSPHAIRA.git c255df512ba86cf8c346c797bac5400bac1b6ab3
+          git -C "$RUNNER_TEMP/pan466-source" checkout --detach FETCH_HEAD
+          git init "$RUNNER_TEMP/pan466-consumer"
+          git -C "$RUNNER_TEMP/pan466-consumer" -c credential.helper= fetch --depth=1 https://github.com/JoFe2/KaleidoSphere.git 72d9a4af87fbbc5b23cb52835cd2f85415b8ddc7
+          git -C "$RUNNER_TEMP/pan466-consumer" checkout --detach FETCH_HEAD
+      - name: Install locked dependencies and compile both actual producer versions
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm rebuild @embedded-postgres/linux-x64
+          npm run build --silent
+          npm --prefix "$RUNNER_TEMP/pan466-source" ci --ignore-scripts --no-audit --no-fund
+          npm --prefix "$RUNNER_TEMP/pan466-source" rebuild @embedded-postgres/linux-x64
+          npm --prefix "$RUNNER_TEMP/pan466-source" run build --silent
+      - name: Build the accepted pinned local qualification environment
+        run: |
+          docker build --network none --build-arg QUALIFICATION_UID="$(id -u)" --build-arg QUALIFICATION_GID="$(id -g)" -t pan466-native-qualification:local tests/pan464/runtime
+          mkdir -m 700 "$RUNNER_TEMP/pan466-owned"
+      - name: Run all required same-PID native module-use cases without skips
+        env:
+          EXPECTED_PAN_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          PAN466_SOURCE_ROOT: ${{ runner.temp }}/pan466-source
+          PAN466_KS_ROOT: ${{ runner.temp }}/pan466-consumer
+          PAN466_OWNED_ROOT: ${{ runner.temp }}/pan466-owned
+        run: |
+          export PAN466_IMAGE_ID="$(docker image inspect --format '{{.Id}}' pan466-native-qualification:local)"
+          npm run pan466:native -- --output "$RUNNER_TEMP/pan466-native-summary.json"
+          git diff --exit-code
+      - name: Remove only this disposable runner's labeled native containers
+        if: always()
+        run: |
+          mapfile -t owned < <(docker ps -aq --filter label=io.pansphaira.pan464.owner)
+          if [ "${#owned[@]}" -gt 0 ]; then docker rm -f "${owned[@]}"; fi
+          test -z "$(docker ps -aq --filter label=io.pansphaira.pan464.owner)"
+      - name: Preserve exact-head public-safe module-use evidence only
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pan466-native-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/pan466-native-summary.json
+          if-no-files-found: error
+          retention-days: 14

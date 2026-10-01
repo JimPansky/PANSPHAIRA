@@ -766,8 +766,22 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     graphVersion: number;
     nodes: Array<{ id: string; inputs: Array<{ path: string; role: string; sha256: string }>; ownedTests: string[] }>;
   };
-  // v66 expands the existing owner for R1, not the node inventory or authority.
-  assert.equal(dag.graphVersion, 66);
+  // v67 adds the explicit bounded LIFE-06 owner; R1 v66 bindings remain intact.
+  assert.equal(dag.graphVersion, 67);
+  const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
+  assert.equal(life06.length, 1);
+  const life06Inputs: ReadonlyArray<readonly [string, string]> = [
+    ["docs/architecture/pan466-qualified-module-generations-v1.md", "DERIVED_EVIDENCE"],
+    ...["module-lifecycle-descriptor", "module-lifecycle-check", "qualified-retained-module"].map(name => [`src/pan466/${name}.mjs`, "SOURCE"] as const),
+    ["scripts/run-pan466-native-qualification.mjs", "VALIDATOR"],
+    ...["module-lifecycle-descriptor.test", "module-lifecycle-check.test", "qualified-module-binding.test", "qualified-module-native.test", "qualified-module-process"].map(name => [`tests/pan466/${name}.mjs`, "VALIDATOR"] as const),
+  ];
+  assert.equal(life06[0]!.inputs.length, life06Inputs.length);
+  for (const [path, role] of life06Inputs) {
+    assert.deepEqual(dag.nodes.filter(owner => owner.inputs.some(input => input.path === path)).map(({ id }) => id), [life06[0]!.id], path);
+    assert.deepEqual(life06[0]!.inputs.find(input => input.path === path), { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
+  }
+  assert.deepEqual(life06[0]!.ownedTests, ["npm run pan466:test"]);
   const integrity = dag.nodes.filter(({ id }) => id === "repository-integrity");
   assert.equal(integrity.length, 1);
   const r1Bindings: ReadonlyArray<readonly [string, string]> = [
@@ -788,7 +802,8 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     assert.deepEqual(matches[0], { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
   }
   assert.equal(integrity[0]!.ownedTests.filter((command) => command === "npm run docs:test").length, 1);
-  assert.equal(dag.nodes.length, 72);
+  assert.equal(dag.nodes.length, 73);
+  assert.equal(dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan465-offline-updater-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan463-native-update-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan464-retained-pair-v1").length, 1);

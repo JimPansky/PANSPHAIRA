@@ -80,7 +80,7 @@ test("PAN464 retains native ownership and its mandatory separate exact-head Dock
   const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string, string> };
   assert.equal(pkg.scripts["pan464:test"], "node --test tests/pan464/protected-oracle.test.mjs tests/pan464/retained-snapshot.test.mjs tests/pan464/retained-pair-plan.test.mjs");
   assert.equal(pkg.scripts["pan464:native"], "node --test --test-concurrency=1 tests/pan464/native-controller.test.mjs");
-  assert.ok(pkg.scripts.posttest?.endsWith("&& npm run pan463:test && npm run pan464:test && npm run pan465:test"));
+  assert.ok(pkg.scripts.posttest?.endsWith("&& npm run pan463:test && npm run pan464:test && npm run pan465:test && npm run pan466:test"));
   for (const changed of ["src/pan464/retained-pair-controller.mjs", "src/pan464/native-consumer.py", "src/pan464/protected-oracle.mjs", "tests/pan464/native-controller.test.mjs", ".github/workflows/retained-native-pair.yml", "demo/runtime/local-journal-owner.mjs"]) {
     assert.ok(node.inputs.some((input) => input.path === changed));
     const impact = plan([changed]);
@@ -95,6 +95,38 @@ test("PAN464 retains native ownership and its mandatory separate exact-head Dock
   assert.ok(runner.includes("--test-reporter=tap"));
   assert.ok(runner.includes("skipped!==0"));
   assert.ok(runner.includes("sanitizeArtifactText"));
+});
+
+test("LIFE-06 adds only a bounded owner and separately required native module-use gate", () => {
+  const manifest = graph();
+  const nodes = manifest.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
+  assert.equal(manifest.graphVersion, 67);
+  assert.equal(nodes.length, 1);
+  const node = nodes[0]!;
+  assert.deepEqual(node.dependsOn, ["pan468-impact-selection-v1", "pan464-retained-pair-v1"]);
+  assert.deepEqual(node.ownedTests, ["npm run pan466:test"]);
+  const expected = new Map<string, string>([
+    ["docs/architecture/pan466-qualified-module-generations-v1.md", "DERIVED_EVIDENCE"],
+    ...["module-lifecycle-descriptor", "module-lifecycle-check", "qualified-retained-module"].map(name => [`src/pan466/${name}.mjs`, "SOURCE"] as [string,string]),
+    ["scripts/run-pan466-native-qualification.mjs", "VALIDATOR"],
+    ...["module-lifecycle-descriptor.test", "module-lifecycle-check.test", "qualified-module-binding.test", "qualified-module-native.test", "qualified-module-process"].map(name => [`tests/pan466/${name}.mjs`, "VALIDATOR"] as [string,string]),
+  ]);
+  assert.equal(node.inputs.length, expected.size);
+  for (const [path, role] of expected) {
+    assert.deepEqual(manifest.nodes.filter(owner => owner.inputs.some(input => input.path === path)).map(({ id }) => id), [node.id], path);
+    assert.equal(node.inputs.find(input => input.path === path)?.role, role, path);
+    const selected = plan([path]);
+    assert.equal(selected.mode, "IMPACTED_SHADOW");
+    assert.ok(selected.selectedNodes.includes(node.id));
+    assert.ok(selected.selectedTests.includes("npm run pan466:test"));
+    assert.deepEqual(selected.hardGates, [...manifest.hardGates].sort((a,b) => a.localeCompare(b,"en")));
+  }
+  const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string,string> };
+  assert.equal(pkg.scripts["pan466:native"], "node scripts/run-pan466-native-qualification.mjs");
+  const workflow = readFileSync(".github/workflows/retained-native-pair.yml", "utf8");
+  for (const field of ["pan466-native:", "npm run pan466:native -- --output", "PAN466_SOURCE_ROOT:", "PAN466_KS_ROOT:", "PAN466_OWNED_ROOT:", "pan466-native-${{ github.event.pull_request.head.sha || github.sha }}"]) assert.ok(workflow.includes(field), field);
+  const runner = readFileSync("scripts/run-pan466-native-qualification.mjs", "utf8");
+  for (const field of ["skipped!==0", "tests!==6", "verifyForwardCheckout", "sanitizeArtifactText", "historyActualReadback!==true"]) assert.ok(runner.includes(field), field);
 });
 
 test("REL-TRUTH release authority is canonically owned by repository integrity", () => {
@@ -144,7 +176,7 @@ test("#377 current-head Docker E2E is a focused repository-integrity obligation"
   const manifest = graph();
   const node = manifest.nodes.find(({ id }) => id === "repository-integrity");
   assert.ok(node);
-  assert.equal(manifest.graphVersion, 66);
+  assert.equal(manifest.graphVersion, 67);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
@@ -178,7 +210,7 @@ test("AWI-03 knowledge changes select the bounded critical owner and hard gates"
   const result = plan(["packages/contracts/src/knowledge-envelope.ts"]);
   assert.equal(result.mode, "IMPACTED_SHADOW");
   assert.deepEqual(result.selectedNodes, ["awi-03-knowledge-envelope", "awi-plugin-01-knowledge-harvest-v1", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "lkc-files-01-local-file-corpus", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof"]);
-  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run docs:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan465:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
+  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run docs:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan465:test", "npm run pan466:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
   assert.deepEqual(result.hardGates, [...graph().hardGates].sort((a, b) => a.localeCompare(b, "en")));
 });
 
@@ -334,7 +366,7 @@ test("FND-XR-01 paired external-BI family is canonical, acceptance-mapped and pr
   ]) {
     assert.equal(publicPaths.has(publicPath), true, `public external-BI byte: ${publicPath}`);
   }
-  assert.equal(publicManifestPaths.length, 1741, "current release controls retain their exact R1 public count");
+  assert.equal(publicManifestPaths.length, 1751, "current release controls add only the ten bounded LIFE-06 files to the retained R1 manifest");
   assert.equal(publicPaths.size, publicManifestPaths.length, "public manifest paths remain unique");
   assert.equal(publicPaths.has(evidencePath), false, "pre-closure paired evidence remains repository-only");
 
@@ -430,7 +462,7 @@ test("FND-PS-02 edge-evidence focused family is canonical and selects its owner 
 
 test("CSCL-11 serial holdout gate is a registered DAG node bound to the frozen reconciled pilot", () => {
   const manifest = graph();
-  assert.equal(manifest.graphVersion, 66);
+  assert.equal(manifest.graphVersion, 67);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
