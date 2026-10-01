@@ -1,0 +1,168 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "scopeId",
+    "sourceKind",
+    "baseline",
+    "nativeEvidence",
+    "obligations",
+    "mappingReceipt",
+    "requestDigest"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "pansphaira.sem-holdout487/request/v1"
+    },
+    "caseId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+    },
+    "scopeId": {
+      "const": "product-offering-purpose-v1"
+    },
+    "sourceKind": {
+      "const": "INDEPENDENT_SYNTHETIC_OVERLAY"
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "candidatePath",
+        "candidateSha256"
+      ],
+      "properties": {
+        "commit": {
+          "const": "5a9ac1a797729471ee853fdcbc4cd552f1e0d73b"
+        },
+        "candidatePath": {
+          "const": "verification/cscl-09-product-candidate-v1.json"
+        },
+        "candidateSha256": {
+          "const": "26b2719ec82280454af9a517a80711a9901c0e288dc6fb7af7a6ef595d745d08"
+        }
+      }
+    },
+    "nativeEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "captureScope",
+        "completeness",
+        "catalogueRows",
+        "salesLines"
+      ],
+      "properties": {
+        "captureScope": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 160,
+          "pattern": "^[\\x20-\\x7e]+$"
+        },
+        "completeness": {
+          "const": "BOUNDED_CAPTURE"
+        },
+        "catalogueRows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "key",
+              "label",
+              "stocked"
+            ],
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[\\x20-\\x7e]+$"
+              },
+              "stocked": {
+                "type": "boolean"
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 32
+        },
+        "salesLines": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "key",
+              "orderKey",
+              "offeringKey",
+              "label"
+            ],
+            "properties": {
+              "key": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+              },
+              "orderKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+              },
+              "offeringKey": {
+                "type": "string",
+                "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "pattern": "^[\\x20-\\x7e]+$"
+              }
+            }
+          },
+          "minItems": 0,
+          "maxItems": 32
+        }
+      }
+    },
+    "obligations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "nativeKey"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+          },
+          "nativeKey": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 16
+    },
+    "mappingReceipt": {
+      "$ref": "https://pansphaira.invalid/contracts/cscl-01/mapping-receipt-v1.schema.json"
+    },
+    "requestDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.invalid/contracts/sem-holdout487/request-v1.schema.json",
+  "title": "PAN487 single purpose synthetic request v1"
+}

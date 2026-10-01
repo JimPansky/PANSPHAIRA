@@ -1,0 +1,154 @@
+{
+  "schemaVersion": "pansphaira.sem-holdout487/request/v1",
+  "caseId": "calibration.catalogue-purpose",
+  "scopeId": "product-offering-purpose-v1",
+  "sourceKind": "INDEPENDENT_SYNTHETIC_OVERLAY",
+  "baseline": {
+    "commit": "5a9ac1a797729471ee853fdcbc4cd552f1e0d73b",
+    "candidatePath": "verification/cscl-09-product-candidate-v1.json",
+    "candidateSha256": "26b2719ec82280454af9a517a80711a9901c0e288dc6fb7af7a6ef595d745d08"
+  },
+  "nativeEvidence": {
+    "captureScope": "Public calibration fictional catalogue cedar; two listed offerings and one order line.",
+    "completeness": "BOUNDED_CAPTURE",
+    "catalogueRows": [
+      {
+        "key": "cedar.catalogue.bracket",
+        "label": "Bracket",
+        "stocked": true
+      },
+      {
+        "key": "cedar.catalogue.installation",
+        "label": "Installation visit",
+        "stocked": false
+      }
+    ],
+    "salesLines": [
+      {
+        "key": "cedar.order-a.line-01",
+        "orderKey": "cedar.order-a",
+        "offeringKey": "cedar.catalogue.bracket",
+        "label": "Bracket"
+      }
+    ]
+  },
+  "obligations": [
+    {
+      "id": "cal.obligation-a",
+      "nativeKey": "cedar.catalogue.bracket"
+    },
+    {
+      "id": "cal.obligation-b",
+      "nativeKey": "cedar.catalogue.installation"
+    }
+  ],
+  "mappingReceipt": {
+    "schemaVersion": "pansphaira.cscl01/mapping-receipt/v1",
+    "receiptId": "pan487-synthetic-product-mapping-v1",
+    "holdoutSystemId": "idempiere",
+    "capabilityFamily": "PRODUCT_ITEM_MANAGEMENT",
+    "frozenCandidateDigest": "26b2719ec82280454af9a517a80711a9901c0e288dc6fb7af7a6ef595d745d08",
+    "frozenCandidateBytesSha256": "26b2719ec82280454af9a517a80711a9901c0e288dc6fb7af7a6ef595d745d08",
+    "holdoutProfileDigest": "1559ac9f50bade810a271c05cedd01c3e2b79aee348330cf2837b694e6518cb1",
+    "mappings": [
+      {
+        "holdoutConceptId": "idempiere.product-item-management.objects-roles",
+        "classification": "CORE",
+        "candidateElementId": "product-item-shared-purpose",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "6f4a71a5e872f34211aed269330a39b921062a814441d20d63aedddb2c8d5f06"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.relations",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-relations",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "c2dbd9eb2469f3b0ea080c55ab4518c13e749939c9b60a4d432ae3f8550fec63"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.operations",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-operations",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "2dd0bd0ffb681285125a6245bc12810e1778c86bfede1ed33b492fc0c840240d"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.inputs-outputs",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-inputs-outputs",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "e1f2cdf62e5faa43094880cf8d30b3499c52b31e89717a2936e0d6e0fd580193"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.states-transitions",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-states-transitions",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "cb35f10e150017abc57a6c24cedf9b70bed0f0398790a966eb256407e19a8dd3"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.preconditions",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-preconditions",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "3a671f31146fbbb06046d1e7e961eafae5132b5bd4d5dc7851c3f1c0b4401c50"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.invariants",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-invariants",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "c8a766f4df72c0160debb4edc107f2b2decd5b6090b0ba7b1caf3d667a838f33"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.exceptions-errors",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-exceptions-errors",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "1a86ed8604658e828cfe27acfaccf7412d21d01e4414f100a5a48fa1f92ee3ef"
+        ]
+      },
+      {
+        "holdoutConceptId": "idempiere.product-item-management.readbacks",
+        "classification": "VARIANT",
+        "candidateElementId": "product-item-readbacks",
+        "meaningPreserved": true,
+        "sourceFactDigests": [
+          "2049f4d5133c1cc3a83cc10584e7c9b6f711c436d96d74d6219921dd8b761f03"
+        ]
+      }
+    ],
+    "denominators": {
+      "applicable": 9,
+      "mappedToCore": 1,
+      "mappedToVariant": 8,
+      "unmapped": 0,
+      "coreTotal": 5,
+      "coreIdentityPreserved": 5,
+      "coreContradictions": 0
+    },
+    "extensions": [],
+    "boundary": {
+      "authorityGrant": "NONE",
+      "promotionGrant": "NONE",
+      "executionGrant": "NONE"
+    },
+    "receiptDigest": "ce0d455f2c0124fae4bf3bc316e2b1ec6640cee7624e975bdc1cd2835ba4226e"
+  },
+  "requestDigest": "ed9adefa6a626885c2257b2ff999f5763690ff28bb6247ccfea6cf065b2e6de2"
+}

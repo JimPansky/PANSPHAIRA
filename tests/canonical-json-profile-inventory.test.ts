@@ -438,6 +438,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
     toSha256: "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
     reason: "Advance graph to v67 for the bounded LIFE-06 descriptor/actual-CLI/native-use sources and distinct required same-PID native gate; retain old owners, all immutable profile migrations, pilot noncoverage and independent grant/history boundaries.",
   }),
+  Object.freeze({
+    migrationId: "PAN487-SEM-HOLDOUT01/INTEGRITY-GENERATOR/V39",
+    path: "scripts/refresh-integrity-data.mjs",
+    profileVersion: 39,
+    fromSha256: "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
+    toSha256: "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
+    reason: "Advance graph to v68 and register the bounded product offering-purpose semantic successor actual entry, exact public rule/contracts/calibration and affected tests; preserve historical candidates/protocol/receipts, all prior owners and immutable profile obligations, distinct integrity/semantics and Main-exclusive sealed evaluation.",
+  }),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -451,18 +459,18 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 762,
+  filesScanned: 765,
   declarationSites: 37,
   declarationFiles: 37,
-  importSites: 257,
-  importFiles: 256,
+  importSites: 259,
+  importFiles: 258,
 
   reexportSites: 4,
   similarShapeSites: 30,
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2112, uniquePaths: 2112, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2121, uniquePaths: 2121, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1245,7 +1253,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;

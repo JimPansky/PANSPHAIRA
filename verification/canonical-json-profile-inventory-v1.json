@@ -395,6 +395,14 @@
       "fromSha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
       "toSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
       "reason": "Advance graph to v67 for the bounded LIFE-06 descriptor/actual-CLI/native-use sources and distinct required same-PID native gate; retain old owners, all immutable profile migrations, pilot noncoverage and independent grant/history boundaries."
+    },
+    {
+      "migrationId": "PAN487-SEM-HOLDOUT01/INTEGRITY-GENERATOR/V39",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 39,
+      "fromSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
+      "toSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
+      "reason": "Advance graph to v68 and register the bounded product offering-purpose semantic successor actual entry, exact public rule/contracts/calibration and affected tests; preserve historical candidates/protocol/receipts, all prior owners and immutable profile obligations, distinct integrity/semantics and Main-exclusive sealed evaluation."
     }
   ],
   "scanScope": {
@@ -437,15 +445,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 762,
+    "filesScanned": 765,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 257,
-    "importFiles": 256,
+    "importSites": 259,
+    "importFiles": 258,
     "reexportSites": 4,
     "similarShapeSites": 30,
-    "ledgerEntries": 2112,
-    "ledgerUniquePaths": 2112
+    "ledgerEntries": 2121,
+    "ledgerUniquePaths": 2121
   },
   "profiles": [
     {
@@ -518,7 +526,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631"
+      "sha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -799,6 +807,11 @@
       "importFiles": 1
     },
     {
+      "owner": "cscl-11",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "cscl-13",
       "importSites": 2,
       "importFiles": 2
@@ -870,8 +883,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 59,
-      "importFiles": 58
+      "importSites": 60,
+      "importFiles": 59
     },
     {
       "owner": "usage-insights",
@@ -1164,7 +1177,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
+      "sha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
       "basis": "profile-version-migration"
     },
     {

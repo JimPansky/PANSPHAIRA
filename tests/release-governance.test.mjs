@@ -517,7 +517,20 @@ test("public release builder binds its exact file count to the manifest", () => 
   ];
   assert.equal(life06Paths.length, 10);
   for (const path of life06Paths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
-  assert.equal(count, 1751);
+  const semanticPaths = [
+    "contracts/sem-holdout487/request-v1.schema.json",
+    "contracts/sem-holdout487/result-v1.schema.json",
+    "contracts/sem-holdout487/decision-rule-v1.json",
+    "src/cscl-11/product-purpose-semantic-v1.mjs",
+    "scripts/evaluate-product-purpose-semantic-v1.mjs",
+    "tests/cscl-11/product-purpose-semantic-v1.test.mjs",
+    "tests/fixtures/sem-holdout487/public-calibration.input.json",
+    "tests/fixtures/sem-holdout487/public-calibration.expected.json",
+    "docs/architecture/pan487-product-purpose-semantic-successor-v1.md",
+  ];
+  assert.equal(semanticPaths.length, 9);
+  for (const path of semanticPaths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
+  assert.equal(count, 1760);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -565,7 +578,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1751, "LIFE-06 adds ten explicit source/test/guide files after the retained R1 manifest");
+  assert.equal(publicCount, 1760, "Retained LIFE-06/R1 plus nine explicit bounded semantic successor source/public contract/calibration/test files");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
