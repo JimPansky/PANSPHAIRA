@@ -252,11 +252,14 @@ def finish(root, args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("init", "apply", "resume", "finish", "status", "launch"))
+    parser.add_argument("command", choices=("init", "apply", "resume", "finish", "status", "launch", "run-native-profile"))
     parser.add_argument("--root", required=True)
     parser.add_argument("--bundle")
     parser.add_argument("--trust")
     parser.add_argument("--operation")
+    parser.add_argument("--owned-root")
+    parser.add_argument("--permission-file")
+    parser.add_argument("--output")
     parser.add_argument("--pause-at", choices=("BEFORE_SWITCH", "AFTER_SWITCH", "DURING_JOURNAL_MIGRATION"))
     parser.add_argument("--local-synthetic-qualification", action="store_true")
     args = parser.parse_args()
@@ -285,6 +288,15 @@ def main():
                 switch_and_exec(root, args, fd)
             fd = fd if fd is not None else lock(root)
             observed = R.inspect(root)
+            if args.command == "run-native-profile":
+                A.require(observed["outcome"] == "STABLE" and args.owned_root and args.permission_file and args.output
+                          and not any((args.bundle,args.trust,args.operation,args.pause_at)), "NATIVE_PROFILE_ARGUMENTS_REQUIRED")
+                executable = root/"slots"/observed["activeArtifact"]/"scripts/offline-native-profile.py"
+                A.require(executable.is_file(), "NATIVE_PROFILE_NOT_IN_SELECTED_ARTIFACT")
+                env = {k:os.environ[k] for k in ("PATH","HOME","TMPDIR") if k in os.environ}
+                env.update(PAN465_LOCK_FD=str(fd),PYTHONDONTWRITEBYTECODE="1")
+                os.execve(sys.executable,[sys.executable,"-B",str(executable),"--root",str(root),
+                    "--owned-root",args.owned_root,"--permission-file",args.permission_file,"--output",args.output],env)
             if args.command == "launch":
                 A.require(observed["outcome"] == "STABLE", "INCOMPLETE_OPERATION_HELD")
                 executable = root/"slots"/observed["activeArtifact"]/"scripts/offline-updater.py"

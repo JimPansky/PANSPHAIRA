@@ -134,6 +134,14 @@ def run_profile(args):
                   command(["git","rev-parse","HEAD^{tree}"],destination) == item["tree"] and
                   not command(["git","status","--porcelain=v1","--untracked-files=all"],destination),
                   "RESTORED_GIT_IDENTITY_DENIED")
+        if name == "target":
+            # The independently signed slot code must correspond to the real
+            # target objects; never silently run a different preloaded program.
+            for filename in ("offline-artifact.py","offline-rescue.py","offline-updater.py","offline-native-profile.py"):
+                relative = "scripts/"+filename
+                mode = command(["git","ls-files","--stage","--",relative],destination).split(" ",1)[0]
+                R.require(mode == "100644" and R.read(slot/relative) == R.read(destination/relative),
+                          "PAYLOAD_TO_AUTHENTIC_SOURCE_MISMATCH")
         if name != "consumer":
             R.require(R.sha(R.read(destination/"package-lock.json")) == profile["dependencies"]["packageLockSha256"],
                       "RESTORED_DEPENDENCY_LOCK_DENIED")
