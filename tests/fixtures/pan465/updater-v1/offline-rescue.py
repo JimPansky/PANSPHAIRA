@@ -182,81 +182,12 @@ def inspect(root):
             "nonclaims":["NO_MAIN_APPLICATION_IMPORT", "NO_BUSINESS_REPLAY_OR_RESTORE", "NO_POWER_LOSS_QUALIFICATION"]}
 
 
-def inspect_retained_pair(owned_root):
-    """Understand the retained PAN464 v4 journal without loading PAN/KS/Node.
-
-    This is deliberately observational: durable receipts are not a fresh native
-    PostgreSQL/Superset readback and cannot authorize restore or new work.
-    """
-    root = Path(owned_root)
-    require(root.is_absolute() and root.is_dir(), "PAIR_ROOT_REQUIRED")
-    control = root/"pan464-owned-v1"/"pan453-owned-v2"
-    pair_bytes = read(control/"pair-state.json")
-    pair = decode(pair_bytes)
-    phases = {"SOURCE_CREATING", "SOURCE_READY", "CHECKPOINTED", "MIGRATING", "NATIVE_STARTUP",
-              "VALIDATING", "RESTORING", "REJECTED_RESTORED", "ACTIVATION_INTENT", "ACTIVE",
-              "POST_ACTIVATION_WRITE_INTENT", "ACTIVE_WITH_NEW_WRITES"}
-    require(isinstance(pair, dict) and pair.get("phase") in phases and
-            isinstance(pair.get("edgeDigest"), str) and HEX.fullmatch(pair["edgeDigest"]), "PAIR_STATE_DENIED")
-    effects_path = control/"effects.json"
-    statuses = []
-    effects_digest = None
-    if effects_path.exists():
-        raw = read(effects_path)
-        effects_digest = sha(raw)
-        journal = decode(raw)
-        require(isinstance(journal, dict) and set(journal) == {"schemaVersion", "effects", "reservations", "consumedAuthorityLeases"} and
-                journal["schemaVersion"] == "chimpmaera.demo/effect-store/v4", "PAIR_EFFECT_SCHEMA_DENIED")
-        for key in ("effects", "reservations", "consumedAuthorityLeases"):
-            require(isinstance(journal[key], dict), "PAIR_EFFECT_COLLECTION_DENIED")
-        # This reader qualifies exactly the retained native updater operation,
-        # not arbitrary application/HMAC/owner-escalation records.
-        operation = "native:pan464-pair-v1"
-        require(set(journal["reservations"]) <= {operation} and set(journal["effects"]) <= {operation} and
-                not journal["consumedAuthorityLeases"], "PAIR_OPERATION_DENIED")
-        for key, record in journal["reservations"].items():
-            require(isinstance(record, dict) and set(record) == {"actionDigest", "authorityBinding", "authorityKind", "leaseId", "recovery", "reservedAtMs", "status"}, "PAIR_RESERVATION_DENIED")
-            require(record["authorityKind"] == "INSTALLER_APPROVAL_V1" and record["leaseId"] is None and
-                    record["status"] in ("EXECUTING", "APPLIED", "AMBIGUOUS") and
-                    record["recovery"] == ("RECONCILE" if record["status"] == "AMBIGUOUS" else "NONE"), "PAIR_RESERVATION_STATE_DENIED")
-            integer(record["reservedAtMs"])
-            for field in ("actionDigest", "authorityBinding"):
-                require(isinstance(record[field], str) and HEX.fullmatch(record[field]), "PAIR_AUTHORITY_BINDING_DENIED")
-            require((record["status"] == "APPLIED") == (key in journal["effects"]), "PAIR_EFFECT_CONTRADICTION_DENIED")
-            statuses.append(record["status"])
-        for key, effect in journal["effects"].items():
-            require(key in journal["reservations"] and isinstance(effect, dict) and
-                    set(effect) == {"actionDigest", "providerResult", "readback", "receipt"}, "PAIR_RECEIPT_REQUIRED")
-            receipt = effect["receipt"]
-            require(isinstance(receipt, dict) and set(receipt) == {"schemaVersion", "replayKey", "actionDigest", "outcome", "readbackDigest", "checkpointDigest", "receiptDigest"}, "PAIR_RECEIPT_SCHEMA_DENIED")
-            require(receipt["schemaVersion"] == "pansphaira.pan464/retained-pair-receipt/v1" and
-                    receipt["replayKey"] == key and receipt["outcome"] == "LOCAL_RETAINED_PAIR_VERIFIED" and
-                    receipt["actionDigest"] == effect["actionDigest"] == journal["reservations"][key]["actionDigest"], "PAIR_RECEIPT_BINDING_DENIED")
-            for field in ("actionDigest", "readbackDigest", "checkpointDigest", "receiptDigest"):
-                require(isinstance(receipt[field], str) and HEX.fullmatch(receipt[field]), "PAIR_RECEIPT_DIGEST_DENIED")
-            core = {k:v for k,v in receipt.items() if k != "receiptDigest"}
-            # This closed receipt has ASCII string values only; its bytes match
-            # the existing sorted-key JS canonical JSON without numeric drift.
-            require(sha(json.dumps(core, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()) == receipt["receiptDigest"], "PAIR_RECEIPT_CORRUPTED_DENIED")
-    else:
-        require(pair["phase"] in ("SOURCE_CREATING", "SOURCE_READY"), "PAIR_EFFECT_JOURNAL_MISSING_HELD")
-    if pair["phase"] in ("ACTIVE", "POST_ACTIVATION_WRITE_INTENT", "ACTIVE_WITH_NEW_WRITES"):
-        require(statuses == ["APPLIED"], "PAIR_ACTIVATION_CONTRADICTION_HELD")
-    return {"schema":"pansphaira.retained-pair-rescue/v1", "outcome":"HELD_REQUIRES_NATIVE_READBACK",
-            "phase":pair["phase"], "effectJournalSchema":"chimpmaera.demo/effect-store/v4" if effects_digest else None,
-            "reservationStates":statuses, "pairStateSha256":sha(pair_bytes), "effectJournalSha256":effects_digest,
-            "ownerLockPresent":(control/"operation.lock").exists(), "mutationPerformed":False,
-            "nonclaims":["NO_MAIN_APPLICATION_IMPORT", "NO_FRESH_BUSINESS_READBACK", "NO_LOCK_ADOPTION", "NO_REPLAY_OR_RESTORE", "NO_POWER_LOSS_QUALIFICATION"]}
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--root")
-    group.add_argument("--retained-pair-root")
+    parser.add_argument("--root", required=True)
     args = parser.parse_args()
     try:
-        result = inspect(args.root) if args.root else inspect_retained_pair(args.retained_pair_root)
+        result = inspect(args.root)
     except (ValueError, OSError, TypeError, KeyError):
         print(json.dumps({"outcome":"UNKNOWN_HELD", "mutationPerformed":False}))
         return 1

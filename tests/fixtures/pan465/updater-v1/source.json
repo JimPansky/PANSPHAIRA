@@ -1,0 +1,11 @@
+{
+  "schema": "pansphaira.updater-baseline-source/v1",
+  "commit": "6e6f46b3f8eab287445e519fc257129235398b8e",
+  "classification": "ACTUAL_IMPLEMENTED_LOCAL_BASELINE_NOT_PREVIOUS_PUBLIC_RELEASE",
+  "sourcePrefix": "scripts/",
+  "files": {
+    "offline-artifact.py": "bcc1e7337f6a5ea32e73c146224b5f51b079b673e27cee5126321cbd15f8435a",
+    "offline-rescue.py": "7220dae5af045fe27bbdd83b14cfacce3f3239ed593c0ee82181c5f293cb5208",
+    "offline-updater.py": "076d5c4a970e9546e39df2195b51e04f662953ed5285ac4a614a9a9016df30c5"
+  }
+}

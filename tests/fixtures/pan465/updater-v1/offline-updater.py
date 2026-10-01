@@ -23,7 +23,7 @@ sys.dont_write_bytecode = True
 HERE = Path(__file__).resolve().parent
 A = SimpleNamespace(**runpy.run_path(str(HERE / "offline-artifact.py")))
 R = SimpleNamespace(**runpy.run_path(str(HERE / "offline-rescue.py")))
-JOURNAL_PROTOCOL = 2
+JOURNAL_PROTOCOL = 1
 
 
 def sync_dir(path):
@@ -191,46 +191,6 @@ def switch_and_exec(root, args, fd):
     os.execve(sys.executable, command, env)
 
 
-def migrate_journal(root, args, protocol):
-    A.require(protocol in (1, 2), "JOURNAL_PROTOCOL_DENIED")
-    if protocol == 2:
-        # Already migrated: retain the exact historical index and all v1 bytes.
-        return 2
-    records = R.read_journal(root)
-    data = R.encoded({"schema":"pansphaira.updater-journal-index/v2", "retainedV1":[
-        {"ordinal":r["ordinal"], "sha256":r["digest"]} for r in records if r["protocol"] == 1]})
-    index = root/"journal-v2.json"
-    if index.exists():
-        A.require(R.read(index) == data, "PRIOR_MIGRATION_INDEX_DENIED")
-        return 2
-    directory = root/"journal-migrations"
-    directory.mkdir(mode=0o700, exist_ok=True)
-    A.require(not directory.is_symlink(), "MIGRATION_DIRECTORY_DENIED")
-    # Partial migration writes survive a real process kill and are never
-    # overwritten or deleted by rescue/resume. Publication is create-only.
-    temporary = directory/(str(uuid.uuid4())+".partial")
-    fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW, 0o600)
-    try:
-        midpoint = len(data)//2
-        with os.fdopen(fd, "wb", closefd=False) as stream:
-            stream.write(data[:midpoint])
-            stream.flush()
-            os.fsync(fd)
-            sync_dir(directory)
-            phase_pause(args, "DURING_JOURNAL_MIGRATION")
-            stream.write(data[midpoint:])
-            stream.flush()
-        os.fchmod(fd, 0o444)
-        os.fsync(fd)
-    finally:
-        os.close(fd)
-    # A hard link publishes exactly the fsynced bytes without replacing an
-    # existing journal/index. Both complete and interrupted records stay intact.
-    os.link(temporary, index, follow_symlinks=False)
-    sync_dir(root)
-    return 2
-
-
 def finish(root, args):
     record, protocol = current_record(root)
     A.require(record["metadataSha256"] == args.operation and record["phase"] in
@@ -242,7 +202,9 @@ def finish(root, args):
         record["phase"] = "MIGRATION_INTENT"
         append(root, record, protocol)
     if record["phase"] == "MIGRATION_INTENT":
-        protocol = migrate_journal(root, args, protocol)
+        # Protocol 1 is the first usable updater baseline. It retains the same
+        # readable journal format; the next executable may add a real migration.
+        A.require(JOURNAL_PROTOCOL == 1 and protocol == 1, "MIGRATION_NOT_SUPPORTED")
         record["phase"] = "MIGRATED"
         append(root, record, protocol)
     record["phase"] = "COMPLETED"

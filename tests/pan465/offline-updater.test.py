@@ -52,7 +52,7 @@ class UpdaterBaselineTests(Base):
 
     def test_real_initial_executable_slot_and_launch(self):
         receipt = self.initialize()
-        self.assertEqual(receipt["journalProtocol"], 1)
+        self.assertEqual(receipt["journalProtocol"], 2)
         self.assertTrue((self.install/"current").is_symlink())
         before = self.inventory()
         status, selected = self.updater("launch")
