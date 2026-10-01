@@ -68,6 +68,12 @@ unrecognized fields, invalid synthetic bindings/receipt/request digests, unsafe
 wire numbers/strings, duplicate JSON keys, invalid UTF8 and oversized transport.
 Cross-relation collisions are meaningful admitted evidence, not schema errors.
 
+The public wire admits integer JSON tokens, not decimal or exponent tokens that
+happen to normalize to integers. The bounded entry checks exact numeric token
+sources after the unchanged shared strict parser; `9.0` and `9e0` are admission
+errors, while those spellings inside string labels remain ordinary text. This
+transport correction does not change the public contract or semantic rule.
+
 Tests invoke the actual module export and actual stdin/stdout executable. The
 initial public development run passes38cases:18public-calibration/implementer
 checks and20unchanged historical CSCL-11 regressions. These development results

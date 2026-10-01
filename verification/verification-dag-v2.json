@@ -7546,7 +7546,7 @@
         {
           "path": "src/cscl-11/product-purpose-semantic-v1.mjs",
           "role": "SOURCE",
-          "sha256": "5c2c53887ce0c30889a05b3b69c2f9019eb63dbef5326c50684be971805757af"
+          "sha256": "e788b6e9a3a30c091a1690458b9eb89d904f85571e460d94bc37928e0241ad8d"
         },
         {
           "path": "scripts/evaluate-product-purpose-semantic-v1.mjs",
@@ -7556,7 +7556,7 @@
         {
           "path": "tests/cscl-11/product-purpose-semantic-v1.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "2110939fc5d40c0b2353c395e6c3f8ca836dc185a05fd8af5e4c3d15f0af5edb"
+          "sha256": "547a4df42f9c21131188100df25dafcb677fcd4092bf596b4c1320787cb4963a"
         },
         {
           "path": "tests/fixtures/sem-holdout487/public-calibration.input.json",
@@ -7571,7 +7571,7 @@
         {
           "path": "docs/architecture/pan487-product-purpose-semantic-successor-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "ac43cf52aa5bb32e86352a4520ba758cb0e157536d0e61d463ad9b1a794eb1bd"
+          "sha256": "faad3bc18f6ec941597278f022f4d2abbdd952805231e9bfcc9ba87e3365c309"
         }
       ],
       "ownedTests": [

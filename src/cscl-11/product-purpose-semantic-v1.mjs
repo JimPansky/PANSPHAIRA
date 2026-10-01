@@ -32,7 +32,19 @@ function safeWire(value) {
   requireInput(value && typeof value === "object" && Object.getPrototypeOf(value) === Object.prototype, "UNSAFE_WIRE_TYPE");
   for (const [key, child] of Object.entries(value)) { safeWire(key); safeWire(child); }
 }
-export function parseProductPurposeSemanticRequestV1(bytes) { return parseStrictJson(bytes, { maxBytes: RULE.maxInputBytes }); }
+export function parseProductPurposeSemanticRequestV1(bytes) {
+  const request = parseStrictJson(bytes, { maxBytes: RULE.maxInputBytes });
+  // R1: keep the unchanged public wire's integer type, not merely Number's
+  // normalized value. Node's exact token source distinguishes 9 from 9.0/9e0.
+  // This second bounded pass observes tokens only; the shared strict parser and
+  // its frozen validated result retain duplicate/UTF8/resource protections.
+  const text = (Buffer.isBuffer(bytes) ? bytes : Buffer.from(bytes)).toString("utf8");
+  JSON.parse(text, (_key, value, context) => {
+    if (typeof value === "number") requireInput(/^(?:0|[1-9][0-9]*)$/.test(context?.source ?? ""), "UNSAFE_WIRE_NUMBER_TOKEN");
+    return value;
+  });
+  return request;
+}
 function admit(value) {
   const request = cloneStrictJson(value, { maxBytes: RULE.maxInputBytes }); safeWire(request);
   requireInput(validateRequest(request), "REQUEST_SCHEMA_ADMISSION_DENIED");

@@ -80,6 +80,18 @@ for (const [name, mutate] of [
 test("wrong request digest is admission failure, not a semantic negative", () => {
   const r = fixture(); r.requestDigest = "0".repeat(64); const p = cli(r); assert.equal(p.status, 2); assert.equal(p.stdout, "");
 });
+for (const token of ["9.0", "9e0"]) test(`R1 fixed public wire: integral non-integer token ${token} is denied before semantic evaluation`, () => {
+  const bytes = JSON.stringify(calibration).replace('"applicable":9', `"applicable":${token}`);
+  assert.notEqual(bytes, JSON.stringify(calibration), "actual numeric wire spelling changed");
+  const p = cli(null, bytes);
+  assert.equal(p.status, 2, "public wire excludes decimal/exponent JSON number types even when mathematically integral");
+  assert.equal(p.stdout, "");
+  assert.notEqual(p.stderr, "");
+});
+test("R1 lexical admission does not mistake decimal/exponent spellings inside JSON strings for numeric tokens", () => {
+  const r = fixture((v) => { v.nativeEvidence.catalogueRows[0].label = "9.0 and 9e0 are text labels"; });
+  assert.equal(result(r).verdict, "GO");
+});
 test("duplicate JSON keys, invalid UTF8 and oversized transport are rejected by actual entry", () => {
   for (const bytes of [JSON.stringify(calibration).replace('"scopeId":', '"scopeId":"product-offering-purpose-v1","scopeId":'), Buffer.from([255]), " ".repeat(131073)]) {
     const p = cli(null, bytes); assert.equal(p.status, 2); assert.equal(p.stdout, "");
