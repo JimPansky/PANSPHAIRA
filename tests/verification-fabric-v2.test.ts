@@ -100,7 +100,7 @@ test("PAN464 retains native ownership and its mandatory separate exact-head Dock
 test("LIFE-06 adds only a bounded owner and separately required native module-use gate", () => {
   const manifest = graph();
   const nodes = manifest.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
-  assert.equal(manifest.graphVersion, 67);
+  assert.equal(manifest.graphVersion, 68);
   assert.equal(nodes.length, 1);
   const node = nodes[0]!;
   assert.deepEqual(node.dependsOn, ["pan468-impact-selection-v1", "pan464-retained-pair-v1"]);
@@ -176,7 +176,7 @@ test("#377 current-head Docker E2E is a focused repository-integrity obligation"
   const manifest = graph();
   const node = manifest.nodes.find(({ id }) => id === "repository-integrity");
   assert.ok(node);
-  assert.equal(manifest.graphVersion, 67);
+  assert.equal(manifest.graphVersion, 68);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
@@ -206,11 +206,42 @@ test("#377 current-head Docker E2E is a focused repository-integrity obligation"
   ]) assert.ok(node.invariants.includes(required), required);
 });
 
+test("SEM-HOLDOUT-01 registers only the explicit semantic successor without implying blind acceptance", () => {
+  const manifest = graph();
+  const nodes = manifest.nodes.filter(({ id }) => id === "pan487-product-purpose-semantic-successor-v1");
+  assert.equal(nodes.length, 1);
+  const node = nodes[0]!;
+  assert.equal(manifest.graphVersion, 68);
+  assert.deepEqual(node.dependsOn, ["cscl-11-idempiere-serial-holdout-gate-v1"]);
+  assert.deepEqual(node.ownedTests, ["npm run pan487:test"]);
+  assert.equal(node.globalInvalidation, false);
+  const inputs = new Map(node.inputs.map(({ path, role }) => [path, role]));
+  const expected = new Map([
+    ["contracts/sem-holdout487/request-v1.schema.json", "SCHEMA"],
+    ["contracts/sem-holdout487/result-v1.schema.json", "SCHEMA"],
+    ["contracts/sem-holdout487/decision-rule-v1.json", "CONTRACT"],
+    ["src/cscl-11/product-purpose-semantic-v1.mjs", "SOURCE"],
+    ["scripts/evaluate-product-purpose-semantic-v1.mjs", "SOURCE"],
+    ["tests/cscl-11/product-purpose-semantic-v1.test.mjs", "VALIDATOR"],
+    ["tests/fixtures/sem-holdout487/public-calibration.input.json", "FIXTURE"],
+    ["tests/fixtures/sem-holdout487/public-calibration.expected.json", "FIXTURE"],
+    ["docs/architecture/pan487-product-purpose-semantic-successor-v1.md", "DERIVED_EVIDENCE"],
+  ]);
+  assert.deepEqual(inputs, expected);
+  for (const [path] of expected) {
+    const result = plan([path]);
+    assert.deepEqual(result.selectedNodes, [node.id], path);
+    assert.deepEqual(result.selectedTests, ["npm run pan487:test"], path);
+  }
+  assert.ok(node.invariants.some((text) => text.includes("Main exclusively")));
+  assert.ok(node.invariants.some((text) => text.includes("not blind score")));
+});
+
 test("AWI-03 knowledge changes select the bounded critical owner and hard gates", () => {
   const result = plan(["packages/contracts/src/knowledge-envelope.ts"]);
   assert.equal(result.mode, "IMPACTED_SHADOW");
-  assert.deepEqual(result.selectedNodes, ["awi-03-knowledge-envelope", "awi-plugin-01-knowledge-harvest-v1", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "lkc-files-01-local-file-corpus", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof"]);
-  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run docs:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan465:test", "npm run pan466:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
+  assert.deepEqual(result.selectedNodes, ["awi-03-knowledge-envelope", "awi-plugin-01-knowledge-harvest-v1", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "lkc-files-01-local-file-corpus", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "pan487-product-purpose-semantic-successor-v1", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof"]);
+  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run docs:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan465:test", "npm run pan466:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run pan487:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
   assert.deepEqual(result.hardGates, [...graph().hardGates].sort((a, b) => a.localeCompare(b, "en")));
 });
 
@@ -229,7 +260,7 @@ test("contract and cross-contract changes invalidate downstream dependants", () 
   ]) {
     const result = plan([changed]);
     assert.equal(result.mode, "IMPACTED_SHADOW");
-    assert.deepEqual(result.selectedNodes, ["awi-plugin-01-knowledge-harvest-v1", "azpp-m1-repository-synthetic-v1", "cap-cell-erp-01", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "etl-01-extension-assurance-profile-v1", "etl-02-external-plugin-preflight-v1", "external-bi-service-v2", "intake-001-issue-candidate-v1", "integration-profile-v1", "know-media-m1-audience-learning-v1", "learning-routing-foundation", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "pan435-436-sales-stock-journey-v1", "pan441-employee-profile-v1", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof", "vf-contract-v1", "vf-m2-adaptive-evidence-gates-v1", "vf-shadow-v2"]);
+    assert.deepEqual(result.selectedNodes, ["awi-plugin-01-knowledge-harvest-v1", "azpp-m1-repository-synthetic-v1", "cap-cell-erp-01", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "etl-01-extension-assurance-profile-v1", "etl-02-external-plugin-preflight-v1", "external-bi-service-v2", "intake-001-issue-candidate-v1", "integration-profile-v1", "know-media-m1-audience-learning-v1", "learning-routing-foundation", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "pan435-436-sales-stock-journey-v1", "pan441-employee-profile-v1", "pan487-product-purpose-semantic-successor-v1", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof", "vf-contract-v1", "vf-m2-adaptive-evidence-gates-v1", "vf-shadow-v2"]);
   }
 });
 
@@ -366,7 +397,7 @@ test("FND-XR-01 paired external-BI family is canonical, acceptance-mapped and pr
   ]) {
     assert.equal(publicPaths.has(publicPath), true, `public external-BI byte: ${publicPath}`);
   }
-  assert.equal(publicManifestPaths.length, 1751, "current release controls add only the ten bounded LIFE-06 files to the retained R1 manifest");
+  assert.equal(publicManifestPaths.length, 1760, "current release controls retain LIFE-06/R1 and add only the nine bounded SEM-HOLDOUT-01 source, public contract/calibration and test files");
   assert.equal(publicPaths.size, publicManifestPaths.length, "public manifest paths remain unique");
   assert.equal(publicPaths.has(evidencePath), false, "pre-closure paired evidence remains repository-only");
 
@@ -462,13 +493,13 @@ test("FND-PS-02 edge-evidence focused family is canonical and selects its owner 
 
 test("CSCL-11 serial holdout gate is a registered DAG node bound to the frozen reconciled pilot", () => {
   const manifest = graph();
-  assert.equal(manifest.graphVersion, 67);
+  assert.equal(manifest.graphVersion, 68);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
   assert.equal(
     packageJson.scripts["cscl11:test"],
-    "node --test tests/cscl-11/holdout-gate.test.mjs",
+    "node --test tests/cscl-11/holdout-gate.test.mjs tests/cscl-11/product-purpose-semantic-v1.test.mjs",
   );
   assert.equal(
     packageJson.scripts.posttest?.split(" && ")[0],
@@ -516,15 +547,15 @@ test("CSCL-11 serial holdout gate is a registered DAG node bound to the frozen r
     "All 36 holdout source facts, 36 evidence cells and the complete party/product/sales denominators replay deterministically from the frozen bytes; the empty party and sales frozen cores are reported as FALSIFIED_WITH_EVIDENCE narrowing, never patched.",
     "No holdout tuning, no universal-ERP-compatibility claim and no Authority, promotion or execution grant; the overall GO / NARROW_GO / FALSIFIED_WITH_EVIDENCE verdict derives only from the frozen protocol functions and the six governance gates.",
   ]) assert.ok(node.invariants.includes(invariant), invariant);
-  // Bounded ownership: a cscl-11 input change selects only the gate and its focused suite.
+  // Legacy ownership remains; its explicit successor is now a bounded dependant.
   for (const changed of [
     "src/cscl-11/holdout-gate.mjs",
     "verification/cscl-11-idempiere-holdout-verdict-overall-v1.json",
   ]) {
     const result = plan([changed]);
     assert.equal(result.mode, "IMPACTED_SHADOW", changed);
-    assert.deepEqual(result.selectedNodes, ["cscl-11-idempiere-serial-holdout-gate-v1"], changed);
-    assert.deepEqual(result.selectedTests, ["npm run cscl11:test"], changed);
+    assert.deepEqual(result.selectedNodes, ["cscl-11-idempiere-serial-holdout-gate-v1", "pan487-product-purpose-semantic-successor-v1"], changed);
+    assert.deepEqual(result.selectedTests, ["npm run cscl11:test", "npm run pan487:test"], changed);
   }
   // Fail-closed: a drifted observed digest on a cscl-11 input forces FULL_FALLBACK.
   const digests = observed(manifest);

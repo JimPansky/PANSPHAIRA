@@ -1,0 +1,185 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "caseId",
+    "scopeId",
+    "ruleId",
+    "baseline",
+    "requestDigest",
+    "integrity",
+    "observations",
+    "counts",
+    "finalSemanticCounts",
+    "verdict",
+    "applicability"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "pansphaira.sem-holdout487/result/v1"
+    },
+    "caseId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+    },
+    "scopeId": {
+      "const": "product-offering-purpose-v1"
+    },
+    "ruleId": {
+      "const": "catalogue-offering-purpose-v1"
+    },
+    "baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "candidatePath",
+        "candidateSha256"
+      ],
+      "properties": {
+        "commit": {
+          "const": "5a9ac1a797729471ee853fdcbc4cd552f1e0d73b"
+        },
+        "candidatePath": {
+          "const": "verification/cscl-09-product-candidate-v1.json"
+        },
+        "candidateSha256": {
+          "const": "26b2719ec82280454af9a517a80711a9901c0e288dc6fb7af7a6ef595d745d08"
+        }
+      }
+    },
+    "requestDigest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "integrity": {
+      "const": "PASS"
+    },
+    "observations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "obligationId",
+          "status",
+          "reason",
+          "evidencePointers"
+        ],
+        "properties": {
+          "obligationId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9.-]{0,95}$"
+          },
+          "status": {
+            "enum": [
+              "PRESERVED",
+              "CONTRADICTED",
+              "UNMAPPED",
+              "UNKNOWN"
+            ]
+          },
+          "reason": {
+            "enum": [
+              "NO_SELECTED_MAPPING",
+              "ORDER_OCCURRENCE_NOT_OFFERING",
+              "CATALOGUE_OFFERING_OBSERVED",
+              "BOUNDED_CAPTURE_NO_WITNESS"
+            ]
+          },
+          "evidencePointers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^/nativeEvidence/(catalogueRows|salesLines)/[0-9]+$"
+            },
+            "minItems": 0,
+            "maxItems": 64
+          }
+        }
+      },
+      "minItems": 1,
+      "maxItems": 16
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "preserved",
+        "contradicted",
+        "unmapped",
+        "unsupported"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        },
+        "preserved": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "contradicted": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "unmapped": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "unsupported": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        }
+      }
+    },
+    "finalSemanticCounts": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "preserved",
+            "contradicted"
+          ],
+          "properties": {
+            "preserved": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16
+            },
+            "contradicted": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 16
+            }
+          }
+        }
+      ]
+    },
+    "verdict": {
+      "enum": [
+        "GO",
+        "FALSIFIED_WITH_EVIDENCE",
+        "UNKNOWN",
+        "NARROWED_UNMAPPED"
+      ]
+    },
+    "applicability": {
+      "const": "SYNTHETIC_PRODUCT_OFFERING_PURPOSE_ONLY"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.invalid/contracts/sem-holdout487/result-v1.schema.json",
+  "title": "PAN487 independent bounded result v1"
+}

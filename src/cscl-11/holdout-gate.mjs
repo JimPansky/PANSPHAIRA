@@ -17,9 +17,10 @@
 //        unmodified;
 //   AC6  reports any required core edit (here: party/sales empty core) as
 //        narrowing/falsification, NOT patched away;
-//   AC7  emits an independent GO / NARROW_GO / FALSIFIED_WITH_EVIDENCE holdout
-//        receipt conforming to holdout-verdict-v1 -- no holdout tuning, no
-//        universal-compatibility, no Authority claim.
+//   AC7  emits the historical protocol GO / NARROW_GO / FALSIFIED_WITH_EVIDENCE
+//        receipt conforming to holdout-verdict-v1. Its generated mapping flags
+//        are proposal scaffolding, not independently authored semantic outcomes;
+//        PAN487 supplies the separately versioned bounded semantic successor.
 //
 // Everything is deterministic and reproducible from the pinned bytes. The
 // module never mutates the candidates; it only reads their raw bytes and
@@ -39,6 +40,15 @@ import {
 } from "../cscl-01/protocol.mjs";
 import { FACTS, FILES } from "./holdout-facts.mjs";
 export { FACTS, FILES };
+
+// PAN487 named semantic successor. Legacy CSCL-11 generated flags below are
+// immutable historical proposal/integrity evidence, not independent semantic
+// expectations. This additive real mapping/evaluation entry judges only the
+// frozen single product offering-purpose seam from independent bounded captures.
+export {
+  evaluateProductPurposeSemanticV1,
+  parseProductPurposeSemanticRequestV1,
+} from "./product-purpose-semantic-v1.mjs";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_REPO_ROOT = resolve(HERE, "../..");

@@ -1753,3 +1753,12 @@ tests/pan466/module-lifecycle-check.test.mjs	tests/pan466/module-lifecycle-check
 tests/pan466/qualified-module-binding.test.mjs	tests/pan466/qualified-module-binding.test.mjs	0644
 tests/pan466/qualified-module-native.test.mjs	tests/pan466/qualified-module-native.test.mjs	0644
 tests/pan466/qualified-module-process.mjs	tests/pan466/qualified-module-process.mjs	0644
+contracts/sem-holdout487/request-v1.schema.json	contracts/sem-holdout487/request-v1.schema.json	0644
+contracts/sem-holdout487/result-v1.schema.json	contracts/sem-holdout487/result-v1.schema.json	0644
+contracts/sem-holdout487/decision-rule-v1.json	contracts/sem-holdout487/decision-rule-v1.json	0644
+src/cscl-11/product-purpose-semantic-v1.mjs	src/cscl-11/product-purpose-semantic-v1.mjs	0644
+scripts/evaluate-product-purpose-semantic-v1.mjs	scripts/evaluate-product-purpose-semantic-v1.mjs	0644
+tests/cscl-11/product-purpose-semantic-v1.test.mjs	tests/cscl-11/product-purpose-semantic-v1.test.mjs	0644
+tests/fixtures/sem-holdout487/public-calibration.input.json	tests/fixtures/sem-holdout487/public-calibration.input.json	0644
+tests/fixtures/sem-holdout487/public-calibration.expected.json	tests/fixtures/sem-holdout487/public-calibration.expected.json	0644
+docs/architecture/pan487-product-purpose-semantic-successor-v1.md	docs/architecture/pan487-product-purpose-semantic-successor-v1.md	0644

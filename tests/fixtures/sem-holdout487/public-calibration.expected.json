@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "pansphaira.sem-holdout487/result/v1",
+  "caseId": "calibration.catalogue-purpose",
+  "scopeId": "product-offering-purpose-v1",
+  "ruleId": "catalogue-offering-purpose-v1",
+  "baseline": {
+    "commit": "5a9ac1a797729471ee853fdcbc4cd552f1e0d73b",
+    "candidatePath": "verification/cscl-09-product-candidate-v1.json",
+    "candidateSha256": "26b2719ec82280454af9a517a80711a9901c0e288dc6fb7af7a6ef595d745d08"
+  },
+  "requestDigest": "ed9adefa6a626885c2257b2ff999f5763690ff28bb6247ccfea6cf065b2e6de2",
+  "integrity": "PASS",
+  "observations": [
+    {
+      "obligationId": "cal.obligation-a",
+      "status": "PRESERVED",
+      "reason": "CATALOGUE_OFFERING_OBSERVED",
+      "evidencePointers": [
+        "/nativeEvidence/catalogueRows/0"
+      ]
+    },
+    {
+      "obligationId": "cal.obligation-b",
+      "status": "PRESERVED",
+      "reason": "CATALOGUE_OFFERING_OBSERVED",
+      "evidencePointers": [
+        "/nativeEvidence/catalogueRows/1"
+      ]
+    }
+  ],
+  "counts": {
+    "total": 2,
+    "preserved": 2,
+    "contradicted": 0,
+    "unmapped": 0,
+    "unsupported": 0
+  },
+  "finalSemanticCounts": {
+    "preserved": 2,
+    "contradicted": 0
+  },
+  "verdict": "GO",
+  "applicability": "SYNTHETIC_PRODUCT_OFFERING_PURPOSE_ONLY"
+}

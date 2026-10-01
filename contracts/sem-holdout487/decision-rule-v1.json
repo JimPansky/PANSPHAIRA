@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "pansphaira.sem-holdout487/decision/v1",
+  "ruleId": "catalogue-offering-purpose-v1",
+  "scopeId": "product-offering-purpose-v1",
+  "family": "PRODUCT_ITEM_MANAGEMENT",
+  "questionId": "objects-roles",
+  "candidateElementId": "product-item-shared-purpose",
+  "selectedConceptId": "idempiere.product-item-management.objects-roles",
+  "syntheticAttribution": "INDEPENDENT_SYNTHETIC_OVERLAY_NOT_IDEMPIERE_EVIDENCE",
+  "denominator": "ALL_DECLARED_OBLIGATIONS_NO_FILTERING",
+  "maxObligations": 16,
+  "maxRowsPerRelation": 32,
+  "maxInputBytes": 131072,
+  "runtimeSeconds": 10,
+  "observationPrecedence": [
+    {"condition": "selected mapping omitted or UNMAPPED", "status": "UNMAPPED", "reason": "NO_SELECTED_MAPPING"},
+    {"condition": "nativeKey occurs in salesLines.key", "status": "CONTRADICTED", "reason": "ORDER_OCCURRENCE_NOT_OFFERING"},
+    {"condition": "nativeKey occurs in catalogueRows.key", "status": "PRESERVED", "reason": "CATALOGUE_OFFERING_OBSERVED"},
+    {"condition": "otherwise", "status": "UNKNOWN", "reason": "BOUNDED_CAPTURE_NO_WITNESS"}
+  ],
+  "verdictPrecedence": [
+    {"condition": "contradicted > 0", "verdict": "FALSIFIED_WITH_EVIDENCE"},
+    {"condition": "unsupported > 0", "verdict": "UNKNOWN"},
+    {"condition": "unmapped > 0", "verdict": "NARROWED_UNMAPPED"},
+    {"condition": "preserved == total", "verdict": "GO"}
+  ],
+  "unknownRule": "observed category counts remain exact; finalSemanticCounts is null whenever unsupported > 0",
+  "evidencePointers": "all matching catalogueRows pointers in array order, followed by all matching salesLines pointers in array order; empty for UNKNOWN or UNMAPPED",
+  "notEvidence": ["meaningPreserved", "receipt.denominators", "label", "stocked", "hashEquality", "candidateFlags"],
+  "nonClaims": ["NO_FAMILY_OR_UNIVERSAL_VERDICT", "NO_PRIVATE_ORIGINALS", "NO_PRODUCTION_ERP_VALIDATION", "NO_WORKER_UPTAKE_OR_DELIVERY_PROOF", "NO_AUTHORITY"]
+}

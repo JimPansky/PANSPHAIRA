@@ -1216,6 +1216,40 @@ pan466Node.inputs = pan466Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan466:test")) repositoryIntegrityNode.ownedTests.push("npm run pan466:test");
 dag.graphVersion = 67;
 
+// SEM-HOLDOUT-01: an explicit bounded semantic successor, not a new historical
+// verdict or independent acceptance. Legacy sources keep their existing owner;
+// the successor consumes only the public rule/contracts and bounded observations.
+const pan487Inputs = [
+  ["contracts/sem-holdout487/request-v1.schema.json", "SCHEMA"],
+  ["contracts/sem-holdout487/result-v1.schema.json", "SCHEMA"],
+  ["contracts/sem-holdout487/decision-rule-v1.json", "CONTRACT"],
+  ["src/cscl-11/product-purpose-semantic-v1.mjs", "SOURCE"],
+  ["scripts/evaluate-product-purpose-semantic-v1.mjs", "SOURCE"],
+  ["tests/cscl-11/product-purpose-semantic-v1.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/sem-holdout487/public-calibration.input.json", "FIXTURE"],
+  ["tests/fixtures/sem-holdout487/public-calibration.expected.json", "FIXTURE"],
+  ["docs/architecture/pan487-product-purpose-semantic-successor-v1.md", "DERIVED_EVIDENCE"],
+];
+let pan487Node = dag.nodes.find(({ id }) => id === "pan487-product-purpose-semantic-successor-v1");
+if (pan487Node === undefined) {
+  pan487Node = {
+    id: "pan487-product-purpose-semantic-successor-v1",
+    dependsOn: ["cscl-11-idempiere-serial-holdout-gate-v1"], inputs: [],
+    ownedTests: ["npm run pan487:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "One pre-authored public offering-purpose rule judges actual independently captured catalogue versus order-owned occurrence, not generated candidate flags, labels, hashes or historical family success assertions.",
+      "Every declared obligation remains in the positive complete semantic denominator, including omitted/UNMAPPED proposals; unsupported bounded search is UNKNOWN with null final semantic totals and exact observed lower bounds, never global absence.",
+      "Schema/digest/source and closed scope admission remain distinct from meaning; a structurally valid correctly re-digested material contradiction is FALSIFIED_WITH_EVIDENCE at the actual versioned repository mapping/evaluation entry.",
+      "Historical candidates, facts, protocol, receipts and verdicts remain immutable; public calibration and implementer tests are not blind score, independent acceptance or universal ERP evidence.",
+      "Main exclusively retains and executes the sealed evaluator after full candidate/executable closure freeze; private expectations/reference/case material never enter implementation/tuning, and failed evidence is not repaired by changing the fixed rule or core.",
+    ],
+  };
+  dag.nodes.push(pan487Node);
+}
+pan487Node.inputs = pan487Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan487:test")) repositoryIntegrityNode.ownedTests.push("npm run pan487:test");
+dag.graphVersion = 68;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1250,6 +1284,7 @@ for (const [inputPath] of pan463Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan464Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan465Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan466Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan487Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

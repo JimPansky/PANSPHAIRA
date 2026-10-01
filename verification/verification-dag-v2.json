@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 67,
+  "graphVersion": 68,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "4dc9e45690f1589a1e69494e197f716da4b2a4efa2cad5cdeadd5edd3cfdfa26"
+          "sha256": "c8a28b7213fc2122694e5848d9e6abe5ae249a355af81db4bdb324c9b03fcbe3"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "853a695ab1c9b48f412704eb30e477b015609af9d5d10fd59b738fc8e9c079a4"
+          "sha256": "9edacba82ac1fae354ee31a1c883860ec406a5565b6cd48aa65fcc062b6e7f65"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "71707875b5dcdd2b76bed55e74e66159e849cd48bc5a350f6573f1802399c050"
+          "sha256": "6f0ae168ff3b1e0aeea8fb08be51dedf516f5cf9dcc287118e81aa7722c5f81c"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "d10b96f829926448c2694848d0e9f39c98b6f8bb95d91557b8605da657fb4322"
+          "sha256": "625f1d707b14330716022b399c382b3c85d6cd3cb6d68f42456303a0666aaefc"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "f4a69a74a3abc9fc9d812192e234d1878f2c3f130f628c677811d8d304ccb719"
+          "sha256": "819f0e8223fc7c94d3d017b21160752ae9e5da0a5fb94843b9d3fec6548d922b"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4991,7 +4991,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "aba04df0038b822b3076ff09964c721e53568a0013559208c6f79314ae9b9dc9"
+          "sha256": "fb894738b420de4fdf4dee3bf54e164f1414a1ee12a6001b28778f1ba0796511"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "95d7d5232f33ab0337b72276becb286352dd487feba1bf9ba5e22a6b6df826d2"
+          "sha256": "e468a42e8d98c6368092ce84d0d79ece6704d7c0dd3bfdab1b5d7650493dbf9f"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5066,7 +5066,8 @@
         "npm run pan464:test",
         "npm run pan465:test",
         "npm run docs:test",
-        "npm run pan466:test"
+        "npm run pan466:test",
+        "npm run pan487:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5621,7 +5622,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "6632f02aa754769a9f8cf3b5bf4eb73240cee2e419eb9b21b6cefd94c37d915c"
+          "sha256": "fd9cb020ea33d1633f3034f248611edad730a7c1c6ca488b84cfdd9e11f73a2d"
         },
         {
           "path": "package-lock.json",
@@ -5981,7 +5982,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "68bde40619d0b4569a34cdc0e7a5e1c536967d7992bc4e8c2a884f3b2e723f54"
+          "sha256": "176a8aa19b961b311bbccefe763f6d39d483ced62e645619f7edf8357abc9fe9"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6246,7 +6247,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "61b32c45cb67ac2377a6404f952c25516b8a32b47dd9af46f7a4b1d46daeafc5"
+          "sha256": "d1646cb02e5fa4adf678b383ab9735514a41f86d846980a9b0c4bee57c0e9ed7"
         }
       ],
       "ownedTests": [
@@ -6328,7 +6329,7 @@
         {
           "path": "src/cscl-11/holdout-gate.mjs",
           "role": "VALIDATOR",
-          "sha256": "5f6d75bf87c844925bb74e97923dc59bd19b9502270d85defe724b8821d1ee87"
+          "sha256": "a4be9891bf4a9fad53eb9ee06b533a78737671f69ab179971f1ba5579607c75a"
         },
         {
           "path": "tests/cscl-11/holdout-gate.test.mjs",
@@ -7519,6 +7520,71 @@
         "The explicit fixed native module-use entry separately qualifies the accepted pair and rereads current compatibility plus the independently checked native grant before effects; history is actual observed content under a distinct read scope, never a new write grant.",
         "Required exact-head native CI resumes the same live IPC-waiting PID across generation change, grant revocation and both, retaining historical reads while denying stale writes; independent positives execute real current and freshly rebound native writes.",
         "Component/CLI checks do not replace native qualification, independent acceptance, exact CI or public release/readback; raw synthetic grants/history/state stay private and no scheduler, PKI, production or hostile-host claim is added."
+      ]
+    },
+    {
+      "id": "pan487-product-purpose-semantic-successor-v1",
+      "dependsOn": [
+        "cscl-11-idempiere-serial-holdout-gate-v1"
+      ],
+      "inputs": [
+        {
+          "path": "contracts/sem-holdout487/request-v1.schema.json",
+          "role": "SCHEMA",
+          "sha256": "0bf4f33e34354b8f8b6621d8d1aa6df6e1a5ac151cb080f980364c145c28e44b"
+        },
+        {
+          "path": "contracts/sem-holdout487/result-v1.schema.json",
+          "role": "SCHEMA",
+          "sha256": "85b2980957b700977d411ff333c2e6066c19e062da7ff82ab4de6a95c5a5b07a"
+        },
+        {
+          "path": "contracts/sem-holdout487/decision-rule-v1.json",
+          "role": "CONTRACT",
+          "sha256": "64060fb673aecb2d9116a461007c1b1d5c8b205eb05db921cda994d8e28d2be8"
+        },
+        {
+          "path": "src/cscl-11/product-purpose-semantic-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "e788b6e9a3a30c091a1690458b9eb89d904f85571e460d94bc37928e0241ad8d"
+        },
+        {
+          "path": "scripts/evaluate-product-purpose-semantic-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "d45f133d7b467c3b083e8586c43931263e9e6988b972d31ed5effeb643ca1c43"
+        },
+        {
+          "path": "tests/cscl-11/product-purpose-semantic-v1.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "547a4df42f9c21131188100df25dafcb677fcd4092bf596b4c1320787cb4963a"
+        },
+        {
+          "path": "tests/fixtures/sem-holdout487/public-calibration.input.json",
+          "role": "FIXTURE",
+          "sha256": "0e3b1fde103424f14c6c9c4b0cf1cf5aed1495666fe04252f4e9906a99a7dcd5"
+        },
+        {
+          "path": "tests/fixtures/sem-holdout487/public-calibration.expected.json",
+          "role": "FIXTURE",
+          "sha256": "acb54f167cc676d28897be79e76a1f43d647fa9a80b8c907972a3160348d4b6d"
+        },
+        {
+          "path": "docs/architecture/pan487-product-purpose-semantic-successor-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "faad3bc18f6ec941597278f022f4d2abbdd952805231e9bfcc9ba87e3365c309"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan487:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "One pre-authored public offering-purpose rule judges actual independently captured catalogue versus order-owned occurrence, not generated candidate flags, labels, hashes or historical family success assertions.",
+        "Every declared obligation remains in the positive complete semantic denominator, including omitted/UNMAPPED proposals; unsupported bounded search is UNKNOWN with null final semantic totals and exact observed lower bounds, never global absence.",
+        "Schema/digest/source and closed scope admission remain distinct from meaning; a structurally valid correctly re-digested material contradiction is FALSIFIED_WITH_EVIDENCE at the actual versioned repository mapping/evaluation entry.",
+        "Historical candidates, facts, protocol, receipts and verdicts remain immutable; public calibration and implementer tests are not blind score, independent acceptance or universal ERP evidence.",
+        "Main exclusively retains and executes the sealed evaluator after full candidate/executable closure freeze; private expectations/reference/case material never enter implementation/tuning, and failed evidence is not repaired by changing the fixed rule or core."
       ]
     }
   ]
