@@ -1840,7 +1840,7 @@ fc598ba857ff4048f12b46f5d594f44c9fb723faaca1e07bcfe3bf97fbd06514  ./tests/pan464
 7ad6d3f006c1e2a9528e33a34bbd39a6f7d314ec37278911f9a3747556acd9f8  ./tests/pan464/retained-snapshot.test.mjs
 f377cdb5a64c95fb2fd1e15f2a381b2936f159ac9cf76a76f4de6bb19cb04355  ./tests/pan464/runtime/Dockerfile
 d24fdaaeba9fb4c221f1bcb6514829df10bacefe7fcce3b017a3d3ee507568b0  ./tests/pan465/dependency-boundaries.test.py
-c7c3f129df622c11a4b71de2b51c590a8fba3948da9248cacfcbb4e8527af755  ./tests/pan465/distribution-envelope.test.py
+04484bb32cd36c9b83b24c700978a24e5a1b33f12647f5539c4c7f18c50273af  ./tests/pan465/distribution-envelope.test.py
 30aadb29d6674347acb9a6e4934f331a3417ff851583a458370f9be33ffcfe4c  ./tests/pan465/offline-artifact.test.py
 1795284a269808b71fb3fc93e82cf31ca58ccd15ce1af3658b90cfac8281fa2f  ./tests/pan465/offline-migration.test.py
 be79be94ca6c115c2f0d3d1afd67816a4ac6f305ec43ad46d22085c3c6a2a442  ./tests/pan465/offline-updater.test.py
@@ -2085,5 +2085,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-0efebeded23aed68ef242f7ae5c91a798ed9baedb2a27da4ac382d00acff357a  ./verification/verification-dag-v2.json
+7e364b3d37ce24215c5be9b8459f1214e37a468b2a7d2a12b29caf826f3540c3  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

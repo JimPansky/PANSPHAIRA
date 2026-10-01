@@ -14,6 +14,7 @@ import subprocess
 import sys
 import tarfile
 import unittest
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
@@ -101,7 +102,7 @@ class EnvelopeTests(unittest.TestCase):
         result = subprocess.run([sys.executable, "-B", str(VERIFY), "--archive", str(self.archive),
             "--sha256", expected or digest, "--trust", str(self.trust), "--output", str(self.output)],
             text=True, capture_output=True, timeout=30,
-            env={"PATH": "/usr/bin:/bin", "TMPDIR": os.environ["TMPDIR"], "PYTHONDONTWRITEBYTECODE": "1"})
+            env={"PATH": "/usr/bin:/bin", "TMPDIR": str(self.root), "PYTHONDONTWRITEBYTECODE": "1"})
         self.assertEqual(result.stderr, "", result.stdout)
         return result.returncode, json.loads(result.stdout)
 
@@ -120,6 +121,14 @@ class EnvelopeTests(unittest.TestCase):
 
     def test_external_digest_mismatch_before_output(self):
         self.denied(expected="0" * 64)
+
+    def test_cli_without_inherited_tmpdir_uses_owned_fixture_directory(self):
+        with mock.patch.dict(os.environ):
+            os.environ.pop("TMPDIR", None)
+            code, receipt = self.cli()
+        self.assertEqual(code, 0, receipt)
+        self.assertEqual(receipt["outcome"], "OFFLINE_DISTRIBUTION_VERIFIED_NOT_INSTALLED")
+        self.assertFalse(receipt["executionAuthorized"])
 
     def test_private_material_extra_member_before_output(self):
         self.denied(extra="qualification-signing.pem")

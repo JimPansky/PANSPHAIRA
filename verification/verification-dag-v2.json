@@ -7332,7 +7332,7 @@
         {
           "path": "tests/pan465/distribution-envelope.test.py",
           "role": "VALIDATOR",
-          "sha256": "c7c3f129df622c11a4b71de2b51c590a8fba3948da9248cacfcbb4e8527af755"
+          "sha256": "04484bb32cd36c9b83b24c700978a24e5a1b33f12647f5539c4c7f18c50273af"
         },
         {
           "path": "tests/fixtures/pan465/updater-v1/source.json",
