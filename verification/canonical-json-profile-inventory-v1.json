@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "f4a69a74a3abc9fc9d812192e234d1878f2c3f130f628c677811d8d304ccb719"
+        "sha256": "62f82065f1748ed070af623938cc31d91a96281f82a6a416dd51fbba8067cc30"
       }
     ]
   },
@@ -403,6 +403,14 @@
       "fromSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
       "toSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
       "reason": "Advance graph to v68 and register the bounded product offering-purpose semantic successor actual entry, exact public rule/contracts/calibration and affected tests; preserve historical candidates/protocol/receipts, all prior owners and immutable profile obligations, distinct integrity/semantics and Main-exclusive sealed evaluation."
+    },
+    {
+      "migrationId": "PAN472-MIG02/INTEGRITY-GENERATOR/V40",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 40,
+      "fromSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
+      "toSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
+      "reason": "Advance graph to v69 and register the bounded persistent synthetic draft transfer actual CLI, independent native readback, fixtures and original-AC tests; preserve existing owners, hard gates, immutable migrations, journal authority and sealed semantic evaluation."
     }
   ],
   "scanScope": {
@@ -445,15 +453,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 765,
+    "filesScanned": 770,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 259,
-    "importFiles": 258,
-    "reexportSites": 4,
+    "importSites": 260,
+    "importFiles": 259,
+    "reexportSites": 5,
     "similarShapeSites": 30,
-    "ledgerEntries": 2121,
-    "ledgerUniquePaths": 2121
+    "ledgerEntries": 2128,
+    "ledgerUniquePaths": 2128
   },
   "profiles": [
     {
@@ -526,7 +534,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c"
+      "sha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -705,6 +713,14 @@
       "sha256": null
     },
     {
+      "file": "src/cscl-13/complaint.mjs",
+      "line": 13,
+      "classification": "implementation",
+      "owner": "cscl-13",
+      "pinned": false,
+      "sha256": null
+    },
+    {
       "file": "src/rks-01/comparator.mjs",
       "line": 3,
       "classification": "implementation",
@@ -743,14 +759,6 @@
       "owner": "video-production-reference",
       "pinned": true,
       "sha256": "a1abaca9ff5e319e082de36dd7d42c02889d223aec8c5132139599d34a7d6977"
-    },
-    {
-      "file": "src/cscl-13/complaint.mjs",
-      "line": 13,
-      "classification": "implementation",
-      "owner": "cscl-13",
-      "pinned": false,
-      "sha256": null
     }
   ],
   "reexports": [
@@ -768,6 +776,11 @@
       "file": "src/cscl-03/profile-builder.mjs",
       "line": 8,
       "owner": "cscl-03"
+    },
+    {
+      "file": "src/pan472/draft-profile.mjs",
+      "line": 8,
+      "owner": "pan472"
     },
     {
       "file": "src/rks-02/comparator.mjs",
@@ -860,6 +873,11 @@
       "owner": "pan464",
       "importSites": 3,
       "importFiles": 3
+    },
+    {
+      "owner": "pan472",
+      "importSites": 1,
+      "importFiles": 1
     },
     {
       "owner": "procurement-434",
@@ -1177,7 +1195,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
+      "sha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
       "basis": "profile-version-migration"
     },
     {

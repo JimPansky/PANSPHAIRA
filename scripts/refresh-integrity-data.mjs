@@ -1250,6 +1250,38 @@ pan487Node.inputs = pan487Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan487:test")) repositoryIntegrityNode.ownedTests.push("npm run pan487:test");
 dag.graphVersion = 68;
 
+// Original MIG-02: one additive bounded synthetic native draft transfer.
+// Existing fixed business action and read-only inventory permissions stay intact.
+const pan472Inputs = [
+  ["src/pan472/draft-profile.mjs", "CONTRACT"],
+  ["src/pan472/persistent-draft-transfer.mjs", "SOURCE"],
+  ["src/pan472/independent-draft-reconciliation.mjs", "VALIDATOR"],
+  ["scripts/run-pan472-draft-transfer.mjs", "SOURCE"],
+  ["tests/pan472/persistent-draft-transfer.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/pan472/initial-draft-v1.json", "FIXTURE"],
+  ["docs/architecture/pan472-persistent-draft-transfer-v1.md", "DERIVED_EVIDENCE"],
+];
+let pan472Node = dag.nodes.find(({ id }) => id === "pan472-persistent-draft-transfer-v1");
+if (pan472Node === undefined) {
+  pan472Node = {
+    id: "pan472-persistent-draft-transfer-v1",
+    dependsOn: ["pan442-bound-task-handles-v1", "pan471-capability-inventory-v1"],
+    inputs: [], ownedTests: ["npm run pan472:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "One qualified native SQLite generation-bound snapshot/delta stream retains contiguous sequence, exact revisions, observed deletion history and code-owned exact mapping; absent semantics stay UNKNOWN and no missing inventory fact becomes authority.",
+      "Local synthetic approval is content-bound; existing PAN453 owner, stop/revoke, identity and recovery boundaries compose without retargeting legacy fixed CREATE_IF_ABSENT semantics or widening maintenance-preview permission.",
+      "Target data, cursor, approval, dedup and receipt commit atomically; post-commit acknowledgement loss reconciles actual native state without a second effect; conflicting content and stale resurrection are denied.",
+      "Empty delta is read-only NO_CHANGES only after independent verification, has no executable plan and cannot poison receipts; strict from-before-through receipt admission remains unchanged.",
+      "Independent read-only native source/target queries expose missing objects, broken references, scaling/status mutations and quarantined/unknown coverage at the retained cutoff, not a global cross-store transaction.",
+      "Fresh-process native restart retains exact receipts and zero outside effects; no second runtime, booking/email/payment, productive cutover, power-loss or hostile-host claim, private scratch publication or automatic stale-owner takeover.",
+    ],
+  };
+  dag.nodes.push(pan472Node);
+}
+pan472Node.inputs = pan472Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan472:test")) repositoryIntegrityNode.ownedTests.push("npm run pan472:test");
+dag.graphVersion = 69;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1285,6 +1317,7 @@ for (const [inputPath] of pan464Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan465Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan466Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan487Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan472Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
