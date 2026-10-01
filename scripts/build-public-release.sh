@@ -189,7 +189,7 @@ for line_number, raw in enumerate(manifest.read_text("utf-8").splitlines(), 1):
         raise SystemExit(f"PRIVILEGED_SOURCE_MODE:{line_number}")
     total_bytes += metadata.st_size
 
-if count != 1689:
+if count != 1728:
     raise SystemExit("MANIFEST_FILE_COUNT")
 if total_bytes > 100 * 1024 * 1024:
     raise SystemExit("MANIFEST_BYTE_LIMIT")
@@ -295,29 +295,9 @@ repository_only_files = {
     "docs/architecture/pan470-handoff-effort.md",
     "verification/pan470-handoff-effort-boundary-v1.json",
     "tests/fixtures/pan470/evidence-selfcheck-v1.txt",
-    # PAN463 isolated native-update source evidence; not a deployed updater.
-    "src/pan463/native-update-executor.mjs",
-    "tests/pan463/native-update-executor.test.mjs",
-    "tests/pan463/executor-process.mjs",
-    "schemas/contracts/pan463-native-update-v1.schema.json",
-    "docs/architecture/pan463-native-update-v1.md",
-    # PAN464 owned retained native pair qualification — source evidence only.
-    # Not included in the runnable product-increment allowlist.
-    "docs/architecture/pan464-retained-pair-v1.md",
-    "src/pan464/native-producer.mjs",
-    "src/pan464/native-consumer.py",
-    "src/pan464/protected-oracle.mjs",
-    "src/pan464/retained-snapshot.mjs",
-    "src/pan464/retained-pair-plan.mjs",
-    "src/pan464/retained-pair-controller.mjs",
-    "scripts/run-retained-pair-upgrade.mjs",
-    "scripts/run-pan464-native-qualification.mjs",
-    "tests/pan464/protected-oracle.test.mjs",
-    "tests/pan464/retained-snapshot.test.mjs",
-    "tests/pan464/retained-pair-plan.test.mjs",
-    "tests/pan464/native-controller.test.mjs",
-    "tests/pan464/controller-process.mjs",
-    "tests/pan464/runtime/Dockerfile",
+    # PAN465 promotes the bounded PAN463/PAN464 native source closure into the
+    # ordinary allowlist. Generated Git bundles/dependencies/signatures/receipts
+    # use the separate closed offline composer, never a global allowlist bypass.
     ".github/workflows/retained-native-pair.yml",
 }
 repository_only_prefixes = (

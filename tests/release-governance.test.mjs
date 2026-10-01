@@ -127,7 +127,7 @@ function conformingReleaseFixture(releaseClass) {
     governance,
     release,
     latest: { tag_name: tag },
-    tagRef: { object: { sha: mergeSha, type: "commit" } },
+    tagRef: { ref: `refs/tags/${tag}`, object: { sha: mergeSha, type: "commit" } },
     downloadedAssets,
   };
 }
@@ -160,6 +160,181 @@ test("regular/runnable and source/evidence-only releases pass only their class-s
     const input = conformingReleaseFixture(releaseClass);
     assert.deepEqual(validateReleaseContract(input), [], releaseClass);
   }
+});
+
+function nonLatestRunnableFixture() {
+  const input = conformingReleaseFixture("REGULAR_RUNNABLE_ARTIFACT");
+  const owner = conformingReleaseFixture("SOURCE_EVIDENCE_ONLY");
+  input.governance = owner.governance;
+  const tag = input.governance.forwardRunnableReleases.designations[0].tag;
+  const oldTag = input.release.tag_name;
+  input.release.tag_name = tag;
+  input.tagRef.ref = `refs/tags/${tag}`;
+  input.release.html_url = input.release.html_url.replace(oldTag, tag);
+  input.release.body = input.release.body.replace("- ISSUE: #376", "- ISSUE: #465");
+  for (const asset of input.release.assets) asset.browser_download_url = asset.browser_download_url.replace(oldTag, tag);
+  input.latest = owner.release;
+  input.latestByTag = structuredClone(owner.release);
+  input.latestTagRef = owner.tagRef;
+  return input;
+}
+
+test("PAN465 forward designated runnable remains non-Latest without promoting or rewriting historical identities", () => {
+  const input = nonLatestRunnableFixture();
+  assert.deepEqual(validateReleaseContract(input), []);
+  assert.notEqual(input.latest.tag_name, input.release.tag_name);
+  assert.equal(input.governance.releaseTaxonomy.githubLatestOwnerClass, "SOURCE_EVIDENCE_ONLY");
+  assert.equal(input.governance.currentRelease.historical, true);
+  assert.equal(input.governance.legacyReleaseExceptions.length, 2);
+});
+
+test("PAN465 non-Latest runnable does not bypass current owner, exact target, archive, or historical authority", async (t) => {
+  const probes = [
+    ["undesignated tag", "PUBLIC_NONLATEST_RUNNABLE_NOT_DESIGNATED", (x) => { x.governance.forwardRunnableReleases.designations = []; }],
+    ["owner policy weakened", "PUBLIC_NONLATEST_RUNNABLE_NOT_DESIGNATED", (x) => { x.governance.forwardRunnableReleases.requiresAnonymousLatestTagReadback = false; }],
+    ["scope substituted", "PUBLIC_NONLATEST_DESIGNATED_SCOPE_MISMATCH", (x) => { x.release.body = x.release.body.replace("- ISSUE: #465", "- ISSUE: #999"); }],
+    ["accidental promotion", "PUBLIC_NONOWNER_BECAME_LATEST", (x) => { x.latest = structuredClone(x.release); }],
+    ["owner has assets", "PUBLIC_NONLATEST_OWNER_CLASS_OR_ASSETS_INVALID", (x) => { x.latest.assets = structuredClone(x.release.assets); }],
+    ["owner class forged", "PUBLIC_NONLATEST_OWNER_CLASS_OR_ASSETS_INVALID", (x) => { x.latest.body = x.latest.body.replace("RELEASE_CLASS: SOURCE_EVIDENCE_ONLY", "RELEASE_CLASS: REGULAR_RUNNABLE_ARTIFACT"); }],
+    ["owner still draft", "PUBLIC_NONLATEST_OWNER_METADATA_INVALID", (x) => { x.latest.draft = true; }],
+    ["owner ref unavailable", "PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED", (x) => { delete x.latestTagRef; }],
+    ["owner target moved", "PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED", (x) => { x.latestTagRef.object.sha = "c".repeat(40); }],
+    ["owner metadata unavailable", "PUBLIC_NONLATEST_OWNER_TAG_READBACK_MISMATCH", (x) => { delete x.latestByTag; }],
+    ["owner id drift", "PUBLIC_NONLATEST_OWNER_TAG_READBACK_MISMATCH", (x) => { x.latestByTag.id += 1; }],
+    ["own target moved", "PUBLIC_TARGET_MISMATCH", (x) => { x.tagRef.object.sha = "c".repeat(40); }],
+    ["unlisted extra asset", "PUBLIC_ASSET_SET_OR_SIZE_MISMATCH", (x) => { x.release.assets.push({name:"invented.sig", size:7, browser_download_url:"https://example.invalid"}); }],
+    ["archive corruption", `PUBLIC_ASSET_SHA256_MISMATCH:cm-product-increment-rc-20260902-release-authority.tar.gz`, (x) => { x.downloadedAssets.set(x.release.assets[0].name, Buffer.from("corrupted")); }],
+  ];
+  for (const [name, expected, mutate] of probes) await t.test(name, () => {
+    const input = nonLatestRunnableFixture(); mutate(input);
+    assert.ok(validateReleaseContract(input).includes(expected), validateReleaseContract(input).join("\n"));
+  });
+});
+
+async function syntheticForwardReadback(input, {requestedTag = input.release.tag_name, root = ROOT} = {}) {
+  const repository = input.governance.repository;
+  const api = `https://api.github.com/repos/${repository}`;
+  const rawPrefix = `https://raw.githubusercontent.com/${repository}/${input.tagRef.object.sha}/`;
+  const requested = [];
+  const response = (value, bytes = Buffer.alloc(0)) => ({ok:true, status:200,
+    async json() { return structuredClone(value); }, async text() { return bytes.toString("utf8"); },
+    async arrayBuffer() { return bytes; }});
+  const fetchImpl = async (url, options = {}) => {
+    requested.push(url);
+    assert.equal(options.headers?.Authorization, undefined);
+    assert.equal(options.headers?.authorization, undefined);
+    if (url === `${api}/releases/tags/${requestedTag}`) return response(input.release);
+    if (url === `${api}/releases/latest`) return response(input.latest);
+    if (url === `${api}/git/ref/tags/${requestedTag}`) return response(input.tagRef);
+    if (url === `${api}/git/ref/tags/${input.latest.tag_name}`) return response(input.latestTagRef);
+    if (url === `${api}/releases/tags/${input.latest.tag_name}`) return response(input.latestByTag);
+    if (url.startsWith(rawPrefix)) return response(undefined, readFileSync(join(root, url.slice(rawPrefix.length))));
+    const asset = input.release.assets.find((item) => item.browser_download_url === url);
+    if (asset) return response(undefined, input.downloadedAssets.get(asset.name));
+    throw new Error(`UNEXPECTED_READBACK_URL:${url}`);
+  };
+  const result = await verifyPublicReadback(root, {releaseTag:requestedTag, requireConforming:true,
+    fetchImpl, readLocalHead:() => input.tagRef.object.sha});
+  return {result, requested};
+}
+
+test("PAN465 anonymous non-Latest readback fetches both full owner metadata and exact owner tag; returns latest:false", async () => {
+  const input = nonLatestRunnableFixture();
+  const api = `https://api.github.com/repos/${input.governance.repository}`;
+  const {result, requested} = await syntheticForwardReadback(input);
+  assert.equal(result.latest, false);
+  assert.equal(result.releaseClass, "REGULAR_RUNNABLE_ARTIFACT");
+  assert.ok(requested.includes(`${api}/git/ref/tags/${input.latest.tag_name}`));
+  assert.ok(requested.includes(`${api}/releases/tags/${input.latest.tag_name}`));
+});
+
+test("PAN465 GOV-01 designated tag cannot change class to bypass issue/assets/non-Latest constraints", async () => {
+  const input = conformingReleaseFixture("SOURCE_EVIDENCE_ONLY");
+  const tag = input.governance.forwardRunnableReleases.designations[0].tag;
+  input.release.tag_name = tag;
+  input.release.html_url = `https://github.com/${input.governance.repository}/releases/tag/${tag}`;
+  input.release.body = input.release.body.replace("- ISSUE: #376", "- ISSUE: #999");
+  input.tagRef.ref = `refs/tags/${tag}`;
+  input.latest = structuredClone(input.release);
+  await assert.rejects(syntheticForwardReadback(input), /PUBLIC_DESIGNATED_RELEASE_CLASS_MISMATCH/);
+});
+
+test("PAN465 GOV-01 ordinary non-designated source-only owner retains its conforming path", async () => {
+  const input = conformingReleaseFixture("SOURCE_EVIDENCE_ONLY");
+  const {result} = await syntheticForwardReadback(input);
+  assert.equal(result.latest, true);
+  assert.equal(result.releaseClass, "SOURCE_EVIDENCE_ONLY");
+});
+
+test("PAN465 GOV-02 recognized historical tag or release ID cannot be rewritten as auxiliary owner or new release", async (t) => {
+  for (const collision of ["owner-tag", "owner-id", "own-id"]) await t.test(collision, async () => {
+    const input = nonLatestRunnableFixture();
+    const historical = input.governance.publicLatestRelease;
+    if (collision === "owner-tag") {
+      input.latest.tag_name = historical.tag;
+      input.latest.html_url = historical.url;
+      input.latestTagRef.ref = `refs/tags/${historical.tag}`;
+    } else if (collision === "owner-id") input.latest.id = historical.releaseId;
+    else input.release.id = input.governance.currentRelease.releaseId;
+    input.latestByTag = structuredClone(input.latest);
+    await assert.rejects(syntheticForwardReadback(input), collision === "own-id"
+      ? /PUBLIC_HISTORICAL_IDENTITY_NOT_NEW_RELEASE/ : /PUBLIC_NONLATEST_HISTORICAL_OWNER_NOT_SUPPORTED/);
+  });
+});
+
+test("PAN465 GOV-02 historical tags cannot be shadowed by forward policy, even in a new schema-valid designation", async (t) => {
+  const policy = nonLatestRunnableFixture().governance;
+  for (const tag of [policy.currentRelease.tag, policy.publicLatestRelease.tag, policy.historicalReleasePolicy.namedHistoricalIdentity.tag]) {
+    await t.test(tag, async () => {
+      const root = fixture();
+      try {
+        const input = nonLatestRunnableFixture();
+        input.governance.forwardRunnableReleases.designations[0].tag = tag;
+        writeFileSync(join(root, "release/governance.json"), JSON.stringify(input.governance));
+        assert.ok(validateRepository(root).includes("FORWARD_RUNNABLE_POLICY_INVALID"));
+        await assert.rejects(syntheticForwardReadback(input, {root}), /FORWARD_RUNNABLE_POLICY_INVALID/);
+      } finally { rmSync(root, {recursive:true, force:true}); }
+    });
+  }
+});
+
+test("PAN465 HOLD-01 explicit conforming nonhistorical owner policy does not grant legacy conformance", async () => {
+  const input = nonLatestRunnableFixture();
+  const legacy = input.governance.publicLatestRelease;
+  const owner = {id:legacy.releaseId, tag_name:legacy.tag, name:legacy.title, target_commitish:legacy.targetCommitish,
+    draft:legacy.draft, prerelease:legacy.prerelease, published_at:legacy.publishedAt, html_url:legacy.url,
+    body:legacy.legacyBody, assets:structuredClone(legacy.assets)};
+  input.latest = owner;
+  input.latestByTag = structuredClone(owner);
+  input.latestTagRef = {ref:`refs/tags/${legacy.tag}`, object:{type:"commit",sha:legacy.tagObjectSha}};
+  assert.deepEqual(validateRecordedPublicState({governance:input.governance, latestRelease:owner,
+    latest:{tag_name:legacy.tag}, latestTagRef:input.latestTagRef}), []);
+  await assert.rejects(syntheticForwardReadback(input), /PUBLIC_NONLATEST_HISTORICAL_OWNER_NOT_SUPPORTED/);
+});
+
+test("PAN465 GOV-03 duplicate or contradictory owner merge declarations never use first-match precedence", async (t) => {
+  for (const other of ["b".repeat(40), "c".repeat(40)]) await t.test(other, async () => {
+    const input = nonLatestRunnableFixture();
+    input.latest.body = input.latest.body.replace(`MERGE_SHA: ${"b".repeat(40)}`,
+      `MERGE_SHA: ${"b".repeat(40)}\nMERGE_SHA: ${other}`);
+    input.latestByTag = structuredClone(input.latest);
+    await assert.rejects(syntheticForwardReadback(input), /PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED/);
+  });
+});
+
+test("PAN465 OBS-01 requested tag, response release tag and both response ref names are bound", async (t) => {
+  await t.test("own requested tag", async () => {
+    await assert.rejects(syntheticForwardReadback(nonLatestRunnableFixture(), {requestedTag:"different-requested-tag"}),
+      /PUBLIC_REQUESTED_TAG_RESPONSE_MISMATCH/);
+  });
+  await t.test("own ref name", async () => {
+    const input = nonLatestRunnableFixture(); input.tagRef.ref = "refs/tags/different-ref";
+    await assert.rejects(syntheticForwardReadback(input), /PUBLIC_REQUESTED_TAG_RESPONSE_MISMATCH/);
+  });
+  await t.test("owner ref name", async () => {
+    const input = nonLatestRunnableFixture(); input.latestTagRef.ref = "refs/tags/different-owner";
+    await assert.rejects(syntheticForwardReadback(input), /PUBLIC_NONLATEST_OWNER_TARGET_UNOBSERVED/);
+  });
 });
 
 test("bounded contradiction preflight has one closed ownership and failure matrix", () => {
@@ -333,7 +508,7 @@ test("public release builder binds its exact file count to the manifest", () => 
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), count);
-  assert.equal(count, 1689);
+  assert.equal(count, 1728);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -381,7 +556,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1689, "reconciled public count is the actual final manifest count");
+  assert.equal(publicCount, 1728, "reconciled public count is the actual final manifest count");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
