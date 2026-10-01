@@ -339,7 +339,7 @@ c0620d256e632a64f2df520731adb0852ce7e0c8178b49e6c17d1df1ecdf1117  ./docs/archite
 75f00b8855a16b4673b7d09799c38d695e986562d4cafc189c370848c81c876e  ./docs/architecture/pan462-native-backup-restore-v1.md
 5f359ba5501bee61513d6cff6407351523cc229d525a58ea17b7baa12ea4e32a  ./docs/architecture/pan463-native-update-v1.md
 0d874fe1b50ab6bb514d4366a5574297d10dd343d7e17e895b39907650c873cc  ./docs/architecture/pan464-retained-pair-v1.md
-b16ae814efd8008659b526b873b2deedf80761cf1796a02c202dd8e92e14edb3  ./docs/architecture/pan465-offline-profile.txt
+7b077af62d1925c0e4944eff217dc1e1ff2300d097976cc8dc2e2a9e0c0cc901  ./docs/architecture/pan465-offline-profile.txt
 0c95fdf922e6b4ec3a6036005c2f9263462d6939775d36bff4bc9484b32e37a6  ./docs/architecture/pan468-impact-selection-v1.md
 5fb325a027879610d8c0d022e9e6d3da1444d6b74522d8707ec41d5abb50f5b2  ./docs/architecture/pan469-contribution-views-v1.md
 793594fe6662bd7ddfd459685373598e2751e1db45475e8f71ebaafbe5ea744f  ./docs/architecture/pan470-handoff-effort.md
@@ -2085,5 +2085,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-1c97dc0190507895a3c4d95e2ddd57214149459bab92da82783fd2790421b858  ./verification/verification-dag-v2.json
+0efebeded23aed68ef242f7ae5c91a798ed9baedb2a27da4ac382d00acff357a  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

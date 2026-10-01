@@ -1,7 +1,7 @@
 PAN465 offline retained-native profile
 
 Scope
-  Runnable local synthetic retained PANSPHAIRA/KaleidoSphere qualification.
+  Runnable local synthetic retained PanSphaira/KaleidoSphere qualification.
   The archive includes real source/target/consumer Git bundles and locked local
   dependency bytes. It is not a production deployment, an organization PKI,
   a whole-host sandbox, a registry-signature assertion or power-loss evidence.
