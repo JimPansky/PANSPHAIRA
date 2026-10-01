@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "4dc9e45690f1589a1e69494e197f716da4b2a4efa2cad5cdeadd5edd3cfdfa26"
+          "sha256": "c8a28b7213fc2122694e5848d9e6abe5ae249a355af81db4bdb324c9b03fcbe3"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "853a695ab1c9b48f412704eb30e477b015609af9d5d10fd59b738fc8e9c079a4"
+          "sha256": "9edacba82ac1fae354ee31a1c883860ec406a5565b6cd48aa65fcc062b6e7f65"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",

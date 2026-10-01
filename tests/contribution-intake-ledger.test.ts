@@ -766,8 +766,8 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     graphVersion: number;
     nodes: Array<{ id: string; inputs: Array<{ path: string; role: string; sha256: string }>; ownedTests: string[] }>;
   };
-  // v67 adds the explicit bounded LIFE-06 owner; R1 v66 bindings remain intact.
-  assert.equal(dag.graphVersion, 67);
+  // v68 adds one bounded semantic successor; LIFE-06 and R1 bindings remain intact.
+  assert.equal(dag.graphVersion, 68);
   const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
   assert.equal(life06.length, 1);
   const life06Inputs: ReadonlyArray<readonly [string, string]> = [
@@ -802,7 +802,15 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     assert.deepEqual(matches[0], { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
   }
   assert.equal(integrity[0]!.ownedTests.filter((command) => command === "npm run docs:test").length, 1);
-  assert.equal(dag.nodes.length, 73);
+  assert.equal(dag.nodes.length, 74);
+  const semantic = dag.nodes.filter(({ id }) => id === "pan487-product-purpose-semantic-successor-v1");
+  assert.equal(semantic.length, 1);
+  assert.equal(semantic[0]!.inputs.length, 9);
+  assert.deepEqual(semantic[0]!.ownedTests, ["npm run pan487:test"]);
+  for (const input of semantic[0]!.inputs) {
+    assert.deepEqual(dag.nodes.filter(owner => owner.inputs.some(candidate => candidate.path === input.path)).map(({ id }) => id), [semantic[0]!.id], input.path);
+    assert.equal(input.sha256, createHash("sha256").update(readFileSync(input.path)).digest("hex"), input.path);
+  }
   assert.equal(dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan465-offline-updater-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan463-native-update-v1").length, 1);
