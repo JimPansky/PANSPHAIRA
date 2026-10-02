@@ -1,0 +1,1520 @@
+{
+  "schemaVersion": "pansphaira.pan360/erv-original-profile/v1",
+  "profileVersion": "1.0.0",
+  "scope": "PUBLIC_SYNTHETIC_NON_CUSTOMER_AUTHORITY_FREE",
+  "authority": {
+    "mode": "LOCAL_SYNTHETIC_PROOF",
+    "customerData": false,
+    "externalProvider": false,
+    "productivePosting": false
+  },
+  "variants": {
+    "matchingModes": [
+      {
+        "variantId": "LEAN_INVOICE_ONLY_V1",
+        "version": "1.0.0",
+        "requiredKinds": [
+          "SUPPLIER",
+          "INVOICE"
+        ],
+        "amountKinds": [
+          "INVOICE"
+        ],
+        "relationDimensions": [
+          "SUPPLIER",
+          "QUANTITY",
+          "UNIT",
+          "CURRENCY"
+        ]
+      },
+      {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0",
+        "requiredKinds": [
+          "SUPPLIER",
+          "INVOICE",
+          "PURCHASE_ORDER",
+          "RECEIPT"
+        ],
+        "amountKinds": [
+          "INVOICE",
+          "PURCHASE_ORDER",
+          "RECEIPT"
+        ],
+        "relationDimensions": [
+          "SUPPLIER",
+          "QUANTITY",
+          "UNIT",
+          "CURRENCY"
+        ]
+      }
+    ],
+    "tolerancePolicies": [
+      {
+        "variantId": "STRICT_ZERO_V1",
+        "version": "1.0.0",
+        "absoluteToleranceMinor": 0,
+        "rateBasisPoints": 0
+      },
+      {
+        "variantId": "RATE_BPS_V1",
+        "version": "1.0.0",
+        "absoluteToleranceMinor": 0,
+        "rateBasisPoints": 100
+      },
+      {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0",
+        "absoluteToleranceMinor": 0,
+        "rateBasisPoints": 200
+      }
+    ]
+  },
+  "documents": [
+    {
+      "id": "high",
+      "path": "tests/fixtures/pan360/invoice-high-v1.txt",
+      "sha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830",
+      "supplierId": "SYN-PAN360-SUP-001",
+      "invoiceNumber": "SYN-PAN360-HIGH",
+      "currency": "EUR",
+      "quantity": 2,
+      "unit": "EA",
+      "grossAmountMinor": 1200000,
+      "provenance": {
+        "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+        "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+        "synthetic": true,
+        "customerData": false,
+        "externalRetrieval": false
+      }
+    },
+    {
+      "id": "below",
+      "path": "tests/fixtures/pan360/invoice-below-v1.txt",
+      "sha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+      "supplierId": "SYN-PAN360-SUP-001",
+      "invoiceNumber": "SYN-PAN360-BELOW",
+      "currency": "EUR",
+      "quantity": 2,
+      "unit": "EA",
+      "grossAmountMinor": 999999,
+      "provenance": {
+        "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+        "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+        "synthetic": true,
+        "customerData": false,
+        "externalRetrieval": false
+      }
+    },
+    {
+      "id": "equal",
+      "path": "tests/fixtures/pan360/invoice-equal-v1.txt",
+      "sha256": "3cb39f293157f8bf008efd8014c0e24050a498989d7c75152d23a095bae81af5",
+      "supplierId": "SYN-PAN360-SUP-001",
+      "invoiceNumber": "SYN-PAN360-EQUAL",
+      "currency": "EUR",
+      "quantity": 2,
+      "unit": "EA",
+      "grossAmountMinor": 1000000,
+      "provenance": {
+        "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+        "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+        "synthetic": true,
+        "customerData": false,
+        "externalRetrieval": false
+      }
+    },
+    {
+      "id": "above",
+      "path": "tests/fixtures/pan360/invoice-above-v1.txt",
+      "sha256": "30ab519f817f63353151acb11a5ff9d36de2278ea96fc93f5a4c8bda39265017",
+      "supplierId": "SYN-PAN360-SUP-001",
+      "invoiceNumber": "SYN-PAN360-ABOVE",
+      "currency": "EUR",
+      "quantity": 2,
+      "unit": "EA",
+      "grossAmountMinor": 1000001,
+      "provenance": {
+        "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+        "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+        "synthetic": true,
+        "customerData": false,
+        "externalRetrieval": false
+      }
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "lean-no-po-no-receipt",
+      "matchingMode": {
+        "variantId": "LEAN_INVOICE_ONLY_V1",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "STRICT_ZERO_V1",
+        "version": "1.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "lean-no-po-no-receipt:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/0/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "410eac50cc78bb86d6a8724b1e33051e029ea454d634d3bc67530acc3f289388"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "lean-no-po-no-receipt:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/0/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "15d16036089008d6be286052e92ca3a2b77040b90fa375bc1b428738f29d65ea"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-discriminating200",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-discriminating200:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/1/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "49bc412fe6af7f8f731978cbf9043bff4c2f4177a76fe2f76e0995f2f0de1c2b"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-discriminating200:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/1/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "6fb0dfb702a97dbbf9ad40c4de8fbe2a1c2c8e67c3ba1069ce9c708bf9cfba0f"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-discriminating200:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1182000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/1/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "3bdaf81e9f8f0cd7578bba17f39f75ab49cb0b24398d2e513c2b1d9c8e0fc64b"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-discriminating200:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/1/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "16cced3b39d9d8aa9b5b919886e18eba434903cb4ac3c2da59f9c1f1d4d1b412"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-boundary200",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-boundary200:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/2/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "015bdd4a7f6a7477d3d55f43ef2fcb78120fea989e7b1ed0abdd6d1e31482aba"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-boundary200:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/2/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "7b59c4762a15b3f88a9f3dafd7b5e683730443b62f630ce05dd92586cd47ee90"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-boundary200:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1176000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/2/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "d169e8f95b65c477f481706fedc5cb4fab78f7356e92db4ce1ddbff3563e8f4a"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-boundary200:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/2/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e71e0a9e2b227beaf3116d3c4ce2713b6c552d567c1e4bb75cb449ce3ff4662e"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-outside200",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-outside200:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/3/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "5ac95f1d7d96f924913587d70e9c0fb43ba10895a4b8b1a9c621064fa5cfc9a0"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-outside200:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/3/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "6cbbc491e02e8fc2cfb8245dbe70b8d9295f65b345df120506ad25e8697e8130"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-outside200:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1175999,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/3/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "6cf34fa61c83c7880a823ab8f6938dbad76afbadf8c8d01c16f46b6e89732f3e"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-outside200:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/3/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "6830ca4ea7b0435dbf4e323c20da1f1ab0a3fbdc68137a5db951087b45d17b31"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-legacy100-conflict",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "1.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-legacy100-conflict:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/4/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "f5c6ad3fde00ef98cd77e4f2cbeeb95c98ace8583a84354a2b45c02d8f34edc4"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-legacy100-conflict:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/4/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "f0023d7f0f20877d085b47710363771e9d8a9630dbf3a574bb70ade950f3a94e"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-legacy100-conflict:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1182000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/4/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "4e3d88965dd8054a75d9db6ce34865b7bbec5b6aacf5e99062c536ca6c427104"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-legacy100-conflict:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/4/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "ae9c99a5a2c0ffe01349bb74826822c44a0dc7cd4115648256840d47ed703a85"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-missing-po",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-missing-po:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/5/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "08f08552802cd59453d1a1b553e6680248f91fa1959622acd4ab42cce50f74be"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-missing-po:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/5/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e0107fa747a04b454bcd08fa10857f059526c2b708590f60311ab3a1c2873354"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-missing-po:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/5/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "4a942700d53ae6081a2a10dff36c75aa5dfa62090e61f072b2dfbae0cb373187"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-missing-receipt",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-missing-receipt:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/6/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "ebc14335b644e69e2afaad608b5c1bd187309eb4c55a695b21f298d1e57c0753"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-missing-receipt:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/6/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "d91c2b17c85cd4688fb18d98f78133bca344aff195316cc18164cd058dab5d46"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-missing-receipt:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/6/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "771c3afd30b0a2ec81db3669ccc13662df5270350b9e92738d53a68b9384d50f"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-wrong-supplierId",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-wrong-supplierId:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/7/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "c95c7189a0a6db87c20f3a67f9e20087a57451b0d07289e8e3ed7b5d7a41fbcf"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-wrong-supplierId:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/7/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "8084c9097f1ac3e13e0319b1ce2666f805177d6876cfc9ec31e0f20fd16a6323"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-wrong-supplierId:RECEIPT",
+            "supplierId": "SYN-PAN360-FOREIGN",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/7/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "83bd6a28a48ac49db783f600b2561cf3ba75e56c11554c95593e5ae766089641"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-wrong-supplierId:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/7/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e846969df105d9fd3a2edf66a17786457e5dd2150626ddb5e5698b48ca6a356f"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-wrong-quantity",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-wrong-quantity:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/8/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "9cf2cb8058daa8efaa7211992234689346693908aa33f68bac8f74a1733d86ff"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-wrong-quantity:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/8/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "065620976e2670d810c6340036e641e9949efb423dbbc8216c40d158240556c7"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-wrong-quantity:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 3,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/8/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "4a45d6908b58a39ee2c35c8284a7428d4e64ed59bb4e9505a02e1e94f0122f51"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-wrong-quantity:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/8/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "14c4a034d1b190ed6dd33ef89639db26d361539ece31d278d82ac388c5cefc47"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-wrong-unit",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-wrong-unit:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/9/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "955291d02ffbc3fcd6acb7f350082b5c22f7f8f5ff8074ed310b01e40bd3fa2f"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-wrong-unit:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/9/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "357639a1768e2c571928323398f041053fec8b9a09468246514b269dde7848b6"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-wrong-unit:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "KG",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/9/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "29d61e1da6b1668e0f13c0eff2bbf3b14707adaabdcfc3aec451ec9c62d8d987"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-wrong-unit:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/9/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "b2202a5de815d82d5937a6de81f9d8ebeefb3fb47587ed609354aa10a455de29"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-wrong-currency",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-wrong-currency:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/10/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "c4764537f8aeb6d163c744860e1a372c2be860010565d2096aa34d81f1d1c230"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-wrong-currency:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/10/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "334c473a4ee2bb7bd202fd49a4b6ee1dd098a406ab59b52f4dfc78575550ef89"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-wrong-currency:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "USD"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/10/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "02f454eb9d06820a7c728c5b1c2a6b6dd62f84def19b4fea6645c2df69c3b591"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-wrong-currency:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/10/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "7635834c087d7251cf2e0d0dfd6d7e62cf46d1abf03e5913473709edee67b67e"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-duplicate-po",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-duplicate-po:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/11/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "bba0134f555f3a0fc94e5cd0545641d45b363ed543935b46b3e177e904336852"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-duplicate-po:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/11/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "9ff5e811e3ac02547419957dd9e7685be7ae1f355e4152794bf0101ad01c6e41"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-duplicate-po:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/11/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "21feb9fd24bd3a2e22a62e44d7712294e2cf4c4451985a922ab6048fcf37bfdc"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-duplicate-po:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/11/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e1471756bbe52382cc5bb7dba7e356718beabe3a6de53d552f240905d01bc116"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-duplicate-po:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/11/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "9ff5e811e3ac02547419957dd9e7685be7ae1f355e4152794bf0101ad01c6e41"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "three-way-unknown-policy",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "9.9.9"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "three-way-unknown-policy:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/12/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e7f45b922b818915c426b1eba484357e95a29404dd92095083721723f87dc379"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "three-way-unknown-policy:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/12/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "d10a217840f631f19cfaa04a89fa5d01f86c881af21a792c5f46ae40eb264b87"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "three-way-unknown-policy:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/12/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "45c45409bb8ffb5a28d60506c8f97b570cbdd477ed714d937127c09eb6da36d6"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "three-way-unknown-policy:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/12/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "33d07e61bdb45d32554b465efc6abf11c4126d78dd971a430ef757c5d825b0a1"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "lean-productive-denied",
+      "matchingMode": {
+        "variantId": "LEAN_INVOICE_ONLY_V1",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "STRICT_ZERO_V1",
+        "version": "1.0.0"
+      },
+      "requestedEffects": [
+        "POST_PRODUCTIVE"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "lean-productive-denied:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/13/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "9187d8b2e2c2294110047301512cb051b919b0bcd9820174bad165a035ea8d3b"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "lean-productive-denied:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1200000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/13/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "a5c4a9bcb239cb0b1d327bbccedbae22155234d35914261de1b5bcfa96af90a3"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "threshold-below",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "threshold-below:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/14/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "fbd7df92c82c84cf095f2a8e7c15ff90d228b5f2dd4b653a7a721340cf4b4a62"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "threshold-below:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 999999,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/14/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e5287ef82d0d2c052a9a932325fef42c194f3d123430774eaa4e78bb47d93ea7"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "threshold-below:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 999999,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/14/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "b4ea8405aab02bc713bdcfbb9ac55894902b8d9027a151fb4b3959a68163bbf0"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "threshold-below:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 999999,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/14/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "b1c9a4729a07b236edbc3d762b92e95429268190a5e73e89faa90cc8bc4a0275"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "threshold-equal",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "threshold-equal:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/15/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "4ff353a569099e6c8f4d036f28d7ba01216a2bd85531bfa07b7e86a047ac2da7"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "threshold-equal:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1000000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/15/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "d5398b59c796403e0b2253d0bea2c7d3b287d6518a8a130799148172329c58af"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "threshold-equal:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1000000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/15/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "693567017bbe141c047542f28877ea8fe18b124b2e0adaa36a86e1e39d09ec38"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "threshold-equal:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1000000,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/15/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "9b44396f5d067bfbccd622a110232c616234fe6b62d85594d9965f8cf2d680e0"
+          }
+        }
+      ]
+    },
+    {
+      "caseId": "threshold-above",
+      "matchingMode": {
+        "variantId": "THREE_WAY_RELATIONAL_V2",
+        "version": "1.0.0"
+      },
+      "tolerancePolicy": {
+        "variantId": "RATE_BPS_V1",
+        "version": "2.0.0"
+      },
+      "requestedEffects": [
+        "READ_SYNTHETIC",
+        "WRITE_LOCAL_PROOF"
+      ],
+      "references": [
+        {
+          "body": {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "threshold-above:SUPPLIER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 0,
+            "quantity": 0,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/16/references/0",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "b6df30a5ec4f482458e9535e8ed655b6bef2fa253622e9d5fdc6ec090cc130d4"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "threshold-above:PURCHASE_ORDER",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1000001,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/16/references/1",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "0f94eb4c7118ebc9c785eb1827095636fff57bb4d2b7f1788ee10afe03c60a9d"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "RECEIPT",
+            "referenceId": "threshold-above:RECEIPT",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1000001,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/16/references/2",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "e824204f19cffcc5e8fef56cc7abae8a8aa7b4e060255b3b0f3f15bf93c2b300"
+          }
+        },
+        {
+          "body": {
+            "referenceKind": "INVOICE",
+            "referenceId": "threshold-above:INVOICE",
+            "supplierId": "SYN-PAN360-SUP-001",
+            "matchAmountMinor": 1000001,
+            "quantity": 2,
+            "unit": "EA",
+            "currency": "EUR"
+          },
+          "evidence": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "locator": "tests/fixtures/pan360/original-erv-profile-v1.json#cases/16/references/3",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "contentSha256": "f603faae0280d0b539733aa37456ac0fe81ad995d7fbbdd46494a79c0c84d301"
+          }
+        }
+      ]
+    }
+  ],
+  "originalRequirements": {
+    "baseline": "LEAN_NO_MANDATORY_PO_RECEIPT",
+    "changed": "THREE_WAY_PO_RECEIPT_200BPS_SEPARATE_APPROVAL_ABOVE_EUR10000",
+    "approvalComparison": "STRICTLY_GREATER_THAN",
+    "separateApprovalThresholdMinor": 1000000
+  },
+  "historicalNonclaims": [
+    "HISTORICAL100BPS_PACK_AND_CORE_UNCHANGED",
+    "INVOICE_ONLY_IS_NOT_FULL_PO_OR_THREE_WAY_MATCH",
+    "STRUCTURED_TEXT_EXTRACTION_NOT_OCR",
+    "NO_PRODUCTIVE_BOOKING_OR_EXTERNAL_READBACK"
+  ]
+}

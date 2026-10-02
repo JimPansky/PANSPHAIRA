@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 73,
+  "graphVersion": 74,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "16333124bf6d72b78735af61a0fb172c813601356eae9cf0da7cb90886505868"
+          "sha256": "8df4d62c7f7a144a0a28304b7e55d07a0b79b3f853eb214c6edfefd925ae78e2"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "5f6c5257b93ede1290b2ef42436a6331cb10b240add76c2dd87c58b4f3e00a91"
+          "sha256": "90749c8fd9a5671071cc9127ff8968f192ff6c49f1f1a427708c7c9d4234920b"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "f6fb08b611ee5b8f1f04bc0150aa81a78fb2993e0078f54e45f45d33077d8432"
+          "sha256": "da7d6d0c2e68d949223fa7c2bad5202a48b5ea0a2eeb174a4ea920c8f5d22a40"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "9612b0eea8cfb90877244b9aa9e894381bceab84f9fa36534787aaa56206aebe"
+          "sha256": "4f921a6ded1394f845c921cad47f1cd337818276db821f03179685161dc00243"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "0cebb896ceda4c4b1fe503151e94c1971dcd147b341915f1725c443727d5705f"
+          "sha256": "0d3cc1eee0780495af46966c0ece077092d661bc5a8e4b0167fef0391e4ea8d6"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4986,7 +4986,7 @@
         {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "04c37cba2efedb118ef1b669e5d238573e64b755d5dce7cc9a30c789cda5be4f"
+          "sha256": "e0af70c3afda6569703d281fdfdad39c4f3dcebf74ad86913fdaf42ec7616500"
         },
         {
           "path": "tests/release-governance.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "483518a14db7f651a8101d368e6b7abd3e184b6a87b6cec794b0711632f9eaee"
+          "sha256": "7ee5e570ac49122336fb983c75c11f41c15af6b8c87d8a3c012be7825acce449"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5072,7 +5072,8 @@
         "npm run pan473:test",
         "npm run pan467:test",
         "npm run pan456:test",
-        "npm run pan454:test"
+        "npm run pan454:test",
+        "npm run pan360:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5627,7 +5628,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "57922c624a9744383cef5dcdc81e59f39a87f3992570e45c47d4c783a6065e01"
+          "sha256": "7db6041d1f310c6a0724968c7923946ca9951a484263a81a1c90b0aa22703cda"
         },
         {
           "path": "package-lock.json",
@@ -5987,7 +5988,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "61ab3278b29137b53a678928998a4d84176ab4556ebdbb03f7c5c793b0278837"
+          "sha256": "9114a28c82d6a79feb8df157e29c6e708066fbff5ab477600d5cad95bd48fea3"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7867,6 +7868,112 @@
         "Observed same-UID process/credential/state/journal and loopback access yields a bounded falsification of complete intra-container mediation, retaining a network-free synthetic scope and owned corrections, never an implemented production isolation capability.",
         "Source-only BTH and new evidence tooling retain their repository-only source archive classification; all prior owners, original criteria, immutable profiles and mandatory review/canonical/CI/merge/release/public-readback obligations remain intact."
       ]
+    },
+    {
+      "id": "pan360-original-erv-execution-v1",
+      "dependsOn": [
+        "ap-02-incoming-invoice-intake-v1",
+        "ap-04-incoming-invoice-erv-relational-v2",
+        "ap-05-incoming-invoice-receipt-manifest-v1"
+      ],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan360-original-erv-execution-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "a87c62257b7a093f4c204bd5eaa815eb3c111426bde417ca89d5dd08aacf71da"
+        },
+        {
+          "path": "scripts/run-pan360-original-erv.mjs",
+          "role": "SOURCE",
+          "sha256": "5be39ceb905a5a2cbe3e0334ce0650dfda5d731413efea8a9c5f088eb9c685a7"
+        },
+        {
+          "path": "src/pan360/original-erv-core-v1.mjs",
+          "role": "CONTRACT",
+          "sha256": "fb55266a99ce6500b99ca5683da3c27ecd08d7166c21e96523ab623bff0e9d1c"
+        },
+        {
+          "path": "src/pan360/original-invoice-input-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "ead7129d7815d75d484d73f0ed390610e06d94ce3591742990c1fc220858ac41"
+        },
+        {
+          "path": "src/pan360/original-erv-execution-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "bb4e10192e72272b7e4261bfcc52b6ebacd62b4def5e032a27859cb431a89197"
+        },
+        {
+          "path": "src/pan360/original-erv-report-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "cb17c49c59d273cfe9553184b5e107b16ee0dcdb7306c7e8bf2f68f626d0b0a5"
+        },
+        {
+          "path": "tests/pan360/original-execution-regression.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "c6218b764663365a6f884643dc10c0308cbd6f36949f609b68c6b6b312bd896b"
+        },
+        {
+          "path": "tests/pan360/original-core-qualification.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "e1ee2081a408b87985c96b459e2416296192dfbf8543b9e157038c2da1771438"
+        },
+        {
+          "path": "tests/pan360/original-composition.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "b7c1614a683dfb1756eaf0ffe80892403f82e9d98187abf071626217bdf42541"
+        },
+        {
+          "path": "tests/pan360/original-report.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "6fb884112e9f1dfff0caac5ba4835907b1be9d386452fb04c3ecedd19df8909b"
+        },
+        {
+          "path": "tests/pan360/original-registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "297051f3f82751c268ed6bfa9445a668acc8c68c06a5e13e4c6f9ffd424eb8a1"
+        },
+        {
+          "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
+          "role": "FIXTURE",
+          "sha256": "708ce4f0232377a878e60703d37c92d25f1601278bc98fd96e62018d1bf08ae2"
+        },
+        {
+          "path": "tests/fixtures/pan360/invoice-high-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830"
+        },
+        {
+          "path": "tests/fixtures/pan360/invoice-below-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f"
+        },
+        {
+          "path": "tests/fixtures/pan360/invoice-equal-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "3cb39f293157f8bf008efd8014c0e24050a498989d7c75152d23a095bae81af5"
+        },
+        {
+          "path": "tests/fixtures/pan360/invoice-above-v1.txt",
+          "role": "FIXTURE",
+          "sha256": "30ab519f817f63353151acb11a5ff9d36de2278ea96fc93f5a4c8bda39265017"
+        },
+        {
+          "path": "verification/pan360-original-erv-execution-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "233558e4908ea924e3178253fddc37be4c05a3991353d9bd0ca8f1079d04e2c8"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan360:test"
+      ],
+      "invariants": [
+        "Original LEAN without mandatory PO/receipt and dialogue-derived relational200bps/strictly-above10000EUR approval actually execute on identical versioned modules.",
+        "Historical100bps, fixed-pack compilers, UNKNOWN and accepted evidence remain unchanged; no caller-minted source, registry, answer, UI, receipt or Authority substitutes for actual bound execution.",
+        "Only fixed public synthetic document/reference admission and local evidence are implemented; no OCR, customer, productive booking, external credentials or optional ERP dependency is inferred.",
+        "Independent qualification, exact-head CI, protected merge, correctly classified new release and anonymous released-source replay remain separate delivery gates."
+      ],
+      "riskClass": "CRITICAL",
+      "globalInvalidation": false
     }
   ]
 }
