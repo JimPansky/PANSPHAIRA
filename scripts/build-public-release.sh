@@ -243,6 +243,25 @@ repository_only_files = {
     "scripts/run-pan454-journey-evidence.mjs",
     "tests/pan454/journey-mediation-evidence.test.mjs",
     "docs/architecture/pan454-journey-mediation-evidence-v1.md",
+    # PAN360 original functional ERV source increment. Actual synthetic execution
+    # evidence is shipped in the source archive; no runnable product promotion.
+    "docs/architecture/pan360-original-erv-execution-v1.md",
+    "scripts/run-pan360-original-erv.mjs",
+    "src/pan360/original-erv-core-v1.mjs",
+    "src/pan360/original-invoice-input-v1.mjs",
+    "src/pan360/original-erv-execution-v1.mjs",
+    "src/pan360/original-erv-report-v1.mjs",
+    "tests/pan360/original-execution-regression.test.mjs",
+    "tests/pan360/original-core-qualification.test.mjs",
+    "tests/pan360/original-composition.test.mjs",
+    "tests/pan360/original-report.test.mjs",
+    "tests/pan360/original-registration.test.mjs",
+    "tests/fixtures/pan360/original-erv-profile-v1.json",
+    "tests/fixtures/pan360/invoice-high-v1.txt",
+    "tests/fixtures/pan360/invoice-below-v1.txt",
+    "tests/fixtures/pan360/invoice-equal-v1.txt",
+    "tests/fixtures/pan360/invoice-above-v1.txt",
+    "verification/pan360-original-erv-execution-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

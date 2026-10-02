@@ -1401,6 +1401,48 @@ pan454Node.inputs = pan454Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan454:test")) repositoryIntegrityNode.ownedTests.push("npm run pan454:test");
 dag.graphVersion = 73;
 
+// Original PAN360 internal execution remainder: one bounded versioned owner.
+const pan360Inputs = [
+  ["docs/architecture/pan360-original-erv-execution-v1.md", "DERIVED_EVIDENCE"],
+  ["scripts/run-pan360-original-erv.mjs", "SOURCE"],
+  ["src/pan360/original-erv-core-v1.mjs", "CONTRACT"],
+  ["src/pan360/original-invoice-input-v1.mjs", "SOURCE"],
+  ["src/pan360/original-erv-execution-v1.mjs", "SOURCE"],
+  ["src/pan360/original-erv-report-v1.mjs", "SOURCE"],
+  ["tests/pan360/original-execution-regression.test.mjs", "VALIDATOR"],
+  ["tests/pan360/original-core-qualification.test.mjs", "VALIDATOR"],
+  ["tests/pan360/original-composition.test.mjs", "VALIDATOR"],
+  ["tests/pan360/original-report.test.mjs", "VALIDATOR"],
+  ["tests/pan360/original-registration.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/pan360/original-erv-profile-v1.json", "FIXTURE"],
+  ["tests/fixtures/pan360/invoice-high-v1.txt", "FIXTURE"],
+  ["tests/fixtures/pan360/invoice-below-v1.txt", "FIXTURE"],
+  ["tests/fixtures/pan360/invoice-equal-v1.txt", "FIXTURE"],
+  ["tests/fixtures/pan360/invoice-above-v1.txt", "FIXTURE"],
+  ["verification/pan360-original-erv-execution-v1.json", "DERIVED_EVIDENCE"],
+];
+let pan360Node = dag.nodes.find(({ id }) => id === "pan360-original-erv-execution-v1");
+if (pan360Node === undefined) {
+  pan360Node = {
+    id: "pan360-original-erv-execution-v1",
+    dependsOn: ["ap-02-incoming-invoice-intake-v1", "ap-04-incoming-invoice-erv-relational-v2", "ap-05-incoming-invoice-receipt-manifest-v1"],
+    inputs: [],
+    ownedTests: ["npm run pan360:test"],
+    invariants: [
+      "Original LEAN without mandatory PO/receipt and dialogue-derived relational200bps/strictly-above10000EUR approval actually execute on identical versioned modules.",
+      "Historical100bps, fixed-pack compilers, UNKNOWN and accepted evidence remain unchanged; no caller-minted source, registry, answer, UI, receipt or Authority substitutes for actual bound execution.",
+      "Only fixed public synthetic document/reference admission and local evidence are implemented; no OCR, customer, productive booking, external credentials or optional ERP dependency is inferred.",
+      "Independent qualification, exact-head CI, protected merge, correctly classified new release and anonymous released-source replay remain separate delivery gates.",
+    ],
+    riskClass: "CRITICAL",
+    globalInvalidation: false,
+  };
+  dag.nodes.push(pan360Node);
+}
+pan360Node.inputs = pan360Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan360:test")) repositoryIntegrityNode.ownedTests.push("npm run pan360:test");
+dag.graphVersion = 74;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1440,6 +1482,7 @@ for (const [inputPath] of pan472Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan473Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan467Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan454Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan360Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

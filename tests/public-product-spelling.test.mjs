@@ -98,6 +98,17 @@ function classify(path, line) {
     && line.trim() === `export const AP02_BOUNDED_EXTRACTION_LINE_PREFIX_V1 = "${legacyDisplay} SYNTHETIC SUPPLIER INVOICE" as const;`)
     return "frozen-synthetic-fixture-display";
   if (path === "tests/fixtures/incoming-invoice/supplier-invoice-v1.txt") return "frozen-synthetic-fixture-display";
+  // Exact original360 structured-text fixtures reuse the retained extractor's
+  // mandatory technical header. Pin bytes and this line; no branding wildcard.
+  const original360FixturePins = {
+    "tests/fixtures/pan360/invoice-high-v1.txt": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830",
+    "tests/fixtures/pan360/invoice-below-v1.txt": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+    "tests/fixtures/pan360/invoice-equal-v1.txt": "3cb39f293157f8bf008efd8014c0e24050a498989d7c75152d23a095bae81af5",
+    "tests/fixtures/pan360/invoice-above-v1.txt": "30ab519f817f63353151acb11a5ff9d36de2278ea96fc93f5a4c8bda39265017",
+  };
+  if (Object.hasOwn(original360FixturePins, path)
+    && createHash("sha256").update(read(path)).digest("hex") === original360FixturePins[path]
+    && line === `${legacyDisplay} SYNTHETIC SUPPLIER INVOICE V1`) return "exact-digest-synthetic-extractor-header";
   if (path.startsWith("schemas/")) return "stable-schema";
   if (path === "release/governance.json") {
     if (line.includes(`JoFe2/${legacyDisplay}`)) return "repository-slug";
