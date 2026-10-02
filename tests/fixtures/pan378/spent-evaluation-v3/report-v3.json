@@ -1,0 +1,336 @@
+{
+  "outcome": "SCORED",
+  "schemaVersion": "pansphaira.document-ai-pilot/report/v2",
+  "verdict": "FALSIFIED_WITH_EVIDENCE",
+  "testedScope": {
+    "candidateId": "audit-378-tesseract-5.5.0-eng-generic-parser-v2",
+    "corpusId": "audit-378-fictional-invoices-v2-ec1fd7668deb",
+    "documentCount": 6,
+    "sourceMedia": {
+      "pdf": 3,
+      "image": 3
+    },
+    "runtimeImageManifestSha256": "e76ea7fb7afa055b1948ca4b297edb4ec12b2c60813ebb636ca2d1a421d27898",
+    "modelIdentity": "tesseract-eng-traineddata",
+    "modelWeightsSha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
+    "parserId": "generic-invoice-parser-v1",
+    "parserSha256": "75953ec8d4f2f21626e0e7d520c0a84d39d00644fc7e8d22840f45240245c97a"
+  },
+  "diversity": {
+    "layouts": [
+      "COLUMN_LEDGER",
+      "PLAIN_REGISTER",
+      "RIGHT_HEADER"
+    ],
+    "lineItemClasses": [
+      "MULTIPLE",
+      "SINGLE"
+    ],
+    "taxClasses": [
+      "MIXED",
+      "SINGLE",
+      "ZERO"
+    ],
+    "failureClasses": [
+      "NONE",
+      "OCCLUDED_TOTAL",
+      "TOTAL_CONTRADICTION"
+    ]
+  },
+  "denominators": {
+    "fieldValues": 24,
+    "lineItems": 12,
+    "taxes": 8,
+    "totals": 6,
+    "dispositions": 6,
+    "documentsExact": 6
+  },
+  "metrics": {
+    "fieldValues": {
+      "denominator": 24,
+      "exactCorrect": 24,
+      "incorrect": 0,
+      "abstained": 0,
+      "falsePositives": 0,
+      "exactRate": 1
+    },
+    "lineItems": {
+      "denominator": 12,
+      "exactCorrect": 6,
+      "incorrect": 0,
+      "abstained": 6,
+      "falsePositives": 0,
+      "exactRate": 0.5
+    },
+    "taxes": {
+      "denominator": 8,
+      "exactCorrect": 8,
+      "incorrect": 0,
+      "abstained": 0,
+      "falsePositives": 0,
+      "exactRate": 1
+    },
+    "totals": {
+      "denominator": 6,
+      "exactCorrect": 5,
+      "incorrect": 0,
+      "abstained": 1,
+      "falsePositives": 0,
+      "exactRate": 0.833333
+    },
+    "dispositions": {
+      "denominator": 6,
+      "exactCorrect": 4,
+      "incorrect": 0,
+      "abstained": 2,
+      "falsePositives": 0,
+      "exactRate": 0.666667
+    },
+    "documentsExact": {
+      "denominator": 6,
+      "exactCorrect": 4,
+      "incorrect": 0,
+      "abstained": 2,
+      "falsePositives": 0,
+      "exactRate": 0.666667
+    }
+  },
+  "errors": [
+    {
+      "opaqueCaseId": "a10ac5c88247bf800e17",
+      "dimension": "lineItems:0",
+      "expected": "{\"description\":\"SYNTHETIC PART A\",\"netAmountMinor\":6320,\"quantity\":2,\"unitAmountMinor\":3160}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a10ac5c88247bf800e17",
+      "dimension": "lineItems:1",
+      "expected": "{\"description\":\"SYNTHETIC PART B\",\"netAmountMinor\":15790,\"quantity\":5,\"unitAmountMinor\":3158}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a10ac5c88247bf800e17",
+      "dimension": "lineItems:2",
+      "expected": "{\"description\":\"SYNTHETIC PART C\",\"netAmountMinor\":7641,\"quantity\":3,\"unitAmountMinor\":2547}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a10ac5c88247bf800e17",
+      "dimension": "disposition",
+      "expected": "{\"disposition\":\"VALID\"}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "lineItems:0",
+      "expected": "{\"description\":\"SYNTHETIC PART A\",\"netAmountMinor\":16645,\"quantity\":5,\"unitAmountMinor\":3329}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "lineItems:1",
+      "expected": "{\"description\":\"SYNTHETIC PART B\",\"netAmountMinor\":6728,\"quantity\":4,\"unitAmountMinor\":1682}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "lineItems:2",
+      "expected": "{\"description\":\"SYNTHETIC PART C\",\"netAmountMinor\":1899,\"quantity\":1,\"unitAmountMinor\":1899}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "totals",
+      "expected": "{\"grossAmountMinor\":29266,\"netAmountMinor\":25272,\"taxAmountMinor\":3994}",
+      "observed": "UNKNOWN"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "disposition",
+      "expected": "{\"disposition\":\"VALID\"}",
+      "observed": "UNKNOWN"
+    }
+  ],
+  "abstentions": [
+    {
+      "opaqueCaseId": "a10ac5c88247bf800e17",
+      "dimension": "lineItems",
+      "count": 3,
+      "reasonCode": "OCR_FIELD_NOT_FOUND"
+    },
+    {
+      "opaqueCaseId": "a10ac5c88247bf800e17",
+      "dimension": "disposition",
+      "count": 1,
+      "reasonCode": "OCR_FIELD_NOT_FOUND"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "lineItems",
+      "count": 3,
+      "reasonCode": "OCR_FIELD_NOT_FOUND"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "totals",
+      "count": 1,
+      "reasonCode": "OCR_FIELD_NOT_FOUND"
+    },
+    {
+      "opaqueCaseId": "a33c2282d192bff57c38",
+      "dimension": "disposition",
+      "count": 1,
+      "reasonCode": "OCR_FIELD_NOT_FOUND"
+    }
+  ],
+  "calibration": {
+    "target": "EXACT_ALL_SCORED_DIMENSIONS",
+    "denominator": 6,
+    "observedConfidenceCount": 6,
+    "abstainedConfidenceCount": 0,
+    "brierScore": 0.291143,
+    "bins": [
+      {
+        "lowerInclusive": 0,
+        "upperInclusive": 0.8,
+        "count": 0,
+        "meanConfidence": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        },
+        "observedExactAccuracy": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        }
+      },
+      {
+        "lowerInclusive": 0.8,
+        "upperInclusive": 0.9,
+        "count": 0,
+        "meanConfidence": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        },
+        "observedExactAccuracy": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        }
+      },
+      {
+        "lowerInclusive": 0.9,
+        "upperInclusive": 1,
+        "count": 6,
+        "meanConfidence": {
+          "state": "KNOWN",
+          "value": 0.950228
+        },
+        "observedExactAccuracy": {
+          "state": "KNOWN",
+          "value": 0.666667
+        }
+      }
+    ]
+  },
+  "integrity": {
+    "corpusManifestSha256": "743ced13bc3963b8249a4194484bbf0b0753c5128f986c9a6b658ec3e9a2814b",
+    "sealedGoldSha256": "93552d672c1f94de92907f378ab1eeb1c93ef205cd94e113ef8b1702a7c78ca5",
+    "candidateSha256": "7fe0ecfab5c8d11abebfcb6fbdd7078871b61d1bb2d9715737eeb3bab8df4b2d",
+    "runtimeLockSha256": "60a6cd2d0390b97856d589b170ca45f54db2fa734f55d822fcb4e191a3afa280",
+    "custodyReceiptSha256": "56110ef74e5e705bea7ecee2ae10a12f529929ba3862b78fe821fa89cdf45bc6",
+    "oracleId": "independent-gold-oracle-v1",
+    "proposalParserReused": false,
+    "blindSequence": {
+      "authority": "VERIFIED_GIT_OBJECT_TOPOLOGY",
+      "implementationFreezeCommit": "013d812a50d48cc6cbc68f6598e6f186c3565c0c",
+      "holdoutCommitmentCommit": "46da5d248138f15aa3f69795462ad0e8e20f7629",
+      "candidateFreezeCommit": "525d50af0e1531fed42ce9d8a1c35002fa27d02e",
+      "verification": "INDEPENDENT_GIT_OBJECT_AND_ANCESTRY_READBACK"
+    }
+  },
+  "authority": {
+    "customerData": false,
+    "credentials": false,
+    "externalProviderCalls": false,
+    "productiveEffects": false,
+    "postingOrBookingAuthorized": false
+  },
+  "verdictPolicy": {
+    "go": "EVERY_EXACT_RATE_AT_LEAST_0.95_AND_ZERO_ABSTENTIONS_AND_ZERO_ARRAY_FALSE_POSITIVES",
+    "narrowGo": "FIELD_AT_LEAST_0.95_LINE_AND_TAX_AT_LEAST_0.90_TOTAL_DISPOSITION_AND_DOCUMENT_AT_LEAST_0.80_AND_ZERO_ARRAY_FALSE_POSITIVES",
+    "otherwise": "FALSIFIED_WITH_EVIDENCE"
+  },
+  "nonclaims": [
+    "NO_AP_03_OCR_OR_MODEL_QUALITY_CLAIM",
+    "NO_CORPUS_GENERALIZATION_CLAIM",
+    "NO_MODEL_OR_RUNTIME_OTHER_THAN_THE_EXACT_RECORDED_DIGESTS",
+    "NO_CUSTOMER_DOCUMENT_OR_PRODUCTION_FITNESS_CLAIM",
+    "NO_TAX_ACCOUNTING_OR_BOOKING_AUTHORITY",
+    "NO_UNKNOWN_AS_ZERO_ABSENCE_OR_SUCCESS"
+  ],
+  "reportSha256": "11d49918aa5759a50a9eb902cced0b40e8e6700c03e524399ab546c6016b6511",
+  "adversarialMatrix": [
+    {
+      "id": "PAIRED_SUBSTITUTION",
+      "outcome": "DENIED",
+      "reasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "CASE_ID_LEAKAGE",
+      "outcome": "DENIED",
+      "reasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "HARD_CODED_CONFIDENCE",
+      "outcome": "DENIED",
+      "reasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "GOLD_ACCESS",
+      "outcome": "DENIED",
+      "reasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "CALLER_AUTHORED_SEQUENCE",
+      "outcome": "DENIED",
+      "reasonCode": "CUSTODY_RECEIPT_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CUSTODY_RECEIPT_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "PROPOSAL_PARSER_REUSE",
+      "outcome": "DENIED",
+      "reasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "RE_DIGESTED_FORGERY",
+      "outcome": "DENIED",
+      "reasonCode": "CORPUS_MANIFEST_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CORPUS_MANIFEST_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "UNKNOWN_TO_ZERO",
+      "outcome": "DENIED",
+      "reasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "expectedReasonCode": "CANDIDATE_FREEZE_TRUST_ROOT_DENIED",
+      "passed": true
+    },
+    {
+      "id": "POST_VALIDATION_MUTATION",
+      "outcome": "DENIED",
+      "reasonCode": "FROZEN_REPORT_MUTATION_DENIED",
+      "expectedReasonCode": "FROZEN_REPORT_MUTATION_DENIED",
+      "passed": true
+    }
+  ]
+}

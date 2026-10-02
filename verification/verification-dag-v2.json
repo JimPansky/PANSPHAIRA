@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 74,
+  "graphVersion": 75,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "8df4d62c7f7a144a0a28304b7e55d07a0b79b3f853eb214c6edfefd925ae78e2"
+          "sha256": "d33ed8189e13d569cea53d294d69b0d6dffaa881c5d590f2b70bd32f13b76f49"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "90749c8fd9a5671071cc9127ff8968f192ff6c49f1f1a427708c7c9d4234920b"
+          "sha256": "919e0f45e146fe884600864c28ccd5fc2a6f2f414c145596d78e516b1d49d7ec"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "da7d6d0c2e68d949223fa7c2bad5202a48b5ea0a2eeb174a4ea920c8f5d22a40"
+          "sha256": "25267465c70d2da8debbc14f8a93701190e638d2a946f697a24bc4d19782dd28"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "4f921a6ded1394f845c921cad47f1cd337818276db821f03179685161dc00243"
+          "sha256": "d1480b5fa7b22ed159f52dd03b05f180ab60c445a2f8c3b81e5f1ba381180a33"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "0d3cc1eee0780495af46966c0ece077092d661bc5a8e4b0167fef0391e4ea8d6"
+          "sha256": "b39f4ea862c75de7d8cfbee39e7c30b75ccaa1013b73cc086a2513e64c99a426"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "7ee5e570ac49122336fb983c75c11f41c15af6b8c87d8a3c012be7825acce449"
+          "sha256": "eb18a62a79bbd4644fb82425462b137fca4ee330f35b53628b1fa150d485b4af"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5073,7 +5073,8 @@
         "npm run pan467:test",
         "npm run pan456:test",
         "npm run pan454:test",
-        "npm run pan360:test"
+        "npm run pan360:test",
+        "npm run pan378:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5628,7 +5629,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "7db6041d1f310c6a0724968c7923946ca9951a484263a81a1c90b0aa22703cda"
+          "sha256": "cbf87fd0f1deb5664a372ed72314c488cda17ed3b3222c40590e5d2537548383"
         },
         {
           "path": "package-lock.json",
@@ -5988,7 +5989,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "9114a28c82d6a79feb8df157e29c6e708066fbff5ab477600d5cad95bd48fea3"
+          "sha256": "e23a37f80cbaf24cf871d7f648dce64cdb89547b7e2e4da5d9dc283924499267"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7930,7 +7931,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "297051f3f82751c268ed6bfa9445a668acc8c68c06a5e13e4c6f9ffd424eb8a1"
+          "sha256": "6cc74426aaa35f70783b3a0de6f0e7a41981a5f50bbaca8a97160d4e9619e55d"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -7971,6 +7972,79 @@
         "Historical100bps, fixed-pack compilers, UNKNOWN and accepted evidence remain unchanged; no caller-minted source, registry, answer, UI, receipt or Authority substitutes for actual bound execution.",
         "Only fixed public synthetic document/reference admission and local evidence are implemented; no OCR, customer, productive booking, external credentials or optional ERP dependency is inferred.",
         "Independent qualification, exact-head CI, protected merge, correctly classified new release and anonymous released-source replay remain separate delivery gates."
+      ],
+      "riskClass": "CRITICAL",
+      "globalInvalidation": false
+    },
+    {
+      "id": "pan378-spent-pilot-reproduction-v3",
+      "dependsOn": [],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan378-spent-pilot-reproduction-v3.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "6e9518884b61a00a37b5971c76aba310deb7567a906ff3b9fa09d187142a26d9"
+        },
+        {
+          "path": "docs/evidence/PS360-SOURCE-CLOSURE-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "7acaa1b7ed2f5c63c414d583393a0809e7470231b1db11c3f1fbb56c1849ef01"
+        },
+        {
+          "path": "scripts/run-pan378-spent-pilot.mjs",
+          "role": "SOURCE",
+          "sha256": "51cfb5f0995f42143770c78f9862273731470096bb8bb65376e356ab51c57ed6"
+        },
+        {
+          "path": "src/pan378/spent-pilot-replay-v3.mjs",
+          "role": "SOURCE",
+          "sha256": "159a90f44cf70cd7e723da70c73c10de0c2a7097046af9bbbc9c0dfe8cda5537"
+        },
+        {
+          "path": "tests/pan378/spent-pilot-replay.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "78d868462360f50d5dab3cfabc73de6eb6118d50580aaf27c3ee8a16feb3fab5"
+        },
+        {
+          "path": "tests/pan378/spent-pilot-admission.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "ab846d85f640b10cc9728d7855e69457948d428d2eb352eca597350e4fdb6c1e"
+        },
+        {
+          "path": "tests/pan378/spent-pilot-registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7dc33334cb4a3ca12634fbeb64e2f4f819684f149d341d7b317677408f9141da"
+        },
+        {
+          "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
+          "role": "CONTRACT",
+          "sha256": "673c2d406e2b3edf9f612910e1b7bc7c4dc3ecc99a661f7243f47baeaf06204f"
+        },
+        {
+          "path": "tests/fixtures/pan378/spent-evaluation-v3/new-epoch-v3-evaluated-custody.bundle",
+          "role": "FIXTURE",
+          "sha256": "4a1a0795c0c7f9649e05e32d7af0aa4e1d05fda913bd7b3530c7eab5295307b7"
+        },
+        {
+          "path": "tests/fixtures/pan378/spent-evaluation-v3/report-v3.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "93543d7a2e7282431812fc680d9db8b8605095df6b519fdb6ae94201e946448e"
+        },
+        {
+          "path": "verification/pan378-spent-pilot-reproduction-v3.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "b6881699a4b5878cb300efe481f909523f9597993cf157c8a7bc69e5fe357e7f"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan378:test"
+      ],
+      "invariants": [
+        "AP-03 is a synthetic extraction scoring harness; historical parser/fixtures/outcomes are retained, not OCR or model-quality evidence.",
+        "Exact independently frozen source/corpus/runtime/candidate and later spent synthetic disclosure bind a complete unchanged oracle CLI replay; evaluator Git history is never product ancestry.",
+        "FALSIFIED_WITH_EVIDENCE, complete denominators, UNKNOWN and all nine negative probes remain unchanged; no tuning, replacement trust root, new blind trial or positive-score promotion.",
+        "Cleared subprocess environment, fixed local Git/no credentials/config/hooks, read-only custody and owned scratch cleanup are process hygiene, not a host-sandbox claim.",
+        "All original seven criteria and delivery gates remain; source evidence is not a runnable product package or production/customer/booking authority."
       ],
       "riskClass": "CRITICAL",
       "globalInvalidation": false

@@ -262,6 +262,18 @@ repository_only_files = {
     "tests/fixtures/pan360/invoice-equal-v1.txt",
     "tests/fixtures/pan360/invoice-above-v1.txt",
     "verification/pan360-original-erv-execution-v1.json",
+    # PAN378 exact post-freeze disclosed real-OCR falsification evidence/replay.
+    # Separate reviewed custody bundle only, no private originals or runnable promotion.
+    "docs/architecture/pan378-spent-pilot-reproduction-v3.md",
+    "scripts/run-pan378-spent-pilot.mjs",
+    "src/pan378/spent-pilot-replay-v3.mjs",
+    "tests/pan378/spent-pilot-replay.test.mjs",
+    "tests/pan378/spent-pilot-admission.test.mjs",
+    "tests/pan378/spent-pilot-registration.test.mjs",
+    "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
+    "tests/fixtures/pan378/spent-evaluation-v3/new-epoch-v3-evaluated-custody.bundle",
+    "tests/fixtures/pan378/spent-evaluation-v3/report-v3.json",
+    "verification/pan378-spent-pilot-reproduction-v3.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

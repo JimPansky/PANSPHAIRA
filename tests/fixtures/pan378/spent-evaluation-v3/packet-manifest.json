@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "pansphaira.document-ai-pilot/spent-evaluation-packet/v1",
+  "epoch": "MAIN_PAN378_NEW_SOURCE_EPOCH_V3_20261002",
+  "issue": 378,
+  "purpose": "Scoped frozen source-evidence integration packet, not a new training or tuning corpus",
+  "custodyHistoryIsSeparateFromCanonicalProductHistory": true,
+  "custodyHead": "151cbc2dd63ca84003b663468e16aadd88f7df1d",
+  "custodyTree": "820adefce0e5135aba690ed7ee3ae1f924d14b8f",
+  "corpusCaseCount": 6,
+  "mediaCounts": {
+    "pdf": 3,
+    "image": 3
+  },
+  "verdict": "FALSIFIED_WITH_EVIDENCE",
+  "files": [
+    {
+      "path": "new-epoch-v3-evaluated-custody.bundle",
+      "sha256": "4a1a0795c0c7f9649e05e32d7af0aa4e1d05fda913bd7b3530c7eab5295307b7",
+      "bytes": 597621
+    },
+    {
+      "path": "report-v3.json",
+      "sha256": "93543d7a2e7282431812fc680d9db8b8605095df6b519fdb6ae94201e946448e",
+      "bytes": 10104
+    }
+  ],
+  "sourceEntryCount": 39,
+  "sourceBindings": {
+    ".gitignore": "1753cf8daec3b72930e7fd71f55c4e85a13ea17aac77840bc1c58095ac6ddcf6",
+    "licenses/document-ai-pilot-corpus-v3-CC0-1.0.md": "d44f8b727b41022969b54a997bb84dc17c0f9a1e835ce0d6e0baffe84b218770",
+    "licenses/document-ai-pilot-runtime-notice.md": "8f55384fa69e342d33070a2a64467c75047be2a4ef03c5affc4d0e5ced843f1d",
+    "scripts/docker-custody-wrapper.py": "0106af7ccce4fdc21241e62b949d617c0d3adf0cd8e9effcabf47ee515881931",
+    "scripts/document-ai-pilot-candidate.mjs": "75953ec8d4f2f21626e0e7d520c0a84d39d00644fc7e8d22840f45240245c97a",
+    "scripts/document-ai-pilot-oracle.mjs": "941442c935d046401fe811f0ad0066091c9fbaf1c1592af6ad61096f072566c9",
+    "scripts/document-ai-pilot-run.mjs": "850e14a95d3a1b8aeec9285a8bddf9467bdebcb39543b9d6773b118f03d15372",
+    "scripts/document-ai-pilot-seal-gold.mjs": "ff329a1639f052b34d32f294465e45c4b2d285df78ad29f00d0afb524e25578c",
+    "scripts/parent-document-ai-corpus-v3.py": "2c73f54d7b7de67ab131ab06d321d3be5c3ed39c5d3d0a1e02d67d3083b272de",
+    "tests/fixtures/document-ai-pilot/corpus-manifest-v2.json": "743ced13bc3963b8249a4194484bbf0b0753c5128f986c9a6b658ec3e9a2814b",
+    "tests/fixtures/document-ai-pilot/documents-v3/420e4429367418b800b0.png": "ac705c452ef28d4c80a0ec4cac3559b571f39cefeabfa1991957e17ec53ca013",
+    "tests/fixtures/document-ai-pilot/documents-v3/7ba7526c27163fc966bb.png": "086b2800b401fe11ea64ac79736d18b330d13af5f1d370b96d863a8e23026e7e",
+    "tests/fixtures/document-ai-pilot/documents-v3/a10ac5c88247bf800e17.pdf": "74b75e8a66979602111e38d1984edd7a1efbc32bc91afa6e4cc9cc281246d0f1",
+    "tests/fixtures/document-ai-pilot/documents-v3/a10ac5c88247bf800e17.png": "b7536e433f0a90b69856bf1c30e4a4bd6b5b7693bf6679b247488c65ff90b3e5",
+    "tests/fixtures/document-ai-pilot/documents-v3/a33c2282d192bff57c38.png": "c00d660a820edee09ffce26207cce5de20bc97c863cb04557f63d06c1019d433",
+    "tests/fixtures/document-ai-pilot/documents-v3/aae8734cc2c79e91bf4f.pdf": "8a0e9a1a83de334ca5c21da7cf8a1ff2fcdb8007567194cace40082e61a8de23",
+    "tests/fixtures/document-ai-pilot/documents-v3/aae8734cc2c79e91bf4f.png": "432dcd72a7602ae44d3ee257881ddd77729273989092e0d863458e683d54b5e2",
+    "tests/fixtures/document-ai-pilot/documents-v3/d358f5e2c1c8e9b25bb4.pdf": "f88fb1248316b6ddef807e8252c7f8b2aaef0a4df42b5ee0f82313454f52cc90",
+    "tests/fixtures/document-ai-pilot/documents-v3/d358f5e2c1c8e9b25bb4.png": "663220e7b33a01fa04aabd1e10b16787d076875ec3e652af67e7fcb8917b0900",
+    "tests/fixtures/document-ai-pilot/sealed-gold-v2.json": "93552d672c1f94de92907f378ab1eeb1c93ef205cd94e113ef8b1702a7c78ca5",
+    "verification/document-ai-pilot/blind-sequence-custody-v2.json": "56110ef74e5e705bea7ecee2ae10a12f529929ba3862b78fe821fa89cdf45bc6",
+    "verification/document-ai-pilot/gold-disclosure-v2.json": "6b56a1e9d3927cc03dd2423ffa73742c9af31ce8eee1c948b91527ee5461c35f",
+    "verification/document-ai-pilot/report-v3.json": "93543d7a2e7282431812fc680d9db8b8605095df6b519fdb6ae94201e946448e",
+    "verification/document-ai-pilot/run-v2/candidate-freeze-v2.json": "7fe0ecfab5c8d11abebfcb6fbdd7078871b61d1bb2d9715737eeb3bab8df4b2d",
+    "verification/document-ai-pilot/run-v2/independent-container-observations-v3.json": "12688b46cf6f71ae4377788f77043a33aa92014ec5e3daa258b9acc93f6011ce",
+    "verification/document-ai-pilot/run-v2/ocr/420e4429367418b800b0.tsv.gz": "a46a26734a7456025db5a17e603ea6fb2ceb00bacdfc5f1a3f743eec07295072",
+    "verification/document-ai-pilot/run-v2/ocr/420e4429367418b800b0.txt": "2d91d922be6129a7bec300d7fdfe105f93771f01298f1a797e6ebab1bc6964d4",
+    "verification/document-ai-pilot/run-v2/ocr/7ba7526c27163fc966bb.tsv.gz": "d772562dfd636bdbebe98ac05a61ec2f5138534f4929f05f3a4f3216c5f7165a",
+    "verification/document-ai-pilot/run-v2/ocr/7ba7526c27163fc966bb.txt": "12f5c321dccbdc7195097ba84e601b42bbc1ffcc982885ed780161404f2566f8",
+    "verification/document-ai-pilot/run-v2/ocr/a10ac5c88247bf800e17.tsv.gz": "93eb2d3c3e47112d25dd559e2c5a662e9997315b8a2fe35469795b22144faf55",
+    "verification/document-ai-pilot/run-v2/ocr/a10ac5c88247bf800e17.txt": "7c76c82da01f7b62c3b0b931edd99e38e3514105de36ec28fa16978e24d69ecd",
+    "verification/document-ai-pilot/run-v2/ocr/a33c2282d192bff57c38.tsv.gz": "7d4d59d0e9e5d4638b6231bb425a2e65119340ef477c02931a376ba73a6309a5",
+    "verification/document-ai-pilot/run-v2/ocr/a33c2282d192bff57c38.txt": "08d749a447f1d95a328dc3a420af323a3060a9d9fc492ad100fd2b64d41b570a",
+    "verification/document-ai-pilot/run-v2/ocr/aae8734cc2c79e91bf4f.tsv.gz": "52764b7c01a09f6c1e2dbe207073f54cf54831d65058cf5358228c9c82554219",
+    "verification/document-ai-pilot/run-v2/ocr/aae8734cc2c79e91bf4f.txt": "7ff054298785944049c44720d703d5c17c402e2baa34aeb0b53e1eccede170b5",
+    "verification/document-ai-pilot/run-v2/ocr/d358f5e2c1c8e9b25bb4.tsv.gz": "affc638da546d632d154e841d1efebbfeaad6180d87e6f118d0a79e3acc2222b",
+    "verification/document-ai-pilot/run-v2/ocr/d358f5e2c1c8e9b25bb4.txt": "8febac8a81e47054298fa9913e1a81fbd0e6c57712665063c118fe34bcc54a62",
+    "verification/document-ai-pilot/run-v2/runtime-receipt-v2.json": "7304b886c1035b055f6c70d3f148de420711fcddc44f79a16fe177bfab54f01c",
+    "verification/document-ai-pilot/runtime-lock-v1.json": "60a6cd2d0390b97856d589b170ca45f54db2fa734f55d822fcb4e191a3afa280"
+  },
+  "portableOriginalOracleReplay": {
+    "exit": 0,
+    "reportByteIdentical": true,
+    "reportSha256": "93543d7a2e7282431812fc680d9db8b8605095df6b519fdb6ae94201e946448e"
+  },
+  "privateOriginalSeedKeyPlaintextGoldExcluded": true,
+  "onlyScopedPostFreezeSyntheticDisclosureIncluded": true,
+  "noModelOrParserTuningAfterHoldout": true,
+  "originalSevenCriteriaAndDeliveryGatesRemain": true,
+  "publiclyPublished": false,
+  "wholeIssueAccepted": false
+}
