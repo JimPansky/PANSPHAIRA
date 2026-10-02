@@ -1345,6 +1345,34 @@ pan467Node.inputs = pan467Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan467:test")) repositoryIntegrityNode.ownedTests.push("npm run pan467:test");
 dag.graphVersion = 71;
 
+// PAN-EVO-05: one executable tooling comparison, never automatic runtime adoption.
+const pan456Inputs = [
+  ["docs/architecture/pan456-policy-backend-evaluation-v1.md", "DERIVED_EVIDENCE"],
+  ["scripts/run-pan456-policy-evaluation.mjs", "SOURCE"],
+  ["src/pan456/isolated-policy-backend.mjs", "SOURCE"],
+  ["src/pan456/jsonlogic-policy-worker.mjs", "SOURCE"],
+  ["src/pan456/policy-backend-profile.mjs", "CONTRACT"],
+  ["tests/fixtures/pan456/isolated-installation-probe.mjs", "FIXTURE"],
+  ["tests/pan456/policy-backend-evaluation.test.mjs", "VALIDATOR"],
+];
+let pan456Node = dag.nodes.find(({ id }) => id === "pan456-policy-backend-evaluation-v1");
+if (pan456Node === undefined) {
+  pan456Node = {
+    id: "pan456-policy-backend-evaluation-v1",
+    dependsOn: [], inputs: [], ownedTests: ["npm run pan456:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Exactly one MIT/no-runtime-dependency json-logic-js 2.0.5 tooling candidate is byte/version/program pinned behind the unchanged PolicyEvaluatorV1 contract and retained internal-static baseline; no removable duplication or adoption need is invented.",
+      "Actual process-separated synthetic outcomes and named input/context/program/upgrade denials preserve gate-only parent authority and independent adapter ceilings; the child has no inherited credential canary or Node options, but is not an OS sandbox.",
+      "Actual setup, correction-probe, comparable contract operation and added maintenance surfaces support a reject-adoption recommendation with no automatic activation, fallback grant, production capability, private/sealed source or host authority claim.",
+      "All prior owners, immutable profiles, public scopes and mandatory canonical/release gates remain intact; evidence-only rejection is distinct from the implemented executable tooling comparison.",
+    ],
+  };
+  dag.nodes.push(pan456Node);
+}
+pan456Node.inputs = pan456Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan456:test")) repositoryIntegrityNode.ownedTests.push("npm run pan456:test");
+dag.graphVersion = 72;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps

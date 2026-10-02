@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "1083483652d7158fd022b330cd57ad5af934214c1060ccedc6ae610a0d7da806"
+        "sha256": "3758d40e43507adb51eeee0cdb81467001b3048f1dd71954f56f3331ad0b5761"
       }
     ]
   },
@@ -427,6 +427,22 @@
       "fromSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
       "toSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
       "reason": "Advance graph to v71 and register original LIFE-07 attributed native business correction, stable original effect identity, separate read-only diagnosis and actual CLI/process crash tests while retaining all prior owners, immutable migrations, hard gates and private/sealed boundaries."
+    },
+    {
+      "migrationId": "PAN456-EVO05/INTEGRITY-GENERATOR/V43",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 43,
+      "fromSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
+      "toSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
+      "reason": "Advance graph to v72 and bind one version-pinned actual process-separated policy tooling comparison, real copied-installation drift/malformed-result probes and reject-adoption recommendation without runtime activation; preserve all prior owners, immutable migrations, hard gates, retained baseline, private/sealed source and authority boundaries."
+    },
+    {
+      "migrationId": "PAN456-EVO05-PUBLIC-GUIDE/INTEGRITY-GENERATOR/V44",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 44,
+      "fromSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
+      "toSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
+      "reason": "Keep graph v72 and relocate byte-identical functional PAN-EVO-05 guide from forbidden development evidence namespace to public architecture namespace; unchanged supply-chain validator, original Main-qualified source bytes, prior V43 freeze/FAIL, owners, hard gates and all immutable migrations are retained."
     }
   ],
   "scanScope": {
@@ -469,15 +485,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 784,
+    "filesScanned": 790,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 265,
-    "importFiles": 264,
+    "importSites": 268,
+    "importFiles": 267,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2144,
-    "ledgerUniquePaths": 2144
+    "ledgerEntries": 2151,
+    "ledgerUniquePaths": 2151
   },
   "profiles": [
     {
@@ -550,7 +566,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8"
+      "sha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -891,6 +907,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan456",
+      "importSites": 2,
+      "importFiles": 2
+    },
+    {
       "owner": "pan463",
       "importSites": 1,
       "importFiles": 1
@@ -927,8 +948,8 @@
     },
     {
       "owner": "scripts",
-      "importSites": 12,
-      "importFiles": 12
+      "importSites": 13,
+      "importFiles": 13
     },
     {
       "owner": "tests",
@@ -1226,7 +1247,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
+      "sha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
       "basis": "profile-version-migration"
     },
     {

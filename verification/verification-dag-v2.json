@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 71,
+  "graphVersion": 72,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "29846c6ee04433f6d9314e0eb3e4c32aadbe5860597eb05f7d513b01012b3023"
+          "sha256": "295e9dac9a18014545c5a56175d3949c6d2bc468d6c5c85af8449d3e54d0e667"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "fa3a59a969cc4362ef16c314e45c85d24fc894c0e9acb8e76f40b5548525548e"
+          "sha256": "4e4a515b390119d1587b3fcce0321929c3bf96841fe80b327d39d0c63f5e4441"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "d643a05912dfabf20cd838faa8f637e08f89f9d1f58a4d9642be78ab74c53304"
+          "sha256": "2a3424337fca628b5cfafa5e0bf183dee5ab7e1bca95eb4566fbe8748d61ecb9"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "eae548c8cbb9d0c708743fed71b56ed3868c72b64f27787ca28079c4fb445c4f"
+          "sha256": "b07df8e00ac5cf7a4df25c25c3793371d573daf0f14e9e5a8985a03a58673d3a"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1083483652d7158fd022b330cd57ad5af934214c1060ccedc6ae610a0d7da806"
+          "sha256": "3758d40e43507adb51eeee0cdb81467001b3048f1dd71954f56f3331ad0b5761"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4991,7 +4991,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "581bf0fa38353b9d1a9c8d4fdd201e1f321a2866be40381132922af4006501eb"
+          "sha256": "4f18fdf8142689dcb9bcf5457af96108f2d8463e863e36d8fce2e77bdee79f49"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "7e991c2555e0c57ce65c997be693da6ab072aacae3d1ea2f00f9459f769c3761"
+          "sha256": "4e859d15625dcfb66c1e26ba48ed84369aea6243699e7ec1253ee776e779511e"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5070,7 +5070,8 @@
         "npm run pan487:test",
         "npm run pan472:test",
         "npm run pan473:test",
-        "npm run pan467:test"
+        "npm run pan467:test",
+        "npm run pan456:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5625,12 +5626,12 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "1b8579b742e80106e2877e829f0de1dd1ad8411b1256c786d3dbd0bb703adc78"
+          "sha256": "634eeaabe665eb879ce73a2a1283620abee199da8684c55f7db3f263435c919e"
         },
         {
           "path": "package-lock.json",
           "role": "TOOLCHAIN",
-          "sha256": "e806eb4d2f83b4478451c3a9b5cbd41d368723de9d36640855102921bdf1e517"
+          "sha256": "a97943dfae2279194dd5032d62c19192c06e73da041cbd4401a353eae86dbe4a"
         },
         {
           "path": "tsconfig.json",
@@ -5985,7 +5986,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "d71f8a17126ada03a78cf40cca4104197ba7b9848f6aa99ed5feddcb93c9d1f2"
+          "sha256": "eff24cce8c79a909b4df7a51e60f986f9ddaf2e7fdb8ed0e22a78063dcd1f0ae"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6250,7 +6251,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "ad0a0b729c3c453a320cb6559aa36e728a25d270b5091c9fcf5bfe2e00de004e"
+          "sha256": "8e97726e8ab3798c88458c6d6c3cbe9ad0d014dcf91ace2bcf0191d6e3541142"
         }
       ],
       "ownedTests": [
@@ -7767,6 +7768,58 @@
         "Durable code-owned synthetic attribution intent precedes the released native correction; real CLI SIGKILL at intent/native-effect boundaries resumes from actual retained history without duplicate version or erased later data, never stealing live/unknown ownership.",
         "Separate read-only SQL diagnosis binds source/baseline, attribution intent, actual native event and receipt; pending/unknown states and forged receipt rehashes never self-authorize completion.",
         "Prior PAN453/PAN462/PAN472/PAN473 sources and hard gates are retained unchanged; no external booking, compensation, production/host/privacy/PKI authority, private/sealed evaluator material or raw reviewer/runtime publication is admitted."
+      ]
+    },
+    {
+      "id": "pan456-policy-backend-evaluation-v1",
+      "dependsOn": [],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan456-policy-backend-evaluation-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "3bcb36ccca3d9fd7ca43ff107078887f3fa8d559f2ead59121c40ec00d52874c"
+        },
+        {
+          "path": "scripts/run-pan456-policy-evaluation.mjs",
+          "role": "SOURCE",
+          "sha256": "d619840c36c827a349889555fcbde984169a317d378249c025178f701070d214"
+        },
+        {
+          "path": "src/pan456/isolated-policy-backend.mjs",
+          "role": "SOURCE",
+          "sha256": "6f84b5f0878a5b6a04f29b6001dd00225ba9bfc3419abbb7e5a2a213b48af9f3"
+        },
+        {
+          "path": "src/pan456/jsonlogic-policy-worker.mjs",
+          "role": "SOURCE",
+          "sha256": "17eb75235831c857e0e315351f2fcbb1853591eb9cd56e5652acb7f7f0708b7f"
+        },
+        {
+          "path": "src/pan456/policy-backend-profile.mjs",
+          "role": "CONTRACT",
+          "sha256": "016dac87fc88001dbd9ac859cc7d6cf1c439aeff636b634ee65e68b88c054015"
+        },
+        {
+          "path": "tests/fixtures/pan456/isolated-installation-probe.mjs",
+          "role": "FIXTURE",
+          "sha256": "d230becb106db2f6d55fbb93ceb8ff8287503c5a90503e6f720b3483fd080cb6"
+        },
+        {
+          "path": "tests/pan456/policy-backend-evaluation.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "c2300a6dc16efb54874e7ef090fd73e39d8f2ee4f5af8df7c0b9e03176d7819d"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan456:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Exactly one MIT/no-runtime-dependency json-logic-js 2.0.5 tooling candidate is byte/version/program pinned behind the unchanged PolicyEvaluatorV1 contract and retained internal-static baseline; no removable duplication or adoption need is invented.",
+        "Actual process-separated synthetic outcomes and named input/context/program/upgrade denials preserve gate-only parent authority and independent adapter ceilings; the child has no inherited credential canary or Node options, but is not an OS sandbox.",
+        "Actual setup, correction-probe, comparable contract operation and added maintenance surfaces support a reject-adoption recommendation with no automatic activation, fallback grant, production capability, private/sealed source or host authority claim.",
+        "All prior owners, immutable profiles, public scopes and mandatory canonical/release gates remain intact; evidence-only rejection is distinct from the implemented executable tooling comparison."
       ]
     }
   ]
