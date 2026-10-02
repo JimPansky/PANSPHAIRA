@@ -541,7 +541,7 @@ test("public release builder binds its exact file count to the manifest", () => 
   ];
   assert.equal(mig02Paths.length, 7);
   for (const path of mig02Paths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
-  assert.equal(count, 1783);
+  assert.equal(count, 1790);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -589,7 +589,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1783, "Retain released scopes and add only eight bounded LIFE-07 attributed native correction source, tests, fixture and guide files");
+  assert.equal(publicCount, 1790, "Retain released scopes and add only seven bounded PAN-EVO-05 executable tooling, actual-installation probe, tests and guide files; no runtime adoption");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
