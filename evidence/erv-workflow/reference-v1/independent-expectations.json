@@ -1,0 +1,44 @@
+{
+  "currency": "EUR",
+  "toleranceBasisPoints": 200,
+  "invoiceAmountMinor": 1200000,
+  "toleranceMinor": 24000,
+  "onBoundaryReceiptMinor": 1176000,
+  "outsideBoundaryReceiptMinor": 1175999,
+  "onBoundaryDifferenceMinor": 24000,
+  "outsideDifferenceMinor": 24001,
+  "additionalApprovalThresholdMinor": 1000000,
+  "strictGreaterCases": [
+    {
+      "amountMinor": 999999,
+      "extraApprovalRequired": false
+    },
+    {
+      "amountMinor": 1000000,
+      "extraApprovalRequired": false
+    },
+    {
+      "amountMinor": 1000001,
+      "extraApprovalRequired": true
+    }
+  ],
+  "grossApprovalAllocation": {
+    "basis": "GROSS_APPROVAL_VOLUME_ONLY_NOT_ACCOUNTING_COST",
+    "currency": "EUR",
+    "amountMinor": 1200000,
+    "lines": [
+      {
+        "costCenter": "SYNTH-CC-A",
+        "percent": "60",
+        "amountMinor": 720000,
+        "requiredRole": "SYNTH-CC-A-OWNER"
+      },
+      {
+        "costCenter": "SYNTH-CC-B",
+        "percent": "40",
+        "amountMinor": 480000,
+        "requiredRole": "SYNTH-CC-B-OWNER"
+      }
+    ]
+  }
+}

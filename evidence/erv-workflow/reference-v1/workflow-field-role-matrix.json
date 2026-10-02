@@ -1,0 +1,1217 @@
+{
+  "date": "2026-10-02",
+  "legend": {
+    "G": "gesetzliche Rechnungsangabe oder ausdrücklich benannte gesetzliche Kontrolle, nur im zitierten Anwendungsbereich",
+    "S": "dokumentiertes Verhalten / Pflicht im benannten Beispielsystem und Pfad",
+    "U": "konfigurierbare Unternehmensregel oder ausdrücklich synthetischer Entwurf",
+    "U→S": "Regelwahl macht eine Systemprüfung verbindlich"
+  },
+  "roles": [
+    {
+      "id": "AP",
+      "name": "Rechnungserfassung / Kreditorenbuchhaltung",
+      "responsibility": "Eingang, formale Klärung, Kontierung, Buchung; keine automatische fachliche Freigabe."
+    },
+    {
+      "id": "LE",
+      "name": "Leistungsempfänger / Besteller",
+      "responsibility": "Menge, Leistung, Zeitraum, Qualität und Bestellbezug bestätigen; liefert fachlichen Nachweis."
+    },
+    {
+      "id": "KSV",
+      "name": "Kostenstellenverantwortliche",
+      "responsibility": "Verbindliche fachliche Freigabe in sämtlichen synthetischen Fällen; bei Split je betroffener Zuständigkeit."
+    },
+    {
+      "id": "PV",
+      "name": "Projektverantwortliche",
+      "responsibility": "Eigene, konfigurierbare zusätzliche Projekt-/Meilensteinprüfung; ersetzt KSV-Freigabe nicht."
+    },
+    {
+      "id": "MAN",
+      "name": "Übergeordnete Freigabestelle",
+      "responsibility": "Zusätzliche Freigabe bei festgelegter Betragsgrenze oder Ausnahme."
+    },
+    {
+      "id": "PAY",
+      "name": "Zahlungsverantwortliche / Treasury",
+      "responsibility": "Zahlungsvorschlag, separate Zahlungsautorisierung und Zahlungsausführung."
+    },
+    {
+      "id": "CFG",
+      "name": "Workflow-/Stammdatenadministration",
+      "responsibility": "Zuordnung, Berechtigungen, Grenzbeträge, Vertreter und Eskalationen konfigurieren; keine implizite Fachfreigabe."
+    }
+  ],
+  "workflow": [
+    {
+      "id": "W01",
+      "stage": "Eingang / Erfassung",
+      "roles": [
+        "AP"
+      ],
+      "fields": [
+        "Originalbeleg",
+        "Lieferant",
+        "Rechnungsempfänger",
+        "Rechnungsnummer",
+        "Datum",
+        "Beträge"
+      ],
+      "documented": "DocuWare US: vorindexierte Daten werden geprüft und bei Bedarf ergänzt oder korrigiert.",
+      "requirement": "S: konkrete Erfassungsstrecke; G-Angaben separat in F01–F06.",
+      "company_rule": "U: Originalbeleg und Extraktionswerte getrennt behandeln; unklare Erkennung zur Bearbeitung, nicht als Freigabe werten.",
+      "evidence": [
+        "E04a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E04a",
+          "source_id": 4,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-usa",
+          "section": "How to store an invoice from tray to file cabinet > Storing by using standard indexing"
+        }
+      ]
+    },
+    {
+      "id": "W02",
+      "stage": "Validierung / Dublette",
+      "roles": [
+        "AP"
+      ],
+      "fields": [
+        "Summen",
+        "Steuerbetrag",
+        "Dublettenschlüssel",
+        "Fehlergrund"
+      ],
+      "documented": "D365 Finance kann Einreichung bei Summendifferenz, unzugeordneten Zuschlägen oder doppelter Rechnungsnummer verhindern; dokumentierte Parameter müssen aktiv sein.",
+      "requirement": "U→S: Sperre erst nach entsprechender Konfiguration.",
+      "company_rule": "U: Fehler zur Klärung; formale Vollständigkeit nicht mit Leistungsbestätigung gleichsetzen.",
+      "evidence": [
+        "E06b",
+        "E06c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E06b",
+          "source_id": 6,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/vendor-invoices-overview",
+          "section": "Preventing invoice submission to workflow"
+        },
+        {
+          "evidence_id": "E06c",
+          "source_id": 6,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/vendor-invoices-overview",
+          "section": "Preventing invoice submission to workflow"
+        }
+      ]
+    },
+    {
+      "id": "W03",
+      "stage": "Sachliche Prüfung / Leistungsbestätigung",
+      "roles": [
+        "LE",
+        "KSV"
+      ],
+      "fields": [
+        "Bestellposition",
+        "Wareneingang / Leistungsnachweis",
+        "Menge",
+        "Preis",
+        "Leistungszeitraum"
+      ],
+      "documented": "D365 Finance: Drei-Wege-Abgleich vergleicht Rechnungsmenge mit Wareneingang und Preise mit Bestellung/Toleranzen; Abweichungsfreigabe hängt von Einstellungen ab.",
+      "requirement": "U: Matchingart, Toleranz und Ausnahmebefugnis; kein allgemeines gesetzliches Pflichtschema.",
+      "company_rule": "U: LE bestätigt tatsächliche Leistung; KSV erteilt die verbindliche fachliche Freigabe. Bei Dienstleistungen geeigneten Abnahme-/Meilensteinnachweis zuordnen.",
+      "evidence": [
+        "E07a",
+        "E07b",
+        "E07c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E07a",
+          "source_id": 7,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/three-way-matching-policies",
+          "section": "Example: Three-way matching for items > Scenario"
+        },
+        {
+          "evidence_id": "E07b",
+          "source_id": 7,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/three-way-matching-policies",
+          "section": "Example: Three-way matching for item and vendor combinations > Scenario"
+        },
+        {
+          "evidence_id": "E07c",
+          "source_id": 7,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/three-way-matching-policies",
+          "section": "Example: Three-way matching for items > Scenario"
+        }
+      ]
+    },
+    {
+      "id": "W04",
+      "stage": "Kopfkontierung / Vorbelegung",
+      "roles": [
+        "AP"
+      ],
+      "fields": [
+        "Gesellschaft",
+        "Kreditor",
+        "Währung",
+        "Buchungsdatum",
+        "Default-Dimensionen",
+        "Kopfzuschläge"
+      ],
+      "documented": "D365 Finance unterscheidet Kopf- und Positionsbeträge; bei Bestellbezug stammen Standarddimensionen aus den Bestellpositionen.",
+      "requirement": "S/U: Feld- und Vererbungsverhalten des gewählten Systems; nicht alle Kopfdaten sind gesetzliche Angaben.",
+      "company_rule": "U: Kopfwerte nur als Vorschlag; abweichende Positionen einzeln prüfen.",
+      "evidence": [
+        "E01a",
+        "E06d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E01a",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        },
+        {
+          "evidence_id": "E06d",
+          "source_id": 6,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/vendor-invoices-overview",
+          "section": "Default financial dimension in vendor invoice lines"
+        }
+      ]
+    },
+    {
+      "id": "W05",
+      "stage": "Positionskontierung",
+      "roles": [
+        "AP",
+        "KSV"
+      ],
+      "fields": [
+        "Sachkonto",
+        "Steuerschlüssel",
+        "Buchungstext",
+        "Kostenstelle",
+        "Kostenträger / Projekt",
+        "Kontierungsbetrag"
+      ],
+      "documented": "D365 Finance hat Positionsverteilungen; BC kann Dimensionen über Code Mandatory zur Buchung verlangen.",
+      "requirement": "S/U: Pflicht folgt Konten-/Dimensionskonfiguration, nicht dem Rechnungsangabenkatalog.",
+      "company_rule": "U: Sachkonto, Steuerlogik und wirtschaftliche Zuordnung vor Freigabe abgestimmt halten.",
+      "evidence": [
+        "E01b",
+        "E13a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E01b",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        },
+        {
+          "evidence_id": "E13a",
+          "source_id": 13,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/finance-dimensions",
+          "section": "To set up default dimensions for customers, vendors, and other accounts > Tip"
+        }
+      ]
+    },
+    {
+      "id": "W06",
+      "stage": "Kostenstelle / Kostenträger / Projekt / Bestellung",
+      "roles": [
+        "AP",
+        "KSV",
+        "PV"
+      ],
+      "fields": [
+        "Kostenstellen-ID",
+        "Kostenträger-ID",
+        "Projekt-ID",
+        "Projektaufgabe / PSP",
+        "Bestellung + Position"
+      ],
+      "documented": "BC trennt Kostenstelle und Kostenträger in der Kostenrechnung; Projektbeschaffung nutzt Project No. / Project Task No. SAP kann Kostenstellen- bzw. PSP-Verantwortliche über passende Kontierungsvorbedingungen ermitteln.",
+      "requirement": "S: BC-Kostenposten Kostenart + Kostenstelle ODER Kostenträger; keine universelle Rechnungspflicht für beide.",
+      "company_rule": "U: Projektmitprüfung eigenständig an-/abschalten; verantwortliche Kostenstelle als Freigabezuordnung nicht mit buchhalterischer Doppelkontierung verwechseln.",
+      "evidence": [
+        "E11a",
+        "E11b",
+        "E11c",
+        "E14a",
+        "E18a",
+        "E18b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E11a",
+          "source_id": 11,
+          "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+          "section": "Setting Up Cost Centers"
+        },
+        {
+          "evidence_id": "E11b",
+          "source_id": 11,
+          "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+          "section": "Setting Up Cost Objects"
+        },
+        {
+          "evidence_id": "E11c",
+          "source_id": 11,
+          "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+          "section": "Balances between Cost Type, Cost Center, and Cost Object"
+        },
+        {
+          "evidence_id": "E14a",
+          "source_id": 14,
+          "url": "https://learn.microsoft.com/en-gb/dynamics365/business-central/projects-how-manage-project-supplies",
+          "section": "Replenish a project manually"
+        },
+        {
+          "evidence_id": "E18a",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Empfänger"
+        },
+        {
+          "evidence_id": "E18b",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Vorbedingungen"
+        }
+      ]
+    },
+    {
+      "id": "W07",
+      "stage": "Split über mehrere Kostenstellen",
+      "roles": [
+        "AP",
+        "KSV"
+      ],
+      "fields": [
+        "Verteilungszeile",
+        "Prozent / Betrag",
+        "Kostenstelle",
+        "Netto-/Bruttobasis",
+        "Rundungsrest"
+      ],
+      "documented": "DocuWare US: Prozentvorbelegung muss 100 % ergeben; Rundung kann Betragskorrektur erfordern. D365 Finance: bei Bestellbezug ist Splitting für nicht lagergeführte Artikel dokumentiert; Zuschlags-/Steuer-/Rabattzeilen haben Einschränkungen.",
+      "requirement": "S: produktspezifische Splitgrenzen; U: Verteilungsschlüssel und Freigabebasis.",
+      "company_rule": "U: Beträge summengleich; jede betroffene KSV bestätigt ihren Anteil; kein Ausweichen auf Teilbeträge zur Umgehung der Gesamtgrenze.",
+      "evidence": [
+        "E04b",
+        "E01c",
+        "E01d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E04b",
+          "source_id": 4,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-usa",
+          "section": "How to GL code invoices > GL Table prefill options"
+        },
+        {
+          "evidence_id": "E01c",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        },
+        {
+          "evidence_id": "E01d",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        }
+      ]
+    },
+    {
+      "id": "W08",
+      "stage": "Fachliche Freigabe",
+      "roles": [
+        "KSV",
+        "PV"
+      ],
+      "fields": [
+        "Genehmigende",
+        "Zuständigkeit",
+        "Version",
+        "Entscheidung",
+        "Begründung"
+      ],
+      "documented": "DocuWare UK: alle beteiligten ersten Kostenstellenfreigeber und ggf. deren Manager geben frei. SAP: Kostenstellenverantwortliche als Empfänger; Ein-/Alle-Empfänger-Regeln konfigurierbar.",
+      "requirement": "U→S: Empfänger- und Abschlussregel. Nicht jedes Produkt versteht mehrere Empfänger automatisch als UND.",
+      "company_rule": "U: verpflichtendes UND aller betroffenen KSV; PV bei aktiviertem Projektpfad zusätzlich, nicht alternativ.",
+      "evidence": [
+        "E03a",
+        "E17a",
+        "E18a",
+        "E18f"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E03a",
+          "source_id": 3,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-uk",
+          "section": "Approval by requestor and/or cost centre > Approval by cost centre department approvers"
+        },
+        {
+          "evidence_id": "E17a",
+          "source_id": 17,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/9bd9a6b4124446a5b31ddfecbff07508.html?locale=de-DE&version=2608.500",
+          "section": "Workflows für Lieferantenrechnungen verwalten > Einleitung"
+        },
+        {
+          "evidence_id": "E18a",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Empfänger"
+        },
+        {
+          "evidence_id": "E18f",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Empfänger"
+        }
+      ]
+    },
+    {
+      "id": "W09",
+      "stage": "Grenzen / Vertretung / Vier-Augen-Prinzip",
+      "roles": [
+        "KSV",
+        "MAN",
+        "CFG"
+      ],
+      "fields": [
+        "Freigabelimit",
+        "Währungs-/Betragsbasis",
+        "Vertreter",
+        "Gültigkeit",
+        "Erfasser",
+        "Genehmigender"
+      ],
+      "documented": "BC: Einkaufsgrenze in lokaler Währung und Vertretungskette; bei gleicher Person als Anforderer und Genehmiger in einer Workflowbenutzergruppe droht automatische Eigengenehmigung. DocuWare US leitet bei Abwesenheit an Vertreter. SAP bietet Ausschluss des Workflow-Initiators.",
+      "requirement": "U: konkrete Grenzen, Identitätskonflikte und unabhängige Personen festlegen.",
+      "company_rule": "U: in Beispielen > 5.000 EUR Nettorechnungssumme zusätzliche MAN-Freigabe; ausdrücklich kein Hersteller-/Gesetzeswert. Vertretung erhält Aufgabe, nicht automatisch jede finanzielle Befugnis.",
+      "evidence": [
+        "E02a",
+        "E02b",
+        "E02c",
+        "E04c",
+        "E18c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E02a",
+          "source_id": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+          "section": "To set up an approval user > Purchase Amount Approval Limit"
+        },
+        {
+          "evidence_id": "E02b",
+          "source_id": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+          "section": "To set up an approval user > Substitute"
+        },
+        {
+          "evidence_id": "E02c",
+          "source_id": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+          "section": "To set up an approval user > warning about requestor/approver"
+        },
+        {
+          "evidence_id": "E04c",
+          "source_id": 4,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-usa",
+          "section": "How does the cost center approval work?"
+        },
+        {
+          "evidence_id": "E18c",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Schritteigenschaften"
+        }
+      ]
+    },
+    {
+      "id": "W10",
+      "stage": "Rückfrage / Ablehnung / Änderung",
+      "roles": [
+        "AP",
+        "LE",
+        "KSV",
+        "PV"
+      ],
+      "fields": [
+        "Rückfrage",
+        "Ablehnungsgrund",
+        "Änderungsumfang",
+        "Vorversion",
+        "Freigabestatus"
+      ],
+      "documented": "BC: laufende Anfrage stornieren, ändern, neu anfordern. DocuWare UK Completion erlaubt Ablehnung, erneute Anforderung und Halten. SAP-Nacharbeit an vollständig vorerfasster Rechnung kann nach erneutem vollständigem Sichern neuen Workflow starten.",
+      "requirement": "S: konkrete Statusübergänge sind produkt-/szenariospezifisch.",
+      "company_rule": "U: nach bereits erteilter Fachfreigabe relevante Betrags-, Leistungs-, Empfänger- oder Kontierungsänderung sperrt den weiteren Standardpfad und verlangt neue KSV-Freigabe. Kein universeller Automatismus behauptet.",
+      "evidence": [
+        "E08b",
+        "E03c",
+        "E18d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E08b",
+          "source_id": 8,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-use-approval-workflows",
+          "section": "Cancel approval requests"
+        },
+        {
+          "evidence_id": "E03c",
+          "source_id": 3,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-uk",
+          "section": "Completion"
+        },
+        {
+          "evidence_id": "E18d",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Ausnahmebehandlung > vollständig vorerfasste Rechnung"
+        }
+      ]
+    },
+    {
+      "id": "W11",
+      "stage": "Buchung / Korrektur gebuchter Rechnung",
+      "roles": [
+        "AP"
+      ],
+      "fields": [
+        "Buchungsdatum",
+        "Buchungsbeleg",
+        "Kreditorenposten",
+        "Korrekturbezug"
+      ],
+      "documented": "DocuWare UK exportiert Buchungsdaten ins Finanzsystem; Export ist kein Buchungsnachweis. BC-Buchung aktualisiert Konten. BC-Korrektur gebuchter unbezahlter Rechnung arbeitet mit Gutschrift/neuem Beleg; bereits bezahlte oder kombinierte Empfangsbelege haben Einschränkungen.",
+      "requirement": "S: Buchungs- und Korrekturverfahren des konkreten Systems.",
+      "company_rule": "U: eigener Buchungsstatus mit Ergebnis; fehlgeschlagene Buchung bleibt trotz Approval ungebucht.",
+      "evidence": [
+        "E03d",
+        "E16b",
+        "E15a",
+        "E15b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E03d",
+          "source_id": 3,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-uk",
+          "section": "Completion"
+        },
+        {
+          "evidence_id": "E16b",
+          "source_id": 16,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-record-purchases",
+          "section": "Posting purchases"
+        },
+        {
+          "evidence_id": "E15a",
+          "source_id": 15,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-correct-cancel-unpaid-purchase-invoices",
+          "section": "Correct a posted purchase invoice"
+        },
+        {
+          "evidence_id": "E15b",
+          "source_id": 15,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-correct-cancel-unpaid-purchase-invoices",
+          "section": "Correct or cancel unpaid purchase invoices > introductory paragraphs"
+        }
+      ]
+    },
+    {
+      "id": "W12",
+      "stage": "Separate Zahlung",
+      "roles": [
+        "PAY"
+      ],
+      "fields": [
+        "Offene Posten",
+        "Fälligkeit",
+        "Zahlart",
+        "Bankverbindung",
+        "Zahlungsvorschlag",
+        "Zahlungsautorisierung",
+        "Ausführungsstatus"
+      ],
+      "documented": "D365 Finance: Zahlungsvorschlag wählt Rechnungen; Zahlart für Generierung erforderlich; Vorschlagsautomatik bucht Zahlungen nicht automatisch. SAP-Sperrfreigabe hebt eine Zahlungssperre auf Kopfebene auf, ist keine Überweisung.",
+      "requirement": "S: jeweilige Zahlungsfunktion; U: separate Autorisierung und Bankprozess.",
+      "company_rule": "U: Approval, Buchung, Zahlungsfreigabe, Ausführung und Bank-/Ausgleichsrückmeldung separat führen.",
+      "evidence": [
+        "E09a",
+        "E09b",
+        "E10a",
+        "E17b",
+        "E17c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E09a",
+          "source_id": 9,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/cash-bank-management/tasks/vendor-payment-overview",
+          "section": "Vendor payment overview > payment proposal steps"
+        },
+        {
+          "evidence_id": "E09b",
+          "source_id": 9,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/cash-bank-management/tasks/vendor-payment-overview",
+          "section": "Vendor payment overview > method of payment step"
+        },
+        {
+          "evidence_id": "E10a",
+          "source_id": 10,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/automate-vendor-payment-proposal",
+          "section": "Automate vendor payment proposals > introductory paragraphs"
+        },
+        {
+          "evidence_id": "E17b",
+          "source_id": 17,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/9bd9a6b4124446a5b31ddfecbff07508.html?locale=de-DE&version=2608.500",
+          "section": "Funktionsumfang > Hinweis zum Sperrgrund"
+        },
+        {
+          "evidence_id": "E17c",
+          "source_id": 17,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/9bd9a6b4124446a5b31ddfecbff07508.html?locale=de-DE&version=2608.500",
+          "section": "Funktionsumfang > Hinweis zum Sperrgrund"
+        }
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "id": "F01",
+      "field": "Name und Anschrift von Leistendem / Empfänger",
+      "level": "Kopf",
+      "classification": "G",
+      "mandatory_condition_or_scope": "§ 14 Abs. 4 Nr. 1; allgemeiner Katalog, Sonderfälle gesondert",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Interne Kreditoren-/Gesellschafts-ID ist nicht der Gesetzeswortlaut.",
+      "evidence": [
+        "E05a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 1 UStG"
+        }
+      ]
+    },
+    {
+      "id": "F02",
+      "field": "Steuernummer ODER Umsatzsteuer-ID des Leistenden",
+      "level": "Kopf",
+      "classification": "G",
+      "mandatory_condition_or_scope": "§ 14 Abs. 4 Nr. 2; Alternative, nicht pauschal beide verlangen",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Nicht mit einer internen Lieferantennummer verwechseln.",
+      "evidence": [
+        "E05a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 2 UStG"
+        }
+      ]
+    },
+    {
+      "id": "F03",
+      "field": "Ausstellungsdatum / Rechnungsnummer",
+      "level": "Kopf",
+      "classification": "G;U→S",
+      "mandatory_condition_or_scope": "§ 14 Abs. 4 Nr. 3–4; in BC Ext. Doc. No. Mandatory als eigener Buchungsparameter",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Rechtliche Rechnungsangabe und technische Erfassungspflicht sind getrennte Prüfungen.",
+      "evidence": [
+        "E05a",
+        "E16a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 3–4 UStG"
+        },
+        {
+          "evidence_id": "E16a",
+          "source_id": 16,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-record-purchases",
+          "section": "External document number"
+        }
+      ]
+    },
+    {
+      "id": "F04",
+      "field": "Menge / Art der Lieferung oder Umfang / Art der Leistung; Leistungszeitpunkt",
+      "level": "Position / Leistungsbezug",
+      "classification": "G",
+      "mandatory_condition_or_scope": "§ 14 Abs. 4 Nr. 5–6, einschließlich der dort geregelten Bedingungen",
+      "roles": [
+        "LE",
+        "AP"
+      ],
+      "boundary": "Leistungsdatum nicht durch Rechnungseingang oder Buchungsdatum ersetzen.",
+      "evidence": [
+        "E05a",
+        "E05b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 5–6 UStG"
+        },
+        {
+          "evidence_id": "E05b",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 6 UStG"
+        }
+      ]
+    },
+    {
+      "id": "F05",
+      "field": "Entgelt nach Steuersätzen/Befreiungen; vereinbarte Minderungen; Steuersatz und Steuerbetrag oder Befreiungshinweis",
+      "level": "Position / Steuerzusammenfassung",
+      "classification": "G",
+      "mandatory_condition_or_scope": "§ 14 Abs. 4 Nr. 7–8; gesetzliche Alternativen beachten",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Interner Steuerschlüssel ist nicht selbst die gesetzliche Angabe.",
+      "evidence": [
+        "E05a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 7–8 UStG"
+        }
+      ]
+    },
+    {
+      "id": "F06",
+      "field": "Aufbewahrungshinweis / Angabe Gutschrift",
+      "level": "Kopf / Sonderfall",
+      "classification": "G_bedingt",
+      "mandatory_condition_or_scope": "Nur § 14 Abs. 4 Nr. 9–10 in den dort benannten Fällen",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Keine pauschalen Pflichtfelder jeder Eingangsrechnung.",
+      "evidence": [
+        "E05a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 9–10 UStG"
+        }
+      ]
+    },
+    {
+      "id": "F07",
+      "field": "Kleinbetragskontext",
+      "level": "Kopf",
+      "classification": "G_Ausnahme",
+      "mandatory_condition_or_scope": "§ 33 UStDV: Gesamtbetrag bis einschließlich 250 EUR; Satz 3 nimmt bestimmte Umsätze aus",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Abweichender Mindestkatalog; nicht jeden Beleg gegen denselben Vollkatalog sperren.",
+      "evidence": [
+        "E12a",
+        "E12b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E12a",
+          "source_id": 12,
+          "url": "https://www.gesetze-im-internet.de/ustdv_1980/__33.html",
+          "section": "§ 33 Satz 1 UStDV"
+        },
+        {
+          "evidence_id": "E12b",
+          "source_id": 12,
+          "url": "https://www.gesetze-im-internet.de/ustdv_1980/__33.html",
+          "section": "§ 33 Satz 3 UStDV"
+        }
+      ]
+    },
+    {
+      "id": "F08",
+      "field": "Originalbeleg / Herkunft / Lesbarkeit / Leistungsbezug",
+      "level": "Dokument",
+      "classification": "G_Kontrolle;U",
+      "mandatory_condition_or_scope": "§ 14 Abs. 3; Prüfpfad statt vorgeschriebener bestimmter Softwaremaske",
+      "roles": [
+        "AP",
+        "LE"
+      ],
+      "boundary": "Keine Aussage über vollständige technische E-Rechnungsvalidierung.",
+      "evidence": [
+        "E05c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05c",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 3 UStG"
+        }
+      ]
+    },
+    {
+      "id": "F09",
+      "field": "Gesellschaft / Mandant / Rechnungsempfängerzuordnung",
+      "level": "Kopf / Stammdaten",
+      "classification": "S;U",
+      "mandatory_condition_or_scope": "DocuWare US Mehrgesellschaftslösung: Subsidiary Name Pflichtfeld",
+      "roles": [
+        "AP",
+        "CFG"
+      ],
+      "boundary": "Gesellschaft nicht als bloße Kostenstelle behandeln; gesetzlicher Empfänger bleibt F01.",
+      "evidence": [
+        "E04d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E04d",
+          "source_id": 4,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-usa",
+          "section": "Using the solution with multi-subsidiaries"
+        }
+      ]
+    },
+    {
+      "id": "F10",
+      "field": "Interne Kreditoren-ID; Eingangstag; Buchungsdatum; Fälligkeit; Währung; Bank- und Zahlungsdaten",
+      "level": "Kopf / Zahlungsstamm",
+      "classification": "U;S_bedingt",
+      "mandatory_condition_or_scope": "Nicht im allgemeinen §-14-Abs.-4-Katalog aufgeführt; technische Regeln gesondert. D365 verlangt Zahlart für Zahlungsgenerierung.",
+      "roles": [
+        "AP",
+        "PAY"
+      ],
+      "boundary": "Keine Aussage, dass diese Felder in allen Rechts-/Vertragssonderfällen optional wären.",
+      "evidence": [
+        "E05a",
+        "E09a",
+        "E09b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E05a",
+          "source_id": 5,
+          "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+          "section": "§ 14 Abs. 4 Nr. 1–10 UStG"
+        },
+        {
+          "evidence_id": "E09a",
+          "source_id": 9,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/cash-bank-management/tasks/vendor-payment-overview",
+          "section": "Vendor payment overview > payment proposal steps"
+        },
+        {
+          "evidence_id": "E09b",
+          "source_id": 9,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/cash-bank-management/tasks/vendor-payment-overview",
+          "section": "Vendor payment overview > method of payment step"
+        }
+      ]
+    },
+    {
+      "id": "F11",
+      "field": "Default-Dimensionen / Kopfzuschläge",
+      "level": "Kopf",
+      "classification": "S;U",
+      "mandatory_condition_or_scope": "D365: Kopfverteilung und positionsbezogene Ableitung; bei PO Dimensionen aus PO-Zeilen",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Vorbelegung ist nicht Nachweis richtiger Kostenverursachung.",
+      "evidence": [
+        "E01a",
+        "E06d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E01a",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        },
+        {
+          "evidence_id": "E06d",
+          "source_id": 6,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/vendor-invoices-overview",
+          "section": "Default financial dimension in vendor invoice lines"
+        }
+      ]
+    },
+    {
+      "id": "F12",
+      "field": "Sachkonto / Steuerkey / Buchungstext / Kontierungsbetrag",
+      "level": "Position / Kontierungszeile",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "DocuWare UK: GL amount ausdrücklich Pflicht bei Kostenstellenfreigabe; Kontierung Voraussetzung für Buchungsdatensatz",
+      "roles": [
+        "AP",
+        "KSV"
+      ],
+      "boundary": "Nicht pauschal sämtliche angezeigten Felder zu rechtlichen oder unbedingten Systempflichten erklären.",
+      "evidence": [
+        "E03b",
+        "E03d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E03b",
+          "source_id": 3,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-uk",
+          "section": "GL coding"
+        },
+        {
+          "evidence_id": "E03d",
+          "source_id": 3,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-uk",
+          "section": "Completion"
+        }
+      ]
+    },
+    {
+      "id": "F13",
+      "field": "Kostenstelle",
+      "level": "Position / Verteilung / Freigabezuordnung",
+      "classification": "U→S",
+      "mandatory_condition_or_scope": "BC: Code Mandatory kann Dimensionswert zur Buchung verlangen; sonst keine universelle technische Pflicht",
+      "roles": [
+        "AP",
+        "KSV"
+      ],
+      "boundary": "Freigabezuständigkeit und gebuchtes Kontierungsobjekt getrennt modellieren.",
+      "evidence": [
+        "E13a",
+        "E11a"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E13a",
+          "source_id": 13,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/finance-dimensions",
+          "section": "To set up default dimensions for customers, vendors, and other accounts > Tip"
+        },
+        {
+          "evidence_id": "E11a",
+          "source_id": 11,
+          "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+          "section": "Setting Up Cost Centers"
+        }
+      ]
+    },
+    {
+      "id": "F14",
+      "field": "Kostenträger",
+      "level": "Position / Kostenrechnung",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "BC-Kostenrechnung: Kostenposten Kostenart + Kostenstelle ODER Kostenträger; nicht beide zugleich",
+      "roles": [
+        "AP"
+      ],
+      "boundary": "Diese Modulregel nicht auf jede Rechnung / jedes ERP übertragen.",
+      "evidence": [
+        "E11b",
+        "E11c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E11b",
+          "source_id": 11,
+          "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+          "section": "Setting Up Cost Objects"
+        },
+        {
+          "evidence_id": "E11c",
+          "source_id": 11,
+          "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+          "section": "Balances between Cost Type, Cost Center, and Cost Object"
+        }
+      ]
+    },
+    {
+      "id": "F15",
+      "field": "Projekt / Projektaufgabe / PSP-Element",
+      "level": "Position / Projektbezug",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "BC Projektbeschaffung: Project No. / Project Task No.; SAP Rollenfindung nach passender PSP-Vorbedingung",
+      "roles": [
+        "AP",
+        "PV",
+        "KSV"
+      ],
+      "boundary": "Projektprüfung separat konfigurierbar, nicht Ersatz für geforderte KSV-Freigabe.",
+      "evidence": [
+        "E14a",
+        "E18b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E14a",
+          "source_id": 14,
+          "url": "https://learn.microsoft.com/en-gb/dynamics365/business-central/projects-how-manage-project-supplies",
+          "section": "Replenish a project manually"
+        },
+        {
+          "evidence_id": "E18b",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Vorbedingungen"
+        }
+      ]
+    },
+    {
+      "id": "F16",
+      "field": "Bestellung + Bestellposition / Wareneingang / Abnahmebezug",
+      "level": "Position",
+      "classification": "U;S_bedingt",
+      "mandatory_condition_or_scope": "D365 PO-Matching je Richtlinie; Nicht-PO-Pfad gesondert",
+      "roles": [
+        "AP",
+        "LE"
+      ],
+      "boundary": "Bestellung, Rechnung und Leistungsnachweis sind unterschiedliche Objekte.",
+      "evidence": [
+        "E07a",
+        "E07c",
+        "E06d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E07a",
+          "source_id": 7,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/three-way-matching-policies",
+          "section": "Example: Three-way matching for items > Scenario"
+        },
+        {
+          "evidence_id": "E07c",
+          "source_id": 7,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/three-way-matching-policies",
+          "section": "Example: Three-way matching for items > Scenario"
+        },
+        {
+          "evidence_id": "E06d",
+          "source_id": 6,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/vendor-invoices-overview",
+          "section": "Default financial dimension in vendor invoice lines"
+        }
+      ]
+    },
+    {
+      "id": "F17",
+      "field": "Verteilungsbetrag / Prozent / Basis / Rundungsrest",
+      "level": "Kontierungszeile",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "DocuWare US Prozentvorbelegung: insgesamt 100 %; Rundung ggf. korrigieren; D365 Splitgrenzen beachten",
+      "roles": [
+        "AP",
+        "KSV"
+      ],
+      "boundary": "Ein Beleg kann mehrere Kontierungszeilen haben; nicht alle Artikeltypen sind gleich splittbar.",
+      "evidence": [
+        "E04b",
+        "E01c",
+        "E01d"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E04b",
+          "source_id": 4,
+          "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-usa",
+          "section": "How to GL code invoices > GL Table prefill options"
+        },
+        {
+          "evidence_id": "E01c",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        },
+        {
+          "evidence_id": "E01d",
+          "source_id": 1,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+          "section": "Accounting distributions"
+        }
+      ]
+    },
+    {
+      "id": "F18",
+      "field": "Freigeber / Limit / Ersatzperson / Entscheidungsdatum / Belegversion",
+      "level": "Workflow",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "BC Benutzer-/Limit-/Vertretungssetup; SAP Initiatorausschluss konfigurierbar",
+      "roles": [
+        "KSV",
+        "MAN",
+        "CFG"
+      ],
+      "boundary": "Prüfprotokoll und Versionsbindung sind Entwurfsregeln, keine behauptete universelle Standardfunktion.",
+      "evidence": [
+        "E02a",
+        "E02b",
+        "E02c",
+        "E18c"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E02a",
+          "source_id": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+          "section": "To set up an approval user > Purchase Amount Approval Limit"
+        },
+        {
+          "evidence_id": "E02b",
+          "source_id": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+          "section": "To set up an approval user > Substitute"
+        },
+        {
+          "evidence_id": "E02c",
+          "source_id": 2,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+          "section": "To set up an approval user > warning about requestor/approver"
+        },
+        {
+          "evidence_id": "E18c",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Schritteigenschaften"
+        }
+      ]
+    },
+    {
+      "id": "F19",
+      "field": "Rückfrage / Ablehnungs- und Änderungsgrund / Neuprüfung",
+      "level": "Workflow",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "BC Cancel Approval Request; SAP Nacharbeitsverfahren; nach erteilter Freigabe hier explizite Unternehmensregel",
+      "roles": [
+        "AP",
+        "LE",
+        "KSV",
+        "PV"
+      ],
+      "boundary": "Ablehnung ist weder Storno einer Buchung noch Zahlungssperrfreigabe.",
+      "evidence": [
+        "E08b",
+        "E18d",
+        "E15a",
+        "E17b"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E08b",
+          "source_id": 8,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-use-approval-workflows",
+          "section": "Cancel approval requests"
+        },
+        {
+          "evidence_id": "E18d",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Ausnahmebehandlung > vollständig vorerfasste Rechnung"
+        },
+        {
+          "evidence_id": "E15a",
+          "source_id": 15,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-correct-cancel-unpaid-purchase-invoices",
+          "section": "Correct a posted purchase invoice"
+        },
+        {
+          "evidence_id": "E17b",
+          "source_id": 17,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/9bd9a6b4124446a5b31ddfecbff07508.html?locale=de-DE&version=2608.500",
+          "section": "Funktionsumfang > Hinweis zum Sperrgrund"
+        }
+      ]
+    },
+    {
+      "id": "F20",
+      "field": "Approvalstatus / Buchungsstatus / Zahlungsstatus / Ausgleichsstatus",
+      "level": "Getrennte Zustandsobjekte",
+      "classification": "S_bedingt;U",
+      "mandatory_condition_or_scope": "BC Released; BC Posting; D365 Zahlungsprozess; SAP gesperrt/vorerfasst unterschiedliche Folgeaktionen",
+      "roles": [
+        "AP",
+        "KSV",
+        "PAY"
+      ],
+      "boundary": "Getrennte Status sind Entwurf; Produktlabels dürfen nicht ohne semantische Zuordnung gleichgesetzt werden.",
+      "evidence": [
+        "E08c",
+        "E16b",
+        "E10a",
+        "E18e"
+      ],
+      "source_details": [
+        {
+          "evidence_id": "E08c",
+          "source_id": 8,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-use-approval-workflows",
+          "section": "Approve or reject approval requests"
+        },
+        {
+          "evidence_id": "E16b",
+          "source_id": 16,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-record-purchases",
+          "section": "Posting purchases"
+        },
+        {
+          "evidence_id": "E10a",
+          "source_id": 10,
+          "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/automate-vendor-payment-proposal",
+          "section": "Automate vendor payment proposals > introductory paragraphs"
+        },
+        {
+          "evidence_id": "E18e",
+          "source_id": 18,
+          "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+          "section": "Tabelle > Bestimmen der Reihenfolge"
+        }
+      ]
+    }
+  ],
+  "quotes_location": "sources.json: evidence_id → exact section and short literal excerpt; höchstens 25 zitierte Wörter je Quelle insgesamt",
+  "example_invariant": "Jede synthetische Rechnung benötigt fachliche KSV-Freigabe, auch bei fehlerfreiem Bestellabgleich; PV-Mitprüfung separat konfigurierbar."
+}

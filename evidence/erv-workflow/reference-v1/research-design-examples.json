@@ -1,0 +1,270 @@
+{
+  "date": "2026-10-02",
+  "scope": "Synthetische Entwürfe; kein Nachweis tatsächlicher Firmen oder Produktimplementierung",
+  "scenarios": [
+    {
+      "id": "S01",
+      "context": "Agentur, 7 Personen",
+      "invoice_net_eur": 800,
+      "purchase_order": false,
+      "projects": [],
+      "project_coreview": "off",
+      "allocation": [
+        {
+          "cost_center": "Verwaltung",
+          "net_eur": 800
+        }
+      ],
+      "approval": [
+        "LE Leistungszeitraum",
+        "KSV Verwaltung"
+      ],
+      "posting_role": "AP",
+      "payment_role": "PAY",
+      "control": "Erfassung und KSV-Freigabe durch verschiedene Personen",
+      "difference_driver": "Eindeutige Zuständigkeit, kein Bestell- oder Projektbezug",
+      "evidence": [
+        "E04a",
+        "E08a",
+        "E02c"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S02",
+      "context": "Ingenieurteam, 12 Personen",
+      "invoice_net_eur": 4800,
+      "purchase_order": false,
+      "projects": [
+        {
+          "project": "P-A",
+          "task": "30"
+        }
+      ],
+      "project_coreview": "on",
+      "approval": [
+        "LE Meilensteinbestätigung",
+        "PV P-A",
+        "KSV zuständige Kostenstelle"
+      ],
+      "posting_role": "AP",
+      "payment_role": "PAY",
+      "control": "Fehlender Meilensteinnachweis führt zu Rückfrage; KSV bleibt fachlicher Freigeber",
+      "difference_driver": "Projekt- und Abnahmebezug trotz kleiner Organisation",
+      "evidence": [
+        "E14a",
+        "E18b"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S03",
+      "context": "Handelsbetrieb, 80 Personen",
+      "invoice_net_eur": 2000,
+      "corrected_invoice_net_eur": 1800,
+      "purchase_order": true,
+      "ordered_and_invoiced_quantity": 20,
+      "received_quantity": 18,
+      "unit_price_net_eur": 100,
+      "projects": [],
+      "project_coreview": "off",
+      "approval": [
+        "LE Wareneingang klären",
+        "AP korrigierte Rechnung",
+        "KSV fachliche Freigabe"
+      ],
+      "posting_role": "AP",
+      "payment_role": "PAY",
+      "control": "Mengenabweichung vor Standardfreigabe klären; keine universelle Splitannahme für Lagerartikel",
+      "difference_driver": "Bestell-/Wareneingangsabgleich und Ausnahme",
+      "evidence": [
+        "E07a",
+        "E07b",
+        "E07c",
+        "E01c"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S04",
+      "context": "Dienstleister, 150 Personen",
+      "invoice_net_eur": 6000,
+      "purchase_order": false,
+      "projects": [],
+      "project_coreview": "off",
+      "allocation": [
+        {
+          "cost_center": "Zentrale",
+          "percent": 40,
+          "net_eur": 2400
+        },
+        {
+          "cost_center": "Standort B",
+          "percent": 35,
+          "net_eur": 2100
+        },
+        {
+          "cost_center": "Standort C",
+          "percent": 25,
+          "net_eur": 1500
+        }
+      ],
+      "approval": [
+        "Alle drei KSV (UND)",
+        "MAN wegen Nettogesamtsumme > 5000 EUR"
+      ],
+      "posting_role": "AP",
+      "payment_role": "PAY",
+      "control": "Vertretung namentlich und befugnisgebunden; Summe und Rundung prüfen",
+      "difference_driver": "Mehrfachverteilung und mehrere Kostenstellenverantwortliche",
+      "evidence": [
+        "E04b",
+        "E04c",
+        "E03a",
+        "E02a"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S05",
+      "context": "Engineering-Verbund, 20 Personen; ein bestimmter rechtlicher Rechnungsempfänger",
+      "invoice_net_eur": 15000,
+      "purchase_order": false,
+      "projects": [
+        {
+          "project": "P-A",
+          "percent": 60,
+          "net_eur": 9000
+        },
+        {
+          "project": "P-B",
+          "percent": 40,
+          "net_eur": 6000
+        }
+      ],
+      "project_coreview": "on",
+      "approval": [
+        "PV P-A",
+        "PV P-B",
+        "Alle zuständigen KSV",
+        "MAN"
+      ],
+      "posting_role": "AP",
+      "payment_role": "PAY",
+      "control": "Keine automatische gesellschaftsübergreifende Umlage; Kostenträgerbuchung und KSV-Freigabestamm getrennt",
+      "difference_driver": "Mehrprojektbezug und Zuständigkeitsabstimmung, nicht Personalzahl",
+      "evidence": [
+        "E14a",
+        "E18a",
+        "E18b",
+        "E04d"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S06",
+      "context": "Verbund, 2000 Personen, fünf Gesellschaften",
+      "invoice_net_eur": 800,
+      "purchase_order": false,
+      "projects": [],
+      "project_coreview": "off",
+      "allocation": [
+        {
+          "company": "klar ausgewählte empfangende Gesellschaft",
+          "cost_center": "lokale Verwaltung",
+          "net_eur": 800
+        }
+      ],
+      "approval": [
+        "Lokale KSV"
+      ],
+      "posting_role": "Zentrale AP im zutreffenden Mandanten",
+      "payment_role": "PAY mit passender Zuständigkeit",
+      "control": "Gesellschafts- und Lieferantenstamm prüfen; keine zusätzliche Fachstufe nur wegen Unternehmensgröße",
+      "difference_driver": "Mandantentrennung und verteilte Verantwortlichkeit bei einfacher Rechnung",
+      "evidence": [
+        "E04d",
+        "E17a"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S07",
+      "context": "Gemeinnütziger Träger, 25 Personen",
+      "invoice_net_eur": 1200,
+      "purchase_order": false,
+      "projects": [],
+      "project_coreview": "off",
+      "approval": [
+        "LE beantwortet Leistungsrückfrage",
+        "Berechtigte Vertretung der KSV"
+      ],
+      "posting_role": "AP erst nach Klärung/Freigabe",
+      "payment_role": "PAY separat",
+      "control": "Ungeklärte Leistung: Ablehnung/Klärung; Fristablauf ist keine Zustimmung; Ablehnung ist keine Stornobuchung",
+      "difference_driver": "Ausnahme und Abwesenheit",
+      "evidence": [
+        "E04c",
+        "E08b",
+        "E03c"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    },
+    {
+      "id": "S08",
+      "context": "Hersteller, 600 Personen",
+      "invoice_net_eur_before": 4800,
+      "invoice_net_eur_after": 5600,
+      "purchase_order": "für diesen Fall nicht entscheidend",
+      "projects": [],
+      "project_coreview": "off",
+      "approval": [
+        "Vorherige KSV-Freigabe für neue Version im Entwurf ungültig",
+        "KSV prüft neue Version",
+        "MAN wegen neuer Nettogesamtsumme > 5000 EUR"
+      ],
+      "posting_role": "AP nach erneutem Approval",
+      "payment_role": "PAY separat",
+      "control": "Vor Buchung neue Prüfung; nach Buchung eigener Korrekturpfad; keine automatische Rückholung von Zahlungen behauptet",
+      "difference_driver": "Änderung nach Freigabe und Überschreiten der Unternehmensgrenze",
+      "evidence": [
+        "E08b",
+        "E15a",
+        "E15b"
+      ],
+      "synthetic": true,
+      "approval_amount_basis": "Nettorechnungssumme in EUR, nicht Splitanteil",
+      "additional_manager_limit_eur": 5000,
+      "threshold_operator": ">",
+      "rule_not_product_default_or_legal_threshold": true
+    }
+  ]
+}

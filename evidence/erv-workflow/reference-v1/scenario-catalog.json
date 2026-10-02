@@ -1,0 +1,338 @@
+{
+  "schemaVersion": "pansphaira.erv-workflow-scenarios/research-catalog/v1",
+  "scope": "PUBLIC_SYNTHETIC_RESEARCH_AND_EXECUTED_EXISTING_POC_PRIMITIVES",
+  "frozenBeforeProbeExecution": true,
+  "baseCommit": "b79686d1656aec89c8b8ad0bdb84e478ac5c856a",
+  "baseRelease": "2026_10_02_v5",
+  "companySizeIsExecutionInput": false,
+  "companyProfiles": [
+    {
+      "id": "SYNTH-TEAM-5",
+      "employees": 5,
+      "label": "Kleines Team",
+      "assumption": "Wenige Rollen, keine pauschale Ausnahme von Freigabe-/Trennungsregeln."
+    },
+    {
+      "id": "SYNTH-BETRIEB-35",
+      "employees": 35,
+      "label": "Wachsender Dienstleistungsbetrieb",
+      "assumption": "Projekt- und Kostenstellenbezug, Rollen können zusammenfallen."
+    },
+    {
+      "id": "SYNTH-MITTELSTAND-220",
+      "employees": 220,
+      "label": "Mittelstand mit Einkauf und Wareneingang",
+      "assumption": "Bestellbezug und Leistungsempfang werden unabhängig bereitgestellt."
+    },
+    {
+      "id": "SYNTH-VERBUND-1600",
+      "employees": 1600,
+      "label": "Größerer Unternehmensverbund",
+      "assumption": "Mehrere Gesellschaften, Kostenstellen und getrennte Freigabestufen."
+    }
+  ],
+  "scenarioCount": 12,
+  "scenarios": [
+    {
+      "id": "ERV-S01",
+      "companyId": "SYNTH-TEAM-5",
+      "title": "Sachliche Freigabe ohne Bestellung",
+      "businessExpectation": "LEAN kann Rechnungsdaten prüfen; fachliche Freigabe durch den Kostenstellenverantwortlichen ist dennoch gesondert erforderlich.",
+      "userFields": [
+        "costCenter",
+        "businessPurpose",
+        "decision"
+      ],
+      "probeIds": [
+        "native-lean",
+        "core-cost-center-extra",
+        "lean-mandatory-approval"
+      ],
+      "expectedMissingCapabilities": [
+        "CC_OWNER_ROUTING",
+        "EDITABLE_FORM",
+        "ALWAYS_REQUIRED_BUSINESS_APPROVAL"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S02",
+      "companyId": "SYNTH-BETRIEB-35",
+      "title": "Projektbezogene Dienstleistungsrechnung",
+      "businessExpectation": "Kostenstelle und Projektnummer getrennt erfassen; Projektverantwortlicher bestätigt Leistung, Kostenstellenverantwortlicher gibt seinen Kostenanteil frei.",
+      "userFields": [
+        "costCenter",
+        "projectNumber",
+        "projectTask",
+        "serviceConfirmation"
+      ],
+      "probeIds": [
+        "native-lean",
+        "core-project-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "PROJECT_CODING",
+        "PROJECT_ROLE",
+        "CC_OWNER_ROUTING",
+        "EDITABLE_FORM"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S03",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Bestellung und Wareneingang vorhanden",
+      "businessExpectation": "Vorgeschlagene Kontierung übernehmen oder begründet korrigieren; Bestellung, Rechnung und Wareneingang vergleichen. Ein Match ist keine menschliche Freigabe.",
+      "userFields": [
+        "purchaseOrder",
+        "receipt",
+        "costCenter",
+        "glAccount"
+      ],
+      "probeIds": [
+        "native-below",
+        "native-synthetic-approval"
+      ],
+      "expectedMissingCapabilities": [
+        "CC_OWNER_ROUTING",
+        "GL_CODING",
+        "AUTHENTICATED_HUMAN_APPROVAL"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S04",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Wareneingang fehlt oder Menge widerspricht",
+      "businessExpectation": "Keine erfundene Lieferbestätigung: Rückfrage an Empfang/Leistungsempfänger, anschließend aktualisierte Version erneut prüfen.",
+      "userFields": [
+        "receipt",
+        "serviceConfirmation",
+        "discrepancyReason"
+      ],
+      "probeIds": [
+        "native-missing-receipt",
+        "native-quantity-conflict"
+      ],
+      "expectedMissingCapabilities": [
+        "RETURN_QUERY_LOOP",
+        "RECEIPT_UPDATE_INTERFACE",
+        "EDITABLE_FORM"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S05",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Toleranzgrenze und ein Cent darüber",
+      "businessExpectation": "Reale PoC-Referenzbetragsprüfung mit 200 Basispunkten; an der Grenze zulässig, darüber Klärung. Kein Nachweis vollständiger positionsbezogener ERP-Preisprüfung.",
+      "userFields": [
+        "matchingResult",
+        "discrepancyReason",
+        "decision"
+      ],
+      "probeIds": [
+        "native-boundary200",
+        "native-outside200"
+      ],
+      "expectedMissingCapabilities": [
+        "EXCEPTION_RESOLUTION",
+        "AUTHENTICATED_HUMAN_APPROVAL"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S06",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Aufteilung auf zwei Kostenstellen",
+      "businessExpectation": "Brutto-Freigabevolumen getrennt zu 60/40 zuordnen; jeder Verantwortliche bestätigt nur seinen Anteil. Dies ist keine Netto-/Steuerkontierung.",
+      "userFields": [
+        "allocations",
+        "costCenter",
+        "allocationAmount",
+        "allocationPercent"
+      ],
+      "probeIds": [
+        "native-modified-pending",
+        "core-allocations-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "SPLIT_CODING",
+        "PER_ALLOCATION_ROUTING",
+        "PARTIAL_APPROVAL_JOIN"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true,
+      "syntheticAllocation": {
+        "basis": "GROSS_APPROVAL_VOLUME_ONLY_NOT_ACCOUNTING_COST",
+        "currency": "EUR",
+        "amountMinor": 1200000,
+        "lines": [
+          {
+            "costCenter": "SYNTH-CC-A",
+            "percent": "60",
+            "amountMinor": 720000,
+            "requiredRole": "SYNTH-CC-A-OWNER"
+          },
+          {
+            "costCenter": "SYNTH-CC-B",
+            "percent": "40",
+            "amountMinor": 480000,
+            "requiredRole": "SYNTH-CC-B-OWNER"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ERV-S07",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Betragsabhängige zusätzliche Freigabe",
+      "businessExpectation": "Kostenstellenfreigabe bleibt fachliche Grundfreigabe; eine zusätzliche Stufe kommt nach erklärter Betragsregel hinzu. 10.000 EUR ist die vorhandene PoC-Regel, kein allgemeiner Branchenwert.",
+      "userFields": [
+        "costCenter",
+        "approvalLimit",
+        "decision"
+      ],
+      "probeIds": [
+        "native-below",
+        "native-equal",
+        "native-above"
+      ],
+      "expectedMissingCapabilities": [
+        "BASE_CC_OWNER_APPROVAL",
+        "CONFIGURABLE_APPROVAL_LEVELS"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S08",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Vertretung und Selbstfreigabe",
+      "businessExpectation": "Nur gültig konfigurierte Vertretung; fehlende Zuständigkeit bleibt offen. Selbstfreigabe nicht durch freie Eingabe eines anderen Rollennamens ersetzen.",
+      "userFields": [
+        "costCenter",
+        "approvalAssignee",
+        "substitute",
+        "decision"
+      ],
+      "probeIds": [
+        "native-cost-center-actor",
+        "native-self-actor"
+      ],
+      "expectedMissingCapabilities": [
+        "DEPUTY_ROUTING",
+        "AUTHENTICATED_IDENTITY",
+        "RESPONSIBILITY_ADMIN"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S09",
+      "companyId": "SYNTH-BETRIEB-35",
+      "title": "Rechnung kommt ein zweites Mal",
+      "businessExpectation": "Gleiche bereits angenommene Belegbytes nicht nochmals als neue Rechnung verbuchen; Dublettenbefund mit Verweis auf Original vorlegen.",
+      "userFields": [
+        "invoiceNumber",
+        "supplierId",
+        "duplicateReference"
+      ],
+      "probeIds": [
+        "native-duplicate-intake"
+      ],
+      "expectedMissingCapabilities": [
+        "FUZZY_DUPLICATE_REVIEW_UI",
+        "PERSISTENT_OPERATIONAL_INVOICE_STORE"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S10",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Änderung nach synthetischer Freigabe",
+      "businessExpectation": "Betrags-/Kontierungsänderung benötigt eine neue nachvollziehbare Version und betroffene erneute Freigaben; bloße Hashablehnung ist noch kein Revisionsworkflow.",
+      "userFields": [
+        "invoiceVersion",
+        "costCenter",
+        "changeReason",
+        "decision"
+      ],
+      "probeIds": [
+        "native-synthetic-approval",
+        "native-tampered-document",
+        "intake-cost-center-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "VERSIONED_CODING_CHANGE",
+        "APPROVAL_INVALIDATION",
+        "REAPPROVAL_LOOP"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S11",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Gesellschaft und Währung passen nicht",
+      "businessExpectation": "Rechtliche Einheit und zulässige Stammdaten eindeutig binden; Währungskonflikt nicht durch erfundenen Wechselkurs lösen.",
+      "userFields": [
+        "legalEntity",
+        "currency",
+        "costCenter",
+        "supplierId"
+      ],
+      "probeIds": [
+        "native-currency-conflict",
+        "core-entity-extra",
+        "native-productive-effect"
+      ],
+      "expectedMissingCapabilities": [
+        "LEGAL_ENTITY_AUTHORIZATION",
+        "ENTITY_SCOPED_MASTER_DATA",
+        "FX_POLICY"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    },
+    {
+      "id": "ERV-S12",
+      "companyId": "SYNTH-TEAM-5",
+      "title": "Rückfrage oder Zurückweisung",
+      "businessExpectation": "Kostenstellenverantwortlicher kann begründet zurückweisen oder konkrete Rückfrage stellen; offene Fragen verhindern finale Freigabe.",
+      "userFields": [
+        "decision",
+        "decisionReason",
+        "queryRecipient",
+        "comment"
+      ],
+      "probeIds": [
+        "native-modified-pending",
+        "intake-action-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "REJECT_QUERY_ACTIONS",
+        "EDITABLE_FORM",
+        "PERSISTENT_TASK_HISTORY"
+      ],
+      "coverageTarget": "BUSINESS_JOURNEY_WITH_SEPARATELY_MEASURED_NATIVE_PRIMITIVES",
+      "nativeFullWorkflowSuccessMustNotBeInferred": true
+    }
+  ],
+  "commonBusinessRule": "Fachliche Freigabe der Kostenanteile durch die jeweils zuständigen Kostenstellenverantwortlichen; Grundfreigabe, Projektbestätigung, Zusatzlimit und Zahlungsfreigabe sind getrennte Regeln.",
+  "nonclaims": [
+    "NO_CUSTOMER_DATA",
+    "NO_PRODUCTIVE_BOOKING_OR_PAYMENT",
+    "NO_INSTALLED_INTERACTIVE_APPROVAL_FORM",
+    "NO_INFERRED_COMPANY_SIZE_RULE",
+    "NO_FULL_BUSINESS_JOURNEY_PASS_FROM_PRIMITIVE_PROBES",
+    "NO_LEGAL_OR_TAX_CERTIFICATION",
+    "NO_AUTOMATIC_NEW_PLATFORM_OR_FUNCTIONALITY_EXPANSION"
+  ]
+}

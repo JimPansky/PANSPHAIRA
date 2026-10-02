@@ -1,0 +1,98 @@
+{
+  "schemaVersion": "pansphaira.erv-workflow-evidence/released-kernel-bindings/v1",
+  "releasedBaselineCommit": "bf10e58566eddce0c5ab6524ceaf84e1d58b72d4",
+  "releasedBaselineTag": "2026_10_02_v6",
+  "historicalNativeCommit": "b79686d1656aec89c8b8ad0bdb84e478ac5c856a",
+  "historicalNativeTag": "2026_10_02_v5",
+  "qualification": "EXACT_REUSED_KERNEL_BUILD_PROFILE_DOCUMENT_BINDINGS_NOT_WHOLE_REPOSITORY_IDENTITY",
+  "bindings": [
+    {
+      "path": "packages/contracts/src/incoming-invoice-erv.ts",
+      "sha256": "6ba5250783df35f60602a11437c843272ab014bf24e69135cfbf52dfb41750cf"
+    },
+    {
+      "path": "dist/packages/contracts/src/incoming-invoice-erv.js",
+      "sha256": "bf76442618c43e7fee64bb28ee6ad12acd6655fe1b361599e802735fe89c3ff0"
+    },
+    {
+      "path": "packages/contracts/src/incoming-invoice-intake.ts",
+      "sha256": "38490af300dce7965deebf56755ac59be117db711bd7bc478e19538947a412fc"
+    },
+    {
+      "path": "dist/packages/contracts/src/incoming-invoice-intake.js",
+      "sha256": "0ece706da233dbf7b1c7744958eed1a619a71cbb8a69ee284b1f494144ac96c9"
+    },
+    {
+      "path": "packages/contracts/src/incoming-invoice-blueprint.ts",
+      "sha256": "aad1b877c096d4605b80b141100897fab41f62622f5434be59059989b8514550"
+    },
+    {
+      "path": "dist/packages/contracts/src/incoming-invoice-blueprint.js",
+      "sha256": "c0579dafd713abef8810cb5bc94b80fa3f0c116497ec1b9c30971d9ef2481325"
+    },
+    {
+      "path": "src/pan360/original-erv-core-v1.mjs",
+      "sha256": "fb55266a99ce6500b99ca5683da3c27ecd08d7166c21e96523ab623bff0e9d1c"
+    },
+    {
+      "path": "packages/contracts/src/incoming-invoice-extraction-dataflow-v2.ts",
+      "sha256": "d7aaf42607c521db66b0b6fd209c033c4eb75a01ae023d430888a6681f98d2fe"
+    },
+    {
+      "path": "dist/packages/contracts/src/incoming-invoice-extraction-dataflow-v2.js",
+      "sha256": "f05ab917dc1a6cac2fbbaf67162eb01b146be3972801e899ba9c58020bb039e8"
+    },
+    {
+      "path": "src/pan360/original-invoice-input-v1.mjs",
+      "sha256": "ead7129d7815d75d484d73f0ed390610e06d94ce3591742990c1fc220858ac41"
+    },
+    {
+      "path": "packages/contracts/src/incoming-invoice-adaptive-ui.ts",
+      "sha256": "e60fb079364bc48d12629825531299bc7abd9986c5299067e450e7577ef75b1f"
+    },
+    {
+      "path": "dist/packages/contracts/src/incoming-invoice-adaptive-ui.js",
+      "sha256": "ea1e48b16cac4bd3e865b77d9f94853e2fab1c53960383f040105ec4ca16cb38"
+    },
+    {
+      "path": "erv-ui-reference/reference.mjs",
+      "sha256": "6d8c7f9b90fefa611b78314533fd7c0e38d7540de4e5031b881063693679d76c"
+    },
+    {
+      "path": "erv-ui-reference/schema.json",
+      "sha256": "ced5edd9d3566c9649d72daaa68927dac6369d2c7f7443251f45eac12b4b4e45"
+    },
+    {
+      "path": "erv-ui-reference/descriptors.mjs",
+      "sha256": "18c4738ac0aaeec377533de18aeff435d194bf5faab610d1ffa03df345db83ed"
+    },
+    {
+      "path": "src/pan360/original-erv-execution-v1.mjs",
+      "sha256": "bb4e10192e72272b7e4261bfcc52b6ebacd62b4def5e032a27859cb431a89197"
+    },
+    {
+      "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
+      "sha256": "708ce4f0232377a878e60703d37c92d25f1601278bc98fd96e62018d1bf08ae2"
+    },
+    {
+      "path": "tests/fixtures/incoming-invoice/ap-05-frozen-setup-v1.json",
+      "sha256": "fb239dd4fdc964ce0124f8be69ea97078205d31642ff034cdf95dfeb9a7364ec"
+    },
+    {
+      "path": "tests/fixtures/pan360/invoice-high-v1.txt",
+      "sha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830"
+    },
+    {
+      "path": "tests/fixtures/pan360/invoice-below-v1.txt",
+      "sha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f"
+    },
+    {
+      "path": "tests/fixtures/pan360/invoice-equal-v1.txt",
+      "sha256": "3cb39f293157f8bf008efd8014c0e24050a498989d7c75152d23a095bae81af5"
+    },
+    {
+      "path": "tests/fixtures/pan360/invoice-above-v1.txt",
+      "sha256": "30ab519f817f63353151acb11a5ff9d36de2278ea96fc93f5a4c8bda39265017"
+    }
+  ]
+}

@@ -1,0 +1,763 @@
+{
+  "schemaVersion": "pansphaira.erv-workflow-scenarios/native-observations/v1",
+  "sourceCommit": "b79686d1656aec89c8b8ad0bdb84e478ac5c856a",
+  "sourceRelease": "2026_10_02_v5",
+  "catalogSha256": "0f27979dca0d2d2778ba4dc0d533819dd54337c88ebac7ddb013eeff8872f346",
+  "actualNativeProbeCount": 23,
+  "businessScenarioCount": 12,
+  "completeHumanBusinessWorkflowsProven": 0,
+  "noSourceMutation": true,
+  "noCustomerInputs": true,
+  "noProductionBookingOrPayment": true,
+  "allProbeIdsCovered": true,
+  "sourceIdentity": {
+    "core": {
+      "schemaVersion": "pansphaira.pan360/erv-original-core-identity/v1",
+      "coreVersion": "1.0.0",
+      "profileSha256": "708ce4f0232377a878e60703d37c92d25f1601278bc98fd96e62018d1bf08ae2",
+      "bindings": [
+        {
+          "path": "packages/contracts/src/incoming-invoice-erv.ts",
+          "sha256": "6ba5250783df35f60602a11437c843272ab014bf24e69135cfbf52dfb41750cf"
+        },
+        {
+          "path": "dist/packages/contracts/src/incoming-invoice-erv.js",
+          "sha256": "bf76442618c43e7fee64bb28ee6ad12acd6655fe1b361599e802735fe89c3ff0"
+        },
+        {
+          "path": "packages/contracts/src/incoming-invoice-intake.ts",
+          "sha256": "38490af300dce7965deebf56755ac59be117db711bd7bc478e19538947a412fc"
+        },
+        {
+          "path": "dist/packages/contracts/src/incoming-invoice-intake.js",
+          "sha256": "0ece706da233dbf7b1c7744958eed1a619a71cbb8a69ee284b1f494144ac96c9"
+        },
+        {
+          "path": "packages/contracts/src/incoming-invoice-blueprint.ts",
+          "sha256": "aad1b877c096d4605b80b141100897fab41f62622f5434be59059989b8514550"
+        },
+        {
+          "path": "dist/packages/contracts/src/incoming-invoice-blueprint.js",
+          "sha256": "c0579dafd713abef8810cb5bc94b80fa3f0c116497ec1b9c30971d9ef2481325"
+        },
+        {
+          "path": "src/pan360/original-erv-core-v1.mjs",
+          "sha256": "fb55266a99ce6500b99ca5683da3c27ecd08d7166c21e96523ab623bff0e9d1c"
+        }
+      ],
+      "coreDigest": "e13a260aa9730e9e45fbddd0be8db932600c93c3ad4a768842455d40d427c89b",
+      "qualification": "DEVELOPMENT_LOCAL_UNTIL_INDEPENDENT_RELEASE_QUALIFICATION"
+    },
+    "input": {
+      "schemaVersion": "pansphaira.pan360/invoice-input-identity/v1",
+      "bindings": [
+        {
+          "path": "packages/contracts/src/incoming-invoice-extraction-dataflow-v2.ts",
+          "sha256": "d7aaf42607c521db66b0b6fd209c033c4eb75a01ae023d430888a6681f98d2fe"
+        },
+        {
+          "path": "dist/packages/contracts/src/incoming-invoice-extraction-dataflow-v2.js",
+          "sha256": "f05ab917dc1a6cac2fbbaf67162eb01b146be3972801e899ba9c58020bb039e8"
+        },
+        {
+          "path": "src/pan360/original-invoice-input-v1.mjs",
+          "sha256": "ead7129d7815d75d484d73f0ed390610e06d94ce3591742990c1fc220858ac41"
+        }
+      ],
+      "inputDigest": "8139e5d0eb711891df4db3bc6c79527a043174971be059427904f64fadadfdb1"
+    },
+    "bindings": [
+      {
+        "path": "packages/contracts/src/incoming-invoice-adaptive-ui.ts",
+        "sha256": "e60fb079364bc48d12629825531299bc7abd9986c5299067e450e7577ef75b1f"
+      },
+      {
+        "path": "dist/packages/contracts/src/incoming-invoice-adaptive-ui.js",
+        "sha256": "ea1e48b16cac4bd3e865b77d9f94853e2fab1c53960383f040105ec4ca16cb38"
+      },
+      {
+        "path": "erv-ui-reference/reference.mjs",
+        "sha256": "6d8c7f9b90fefa611b78314533fd7c0e38d7540de4e5031b881063693679d76c"
+      },
+      {
+        "path": "erv-ui-reference/schema.json",
+        "sha256": "ced5edd9d3566c9649d72daaa68927dac6369d2c7f7443251f45eac12b4b4e45"
+      },
+      {
+        "path": "erv-ui-reference/descriptors.mjs",
+        "sha256": "18c4738ac0aaeec377533de18aeff435d194bf5faab610d1ffa03df345db83ed"
+      },
+      {
+        "path": "src/pan360/original-erv-execution-v1.mjs",
+        "sha256": "bb4e10192e72272b7e4261bfcc52b6ebacd62b4def5e032a27859cb431a89197"
+      }
+    ],
+    "compositionDigest": "01b302f981f55d516a25dc3bb7d2e5ddcdcb1a7a22b529c7362dbc78e99042ff"
+  },
+  "nativeObservations": [
+    {
+      "id": "native-lean",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-lean.json",
+      "evidenceSha256": "dab4d818874382f799a9cba966ebbb7c92224155047893930e543289819274cd",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "NOT_REQUIRED",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-modified-pending",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-modified-pending.json",
+      "evidenceSha256": "d02c1776a15e7e26c13add2740909ba313f91bf2b4af9f96df1e8e5acec33eba",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "REQUIRES_SEPARATE_APPROVAL",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-below",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-below.json",
+      "evidenceSha256": "8a3246d7c1e2a8acc864fe2dfafe5da77aa8b163518ab6429f45e58c4fdea19c",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "NOT_REQUIRED",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-equal",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-equal.json",
+      "evidenceSha256": "6b1c1703a99c4275041b1a9c20f7ec1583889019fbee3064466f6fadf0b3f80d",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "NOT_REQUIRED",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-above",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-above.json",
+      "evidenceSha256": "9d678b367bdd4bf1733873cc6a492fb4ec8b9502bac89cc9d4c80dca28dad646",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "REQUIRES_SEPARATE_APPROVAL",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-missing-receipt",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-missing-receipt.json",
+      "evidenceSha256": "095fdb5840318e185e02d96351515e647abf447414d65c098cd9ad814aa2cae1",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "EXCEPTION",
+      "exception": "MISSING_CONTEXT",
+      "approval": "BLOCKED_DECISION",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-quantity-conflict",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-quantity-conflict.json",
+      "evidenceSha256": "ac1f8f0351b8e2933599b4d7b4d5144ad53a756b78bccaaa49f2bf057c335e83",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "CONFLICT",
+      "exception": "QUANTITY_RELATION",
+      "approval": "BLOCKED_DECISION",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-currency-conflict",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-currency-conflict.json",
+      "evidenceSha256": "c68f2edb034418308b425e1de5d56edf805ac38ade35faaf8c0bcebb5e8f9389",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "CONFLICT",
+      "exception": "CURRENCY_RELATION",
+      "approval": "BLOCKED_DECISION",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-boundary200",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-boundary200.json",
+      "evidenceSha256": "99706407ac9acdc8c2443615fa6b6001c6d17989f8ea10e909818a52cc6b10b8",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "REQUIRES_SEPARATE_APPROVAL",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-outside200",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-outside200.json",
+      "evidenceSha256": "84c71e2a295e8793b44c2693e3ab392536e70fe8905b71d50ad48dbed62a94c4",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "CONFLICT",
+      "exception": null,
+      "approval": "BLOCKED_DECISION",
+      "approvalRecordSource": null,
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-synthetic-approval",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-synthetic-approval.json",
+      "evidenceSha256": "e18f67135fd2e49f8b6e37ef353bc6f2a8143623605c988f0fe0eef4e32d92a5",
+      "outcome": "EXECUTED",
+      "reason": null,
+      "decision": "MATCHED",
+      "exception": null,
+      "approval": "REQUIRES_SEPARATE_APPROVAL",
+      "approvalRecordSource": "DECLARED_LOCAL_SYNTHETIC_TEST_ACTORS_ONLY",
+      "uiOutputKind": "FRAMEWORK_NEUTRAL_DATA_NOT_BROWSER_FORM",
+      "uiFields": [
+        "amount",
+        "outcome",
+        "scope",
+        "approval",
+        "purchase-order",
+        "receipt"
+      ],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-cost-center-actor",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-cost-center-actor.json",
+      "evidenceSha256": "abe99937f3f5faee93ca02c7c428910df7d701c2fe39d4ef2e9b735d038a1949",
+      "outcome": "DENIED",
+      "reason": "SEPARATE_APPROVAL_ACTOR_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-self-actor",
+      "surface": "runOriginalErvVariantV1",
+      "threw": false,
+      "evidenceFile": "native-self-actor.json",
+      "evidenceSha256": "17f2c8ab6aba08f23ffe1e5fb26cf1cbdacd798926ff53b3a281f1bf37e80320",
+      "outcome": "DENIED",
+      "reason": "SEPARATE_APPROVAL_ACTOR_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "core-cost-center-extra",
+      "surface": "evaluateOriginalErvCaseV1; added desired business fields",
+      "threw": false,
+      "evidenceFile": "core-cost-center-extra.json",
+      "evidenceSha256": "40e5666ccca43cc2348c4def15bf671d7067a6af59371260ec007e6a48f76732",
+      "outcome": "EXCEPTION",
+      "reason": null,
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "core-project-extra",
+      "surface": "evaluateOriginalErvCaseV1; added desired business fields",
+      "threw": false,
+      "evidenceFile": "core-project-extra.json",
+      "evidenceSha256": "b485cdbe0b14d0acd6502fe06dcba6c4f0559bcae34f572863a4b5f4fc3abdb0",
+      "outcome": "EXCEPTION",
+      "reason": null,
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "core-allocations-extra",
+      "surface": "evaluateOriginalErvCaseV1; added desired business fields",
+      "threw": false,
+      "evidenceFile": "core-allocations-extra.json",
+      "evidenceSha256": "46e823589544dcfcfb94eb8f7a1592ad25ec95307adb190452082c33f83332b1",
+      "outcome": "EXCEPTION",
+      "reason": null,
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "core-entity-extra",
+      "surface": "evaluateOriginalErvCaseV1; added desired business fields",
+      "threw": false,
+      "evidenceFile": "core-entity-extra.json",
+      "evidenceSha256": "32859e2053ba270eed9728969d394c658bb102018bb56a7b41f8b315e911347e",
+      "outcome": "EXCEPTION",
+      "reason": null,
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "lean-mandatory-approval",
+      "surface": "deriveOriginalApprovalV1; requested always-required approval",
+      "threw": true,
+      "evidenceFile": "lean-mandatory-approval.json",
+      "evidenceSha256": "5ed6c6eadeaddd3200b8ac487cfd36a027bd287167bc36f4476d2698b32acf05",
+      "outcome": null,
+      "reason": "PAN360_APPROVAL_CONFIGURATION_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-duplicate-intake",
+      "surface": "intakeOriginalInvoiceV1 twice, same actual store; readOriginalInvoiceV1",
+      "threw": false,
+      "evidenceFile": "native-duplicate-intake.json",
+      "evidenceSha256": "45f576685342ffd39b2b467b66da8f2cd2e9d7e9a2b77d71eed5bd6cc862ce2c",
+      "outcome": null,
+      "reason": null,
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": "DUPLICATE_CONTENT_DENIED",
+      "storageReadback": "FOUND"
+    },
+    {
+      "id": "native-tampered-document",
+      "surface": "intakeOriginalInvoiceV1; altered bytes and recomputed caller claim",
+      "threw": false,
+      "evidenceFile": "native-tampered-document.json",
+      "evidenceSha256": "96a5b050b309d6c21277d540e2bad8605825b06288d163ca4a79e11c495e7cfe",
+      "outcome": "DENIED",
+      "reason": "TAMPERED_CONTENT_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "intake-cost-center-extra",
+      "surface": "intakeOriginalInvoiceV1; desired field/action outside the admitted request contract",
+      "threw": false,
+      "evidenceFile": "intake-cost-center-extra.json",
+      "evidenceSha256": "7981f0ec3c806534587e98d363cdcf4e6a58b618f353f94dd6bf31daa52ac03f",
+      "outcome": "DENIED",
+      "reason": "INPUT_SHAPE_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "intake-action-extra",
+      "surface": "intakeOriginalInvoiceV1; desired field/action outside the admitted request contract",
+      "threw": false,
+      "evidenceFile": "intake-action-extra.json",
+      "evidenceSha256": "2ba880d132da97f283663285ca37b81b236bb61fadb141dfd966351c80f7dee4",
+      "outcome": "DENIED",
+      "reason": "INPUT_SHAPE_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    },
+    {
+      "id": "native-productive-effect",
+      "surface": "intakeOriginalInvoiceV1; request effect explicitly denied before mutation",
+      "threw": false,
+      "evidenceFile": "native-productive-effect.json",
+      "evidenceSha256": "0d6d208c2dfc8c8da93992046d8e90a339dffef7eddad9df0c6474d03ee2a64c",
+      "outcome": "DENIED",
+      "reason": "EFFECT_DENIED",
+      "decision": null,
+      "exception": null,
+      "approval": null,
+      "approvalRecordSource": null,
+      "uiOutputKind": null,
+      "uiFields": [],
+      "duplicate": null,
+      "storageReadback": null
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "ERV-S01",
+      "companyId": "SYNTH-TEAM-5",
+      "title": "Sachliche Freigabe ohne Bestellung",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-lean",
+        "core-cost-center-extra",
+        "lean-mandatory-approval"
+      ],
+      "expectedMissingCapabilities": [
+        "CC_OWNER_ROUTING",
+        "EDITABLE_FORM",
+        "ALWAYS_REQUIRED_BUSINESS_APPROVAL"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S02",
+      "companyId": "SYNTH-BETRIEB-35",
+      "title": "Projektbezogene Dienstleistungsrechnung",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-lean",
+        "core-project-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "PROJECT_CODING",
+        "PROJECT_ROLE",
+        "CC_OWNER_ROUTING",
+        "EDITABLE_FORM"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S03",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Bestellung und Wareneingang vorhanden",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-below",
+        "native-synthetic-approval"
+      ],
+      "expectedMissingCapabilities": [
+        "CC_OWNER_ROUTING",
+        "GL_CODING",
+        "AUTHENTICATED_HUMAN_APPROVAL"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S04",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Wareneingang fehlt oder Menge widerspricht",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-missing-receipt",
+        "native-quantity-conflict"
+      ],
+      "expectedMissingCapabilities": [
+        "RETURN_QUERY_LOOP",
+        "RECEIPT_UPDATE_INTERFACE",
+        "EDITABLE_FORM"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S05",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Toleranzgrenze und ein Cent darüber",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-boundary200",
+        "native-outside200"
+      ],
+      "expectedMissingCapabilities": [
+        "EXCEPTION_RESOLUTION",
+        "AUTHENTICATED_HUMAN_APPROVAL"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S06",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Aufteilung auf zwei Kostenstellen",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-modified-pending",
+        "core-allocations-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "SPLIT_CODING",
+        "PER_ALLOCATION_ROUTING",
+        "PARTIAL_APPROVAL_JOIN"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S07",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Betragsabhängige zusätzliche Freigabe",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-below",
+        "native-equal",
+        "native-above"
+      ],
+      "expectedMissingCapabilities": [
+        "BASE_CC_OWNER_APPROVAL",
+        "CONFIGURABLE_APPROVAL_LEVELS"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S08",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Vertretung und Selbstfreigabe",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-cost-center-actor",
+        "native-self-actor"
+      ],
+      "expectedMissingCapabilities": [
+        "DEPUTY_ROUTING",
+        "AUTHENTICATED_IDENTITY",
+        "RESPONSIBILITY_ADMIN"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S09",
+      "companyId": "SYNTH-BETRIEB-35",
+      "title": "Rechnung kommt ein zweites Mal",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-duplicate-intake"
+      ],
+      "expectedMissingCapabilities": [
+        "FUZZY_DUPLICATE_REVIEW_UI",
+        "PERSISTENT_OPERATIONAL_INVOICE_STORE"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S10",
+      "companyId": "SYNTH-MITTELSTAND-220",
+      "title": "Änderung nach synthetischer Freigabe",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-synthetic-approval",
+        "native-tampered-document",
+        "intake-cost-center-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "VERSIONED_CODING_CHANGE",
+        "APPROVAL_INVALIDATION",
+        "REAPPROVAL_LOOP"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S11",
+      "companyId": "SYNTH-VERBUND-1600",
+      "title": "Gesellschaft und Währung passen nicht",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-currency-conflict",
+        "core-entity-extra",
+        "native-productive-effect"
+      ],
+      "expectedMissingCapabilities": [
+        "LEGAL_ENTITY_AUTHORIZATION",
+        "ENTITY_SCOPED_MASTER_DATA",
+        "FX_POLICY"
+      ],
+      "humanWorkflowVerified": false
+    },
+    {
+      "id": "ERV-S12",
+      "companyId": "SYNTH-TEAM-5",
+      "title": "Rückfrage oder Zurückweisung",
+      "disposition": "PARTIAL_PRIMITIVE_EVIDENCE_NOT_END_TO_END_WORKFLOW",
+      "nativeProbeIds": [
+        "native-modified-pending",
+        "intake-action-extra"
+      ],
+      "expectedMissingCapabilities": [
+        "REJECT_QUERY_ACTIONS",
+        "EDITABLE_FORM",
+        "PERSISTENT_TASK_HISTORY"
+      ],
+      "humanWorkflowVerified": false
+    }
+  ],
+  "interpretation": "Native outputs above are actually executed. Scenario roles, coding and tasks are proposed requirements, not functions supplied by this harness. Refusals of new fields show the boundary of this specific versioned entrypoint, not a universal absence proof across the entire repository."
+}

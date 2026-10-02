@@ -1,0 +1,10 @@
+{
+  "id": "lean-mandatory-approval",
+  "surface": "deriveOriginalApprovalV1; requested always-required approval",
+  "actualFunctionInvoked": true,
+  "threw": true,
+  "result": {
+    "errorName": "Error",
+    "message": "PAN360_APPROVAL_CONFIGURATION_DENIED"
+  }
+}

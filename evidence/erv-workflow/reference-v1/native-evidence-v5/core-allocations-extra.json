@@ -1,0 +1,34 @@
+{
+  "id": "core-allocations-extra",
+  "surface": "evaluateOriginalErvCaseV1; added desired business fields",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "caseId": "lean-no-po-no-receipt",
+    "outcome": "EXCEPTION",
+    "exceptionCode": "INPUT_SHAPE_DENIED",
+    "detail": "INPUT_SHAPE_DENIED",
+    "evidenceDimensions": {
+      "integrityVerified": false,
+      "originVerified": false,
+      "semanticsVerified": false,
+      "runtimeObserved": true
+    },
+    "advisor": {
+      "questions": [
+        {
+          "questionId": "PAN360:INPUT_SHAPE_DENIED",
+          "questionText": "INPUT_SHAPE_DENIED",
+          "citations": []
+        }
+      ],
+      "advisorAuthority": "EVIDENCE_CITING_ONLY",
+      "bookingAuthorityGranted": false
+    },
+    "authority": {
+      "productivePostingAuthorized": false,
+      "bookingAuthorityGranted": false,
+      "riskDCapability": "SEPARATELY_AUTHORIZED"
+    }
+  }
+}
