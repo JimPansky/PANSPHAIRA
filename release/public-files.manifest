@@ -1770,3 +1770,12 @@ scripts/run-pan472-draft-transfer.mjs	scripts/run-pan472-draft-transfer.mjs	0644
 tests/pan472/persistent-draft-transfer.test.mjs	tests/pan472/persistent-draft-transfer.test.mjs	0644
 tests/fixtures/pan472/initial-draft-v1.json	tests/fixtures/pan472/initial-draft-v1.json	0644
 docs/architecture/pan472-persistent-draft-transfer-v1.md	docs/architecture/pan472-persistent-draft-transfer-v1.md	0644
+# MIG-03 executable composition only; no native state, grants or reviewer scratch.
+src/pan473/scope-profile.mjs	src/pan473/scope-profile.mjs	0644
+src/pan473/writer-scope-cutover.mjs	src/pan473/writer-scope-cutover.mjs	0644
+src/pan473/independent-scope-diagnosis.mjs	src/pan473/independent-scope-diagnosis.mjs	0644
+scripts/run-pan473-writer-scope-cutover.mjs	scripts/run-pan473-writer-scope-cutover.mjs	0644
+tests/pan473/writer-scope-cutover.test.mjs	tests/pan473/writer-scope-cutover.test.mjs	0644
+tests/pan473/native-process-cutover.test.mjs	tests/pan473/native-process-cutover.test.mjs	0644
+tests/fixtures/pan473/native-scope-client.mjs	tests/fixtures/pan473/native-scope-client.mjs	0644
+docs/architecture/pan473-writer-scope-cutover-v1.md	docs/architecture/pan473-writer-scope-cutover-v1.md	0644

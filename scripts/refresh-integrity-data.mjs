@@ -1282,6 +1282,38 @@ pan472Node.inputs = pan472Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan472:test")) repositoryIntegrityNode.ownedTests.push("npm run pan472:test");
 dag.graphVersion = 69;
 
+// Original MIG-03: single bounded writer scope on the accepted native draft stores.
+// The completed PAN462 boundary is consumed, not rewritten or a new backend.
+const pan473Inputs = [
+  ["src/pan473/scope-profile.mjs", "CONTRACT"],
+  ["src/pan473/writer-scope-cutover.mjs", "SOURCE"],
+  ["src/pan473/independent-scope-diagnosis.mjs", "VALIDATOR"],
+  ["scripts/run-pan473-writer-scope-cutover.mjs", "SOURCE"],
+  ["tests/pan473/writer-scope-cutover.test.mjs", "VALIDATOR"],
+  ["tests/pan473/native-process-cutover.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/pan473/native-scope-client.mjs", "FIXTURE"],
+  ["docs/architecture/pan473-writer-scope-cutover-v1.md", "DERIVED_EVIDENCE"],
+];
+let pan473Node = dag.nodes.find(({ id }) => id === "pan473-writer-scope-cutover-v1");
+if (pan473Node === undefined) {
+  pan473Node = {
+    id: "pan473-writer-scope-cutover-v1",
+    dependsOn: ["pan472-persistent-draft-transfer-v1", "pan462-native-backup-restore-v1"],
+    inputs: [], ownedTests: ["npm run pan473:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Actual old writer and already-open native batch are fenced before exact final source cutoff/target reconciliation, new target epoch activation and native routing readback; no global transaction or production cutover is claimed.",
+      "Real CLI SIGKILL at source fence, target activation and pre-routing-ACK boundaries recovers from native gates and data with a fresh code-owned local owner, never stealing live/unknown controller authority or blindly replaying imported effects.",
+      "Stale late imports and simple old-state rollback cannot clobber later target work; forward correction preserves immutable original evidence and other-field work, while material same-field history including A-to-B-to-A denies obsolete historical correction.",
+      "Independent standalone read-only SQL reconstruction rejects missing or contradictory native state and correctly re-digested clobbering history; source profiles lacking required guarantees retain explicit coexistence/offline-transfer alternative, not synthetic permission.",
+      "Only the existing bounded LOCAL_SYNTHETIC draft scope is implemented; original permissions, signature/install/native qualifications, privacy, sealed evaluators and release gates remain distinct and private runtime/grant/reviewer state is never published wholesale.",
+    ],
+  };
+  dag.nodes.push(pan473Node);
+}
+pan473Node.inputs = pan473Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan473:test")) repositoryIntegrityNode.ownedTests.push("npm run pan473:test");
+dag.graphVersion = 70;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1318,6 +1350,7 @@ for (const [inputPath] of pan465Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan466Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan487Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan472Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan473Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

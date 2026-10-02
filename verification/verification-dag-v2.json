@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 69,
+  "graphVersion": 70,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "a9a9fc650f21807d28339e044f5b7e8756ebc17e0951c09e867a3ec640d494b8"
+          "sha256": "ef51af0507dfa45700280a84e2429a71020cf6216a2605716de8cd9e55ccdbd6"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "a74cdc879288da026cdd8d34530b33e8d7d916fb447a5dbabc179d9b08c9f74a"
+          "sha256": "0cbd22f2de44e5f78960ca02621281b45a116e4dd55de4e1a385b2ecac14d5ce"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "62f82065f1748ed070af623938cc31d91a96281f82a6a416dd51fbba8067cc30"
+          "sha256": "2cec03e901beae6b999c7ba7c7cd8a55638fd860a2850ded8b6c25e09c95cfb7"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4991,7 +4991,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "3a35cc319d3a4bb8e8e9b0a4729557b5d156a4add9b4a95370d4b3a57b4243ce"
+          "sha256": "e093e5921c7d3187c281cc042c9f1bf6bb0341243a9df7d047d19c517097bd5d"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "c4fdb63480de428afcfa9339b0f9a8793663c4cb03726ec12255d3701a58c245"
+          "sha256": "efeb021a075e5da1648350fb9364668a62ec4504d30893b09a0c5fd5f403ee94"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5068,7 +5068,8 @@
         "npm run docs:test",
         "npm run pan466:test",
         "npm run pan487:test",
-        "npm run pan472:test"
+        "npm run pan472:test",
+        "npm run pan473:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5623,7 +5624,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "4edb221d9f2b078e02608fa9830b88dce327fa3683506b76308f04f5f3f266bc"
+          "sha256": "e41573e4d65d262502a7f2e8afd32d8f134ed7b67d784ff6cfd84568e3b7237c"
         },
         {
           "path": "package-lock.json",
@@ -5983,7 +5984,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "c8742661ce5cf953a5feac728e13f279a2e1c668dc6f207fc1d6f152e4193270"
+          "sha256": "6a4bbc6e0ee0d7683a256bf2c2e1d7ae3be2fcf8bd6fdf7aa0385f14e0283a57"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6248,7 +6249,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "8b51127a1a49f46b7bd1f20a24e678d7308279ed7a2303dfbf4289ec5dd85c31"
+          "sha256": "b9f2579f6019031261bf340ba2894aa0d30c3c5a9fc6eb00a675f705a351c977"
         }
       ],
       "ownedTests": [
@@ -7643,6 +7644,67 @@
         "Empty delta is read-only NO_CHANGES only after independent verification, has no executable plan and cannot poison receipts; strict from-before-through receipt admission remains unchanged.",
         "Independent read-only native source/target queries expose missing objects, broken references, scaling/status mutations and quarantined/unknown coverage at the retained cutoff, not a global cross-store transaction.",
         "Fresh-process native restart retains exact receipts and zero outside effects; no second runtime, booking/email/payment, productive cutover, power-loss or hostile-host claim, private scratch publication or automatic stale-owner takeover."
+      ]
+    },
+    {
+      "id": "pan473-writer-scope-cutover-v1",
+      "dependsOn": [
+        "pan472-persistent-draft-transfer-v1",
+        "pan462-native-backup-restore-v1"
+      ],
+      "inputs": [
+        {
+          "path": "src/pan473/scope-profile.mjs",
+          "role": "CONTRACT",
+          "sha256": "2598816b13bd41bb4272cddf05fa2570ba770e5fb4b7f3df5876dffc1d076059"
+        },
+        {
+          "path": "src/pan473/writer-scope-cutover.mjs",
+          "role": "SOURCE",
+          "sha256": "d6290fa2b19c68598bb70f8429a9c41547a04197b04663946843942a61546cd2"
+        },
+        {
+          "path": "src/pan473/independent-scope-diagnosis.mjs",
+          "role": "VALIDATOR",
+          "sha256": "9195fca634d92b6f2f5be8315ef3e296e1f3323e51856d75e5723e4a056df84c"
+        },
+        {
+          "path": "scripts/run-pan473-writer-scope-cutover.mjs",
+          "role": "SOURCE",
+          "sha256": "359c45333471356da6350150809ff97fa73dd58c68d966fa0a0a97e7ed5b56e3"
+        },
+        {
+          "path": "tests/pan473/writer-scope-cutover.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "d8fd10b3101636052502731b080ac86199055959f8c9cf52db6498593bcccfe6"
+        },
+        {
+          "path": "tests/pan473/native-process-cutover.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "d0e22789d44fcebe14874a5053fbcfa8f60ec2872942885f6f24efdac654240b"
+        },
+        {
+          "path": "tests/fixtures/pan473/native-scope-client.mjs",
+          "role": "FIXTURE",
+          "sha256": "f840294701e38d07b0956d226269c5a5b9c6be71f1ef353332e91ff71e62ed40"
+        },
+        {
+          "path": "docs/architecture/pan473-writer-scope-cutover-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "a8d745cfebb6db53c6e803e4e70b050116e30c138f0260701d5daaf70af54fed"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan473:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Actual old writer and already-open native batch are fenced before exact final source cutoff/target reconciliation, new target epoch activation and native routing readback; no global transaction or production cutover is claimed.",
+        "Real CLI SIGKILL at source fence, target activation and pre-routing-ACK boundaries recovers from native gates and data with a fresh code-owned local owner, never stealing live/unknown controller authority or blindly replaying imported effects.",
+        "Stale late imports and simple old-state rollback cannot clobber later target work; forward correction preserves immutable original evidence and other-field work, while material same-field history including A-to-B-to-A denies obsolete historical correction.",
+        "Independent standalone read-only SQL reconstruction rejects missing or contradictory native state and correctly re-digested clobbering history; source profiles lacking required guarantees retain explicit coexistence/offline-transfer alternative, not synthetic permission.",
+        "Only the existing bounded LOCAL_SYNTHETIC draft scope is implemented; original permissions, signature/install/native qualifications, privacy, sealed evaluators and release gates remain distinct and private runtime/grant/reviewer state is never published wholesale."
       ]
     }
   ]

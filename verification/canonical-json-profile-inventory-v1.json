@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "62f82065f1748ed070af623938cc31d91a96281f82a6a416dd51fbba8067cc30"
+        "sha256": "2cec03e901beae6b999c7ba7c7cd8a55638fd860a2850ded8b6c25e09c95cfb7"
       }
     ]
   },
@@ -411,6 +411,14 @@
       "fromSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
       "toSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
       "reason": "Advance graph to v69 and register the bounded persistent synthetic draft transfer actual CLI, independent native readback, fixtures and original-AC tests; preserve existing owners, hard gates, immutable migrations, journal authority and sealed semantic evaluation."
+    },
+    {
+      "migrationId": "PAN473-MIG03/INTEGRITY-GENERATOR/V41",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 41,
+      "fromSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
+      "toSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
+      "reason": "Advance graph to v70 and register the original bounded MIG-03 native writer-scope cutover, independent controller-down observation, actual living-client/SIGKILL/CLI tests and accepted ABA-safe correction; preserve all prior owners, immutable migrations, hard gates, nonclaims and private/sealed boundaries."
     }
   ],
   "scanScope": {
@@ -453,15 +461,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 770,
+    "filesScanned": 777,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 260,
-    "importFiles": 259,
-    "reexportSites": 5,
+    "importSites": 262,
+    "importFiles": 261,
+    "reexportSites": 6,
     "similarShapeSites": 30,
-    "ledgerEntries": 2128,
-    "ledgerUniquePaths": 2128
+    "ledgerEntries": 2136,
+    "ledgerUniquePaths": 2136
   },
   "profiles": [
     {
@@ -534,7 +542,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612"
+      "sha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -783,6 +791,11 @@
       "owner": "pan472"
     },
     {
+      "file": "src/pan473/scope-profile.mjs",
+      "line": 9,
+      "owner": "pan473"
+    },
+    {
       "file": "src/rks-02/comparator.mjs",
       "line": 6,
       "owner": "rks-02"
@@ -901,8 +914,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 60,
-      "importFiles": 59
+      "importSites": 62,
+      "importFiles": 61
     },
     {
       "owner": "usage-insights",
@@ -1195,7 +1208,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
+      "sha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
       "basis": "profile-version-migration"
     },
     {
