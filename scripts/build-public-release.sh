@@ -235,6 +235,14 @@ repository_only_files = {
     "schemas/contracts/pan442-bound-task-handle-v1.schema.json",
     "docs/architecture/pan442-bound-task-handle-v1.md",
     "verification/pan442-bound-task-handle-boundary-v1.json",
+    # PAN454 finite task-journey conformance/falsification consumer. All are
+    # repository-only SOURCE_EVIDENCE_ONLY, like the retained BTH seam; no
+    # runnable product capability or isolation promotion from negative evidence.
+    "src/pan454/journey-profile.mjs",
+    "src/pan454/journey-canary.mjs",
+    "scripts/run-pan454-journey-evidence.mjs",
+    "tests/pan454/journey-mediation-evidence.test.mjs",
+    "docs/architecture/pan454-journey-mediation-evidence-v1.md",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

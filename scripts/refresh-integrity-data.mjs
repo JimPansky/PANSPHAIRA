@@ -1373,6 +1373,34 @@ pan456Node.inputs = pan456Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan456:test")) repositoryIntegrityNode.ownedTests.push("npm run pan456:test");
 dag.graphVersion = 72;
 
+// PAN-EVO-03: finite existing-adapter journey evidence, never isolation promotion.
+const pan454Inputs = [
+  ["src/pan454/journey-profile.mjs", "CONTRACT"],
+  ["src/pan454/journey-canary.mjs", "FIXTURE"],
+  ["scripts/run-pan454-journey-evidence.mjs", "SOURCE"],
+  ["tests/pan454/journey-mediation-evidence.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan454-journey-mediation-evidence-v1.md", "DERIVED_EVIDENCE"],
+];
+let pan454Node = dag.nodes.find(({ id }) => id === "pan454-journey-mediation-evidence-v1");
+if (pan454Node === undefined) {
+  pan454Node = {
+    id: "pan454-journey-mediation-evidence-v1",
+    dependsOn: [], inputs: [], ownedTests: ["npm run pan454:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Finite named current bound-task-handle Order journey reuses unchanged Policy/Approval/gate foundations and existing Docker network-none/UID-owned tmpfs controls; no new sandbox, gateway or live model/provider runtime is implemented.",
+      "Actual permitted synthetic effects/readbacks and targeted alternate route, tenant, credential-reference and caller-authority canaries require exact existing refusal causes with permitted counterparts, not catch-any exceptions.",
+      "Exact pinned OCI reference, actual daemon-local image identity, public source hashes, observed runtime/environment and real OS network/readonly/storage refusals are distinct from configuration claims; no private source, host credential, writable host mount or Docker socket reaches the guest.",
+      "Observed same-UID process/credential/state/journal and loopback access yields a bounded falsification of complete intra-container mediation, retaining a network-free synthetic scope and owned corrections, never an implemented production isolation capability.",
+      "Source-only BTH and new evidence tooling retain their repository-only source archive classification; all prior owners, original criteria, immutable profiles and mandatory review/canonical/CI/merge/release/public-readback obligations remain intact.",
+    ],
+  };
+  dag.nodes.push(pan454Node);
+}
+pan454Node.dependsOn = ["pan442-bound-task-handles-v1"];
+pan454Node.inputs = pan454Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan454:test")) repositoryIntegrityNode.ownedTests.push("npm run pan454:test");
+dag.graphVersion = 73;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1411,6 +1439,7 @@ for (const [inputPath] of pan487Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan472Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan473Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan467Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan454Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 72,
+  "graphVersion": 73,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "295e9dac9a18014545c5a56175d3949c6d2bc468d6c5c85af8449d3e54d0e667"
+          "sha256": "16333124bf6d72b78735af61a0fb172c813601356eae9cf0da7cb90886505868"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "4e4a515b390119d1587b3fcce0321929c3bf96841fe80b327d39d0c63f5e4441"
+          "sha256": "5f6c5257b93ede1290b2ef42436a6331cb10b240add76c2dd87c58b4f3e00a91"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "2a3424337fca628b5cfafa5e0bf183dee5ab7e1bca95eb4566fbe8748d61ecb9"
+          "sha256": "f6fb08b611ee5b8f1f04bc0150aa81a78fb2993e0078f54e45f45d33077d8432"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "b07df8e00ac5cf7a4df25c25c3793371d573daf0f14e9e5a8985a03a58673d3a"
+          "sha256": "9612b0eea8cfb90877244b9aa9e894381bceab84f9fa36534787aaa56206aebe"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "3758d40e43507adb51eeee0cdb81467001b3048f1dd71954f56f3331ad0b5761"
+          "sha256": "0cebb896ceda4c4b1fe503151e94c1971dcd147b341915f1725c443727d5705f"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "4e859d15625dcfb66c1e26ba48ed84369aea6243699e7ec1253ee776e779511e"
+          "sha256": "483518a14db7f651a8101d368e6b7abd3e184b6a87b6cec794b0711632f9eaee"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5071,7 +5071,8 @@
         "npm run pan472:test",
         "npm run pan473:test",
         "npm run pan467:test",
-        "npm run pan456:test"
+        "npm run pan456:test",
+        "npm run pan454:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5626,7 +5627,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "634eeaabe665eb879ce73a2a1283620abee199da8684c55f7db3f263435c919e"
+          "sha256": "57922c624a9744383cef5dcdc81e59f39a87f3992570e45c47d4c783a6065e01"
         },
         {
           "path": "package-lock.json",
@@ -5641,7 +5642,7 @@
         {
           "path": ".github/workflows/ci.yml",
           "role": "ENVIRONMENT",
-          "sha256": "1cae4db625f04fea4f8d743a38be09217ec5646886dbb30b1ac1421e78b26529"
+          "sha256": "ef949384b856a5f26b7a31f5d343633d4d4fab22df40803c1bdf035c9e86917a"
         }
       ],
       "ownedTests": [
@@ -5986,7 +5987,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "eff24cce8c79a909b4df7a51e60f986f9ddaf2e7fdb8ed0e22a78063dcd1f0ae"
+          "sha256": "61ab3278b29137b53a678928998a4d84176ab4556ebdbb03f7c5c793b0278837"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7820,6 +7821,51 @@
         "Actual process-separated synthetic outcomes and named input/context/program/upgrade denials preserve gate-only parent authority and independent adapter ceilings; the child has no inherited credential canary or Node options, but is not an OS sandbox.",
         "Actual setup, correction-probe, comparable contract operation and added maintenance surfaces support a reject-adoption recommendation with no automatic activation, fallback grant, production capability, private/sealed source or host authority claim.",
         "All prior owners, immutable profiles, public scopes and mandatory canonical/release gates remain intact; evidence-only rejection is distinct from the implemented executable tooling comparison."
+      ]
+    },
+    {
+      "id": "pan454-journey-mediation-evidence-v1",
+      "dependsOn": [
+        "pan442-bound-task-handles-v1"
+      ],
+      "inputs": [
+        {
+          "path": "src/pan454/journey-profile.mjs",
+          "role": "CONTRACT",
+          "sha256": "54f9fec04cc0e76777630cc0a7632180337fe1ab68d7ffae6c32666a713c5769"
+        },
+        {
+          "path": "src/pan454/journey-canary.mjs",
+          "role": "FIXTURE",
+          "sha256": "15c7c2cb498690ec13ff53f937f059ce53a44f3d94ce66190bde7d2fbdb7c73b"
+        },
+        {
+          "path": "scripts/run-pan454-journey-evidence.mjs",
+          "role": "SOURCE",
+          "sha256": "65309c64d24a87d52e492de5f7f813cf4857d832aa581d88d7d2c3fbe6a8debc"
+        },
+        {
+          "path": "tests/pan454/journey-mediation-evidence.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "f15a5d1fbefd12ebdc77d05b0ce4c3c566e84aba6bb964add31f52fab5ae32cd"
+        },
+        {
+          "path": "docs/architecture/pan454-journey-mediation-evidence-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "fc8bad049eb3d091463e6bbc8d9f43899fad2593418d6b60c427176a64bd4577"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan454:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Finite named current bound-task-handle Order journey reuses unchanged Policy/Approval/gate foundations and existing Docker network-none/UID-owned tmpfs controls; no new sandbox, gateway or live model/provider runtime is implemented.",
+        "Actual permitted synthetic effects/readbacks and targeted alternate route, tenant, credential-reference and caller-authority canaries require exact existing refusal causes with permitted counterparts, not catch-any exceptions.",
+        "Exact pinned OCI reference, actual daemon-local image identity, public source hashes, observed runtime/environment and real OS network/readonly/storage refusals are distinct from configuration claims; no private source, host credential, writable host mount or Docker socket reaches the guest.",
+        "Observed same-UID process/credential/state/journal and loopback access yields a bounded falsification of complete intra-container mediation, retaining a network-free synthetic scope and owned corrections, never an implemented production isolation capability.",
+        "Source-only BTH and new evidence tooling retain their repository-only source archive classification; all prior owners, original criteria, immutable profiles and mandatory review/canonical/CI/merge/release/public-readback obligations remain intact."
       ]
     }
   ]

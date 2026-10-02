@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "3758d40e43507adb51eeee0cdb81467001b3048f1dd71954f56f3331ad0b5761"
+        "sha256": "0cebb896ceda4c4b1fe503151e94c1971dcd147b341915f1725c443727d5705f"
       }
     ]
   },
@@ -443,6 +443,14 @@
       "fromSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
       "toSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
       "reason": "Keep graph v72 and relocate byte-identical functional PAN-EVO-05 guide from forbidden development evidence namespace to public architecture namespace; unchanged supply-chain validator, original Main-qualified source bytes, prior V43 freeze/FAIL, owners, hard gates and all immutable migrations are retained."
+    },
+    {
+      "migrationId": "PAN454-EVO03/INTEGRITY-GENERATOR/V45",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 45,
+      "fromSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
+      "toSha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd",
+      "reason": "Advance graph to v73 and register one bounded existing-adapter task-journey evidence/falsification consumer with exact actual synthetic runtime boundaries and owned non-promoting corrections; preserve the runnable product manifest, retained foundations, previous owners, all immutable migrations and hard gates, privacy, paused projects and sealed custody. No implemented isolation capability from negative evidence."
     }
   ],
   "scanScope": {
@@ -485,15 +493,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 790,
+    "filesScanned": 794,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 268,
-    "importFiles": 267,
+    "importSites": 271,
+    "importFiles": 270,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2151,
-    "ledgerUniquePaths": 2151
+    "ledgerEntries": 2156,
+    "ledgerUniquePaths": 2156
   },
   "profiles": [
     {
@@ -566,7 +574,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c"
+      "sha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -902,6 +910,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan454",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan455",
       "importSites": 1,
       "importFiles": 1
@@ -948,13 +961,13 @@
     },
     {
       "owner": "scripts",
-      "importSites": 13,
-      "importFiles": 13
+      "importSites": 14,
+      "importFiles": 14
     },
     {
       "owner": "tests",
-      "importSites": 62,
-      "importFiles": 61
+      "importSites": 63,
+      "importFiles": 62
     },
     {
       "owner": "usage-insights",
@@ -1247,7 +1260,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
+      "sha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd",
       "basis": "profile-version-migration"
     },
     {

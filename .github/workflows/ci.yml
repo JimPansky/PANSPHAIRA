@@ -79,6 +79,11 @@ jobs:
       - name: Verify supply-chain declarations
         run: npm run supply-chain:verify
 
+      - name: Prepare the exact public PAN454 synthetic runtime image
+        # Image acquisition is outside the NETWORK_NONE execution window.
+        # Never substitute a floating tag or broaden workload permissions.
+        run: docker pull --platform linux/amd64 node@sha256:3638d9a6fe4030bd716be989438248074489337ba3275657f93595428be4fc03
+
       # Includes the authoritative npm test lifecycle (pretest + test + posttest)
       # in the proof's sanitized child environment; do not run it a second time.
       - name: Run SAFE_GUIDED secure-default proof and full project suite
