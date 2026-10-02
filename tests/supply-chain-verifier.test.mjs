@@ -103,6 +103,44 @@ test("public release staging accepts an isolated Git worktree control file", asy
   }
 });
 
+test("ERV source-only classifier is exact, absent from payload, and denies adjacent unknown files", async () => {
+  const graph = JSON.parse(await readFile(path.join(root, "verification/verification-dag-v2.json"), "utf8"));
+  const admitted = graph.nodes.find(({ id }) => id === "erv-workflow-native-evidence-v1").inputs.map(({ path: file }) => file).sort();
+  assert.equal(admitted.length, 44);
+  const builder = await readFile(path.join(root, "scripts/build-public-release.sh"), "utf8");
+  const fileBlock = builder.match(/^repository_only_files = \{([\s\S]*?)^\}/m)[1];
+  const prefixBlock = builder.match(/^repository_only_prefixes = \(([\s\S]*?)^\)/m)[1];
+  const exact = [...fileBlock.matchAll(/^\s+"([^"]+)",$/gm)].map((match) => match[1]);
+  const prefixes = [...prefixBlock.matchAll(/^\s+"([^"]+)",$/gm)].map((match) => match[1]);
+  assert.deepEqual(exact.filter((file) => admitted.includes(file)).sort(), admitted);
+  assert.ok(!prefixes.some((prefix) => admitted.some((file) => file.startsWith(prefix))));
+  const target = await fixture();
+  const staging = await mkdtemp(path.join(tmpdir(), "cm-erv-source-classification-"));
+  try {
+    for (const file of admitted) {
+      const destination = path.join(target, file);
+      await mkdir(path.dirname(destination), { recursive: true });
+      await copyFile(path.join(root, file), destination);
+    }
+    const output = path.join(staging, "cm-product-increment-rc-20261002-erv-classification");
+    await execFile("bash", [path.join(target, "scripts/build-public-release.sh"), "--output", output]);
+    for (const file of admitted) await assert.rejects(readFile(path.join(output, file)), /ENOENT/);
+    for (const [index, neighbor] of ["tests/erv-workflow-evidence/unreviewed-neighbor.test.mjs", "evidence/erv-workflow/reference-v1/unreviewed-neighbor.json"].entries()) {
+      const location = path.join(target, neighbor);
+      await writeFile(location, "{}\n");
+      await assert.rejects(execFile("bash", [path.join(target, "scripts/build-public-release.sh"), "--output", path.join(staging, `cm-product-increment-rc-20261002-neighbor-${index}`)]), (error) => {
+        assert.equal(error.code, 1);
+        assert.match(error.stderr, new RegExp(`UNMANIFESTED_SOURCE_FILE:${neighbor.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`));
+        return true;
+      });
+      await unlink(location);
+    }
+  } finally {
+    await rm(target, { recursive: true, force: true });
+    await rm(staging, { recursive: true, force: true });
+  }
+});
+
 test("mutable OCI, npm integrity, CI ref, runtime omission and release omission deny", async () => {
   const cases = [
     [
