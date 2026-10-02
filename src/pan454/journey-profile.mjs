@@ -21,8 +21,8 @@ export const CROSSINGS = Object.freeze([
 ]);
 for(const crossing of CROSSINGS) Object.freeze(crossing);
 export const CORRECTIONS = Object.freeze([
- {id:'SAME_UID_SCRATCH_AND_PROCESS',owner:'existing PANSPHAIRA delivery owner',disposition:'Retain NETWORK_NONE synthetic evidence scope. Do not place a real custodian, foreign-tenant store or privileged broker in agent-readable scratch. Separate trust domains would require a separately authorized correction and new exact evidence; not implemented here.'},
- {id:'LOOPBACK_AND_MANAGED_STATE',owner:'existing PANSPHAIRA delivery owner',disposition:'Do not claim complete network/process/state mediation. Reuse the existing UID-owned guest tmpfs profile rather than broaden host scratch permissions for another host UID; the finite storage ceiling is probed, not a production managed-state capability.'},
+ {id:'SAME_UID_SCRATCH_AND_PROCESS',owner:'existing PanSphaira delivery owner',disposition:'Retain NETWORK_NONE synthetic evidence scope. Do not place a real custodian, foreign-tenant store or privileged broker in agent-readable scratch. Separate trust domains would require a separately authorized correction and new exact evidence; not implemented here.'},
+ {id:'LOOPBACK_AND_MANAGED_STATE',owner:'existing PanSphaira delivery owner',disposition:'Do not claim complete network/process/state mediation. Reuse the existing UID-owned guest tmpfs profile rather than broaden host scratch permissions for another host UID; the finite storage ceiling is probed, not a production managed-state capability.'},
 ]);
 for(const correction of CORRECTIONS) Object.freeze(correction);
 export const NONCLAIMS = Object.freeze(['NO_NEW_SANDBOX_OR_GATEWAY','NO_IMPLEMENTED_PRODUCTION_ISOLATION_CAPABILITY','NO_LIVE_OPENCLAW_OR_MODEL_QUALIFICATION','NO_REAL_PROVIDER_CREDENTIAL_OR_CUSTOMER_DATA','NO_HOST_OR_DOCKER_DAEMON_CONFINEMENT','NO_KERNEL_OR_SIDECHANNEL_RESISTANCE','NO_CPU_MEMORY_PID_EXHAUSTION_OR_MANAGED_STATE_QUOTA_PROOF','NO_MANAGED_MIND_MULTI_TENANCY','NO_AUTOMATIC_RUNTIME_ACTIVATION','NO_PUBLICATION_OR_ISSUE_CLOSURE_AUTHORITY']);

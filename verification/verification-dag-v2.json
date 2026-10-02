@@ -7832,7 +7832,7 @@
         {
           "path": "src/pan454/journey-profile.mjs",
           "role": "CONTRACT",
-          "sha256": "54f9fec04cc0e76777630cc0a7632180337fe1ab68d7ffae6c32666a713c5769"
+          "sha256": "1b05e4dddafa72727517167efc04afea1dbe816df2f28911605c3e2922b37cce"
         },
         {
           "path": "src/pan454/journey-canary.mjs",
@@ -7847,7 +7847,7 @@
         {
           "path": "tests/pan454/journey-mediation-evidence.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f15a5d1fbefd12ebdc77d05b0ce4c3c566e84aba6bb964add31f52fab5ae32cd"
+          "sha256": "fc68d490b1e3662b7a6b93d4378ef530f6c310520e85666cbfc711432dce88c2"
         },
         {
           "path": "docs/architecture/pan454-journey-mediation-evidence-v1.md",

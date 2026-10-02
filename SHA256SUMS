@@ -1136,7 +1136,7 @@ e2d5fba3fdd8ce038e1e3a4be7588112c3897e0a63dd7cf9f62b1eba42eb2303  ./src/pan433/d
 d93046c1935e72739caab7cdcabe09eb06fe62d81da9d313c019806ec4f7474e  ./src/pan442/bound-task-handle.mjs
 f94b6858e9cede8b5c01ea371f41fbf12fbfd0a33e366130e6dd27c105acea89  ./src/pan442/synthetic-metric-read-task.mjs
 15c7c2cb498690ec13ff53f937f059ce53a44f3d94ce66190bde7d2fbdb7c73b  ./src/pan454/journey-canary.mjs
-54f9fec04cc0e76777630cc0a7632180337fe1ab68d7ffae6c32666a713c5769  ./src/pan454/journey-profile.mjs
+1b05e4dddafa72727517167efc04afea1dbe816df2f28911605c3e2922b37cce  ./src/pan454/journey-profile.mjs
 c05cce3d17f22095e7d3ea0ed4dbc297c5e6ee811bb756ed3ff5a856d762d2e4  ./src/pan455/intake-release.mjs
 6f84b5f0878a5b6a04f29b6001dd00225ba9bfc3419abbb7e5a2a213b48af9f3  ./src/pan456/isolated-policy-backend.mjs
 17eb75235831c857e0e315351f2fcbb1853591eb9cd56e5652acb7f7f0708b7f  ./src/pan456/jsonlogic-policy-worker.mjs
@@ -1883,7 +1883,7 @@ ce1d0731392a751ec38c26417a53b4e7e12088ac5135e62885ed10f0f9c828c3  ./tests/pan453
 a5617f6a9a5cbd28e474525165c39b45b3d0cb09dd63bb04ca5576b5a77daff7  ./tests/pan453/adoption-race-fixture.mjs
 8ca3c09af881090cd8c470539b757c23f1fbac635224b4dfa0c1c568c712b523  ./tests/pan453/composed-ambiguity.test.mjs
 1940bccf92be0eb2c58fc5fb1f1505f3938ebb52ef0e0ab3d9376e77f67b394e  ./tests/pan453/crash-fixture.mjs
-f15a5d1fbefd12ebdc77d05b0ce4c3c566e84aba6bb964add31f52fab5ae32cd  ./tests/pan454/journey-mediation-evidence.test.mjs
+fc68d490b1e3662b7a6b93d4378ef530f6c310520e85666cbfc711432dce88c2  ./tests/pan454/journey-mediation-evidence.test.mjs
 28b823002247357700fc5d1dd14d4c69a8ce7bbfb1168b19ab75118bff47ea85  ./tests/pan455/pan455-intake.test.mjs
 c2300a6dc16efb54874e7ef090fd73e39d8f2ee4f5af8df7c0b9e03176d7819d  ./tests/pan456/policy-backend-evaluation.test.mjs
 2b24ab68ec90fbfb9cdfb3cf5f669dfa9c26a64c3d7b8e58ab42bcb599540c08  ./tests/pan461/lifecycle-inventory.test.mjs
@@ -2152,5 +2152,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-8815bc70c45435747120212dbb2b06c9e44d334bbfd3464a270ac84f48a52eed  ./verification/verification-dag-v2.json
+2250bdc223b7f4403336c482b41f210629fdb88f703119b9712a5ab8400314a5  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
