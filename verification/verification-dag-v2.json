@@ -7318,7 +7318,7 @@
         {
           "path": "packages/knowledge-solution/src/postgres-source.ts",
           "role": "SOURCE",
-          "sha256": "6217ee914846c8f57dedcda798aa470250f9d0d793e5affc09d9b8ca6630a9cf"
+          "sha256": "a96f44e3935c5e5aca0a09c6be888d4e858a8b633ff8b2fd9a6bed5fe97175e7"
         },
         {
           "path": "tests/fixtures/pan462/expected-facts-v1.json",

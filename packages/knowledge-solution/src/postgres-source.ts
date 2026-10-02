@@ -276,7 +276,26 @@ export async function ensurePostgresClientConnectedV1(client: Client, conn: Post
   // 1) The connection point must be live and the credentials valid — proven
   //    over the wire (probe), not inferred from client internals.
   await probePostgresConnectionV1(conn, timeoutMs);
-  // 2) Connect THIS client, with a HARD BOUND. A fresh client whose connect
+  // pg.connect() overwrites _connectionCallback BEFORE checking whether the
+  // client is already connecting/connected. Calling it again can orphan the
+  // caller's original native Promise even though subsequent wire reads work.
+  // These lifecycle flags are ONLY a conservative do-not-connect ownership
+  // guard, never proof of a live connection or role. Check after the awaited
+  // probe, immediately before any adapter connect() (no intervening await).
+  const lifecycle = client as unknown as {
+    _connecting?: boolean; _connected?: boolean; _ending?: boolean; _ended?: boolean;
+  };
+  if (lifecycle._connecting === true || lifecycle._connected === true || lifecycle._ending === true || lifecycle._ended === true) {
+    if (!(await isQueryableClient(client, timeoutMs))) {
+      throw new PostgresReadDenied("PG_CONNECTION_FAILED",
+        "client is caller-owned but not queryable (not connected, or already ended)");
+    }
+    // Actual bounded wire checks remain mandatory; no flag grants admission.
+    // Rejection here must NOT close, reconnect, or take ownership of the client.
+    await verifyClientRoleV1(client, conn, timeoutMs);
+    return { client, owned: false };
+  }
+  // 2) Connect THIS fresh client, with a HARD BOUND. A fresh client whose connect
   //    never settles (endpoint accepts TCP but never speaks the wire
   //    protocol) is rejected within the bound and released (its socket
   //    reference is cleared) — nothing hangs.

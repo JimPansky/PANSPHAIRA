@@ -887,7 +887,7 @@ ea248b4cf09a8ae73683d0f61c0778158244ead3d3db54ec125c9ec99472f282  ./packages/kno
 a8000ad4a93c86651fa6e7edf9c1d988377cd92b8eec35ad2206eda8c3e8fc0f  ./packages/knowledge-solution/src/method-core.ts
 4bf2c04a2b43c0406699ec960bcdf376fe1fb7952e41ba815d271b4fbd99b27b  ./packages/knowledge-solution/src/method-library.ts
 5a02fa90540a756e3ac70330cb95b4192b35da3e507a1efb92d05ed631e22da4  ./packages/knowledge-solution/src/pg-harness.ts
-6217ee914846c8f57dedcda798aa470250f9d0d793e5affc09d9b8ca6630a9cf  ./packages/knowledge-solution/src/postgres-source.ts
+a96f44e3935c5e5aca0a09c6be888d4e858a8b633ff8b2fd9a6bed5fe97175e7  ./packages/knowledge-solution/src/postgres-source.ts
 d62fd2dbaaa4931d2bd542abaa7ddd347160047bace0b35b418ae6fed9a1118c  ./packages/knowledge-solution/src/user-path.ts
 26f8f39f6687b8d8ace8ef7a5eeb5e6dc1915f67fe679c66b1aacc95e4340fc7  ./packages/local-knowledge/src/mediawiki-readonly-query.ts
 59d5359742855596c090566061fb9ad79c36ea05d4920da7f9215163458184f8  ./packages/local-knowledge/src/wikimedia-download-policy.ts
@@ -1898,7 +1898,7 @@ b9354762dc2fdea40006e2dc31ff14da5bd78abbe5b8df238d8ce5e02aae0fee  ./tests/knowle
 9f14a21c242423d961786cc7576bce491073bd8cec3bdccf66ff9055ed072b15  ./tests/knowledge-solution/kts02-guided-adaptation.test.ts
 26dd323ae10f2ebf323f35e7448b7d59cec12ae970c1c41d1291245fce6a516e  ./tests/knowledge-solution/kts03-postgres-adapter.test.ts
 68b56107f10a67fdcc261bf23b5e48e9da7cccc00ef8474398110491c3f5f3b7  ./tests/knowledge-solution/kts04-integrated-user-path.test.ts
-12a1cf32be7bde6d42ea6c41d8f11428f12227836e9e328e7f145de5d72f4b09  ./tests/knowledge-solution/kts05-followup-regressions.test.ts
+74969e9b5d77294b1f526f47b28afcb9422491cb9bdcc20c75bd5ddd307da324  ./tests/knowledge-solution/kts05-followup-regressions.test.ts
 6045ee232a7d121599f57e8accfce9317c74f6f31f57adfed6952f0a8e5fb5b8  ./tests/knowledge-solution/kts06-residual-regressions.test.ts
 63ede863b3a7caf2e9760143364a68118101ede91ad89712a1f31d6fe863a197  ./tests/ks238/order-source-handoff.test.mjs
 3842568ca1d443d07c30c5da78af819c95033099bda93cce8ee96bd271115996  ./tests/kundenauftrag-lieferzusage-v1.test.ts
@@ -2224,5 +2224,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-a2c847161c8d060ae8d9e4d1a056f6e513d91a8483c1523f82f5a50177253514  ./verification/verification-dag-v2.json
+54e705f1c36f42b1ef9aab3bb9a0c91c2a7dc9f3fd1a814a47530e2d3bc73505  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
