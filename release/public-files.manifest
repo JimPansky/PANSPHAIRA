@@ -1795,4 +1795,4 @@ src/pan456/isolated-policy-backend.mjs	src/pan456/isolated-policy-backend.mjs	06
 scripts/run-pan456-policy-evaluation.mjs	scripts/run-pan456-policy-evaluation.mjs	0644
 tests/fixtures/pan456/isolated-installation-probe.mjs	tests/fixtures/pan456/isolated-installation-probe.mjs	0644
 tests/pan456/policy-backend-evaluation.test.mjs	tests/pan456/policy-backend-evaluation.test.mjs	0644
-docs/development/pan456-policy-backend-evaluation-v1.md	docs/development/pan456-policy-backend-evaluation-v1.md	0644
+docs/architecture/pan456-policy-backend-evaluation-v1.md	docs/architecture/pan456-policy-backend-evaluation-v1.md	0644

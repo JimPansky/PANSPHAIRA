@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "26323fbbfd983cbddd071e6939de8efa17a054e4e0f3cb4806c9e63d5524669d"
+          "sha256": "3758d40e43507adb51eeee0cdb81467001b3048f1dd71954f56f3331ad0b5761"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "c9478baf0fac11cecf072e1ba4b25831969a1b62e7987e4ed8a5abddcc64b434"
+          "sha256": "4e859d15625dcfb66c1e26ba48ed84369aea6243699e7ec1253ee776e779511e"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5986,7 +5986,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "8d83ca07b2d71e43d6002f33033b09a830ae88fe528f8d4f12ca873350e472e4"
+          "sha256": "eff24cce8c79a909b4df7a51e60f986f9ddaf2e7fdb8ed0e22a78063dcd1f0ae"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6251,7 +6251,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "4be6ad677b47a4136b244c061855261391956cdc812de34232b3680007ab08da"
+          "sha256": "8e97726e8ab3798c88458c6d6c3cbe9ad0d014dcf91ace2bcf0191d6e3541142"
         }
       ],
       "ownedTests": [
@@ -7775,7 +7775,7 @@
       "dependsOn": [],
       "inputs": [
         {
-          "path": "docs/development/pan456-policy-backend-evaluation-v1.md",
+          "path": "docs/architecture/pan456-policy-backend-evaluation-v1.md",
           "role": "DERIVED_EVIDENCE",
           "sha256": "3bcb36ccca3d9fd7ca43ff107078887f3fa8d559f2ead59121c40ec00d52874c"
         },

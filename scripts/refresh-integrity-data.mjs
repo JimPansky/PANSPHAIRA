@@ -1347,7 +1347,7 @@ dag.graphVersion = 71;
 
 // PAN-EVO-05: one executable tooling comparison, never automatic runtime adoption.
 const pan456Inputs = [
-  ["docs/development/pan456-policy-backend-evaluation-v1.md", "DERIVED_EVIDENCE"],
+  ["docs/architecture/pan456-policy-backend-evaluation-v1.md", "DERIVED_EVIDENCE"],
   ["scripts/run-pan456-policy-evaluation.mjs", "SOURCE"],
   ["src/pan456/isolated-policy-backend.mjs", "SOURCE"],
   ["src/pan456/jsonlogic-policy-worker.mjs", "SOURCE"],

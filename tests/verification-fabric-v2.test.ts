@@ -216,7 +216,7 @@ test("PAN-EVO-05 registers exactly one bounded executable tooling owner without 
   assert.deepEqual(node.dependsOn,[]);
   assert.deepEqual(node.ownedTests,["npm run pan456:test"]);
   const expected=new Map<string,string>([
-    ["docs/development/pan456-policy-backend-evaluation-v1.md","DERIVED_EVIDENCE"],
+    ["docs/architecture/pan456-policy-backend-evaluation-v1.md","DERIVED_EVIDENCE"],
     ["scripts/run-pan456-policy-evaluation.mjs","SOURCE"],
     ["src/pan456/isolated-policy-backend.mjs","SOURCE"],
     ["src/pan456/jsonlogic-policy-worker.mjs","SOURCE"],
