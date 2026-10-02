@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "2cec03e901beae6b999c7ba7c7cd8a55638fd860a2850ded8b6c25e09c95cfb7"
+        "sha256": "1083483652d7158fd022b330cd57ad5af934214c1060ccedc6ae610a0d7da806"
       }
     ]
   },
@@ -419,6 +419,14 @@
       "fromSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
       "toSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
       "reason": "Advance graph to v70 and register the original bounded MIG-03 native writer-scope cutover, independent controller-down observation, actual living-client/SIGKILL/CLI tests and accepted ABA-safe correction; preserve all prior owners, immutable migrations, hard gates, nonclaims and private/sealed boundaries."
+    },
+    {
+      "migrationId": "PAN467-LIFE07/INTEGRITY-GENERATOR/V42",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 42,
+      "fromSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
+      "toSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
+      "reason": "Advance graph to v71 and register original LIFE-07 attributed native business correction, stable original effect identity, separate read-only diagnosis and actual CLI/process crash tests while retaining all prior owners, immutable migrations, hard gates and private/sealed boundaries."
     }
   ],
   "scanScope": {
@@ -461,15 +469,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 777,
+    "filesScanned": 784,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 262,
-    "importFiles": 261,
-    "reexportSites": 6,
+    "importSites": 265,
+    "importFiles": 264,
+    "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2136,
-    "ledgerUniquePaths": 2136
+    "ledgerEntries": 2144,
+    "ledgerUniquePaths": 2144
   },
   "profiles": [
     {
@@ -542,7 +550,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f"
+      "sha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -786,6 +794,11 @@
       "owner": "cscl-03"
     },
     {
+      "file": "src/pan467/business-correction-profile.mjs",
+      "line": 4,
+      "owner": "pan467"
+    },
+    {
       "file": "src/pan472/draft-profile.mjs",
       "line": 8,
       "owner": "pan472"
@@ -884,6 +897,11 @@
     },
     {
       "owner": "pan464",
+      "importSites": 3,
+      "importFiles": 3
+    },
+    {
+      "owner": "pan467",
       "importSites": 3,
       "importFiles": 3
     },
@@ -1208,7 +1226,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
+      "sha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
       "basis": "profile-version-migration"
     },
     {

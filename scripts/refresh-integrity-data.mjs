@@ -1314,6 +1314,37 @@ pan473Node.inputs = pan473Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan473:test")) repositoryIntegrityNode.ownedTests.push("npm run pan473:test");
 dag.graphVersion = 70;
 
+// Original LIFE-07: additive attributed correction on unchanged native draft/recovery.
+const pan467Inputs = [
+  ["src/pan467/business-correction-profile.mjs", "CONTRACT"],
+  ["src/pan467/business-correction.mjs", "SOURCE"],
+  ["src/pan467/independent-business-diagnosis.mjs", "VALIDATOR"],
+  ["scripts/run-pan467-business-correction.mjs", "SOURCE"],
+  ["tests/pan467/business-correction.test.mjs", "VALIDATOR"],
+  ["tests/pan467/native-process-correction.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/pan467/native-business-fixture.mjs", "FIXTURE"],
+  ["docs/architecture/pan467-attributed-business-correction-v1.md", "DERIVED_EVIDENCE"],
+];
+let pan467Node = dag.nodes.find(({ id }) => id === "pan467-attributed-business-correction-v1");
+if (pan467Node === undefined) {
+  pan467Node = {
+    id: "pan467-attributed-business-correction-v1",
+    dependsOn: ["pan473-writer-scope-cutover-v1", "pan462-native-backup-restore-v1"],
+    inputs: [], ownedTests: ["npm run pan467:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "One bounded actual synthetic aggregate retains earlier wrong source revision and later valid target work; attributed correction appends a new native version, never rewinds the database or overwrites original evidence.",
+      "Stable original effect identity excludes request identity and correction content; uncovered external outcomes, conflicting generations/epochs and fresh-request conflicting original effects fail closed before a new effect.",
+      "Durable code-owned synthetic attribution intent precedes the released native correction; real CLI SIGKILL at intent/native-effect boundaries resumes from actual retained history without duplicate version or erased later data, never stealing live/unknown ownership.",
+      "Separate read-only SQL diagnosis binds source/baseline, attribution intent, actual native event and receipt; pending/unknown states and forged receipt rehashes never self-authorize completion.",
+      "Prior PAN453/PAN462/PAN472/PAN473 sources and hard gates are retained unchanged; no external booking, compensation, production/host/privacy/PKI authority, private/sealed evaluator material or raw reviewer/runtime publication is admitted.",
+    ],
+  };
+  dag.nodes.push(pan467Node);
+}
+pan467Node.inputs = pan467Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan467:test")) repositoryIntegrityNode.ownedTests.push("npm run pan467:test");
+dag.graphVersion = 71;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1351,6 +1382,7 @@ for (const [inputPath] of pan466Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan487Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan472Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan473Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan467Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

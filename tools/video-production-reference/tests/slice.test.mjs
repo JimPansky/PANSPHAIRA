@@ -805,9 +805,9 @@ test("independent schema oracle accepts every shipped job, descriptor and emitte
 
 test("independent DAG oracle binds every local file, both video commands, and security fallback", async () => {
   const dag = await json(join(REPOSITORY_ROOT, "verification", "verification-dag-v2.json"));
-  // v70 adds original MIG-03 while retaining MIG-02/semantic/LIFE-06/R1 bindings.
+  // v71 adds original LIFE-07 while retaining all prior released bindings.
   // Existing video commands, ownership and security fallback remain intact.
-  assert.equal(dag.graphVersion, 70);
+  assert.equal(dag.graphVersion, 71);
   const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
   assert.equal(life06.length, 1);
   assert.deepEqual(life06[0].dependsOn, ["pan468-impact-selection-v1", "pan464-retained-pair-v1"]);
