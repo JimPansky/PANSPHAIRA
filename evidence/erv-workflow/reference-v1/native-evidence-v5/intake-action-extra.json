@@ -1,0 +1,10 @@
+{
+  "id": "intake-action-extra",
+  "surface": "intakeOriginalInvoiceV1; desired field/action outside the admitted request contract",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "outcome": "DENIED",
+    "reasonCode": "INPUT_SHAPE_DENIED"
+  }
+}

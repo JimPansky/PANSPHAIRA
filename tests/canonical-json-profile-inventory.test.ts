@@ -510,6 +510,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
     "toSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
     "reason": "Advance graph to v75 with one bounded original DOC-AI-01 owner for fixed-admission byte-exact complete frozen oracle reproduction of the independently evaluated spent real-OCR pilot. Keep FALSIFIED_WITH_EVIDENCE, all39 custody source bindings, report/v2 wire identity and separate v3 epoch, every original criterion, prior migration/owner/hard gate, historical synthetic outputs, private originals and runnable product manifest intact; no tuning, new blind trial, production or issue-completion authority."
   }),
+  Object.freeze({
+    "migrationId": "ERV-WORKFLOW-EVIDENCE/INTEGRITY-GENERATOR/V48",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 48,
+    "fromSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
+    "toSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
+    "reason": "Advance graph to v76 with one bounded user-authorized ERV workflow evidence owner, exact immutable public research packet, source-qualified real unchanged PSAi primitives, persisted outputs/expectedactual/gaps and mandatory replay. Preserve all historical v5 evidence,22 reused kernel/build/profile/document bindings,0 human workflows, denials/UNKNOWN, prior owners/migrations/hard gates, README R1 and runnable payloads; no operational database, identity/routing/new platform or390396 admission."
+  }),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -523,7 +531,7 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 809,
+  filesScanned: 814,
   declarationSites: 37,
   declarationFiles: 37,
   importSites: 271,
@@ -534,7 +542,7 @@ const EXPECTED_COUNTS = {
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2184, uniquePaths: 2184, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2228, uniquePaths: 2228, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1317,7 +1325,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;

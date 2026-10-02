@@ -1,0 +1,10 @@
+{
+  "id": "native-productive-effect",
+  "surface": "intakeOriginalInvoiceV1; request effect explicitly denied before mutation",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "outcome": "DENIED",
+    "reasonCode": "EFFECT_DENIED"
+  }
+}

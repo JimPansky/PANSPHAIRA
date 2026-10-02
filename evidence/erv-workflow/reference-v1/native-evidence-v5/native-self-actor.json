@@ -1,0 +1,11 @@
+{
+  "id": "native-self-actor",
+  "surface": "runOriginalErvVariantV1",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "outcome": "DENIED",
+    "reasonCode": "SEPARATE_APPROVAL_ACTOR_DENIED",
+    "productivePostingAuthorized": false
+  }
+}

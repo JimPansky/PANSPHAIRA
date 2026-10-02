@@ -1478,6 +1478,41 @@ pan378Node.inputs = pan378Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan378:test")) repositoryIntegrityNode.ownedTests.push("npm run pan378:test");
 dag.graphVersion = 75;
 
+// User-authorized bounded ERV research/native evidence; no new business platform.
+const ervWorkflowReference = "evidence/erv-workflow/reference-v1/";
+const ervWorkflowPacket = JSON.parse(readFileSync(path.join(root, ervWorkflowReference, "packet-manifest.json"), "utf8"));
+const ervWorkflowInputs = [
+  ["docs/architecture/erv-workflow-native-evidence-v1.md", "DERIVED_EVIDENCE"],
+  ["scripts/run-erv-workflow-evidence.mjs", "SOURCE"],
+  ["src/erv-workflow-evidence/native-evidence-v1.mjs", "SOURCE"],
+  ["tests/erv-workflow-evidence/native-evidence.test.mjs", "VALIDATOR"],
+  ["tests/erv-workflow-evidence/source-admission.test.mjs", "VALIDATOR"],
+  ["tests/erv-workflow-evidence/registration.test.mjs", "VALIDATOR"],
+  ["evidence/erv-workflow/released-kernel-bindings-v1.json", "CONTRACT"],
+  [ervWorkflowReference + "packet-manifest.json", "CONTRACT"],
+  ...ervWorkflowPacket.files.map(({ path: relative }) => [ervWorkflowReference + relative, "FIXTURE"]),
+  ["verification/erv-workflow-native-evidence-v1.json", "DERIVED_EVIDENCE"],
+];
+let ervWorkflowNode = dag.nodes.find(({ id }) => id === "erv-workflow-native-evidence-v1");
+if (ervWorkflowNode === undefined) {
+  ervWorkflowNode = {
+    id: "erv-workflow-native-evidence-v1",
+    dependsOn: ["pan360-original-erv-execution-v1"], inputs: [],
+    ownedTests: ["npm run erv-workflow:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Exact admitted public research packet and22 reused kernel/build/profile/document file bindings are checked before native execution; historicalv5 provenance is never relabelled as a new commit/release.",
+      "All23 real unchanged existing PSAi primitives and25 separate expected/actual semantic checks reproduce persisted evidence, including original denials, exceptions and UNKNOWN;0 complete human workflows.",
+      "Company size is descriptive context only; gross native10000EUR rule and8 unexecuted net5000EUR research designs remain separate; exact integer split/tolerance checks do not implement accounting or routing.",
+      "Evidence persistence is not an operational invoice/task database, human form, identity or productive posting/payment; no new ERP/PKI/platform/missing features or reused-core/fixture changes.",
+      "One focused delta review, canonical applicable tests, exact CI/merge/new SOURCE_EVIDENCE_ONLY release and actual public consumer precede task delivery; original390/396 gates and all private/sealed/paused scopes remain.",
+    ],
+  };
+  dag.nodes.push(ervWorkflowNode);
+}
+ervWorkflowNode.inputs = ervWorkflowInputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run erv-workflow:test")) repositoryIntegrityNode.ownedTests.push("npm run erv-workflow:test");
+dag.graphVersion = 76;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1519,6 +1554,7 @@ for (const [inputPath] of pan467Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan454Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan360Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan378Inputs) entries.set(inputPath, null);
+for (const [inputPath] of ervWorkflowInputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

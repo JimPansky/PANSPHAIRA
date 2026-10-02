@@ -1,0 +1,569 @@
+{
+  "retrieved_on": "2026-10-02",
+  "scope": "Ausschließlich öffentliche Primärquellen; kein Laufzeit- oder Produktnachweis",
+  "sources": [
+    {
+      "id": 1,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/accounting-distributions-subledger-journal-entries-vendor-invoices",
+      "title": "Accounting distributions and journal entries for vendor invoices - Finance | Dynamics 365 | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-05-28",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 19,
+      "evidence": [
+        {
+          "evidence_id": "E01a",
+          "section": "Accounting distributions",
+          "quote": "Modify vendor invoice header amounts"
+        },
+        {
+          "evidence_id": "E01b",
+          "section": "Accounting distributions",
+          "quote": "Modify vendor invoice line amounts."
+        },
+        {
+          "evidence_id": "E01c",
+          "section": "Accounting distributions",
+          "quote": "an item that isn't stocked"
+        },
+        {
+          "evidence_id": "E01d",
+          "section": "Accounting distributions",
+          "quote": "can't split or delete"
+        }
+      ],
+      "retrievedTextSha256": "3bc4463e773863f16ebff49a397d38a16465c9bc58415ae2c69c1b391649b048",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 2,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-to-set-up-approval-users",
+      "title": "Set up approval users - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-06-17",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 18,
+      "evidence": [
+        {
+          "evidence_id": "E02a",
+          "section": "To set up an approval user > Purchase Amount Approval Limit",
+          "quote": "maximum purchase amount in LCY"
+        },
+        {
+          "evidence_id": "E02b",
+          "section": "To set up an approval user > Substitute",
+          "quote": "the direct approver, or the approval administrator"
+        },
+        {
+          "evidence_id": "E02c",
+          "section": "To set up an approval user > warning about requestor/approver",
+          "quote": "Their requests are always approved automatically."
+        }
+      ],
+      "retrievedTextSha256": "5a8a8d868a8a71c0622d26e6045db2e937ce86196039118d5ef049a862b7582c",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 3,
+      "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-uk",
+      "title": "Invoice Processing for UK and other countries",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": null,
+      "scope_and_version": "Vorkonfigurierte UK-Lösung; keine eindeutige Releasekennung auf der geöffneten Seite sichtbar.",
+      "quoted_words_total": 25,
+      "evidence": [
+        {
+          "evidence_id": "E03a",
+          "section": "Approval by requestor and/or cost centre > Approval by cost centre department approvers",
+          "quote": "all first approvers and, if applicable,"
+        },
+        {
+          "evidence_id": "E03b",
+          "section": "GL coding",
+          "quote": "GL amount (mandatory field"
+        },
+        {
+          "evidence_id": "E03c",
+          "section": "Completion",
+          "quote": "rejected, re-requested or put on hold"
+        },
+        {
+          "evidence_id": "E03d",
+          "section": "Completion",
+          "quote": "transfer it to the financial system"
+        },
+        {
+          "evidence_id": "E03e",
+          "section": "Approval by requestor and/or cost centre > Approval by requestor",
+          "quote": "one of them"
+        }
+      ],
+      "retrievedTextSha256": "d2fbda079c7a6a17ff82575bf5ba4bf8db45d35e0467e56b4632fe8ec66cba8e",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 4,
+      "url": "https://knowledgecenter.docuware.com/docs/preconfigured-solutions-invoice-processing-usa",
+      "title": "Invoice Processing for US",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": null,
+      "scope_and_version": "Seite nennt IPUS7.9T0 + IPUS 7.8T1 + IPUS7.8T0 + IPUS7.7T1; Lösungs- und DocuWare-Version sind getrennt.",
+      "quoted_words_total": 20,
+      "evidence": [
+        {
+          "evidence_id": "E04a",
+          "section": "How to store an invoice from tray to file cabinet > Storing by using standard indexing",
+          "quote": "checked and, if necessary, filled in or corrected"
+        },
+        {
+          "evidence_id": "E04b",
+          "section": "How to GL code invoices > GL Table prefill options",
+          "quote": "The percentage amounts must total 100%."
+        },
+        {
+          "evidence_id": "E04c",
+          "section": "How does the cost center approval work?",
+          "quote": "substitute approver"
+        },
+        {
+          "evidence_id": "E04d",
+          "section": "Using the solution with multi-subsidiaries",
+          "quote": "mandatory field “Subsidiary Name”"
+        }
+      ],
+      "retrievedTextSha256": "96209b9ea7fd7df78f5110d21f6f976f8b11ab1b370092866278a8b18d84e565",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 5,
+      "url": "https://www.gesetze-im-internet.de/ustg_1980/__14.html",
+      "title": "§ 14 UStG - Einzelnorm",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": null,
+      "scope_and_version": "Amtlich bereitgestellter konsolidierter Normtext am Abrufdatum; keine Einzelfallprüfung oder vollständige Übergangsrechtsanalyse.",
+      "quoted_words_total": 19,
+      "evidence": [
+        {
+          "evidence_id": "E05a",
+          "section": "§ 14 Abs. 4 Nr. 1–10 UStG",
+          "quote": "Eine Rechnung muss folgende Angaben enthalten:"
+        },
+        {
+          "evidence_id": "E05b",
+          "section": "§ 14 Abs. 4 Nr. 6 UStG",
+          "quote": "den Zeitpunkt der Lieferung oder sonstigen Leistung"
+        },
+        {
+          "evidence_id": "E05c",
+          "section": "§ 14 Abs. 3 UStG",
+          "quote": "verlässlichen Prüfpfad zwischen Rechnung und Leistung"
+        }
+      ],
+      "retrievedTextSha256": "f3ebee768ec4bfd4544ff980ba1732b73fa040bc9c344822661c57fdd1646858",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 6,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/vendor-invoices-overview",
+      "title": "Vendor invoices overview - Finance | Dynamics 365 | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-05-06",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 22,
+      "evidence": [
+        {
+          "evidence_id": "E06a",
+          "section": "Submitting a vendor invoice for review",
+          "quote": "header, the invoice line, or both"
+        },
+        {
+          "evidence_id": "E06b",
+          "section": "Preventing invoice submission to workflow",
+          "quote": "Prohibit submission to workflow"
+        },
+        {
+          "evidence_id": "E06c",
+          "section": "Preventing invoice submission to workflow",
+          "quote": "Reject duplicate"
+        },
+        {
+          "evidence_id": "E06d",
+          "section": "Default financial dimension in vendor invoice lines",
+          "quote": "default financial dimension comes from the corresponding purchase order lines"
+        }
+      ],
+      "retrievedTextSha256": "44bbc0c56a6a4eda3fd8aec9bb09f64d34dec3216a97b774dcade55408d3cc82",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 7,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/three-way-matching-policies",
+      "title": "Three-way matching policies - Finance | Dynamics 365 | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-06-04",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 18,
+      "evidence": [
+        {
+          "evidence_id": "E07a",
+          "section": "Example: Three-way matching for items > Scenario",
+          "quote": "the quantity on the invoice line matches the quantity received."
+        },
+        {
+          "evidence_id": "E07b",
+          "section": "Example: Three-way matching for item and vendor combinations > Scenario",
+          "quote": "If approval is required"
+        },
+        {
+          "evidence_id": "E07c",
+          "section": "Example: Three-way matching for items > Scenario",
+          "quote": "within the tolerance percentage"
+        }
+      ],
+      "retrievedTextSha256": "4004179ab0418106fca9c5b14ef3d653ff7f89b9ce702727efdc0d1b604f6c7c",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 8,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/across-how-use-approval-workflows",
+      "title": "Approve or reject documents in workflows - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2025-10-16",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 22,
+      "evidence": [
+        {
+          "evidence_id": "E08a",
+          "section": "Request a record approval",
+          "quote": "remains locked for processing until all approvers approve the record."
+        },
+        {
+          "evidence_id": "E08b",
+          "section": "Cancel approval requests",
+          "quote": "make the necessary changes to the order, and request approval again."
+        },
+        {
+          "evidence_id": "E08c",
+          "section": "Approve or reject approval requests",
+          "quote": "Released"
+        }
+      ],
+      "retrievedTextSha256": "0e35f336cb01051b48b00fc5e79fa4745b069a66565793fb0d826d76cbd4726f",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 9,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/finance/cash-bank-management/tasks/vendor-payment-overview",
+      "title": "Vendor payment overview - Finance | Dynamics 365 | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2025-08-27",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 19,
+      "evidence": [
+        {
+          "evidence_id": "E09a",
+          "section": "Vendor payment overview > payment proposal steps",
+          "quote": "The payment proposal is a query used to select invoices for payment."
+        },
+        {
+          "evidence_id": "E09b",
+          "section": "Vendor payment overview > method of payment step",
+          "quote": "the method of payment must be defined."
+        }
+      ],
+      "retrievedTextSha256": "29ebcbf39a96ccba7f36cda0cb0a829e21b126db72f4c76270c9ea7f34e5ad00",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 10,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/finance/accounts-payable/automate-vendor-payment-proposal",
+      "title": "Automate vendor payment proposals - Finance | Dynamics 365 | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-08-04",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 8,
+      "evidence": [
+        {
+          "evidence_id": "E10a",
+          "section": "Automate vendor payment proposals > introductory paragraphs",
+          "quote": "Payment proposal automations don't automatically post the payments."
+        }
+      ],
+      "retrievedTextSha256": "2f4e1da33361eaa5c1bd0725372ba98c85a6317045c82fdab1c7b8d4c73c88ee",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 11,
+      "url": "https://learn.microsoft.com/en-ca/dynamics365/business-central/finance-set-up-cost-accounting",
+      "title": "Set up cost accounting - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2024-07-25",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 23,
+      "evidence": [
+        {
+          "evidence_id": "E11a",
+          "section": "Setting Up Cost Centers",
+          "quote": "departments that are responsible for costs and income"
+        },
+        {
+          "evidence_id": "E11b",
+          "section": "Setting Up Cost Objects",
+          "quote": "Cost objects are projects, products, or services of a company."
+        },
+        {
+          "evidence_id": "E11c",
+          "section": "Balances between Cost Type, Cost Center, and Cost Object",
+          "quote": "but never in both places"
+        }
+      ],
+      "retrievedTextSha256": "36140be0c02da6655139cde37c2a6bf5993988298818b4c30c8c395a1a39221c",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 12,
+      "url": "https://www.gesetze-im-internet.de/ustdv_1980/__33.html",
+      "title": "§ 33 UStDV - Einzelnorm",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": null,
+      "scope_and_version": "Amtlich bereitgestellter konsolidierter Normtext am Abrufdatum; keine Einzelfallprüfung oder vollständige Übergangsrechtsanalyse.",
+      "quoted_words_total": 15,
+      "evidence": [
+        {
+          "evidence_id": "E12a",
+          "section": "§ 33 Satz 1 UStDV",
+          "quote": "Eine Rechnung, deren Gesamtbetrag 250 Euro nicht übersteigt"
+        },
+        {
+          "evidence_id": "E12b",
+          "section": "§ 33 Satz 3 UStDV",
+          "quote": "Die Sätze 1 und 2 gelten nicht"
+        }
+      ],
+      "retrievedTextSha256": "9a75ea0414826bc48eee66142642bd6669bddc80bb00316cd55f1243ef309a9f",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 13,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/finance-dimensions",
+      "title": "Work with dimensions to track and analyze data - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-04-09",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 23,
+      "evidence": [
+        {
+          "evidence_id": "E13a",
+          "section": "To set up default dimensions for customers, vendors, and other accounts > Tip",
+          "quote": "Code Mandatory"
+        },
+        {
+          "evidence_id": "E13b",
+          "section": "To set up default dimensions for customers, vendors, and other accounts",
+          "quote": "you can delete or change the code on the line if needed."
+        },
+        {
+          "evidence_id": "E13c",
+          "section": "Use dimensions",
+          "quote": "both an individual document line and the document itself"
+        }
+      ],
+      "retrievedTextSha256": "ef759d844cc6d39e3b259a89c442aaff721ce5e4922b26ab3019967de2c62dfd",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 14,
+      "url": "https://learn.microsoft.com/en-gb/dynamics365/business-central/projects-how-manage-project-supplies",
+      "title": "Manage project supplies - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2025-04-01",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 12,
+      "evidence": [
+        {
+          "evidence_id": "E14a",
+          "section": "Replenish a project manually",
+          "quote": "In the Project No. and Project Task No. fields"
+        },
+        {
+          "evidence_id": "E14b",
+          "section": "To post a project-related expense",
+          "quote": "Project G/L Journal"
+        }
+      ],
+      "retrievedTextSha256": "6441c427f3d462866d53c66225b4ccefd36cc48177a6732732473ceec843a2a6",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 15,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-correct-cancel-unpaid-purchase-invoices",
+      "title": "Amend or cancel unpaid purchase invoices - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2025-10-03",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 18,
+      "evidence": [
+        {
+          "evidence_id": "E15a",
+          "section": "Correct a posted purchase invoice",
+          "quote": "A new purchase invoice with the same information is created"
+        },
+        {
+          "evidence_id": "E15b",
+          "section": "Correct or cancel unpaid purchase invoices > introductory paragraphs",
+          "quote": "you must manually create a purchase credit memo"
+        }
+      ],
+      "retrievedTextSha256": "7f15f75ac50d6e8ccfea42afa46e28329a2fe183df30c47c8c73e1d2f05ee476",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 16,
+      "url": "https://learn.microsoft.com/en-us/dynamics365/business-central/purchasing-how-record-purchases",
+      "title": "Record purchases with purchase invoices - Business Central | Microsoft Learn",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "anonymous HTTPS GET of complete public source",
+      "last_updated_visible": "2026-06-17",
+      "scope_and_version": "Laufende Herstellerdokumentation, kein installierter Produktstand nachgewiesen.",
+      "quoted_words_total": 11,
+      "evidence": [
+        {
+          "evidence_id": "E16a",
+          "section": "External document number",
+          "quote": "Ext. Doc. No. Mandatory"
+        },
+        {
+          "evidence_id": "E16b",
+          "section": "Posting purchases",
+          "quote": "the vendor's account, the general ledger (G/L)"
+        }
+      ],
+      "retrievedTextSha256": "121f0a70694ab432f7331ff9347c6288123424f1db66386627a81a57cb7b6183",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 17,
+      "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/9bd9a6b4124446a5b31ddfecbff07508.html?locale=de-DE&version=2608.500",
+      "title": "Workflows für Lieferantenrechnungen verwalten",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "live browser, anonymous public page",
+      "last_updated_visible": null,
+      "scope_and_version": "SAP S/4HANA Cloud Public Edition: sichtbare Version 2608; über Herstellerverweis version=2608.500 geöffnet.",
+      "quoted_words_total": 18,
+      "evidence": [
+        {
+          "evidence_id": "E17a",
+          "section": "Workflows für Lieferantenrechnungen verwalten > Einleitung",
+          "quote": "Genehmigung durch den Kostenstellenverantwortlichen"
+        },
+        {
+          "evidence_id": "E17b",
+          "section": "Funktionsumfang > Hinweis zum Sperrgrund",
+          "quote": "auf Kopfebene zur Zahlung freigegeben"
+        },
+        {
+          "evidence_id": "E17c",
+          "section": "Funktionsumfang > Hinweis zum Sperrgrund",
+          "quote": "auf Positionsebene bleibt das Kennzeichen für den Sperrgrund gesetzt."
+        }
+      ],
+      "retrievedTextSha256": "131b6d64628fab6018846ed51d103ad78b00fb1bf5e050c99fe195d954f4f159",
+      "fullThirdPartyTextIncluded": false
+    },
+    {
+      "id": 18,
+      "url": "https://help.sap.com/docs/SAP_S4HANA_CLOUD/0e602d466b99490187fcbb30d1dc897c/81da6d475c614991aade9bfcdb864846.html?locale=de-DE&version=2608.500",
+      "title": "Konfiguration von Workflow-Schritten",
+      "accessed": "2026-10-02",
+      "primary_source": true,
+      "opened": true,
+      "retrieval": "live browser, anonymous public page",
+      "last_updated_visible": null,
+      "scope_and_version": "SAP S/4HANA Cloud Public Edition: sichtbare Version 2608; über Herstellerverweis version=2608.500 geöffnet.",
+      "quoted_words_total": 22,
+      "evidence": [
+        {
+          "evidence_id": "E18a",
+          "section": "Tabelle > Empfänger",
+          "quote": "Verantwortliche für alle verwendeten Kostenstellen"
+        },
+        {
+          "evidence_id": "E18b",
+          "section": "Tabelle > Vorbedingungen",
+          "quote": "Verantwortliche für alle verwendeten PSP-Elemente"
+        },
+        {
+          "evidence_id": "E18c",
+          "section": "Tabelle > Schritteigenschaften",
+          "quote": "Workflow-Initiator ausschließen"
+        },
+        {
+          "evidence_id": "E18d",
+          "section": "Tabelle > Ausnahmebehandlung > vollständig vorerfasste Rechnung",
+          "quote": "wird ein neuer Workflow gestartet."
+        },
+        {
+          "evidence_id": "E18e",
+          "section": "Tabelle > Bestimmen der Reihenfolge",
+          "quote": "oder gebucht"
+        },
+        {
+          "evidence_id": "E18f",
+          "section": "Tabelle > Empfänger",
+          "quote": "von allen Empfängern"
+        }
+      ],
+      "retrievedTextSha256": "7ca4505e7062da4f2bcc4c3c0dd5fb0eae111aedd7a34e19b501c2c7659a5122",
+      "fullThirdPartyTextIncluded": false
+    }
+  ]
+}

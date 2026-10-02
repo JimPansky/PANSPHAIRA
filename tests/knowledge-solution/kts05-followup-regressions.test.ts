@@ -30,7 +30,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import { randomUUID } from "node:crypto";
 import { spawn } from "node:child_process";
-import { createServer } from "node:net";
+import { createConnection, createServer, type Socket } from "node:net";
 import path from "node:path";
 import test, { after } from "node:test";
 import { Client } from "pg";
@@ -711,26 +711,97 @@ test("F5-0430: an ENDED caller-owned client is rejected (not treated as open) â€
   }
 });
 
-test("F5-0430: a PENDING-connect caller client against a live server settles to caller-owned OPEN (documented behavior)", async () => {
-  const harness: PgHarness = await startRealPostgres(DATA_DIR);
-  try {
-    const pending = new Client({ host: "127.0.0.1", port: PG_PORT, database: PG_DATABASE, user: PG_RO_USER, password: PG_RO_PASSWORD });
-    const pendingConnect = pending.connect(); // started, not yet settled
-    const { readback } = await readMarginContextFromPostgresV1({
-      conn: { host: "127.0.0.1", port: PG_PORT, database: PG_DATABASE, user: PG_RO_USER, password: PG_RO_PASSWORD },
-      schema: PG_SCHEMA,
-      client: pending,
+// Real PostgreSQL byte-forwarding only: delay the caller's first TCP
+// handshake; forward the adapter's later independent identity-probe normally.
+// No PG messages or responses are fabricated. Fixture initialization belongs
+// to our own existing isolated PgHarness, never the retained V2 server.
+for (const delayMs of [0, 250]) {
+  test(`F5-0430: caller connect Promise survives real TCP handshake delay ${delayMs}ms`, { timeout: 20_000 }, async (t) => {
+    const harness: PgHarness = await startRealPostgres(DATA_DIR);
+    const sockets = new Set<Socket>();
+    const timers = new Set<NodeJS.Timeout>();
+    let accepted = 0;
+    let delayedConnections = 0;
+    const bridge = createServer((downstream) => {
+      const thisDelay = ++accepted === 1 ? delayMs : 0;
+      if (thisDelay > 0) delayedConnections++;
+      downstream.pause();
+      const upstream = createConnection({ host: "127.0.0.1", port: PG_PORT });
+      upstream.pause();
+      for (const socket of [downstream, upstream]) {
+        sockets.add(socket);
+        socket.on("close", () => sockets.delete(socket));
+      }
+      downstream.on("error", () => upstream.destroy());
+      upstream.on("error", () => downstream.destroy());
+      downstream.on("close", () => upstream.destroy());
+      upstream.on("close", () => downstream.destroy());
+      upstream.once("connect", () => {
+        const forward = () => {
+          if (downstream.destroyed || upstream.destroyed) return;
+          downstream.pipe(upstream);
+          upstream.pipe(downstream);
+          downstream.resume();
+          upstream.resume();
+        };
+        if (thisDelay === 0) forward();
+        else {
+          const timer = setTimeout(() => { timers.delete(timer); forward(); }, thisDelay);
+          timers.add(timer);
+        }
+      });
     });
-    await pendingConnect; // settled: the adapter found the client OPEN (caller-owned)
-    assert.equal(readback.rowCount, 3, "the (now open) client is used for the read");
-    // caller-owned: the adapter must NOT have closed it:
-    const v = await pending.query("SELECT 1 AS ok");
-    assert.equal(v.rows[0]?.ok, 1);
-    await pending.end();
-  } finally {
-    await harness.stop();
-  }
-});
+    let caller: Client | undefined;
+    let callerSettlement = "PENDING";
+    let rows: number | undefined;
+    try {
+      await new Promise<void>((resolve) => bridge.listen(0, "127.0.0.1", resolve));
+      const address = bridge.address();
+      assert.ok(address !== null && typeof address === "object");
+      const conn = { host: "127.0.0.1", port: address.port, database: PG_DATABASE, user: PG_RO_USER, password: PG_RO_PASSWORD };
+      caller = new Client({ ...conn, connectionTimeoutMillis: 10_000 });
+      const callerConnect = caller.connect(); // native Promise, owned by the caller
+      void callerConnect.then(
+        () => { callerSettlement = "RESOLVED"; },
+        () => { callerSettlement = "REJECTED"; },
+      );
+      const { readback } = await readMarginContextFromPostgresV1({ conn, schema: PG_SCHEMA, client: caller });
+      rows = readback.rowCount;
+      assert.equal(rows, 3, "actual read-only fixture rows, not fabricated responses");
+      // A bounded observation, never an unbounded await of the lost callback.
+      await new Promise<void>((resolve) => {
+        const deadline = setTimeout(resolve, 500);
+        void callerConnect.then(
+          () => { clearTimeout(deadline); resolve(); },
+          () => { clearTimeout(deadline); resolve(); },
+        );
+      });
+      assert.equal(callerSettlement, "RESOLVED", "native caller.connect Promise must not be overwritten by a second adapter connect()");
+      await callerConnect;
+      assert.equal((await caller.query("SELECT 1 AS ok")).rows[0]?.ok, 1, "caller still owns a usable OPEN client");
+      assert.equal(delayedConnections, delayMs > 0 ? 1 : 0);
+      assert.equal(accepted, 2, "only caller plus independent actual identity probe");
+    } finally {
+      // Do not depend on a possibly lost original connect Promise for cleanup.
+      if (caller) {
+        const end = caller.end().catch(() => {});
+        let deadline: NodeJS.Timeout | undefined;
+        await Promise.race([end, new Promise<void>((resolve) => {
+          deadline = setTimeout(resolve, 1_000);
+        })]);
+        if (deadline) clearTimeout(deadline);
+      }
+      for (const timer of timers) clearTimeout(timer);
+      timers.clear();
+      for (const socket of sockets) socket.destroy();
+      await new Promise<void>((resolve) => bridge.close(() => resolve()));
+      await new Promise<void>((resolve) => setImmediate(resolve));
+      await harness.stop();
+      t.diagnostic(JSON.stringify({ delayMs, rows, callerSettlement, accepted, delayedConnections, residualProxySockets: sockets.size }));
+      assert.equal(sockets.size, 0, "our actual TCP proxy sockets must be closed even on RED");
+    }
+  });
+}
 
 test("F5-0430: adapter-owned probe of a blackhole endpoint (accepts TCP, silent) is rejected within a bound â€” end() must NOT hang", async () => {
   // Ground truth (probed): pg hangs forever on end()/query() of a client whose

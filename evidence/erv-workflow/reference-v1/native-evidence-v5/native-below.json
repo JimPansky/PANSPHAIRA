@@ -1,0 +1,844 @@
+{
+  "id": "native-below",
+  "surface": "runOriginalErvVariantV1",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "outcome": "EXECUTED",
+    "execution": {
+      "schemaVersion": "pansphaira.pan360/original-variant-execution/v1",
+      "label": "MODIFIED",
+      "caseId": "threshold-below",
+      "scope": "PUBLIC_SYNTHETIC_NON_CUSTOMER_AUTHORITY_FREE",
+      "sourceIdentity": {
+        "core": {
+          "schemaVersion": "pansphaira.pan360/erv-original-core-identity/v1",
+          "coreVersion": "1.0.0",
+          "profileSha256": "708ce4f0232377a878e60703d37c92d25f1601278bc98fd96e62018d1bf08ae2",
+          "bindings": [
+            {
+              "path": "packages/contracts/src/incoming-invoice-erv.ts",
+              "sha256": "6ba5250783df35f60602a11437c843272ab014bf24e69135cfbf52dfb41750cf"
+            },
+            {
+              "path": "dist/packages/contracts/src/incoming-invoice-erv.js",
+              "sha256": "bf76442618c43e7fee64bb28ee6ad12acd6655fe1b361599e802735fe89c3ff0"
+            },
+            {
+              "path": "packages/contracts/src/incoming-invoice-intake.ts",
+              "sha256": "38490af300dce7965deebf56755ac59be117db711bd7bc478e19538947a412fc"
+            },
+            {
+              "path": "dist/packages/contracts/src/incoming-invoice-intake.js",
+              "sha256": "0ece706da233dbf7b1c7744958eed1a619a71cbb8a69ee284b1f494144ac96c9"
+            },
+            {
+              "path": "packages/contracts/src/incoming-invoice-blueprint.ts",
+              "sha256": "aad1b877c096d4605b80b141100897fab41f62622f5434be59059989b8514550"
+            },
+            {
+              "path": "dist/packages/contracts/src/incoming-invoice-blueprint.js",
+              "sha256": "c0579dafd713abef8810cb5bc94b80fa3f0c116497ec1b9c30971d9ef2481325"
+            },
+            {
+              "path": "src/pan360/original-erv-core-v1.mjs",
+              "sha256": "fb55266a99ce6500b99ca5683da3c27ecd08d7166c21e96523ab623bff0e9d1c"
+            }
+          ],
+          "coreDigest": "e13a260aa9730e9e45fbddd0be8db932600c93c3ad4a768842455d40d427c89b",
+          "qualification": "DEVELOPMENT_LOCAL_UNTIL_INDEPENDENT_RELEASE_QUALIFICATION"
+        },
+        "input": {
+          "schemaVersion": "pansphaira.pan360/invoice-input-identity/v1",
+          "bindings": [
+            {
+              "path": "packages/contracts/src/incoming-invoice-extraction-dataflow-v2.ts",
+              "sha256": "d7aaf42607c521db66b0b6fd209c033c4eb75a01ae023d430888a6681f98d2fe"
+            },
+            {
+              "path": "dist/packages/contracts/src/incoming-invoice-extraction-dataflow-v2.js",
+              "sha256": "f05ab917dc1a6cac2fbbaf67162eb01b146be3972801e899ba9c58020bb039e8"
+            },
+            {
+              "path": "src/pan360/original-invoice-input-v1.mjs",
+              "sha256": "ead7129d7815d75d484d73f0ed390610e06d94ce3591742990c1fc220858ac41"
+            }
+          ],
+          "inputDigest": "8139e5d0eb711891df4db3bc6c79527a043174971be059427904f64fadadfdb1"
+        },
+        "bindings": [
+          {
+            "path": "packages/contracts/src/incoming-invoice-adaptive-ui.ts",
+            "sha256": "e60fb079364bc48d12629825531299bc7abd9986c5299067e450e7577ef75b1f"
+          },
+          {
+            "path": "dist/packages/contracts/src/incoming-invoice-adaptive-ui.js",
+            "sha256": "ea1e48b16cac4bd3e865b77d9f94853e2fab1c53960383f040105ec4ca16cb38"
+          },
+          {
+            "path": "erv-ui-reference/reference.mjs",
+            "sha256": "6d8c7f9b90fefa611b78314533fd7c0e38d7540de4e5031b881063693679d76c"
+          },
+          {
+            "path": "erv-ui-reference/schema.json",
+            "sha256": "ced5edd9d3566c9649d72daaa68927dac6369d2c7f7443251f45eac12b4b4e45"
+          },
+          {
+            "path": "erv-ui-reference/descriptors.mjs",
+            "sha256": "18c4738ac0aaeec377533de18aeff435d194bf5faab610d1ffa03df345db83ed"
+          },
+          {
+            "path": "src/pan360/original-erv-execution-v1.mjs",
+            "sha256": "bb4e10192e72272b7e4261bfcc52b6ebacd62b4def5e032a27859cb431a89197"
+          }
+        ],
+        "compositionDigest": "01b302f981f55d516a25dc3bb7d2e5ddcdcb1a7a22b529c7362dbc78e99042ff"
+      },
+      "requirementDigest": "2321dcf654eef727b9bb0f27038ac6edfd4753f0169bc93bd1278e16b6fc4f31",
+      "configuration": {
+        "schemaVersion": "pansphaira.pan360/executable-configuration/v1",
+        "scenario": "SEGREGATED_ENTERPRISE",
+        "matchingMode": {
+          "variantId": "THREE_WAY_RELATIONAL_V2",
+          "version": "1.0.0"
+        },
+        "tolerancePolicy": {
+          "variantId": "RATE_BPS_V1",
+          "version": "2.0.0"
+        },
+        "rateBasisPoints": 200,
+        "purchaseOrderRequired": true,
+        "receiptRequired": true,
+        "separateApprovalThresholdMinor": 1000000
+      },
+      "configurationDigest": "7078f7552060bb23c7bf06dbacc2843b6c4f7b0c61200d55ba697135b701c3ef",
+      "dialogueDeltaDigest": "cfc3b42d1a1d5a92b42eeb336adea33ed4ca21844d7ea49c3649c30c78147c4e",
+      "transcriptDigest": "e6a3722849b799f65c80c0c231517ad9e072fd6bbb359972277b119d9cb84bb2",
+      "document": {
+        "schemaVersion": "pansphaira.pan360/invoice-record/v1",
+        "document": {
+          "documentId": "below",
+          "documentKind": "SUPPLIER_INVOICE"
+        },
+        "version": {
+          "versionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63",
+          "ordinal": 1,
+          "contentSha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+          "byteLength": 160
+        },
+        "supplierInvoiceIdentity": {
+          "supplierId": "SYN-PAN360-SUP-001",
+          "invoiceNumber": "SYN-PAN360-BELOW",
+          "identityDigest": "c16b61eee24d2fc15d7640758baf13af7db34e3feec06bc9c6f01ebf2ee02212"
+        },
+        "original": {
+          "bytesBase64": "UEFOU1BIQUlSQSBTWU5USEVUSUMgU1VQUExJRVIgSU5WT0lDRSBWMQpzdXBwbGllcl9pZD1TWU4tUEFOMzYwLVNVUC0wMDEKaW52b2ljZV9udW1iZXI9U1lOLVBBTjM2MC1CRUxPVwppc3N1ZV9kYXRlPTIwMjYtMTAtMDIKY3VycmVuY3k9RVVSCmdyb3NzX2Ftb3VudD05OTk5Ljk5Cg==",
+          "path": "tests/fixtures/pan360/invoice-below-v1.txt",
+          "provenance": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "synthetic": true,
+            "customerData": false,
+            "externalRetrieval": false
+          }
+        },
+        "extraction": {
+          "schemaVersion": "chimpmaera.incoming-invoice/bounded-extraction-report/v1",
+          "documentKind": "AP02_SYNTHETIC_SUPPLIER_INVOICE_KEY_VALUE_V1",
+          "extractorId": "ap-02-bounded-key-value-extraction/v1",
+          "sourceVersionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63",
+          "extractionInputSha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+          "deterministicSyntheticExtraction": true,
+          "fields": {
+            "grossAmountMinor": {
+              "state": "KNOWN",
+              "value": 999999,
+              "evidence": {
+                "stage": "EXTRACTION",
+                "extractorId": "ap-02-bounded-key-value-extraction/v1",
+                "sourceVersionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63"
+              }
+            },
+            "purchaseOrderNumber": {
+              "state": "UNKNOWN",
+              "reasonCode": "NOT_EXTRACTED"
+            },
+            "receiptReference": {
+              "state": "UNKNOWN",
+              "reasonCode": "NOT_EXTRACTED"
+            }
+          },
+          "observedFieldsDigest": "1c9de0aba126bc6ce60bdaccb3da8700de34d140b44996ac1560b177a40f328d",
+          "nonclaims": [
+            "NO_OCR_OR_MODEL_INFERENCE",
+            "NO_DOCUMENT_AI_ACCURACY_CLAIM",
+            "NO_UNIVERSAL_EXTRACTION_QUALITY_CLAIM"
+          ]
+        },
+        "authority": {
+          "mode": "LOCAL_SYNTHETIC_PROOF",
+          "customerDataAuthorized": false,
+          "productiveBookingAuthorized": false,
+          "externalCallsAuthorized": false
+        },
+        "recordDigest": "ab09569de69fbb81ab45d2d39c47894c8f1726978ad25765a86cbd749e490335"
+      },
+      "intakeReadback": {
+        "outcome": "FOUND",
+        "versionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63",
+        "contentSha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+        "recordDigest": "ab09569de69fbb81ab45d2d39c47894c8f1726978ad25765a86cbd749e490335",
+        "extraction": {
+          "schemaVersion": "chimpmaera.incoming-invoice/bounded-extraction-report/v1",
+          "documentKind": "AP02_SYNTHETIC_SUPPLIER_INVOICE_KEY_VALUE_V1",
+          "extractorId": "ap-02-bounded-key-value-extraction/v1",
+          "sourceVersionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63",
+          "extractionInputSha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+          "deterministicSyntheticExtraction": true,
+          "fields": {
+            "grossAmountMinor": {
+              "state": "KNOWN",
+              "value": 999999,
+              "evidence": {
+                "stage": "EXTRACTION",
+                "extractorId": "ap-02-bounded-key-value-extraction/v1",
+                "sourceVersionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63"
+              }
+            },
+            "purchaseOrderNumber": {
+              "state": "UNKNOWN",
+              "reasonCode": "NOT_EXTRACTED"
+            },
+            "receiptReference": {
+              "state": "UNKNOWN",
+              "reasonCode": "NOT_EXTRACTED"
+            }
+          },
+          "observedFieldsDigest": "1c9de0aba126bc6ce60bdaccb3da8700de34d140b44996ac1560b177a40f328d",
+          "nonclaims": [
+            "NO_OCR_OR_MODEL_INFERENCE",
+            "NO_DOCUMENT_AI_ACCURACY_CLAIM",
+            "NO_UNIVERSAL_EXTRACTION_QUALITY_CLAIM"
+          ]
+        },
+        "source": {
+          "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+          "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+          "synthetic": true,
+          "customerData": false,
+          "externalRetrieval": false
+        }
+      },
+      "extraction": {
+        "schemaVersion": "chimpmaera.incoming-invoice/bounded-extraction-report/v1",
+        "documentKind": "AP02_SYNTHETIC_SUPPLIER_INVOICE_KEY_VALUE_V1",
+        "extractorId": "ap-02-bounded-key-value-extraction/v1",
+        "sourceVersionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63",
+        "extractionInputSha256": "749e673a1c4916083fe0d44f85ab666616a88e3e6b5b63ce0446dd461366b02f",
+        "deterministicSyntheticExtraction": true,
+        "fields": {
+          "grossAmountMinor": {
+            "state": "KNOWN",
+            "value": 999999,
+            "evidence": {
+              "stage": "EXTRACTION",
+              "extractorId": "ap-02-bounded-key-value-extraction/v1",
+              "sourceVersionId": "pan360:version:sha256:ecc8daa8829076f87eafafa4890825ac674d269fd5d981fb2019f2ee83f7ed63"
+            }
+          },
+          "purchaseOrderNumber": {
+            "state": "UNKNOWN",
+            "reasonCode": "NOT_EXTRACTED"
+          },
+          "receiptReference": {
+            "state": "UNKNOWN",
+            "reasonCode": "NOT_EXTRACTED"
+          }
+        },
+        "observedFieldsDigest": "1c9de0aba126bc6ce60bdaccb3da8700de34d140b44996ac1560b177a40f328d",
+        "nonclaims": [
+          "NO_OCR_OR_MODEL_INFERENCE",
+          "NO_DOCUMENT_AI_ACCURACY_CLAIM",
+          "NO_UNIVERSAL_EXTRACTION_QUALITY_CLAIM"
+        ]
+      },
+      "decision": {
+        "caseId": "threshold-below",
+        "outcome": "MATCHED",
+        "variant": {
+          "matchingModeId": "THREE_WAY_RELATIONAL_V2",
+          "matchingModeVersion": "1.0.0",
+          "tolerancePolicyId": "RATE_BPS_V1",
+          "tolerancePolicyVersion": "2.0.0"
+        },
+        "matchedAmountMinor": 999999,
+        "evidenceCitations": [
+          {
+            "referenceKind": "SUPPLIER",
+            "referenceId": "threshold-below:SUPPLIER",
+            "contentSha256": "fbd7df92c82c84cf095f2a8e7c15ff90d228b5f2dd4b653a7a721340cf4b4a62",
+            "verified": true
+          },
+          {
+            "referenceKind": "PURCHASE_ORDER",
+            "referenceId": "threshold-below:PURCHASE_ORDER",
+            "contentSha256": "e5287ef82d0d2c052a9a932325fef42c194f3d123430774eaa4e78bb47d93ea7",
+            "verified": true
+          },
+          {
+            "referenceKind": "RECEIPT",
+            "referenceId": "threshold-below:RECEIPT",
+            "contentSha256": "b4ea8405aab02bc713bdcfbb9ac55894902b8d9027a151fb4b3959a68163bbf0",
+            "verified": true
+          },
+          {
+            "referenceKind": "INVOICE",
+            "referenceId": "threshold-below:INVOICE",
+            "contentSha256": "b1c9a4729a07b236edbc3d762b92e95429268190a5e73e89faa90cc8bc4a0275",
+            "verified": true
+          }
+        ],
+        "advisor": {
+          "questions": [
+            {
+              "questionId": "ADV:threshold-below:MATCHED",
+              "questionText": "All 3 matched references agree within RATE_BPS_V1 v2.0.0; confirm there are no unlisted adjustments before acknowledgement.",
+              "citations": [
+                {
+                  "referenceKind": "SUPPLIER",
+                  "referenceId": "threshold-below:SUPPLIER",
+                  "evidenceSha256": "fbd7df92c82c84cf095f2a8e7c15ff90d228b5f2dd4b653a7a721340cf4b4a62"
+                },
+                {
+                  "referenceKind": "PURCHASE_ORDER",
+                  "referenceId": "threshold-below:PURCHASE_ORDER",
+                  "evidenceSha256": "e5287ef82d0d2c052a9a932325fef42c194f3d123430774eaa4e78bb47d93ea7"
+                },
+                {
+                  "referenceKind": "RECEIPT",
+                  "referenceId": "threshold-below:RECEIPT",
+                  "evidenceSha256": "b4ea8405aab02bc713bdcfbb9ac55894902b8d9027a151fb4b3959a68163bbf0"
+                },
+                {
+                  "referenceKind": "INVOICE",
+                  "referenceId": "threshold-below:INVOICE",
+                  "evidenceSha256": "b1c9a4729a07b236edbc3d762b92e95429268190a5e73e89faa90cc8bc4a0275"
+                }
+              ]
+            }
+          ],
+          "advisorAuthority": "EVIDENCE_CITING_ONLY",
+          "bookingAuthorityGranted": false
+        },
+        "authority": {
+          "productivePostingAuthorized": false,
+          "bookingAuthorityGranted": false,
+          "riskDCapability": "SEPARATELY_AUTHORIZED"
+        },
+        "matchingScope": "FULL_DECLARED_THREE_WAY_RELATIONAL_MATCH",
+        "appliedRateBasisPoints": 200,
+        "evidenceDimensions": {
+          "integrityVerified": true,
+          "originVerified": true,
+          "semanticsVerified": true,
+          "runtimeObserved": true
+        },
+        "process": {
+          "purchaseOrderRequired": true,
+          "receiptRequired": true
+        },
+        "nonclaims": [
+          "PUBLIC_SYNTHETIC_NON_CUSTOMER",
+          "NO_PRODUCTIVE_BOOKING",
+          "NO_EXTERNAL_SYSTEM_OF_RECORD_READBACK"
+        ]
+      },
+      "approval": {
+        "schemaVersion": "pansphaira.pan360/erv-original-approval/v1",
+        "comparison": "STRICTLY_GREATER_THAN",
+        "thresholdMinor": 1000000,
+        "observedInvoiceAmountMinor": 999999,
+        "state": "NOT_REQUIRED",
+        "independentActorRequired": false,
+        "decisionDigest": "0e6384774e4e6f3763469837dab29e90f2799042dfd6b72f6056fe616549a914",
+        "productivePostingAuthorized": false,
+        "bookingAuthorityGranted": false
+      },
+      "approvalRecord": null,
+      "localJournalReadbackDigest": "33550294d76c7d9321024cee93d03b0791f3fc39730679f254bff6a5db21c2eb",
+      "ui": {
+        "schemaVersion": "chimpmaera.erv-ui/v1",
+        "packageVersion": "1.0.0",
+        "contextId": "pan360:MODIFIED",
+        "scenario": "SEGREGATED_ENTERPRISE",
+        "authority": {
+          "mode": "NONE",
+          "bookingAuthorityGranted": false,
+          "externalCallsAuthorized": false,
+          "customerDataAuthorized": false,
+          "productivePostingAuthorized": false
+        },
+        "bound": {
+          "requirement": {
+            "descriptor": {
+              "schemaVersion": "chimpmaera.incoming-invoice/erv-requirement/v1",
+              "requirementId": "requirement:changed-rate",
+              "scenario": "SEGREGATED_ENTERPRISE",
+              "matchingMode": {
+                "variantId": "THREE_WAY_INVOICE_PO_RECEIPT_V1",
+                "version": "1.0.0"
+              },
+              "tolerancePolicy": {
+                "variantId": "RATE_BPS_V1",
+                "version": "1.0.0",
+                "rateBasisPoints": 200
+              },
+              "separateApprovalThresholdEur": 10000,
+              "requestedEffects": [
+                "READ_SYNTHETIC",
+                "WRITE_LOCAL_PROOF"
+              ],
+              "evidenceRefs": [
+                "evidence:ap04-synthetic-rate-002"
+              ],
+              "synthetic": true,
+              "customerData": false
+            },
+            "digest": "2321dcf654eef727b9bb0f27038ac6edfd4753f0169bc93bd1278e16b6fc4f31"
+          },
+          "configuration": {
+            "descriptor": {
+              "schemaVersion": "pansphaira.pan360/executable-configuration/v1",
+              "scenario": "SEGREGATED_ENTERPRISE",
+              "matchingMode": {
+                "variantId": "THREE_WAY_RELATIONAL_V2",
+                "version": "1.0.0"
+              },
+              "tolerancePolicy": {
+                "variantId": "RATE_BPS_V1",
+                "version": "2.0.0"
+              },
+              "rateBasisPoints": 200,
+              "purchaseOrderRequired": true,
+              "receiptRequired": true,
+              "separateApprovalThresholdMinor": 1000000
+            },
+            "digest": "7078f7552060bb23c7bf06dbacc2843b6c4f7b0c61200d55ba697135b701c3ef"
+          },
+          "scenario": {
+            "descriptor": {
+              "scenario": "SEGREGATED_ENTERPRISE",
+              "processVector": true,
+              "companySizeNotAnInput": true
+            },
+            "digest": "af22721f441e9423210dff1b62fc9828a4c52f1854896bdce17d0853a32e1d6d"
+          },
+          "core": {
+            "descriptor": {
+              "coreVersion": "1.0.0",
+              "coreDigest": "e13a260aa9730e9e45fbddd0be8db932600c93c3ad4a768842455d40d427c89b"
+            },
+            "digest": "3ec02c95412badbdf18e7b6bcfd3b3c107e7174844a75cccc7ac9aca63732b70"
+          }
+        },
+        "evidence": [
+          {
+            "ref": "document",
+            "kind": "DOCUMENT_VERSION",
+            "contentDigest": "3bbc6168f9b2688e174a2cc1cec5a60d3a83c23f5c9b4a01a29a3e917af4d998"
+          },
+          {
+            "ref": "extraction",
+            "kind": "STRUCTURED_TEXT_EXTRACTION",
+            "contentDigest": "536e0ef4f3c0fc51e36d4776cf41a184b8f20bd20d4814d58e059194841533d3"
+          },
+          {
+            "ref": "decision",
+            "kind": "LOCAL_DECISION",
+            "contentDigest": "0e6384774e4e6f3763469837dab29e90f2799042dfd6b72f6056fe616549a914"
+          },
+          {
+            "ref": "approval",
+            "kind": "LOCAL_APPROVAL_REQUIREMENT",
+            "contentDigest": "a6ddeb204ca198100228b731595564f1d3d2207427588f38f34b2eca661eec3e"
+          }
+        ],
+        "screens": [
+          {
+            "screenId": "pan360-local-erv",
+            "order": 0,
+            "sections": [
+              {
+                "sectionId": "local-result",
+                "order": 0,
+                "components": [
+                  {
+                    "componentId": "pan360:amount",
+                    "order": 0,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "amount",
+                      "label": "Observed invoice amount in EUR minor",
+                      "accessibilityLabel": "Observed invoice amount in EUR minor",
+                      "displayKind": "CURRENCY",
+                      "state": "VALUE",
+                      "value": 999999,
+                      "evidenceRefs": [
+                        "extraction"
+                      ]
+                    },
+                    "actions": [
+                      {
+                        "actionId": "acknowledge-local-evidence",
+                        "order": 0,
+                        "enabled": true,
+                        "requiredEvidenceRefs": [
+                          "decision",
+                          "approval"
+                        ],
+                        "authority": "NONE",
+                        "confirmationIntent": {
+                          "required": true,
+                          "label": "Acknowledge local evidence only"
+                        },
+                        "readbackIntent": {
+                          "label": "Local evidence acknowledgment readback"
+                        },
+                        "evidenceRefs": [
+                          "decision",
+                          "approval"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "componentId": "pan360:outcome",
+                    "order": 1,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "outcome",
+                      "label": "Local declared decision outcome",
+                      "accessibilityLabel": "Local declared decision outcome",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "value": "MATCHED",
+                      "evidenceRefs": [
+                        "decision"
+                      ]
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:scope",
+                    "order": 2,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "scope",
+                      "label": "Actual matching scope",
+                      "accessibilityLabel": "Actual matching scope",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "value": "FULL_DECLARED_THREE_WAY_RELATIONAL_MATCH",
+                      "evidenceRefs": [
+                        "decision"
+                      ]
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:approval",
+                    "order": 3,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "approval",
+                      "label": "Separate approval process state",
+                      "accessibilityLabel": "Separate approval process state",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "value": "NOT_REQUIRED",
+                      "evidenceRefs": [
+                        "approval"
+                      ]
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:purchase-order",
+                    "order": 4,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "purchase-order",
+                      "label": "PURCHASE_ORDER",
+                      "accessibilityLabel": "PURCHASE_ORDER",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "value": "threshold-below:PURCHASE_ORDER",
+                      "evidenceRefs": [
+                        "decision"
+                      ]
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:receipt",
+                    "order": 5,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "receipt",
+                      "label": "RECEIPT",
+                      "accessibilityLabel": "RECEIPT",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "value": "threshold-below:RECEIPT",
+                      "evidenceRefs": [
+                        "decision"
+                      ]
+                    },
+                    "actions": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "inventory": {
+          "fields": [
+            {
+              "id": "amount"
+            },
+            {
+              "id": "outcome"
+            },
+            {
+              "id": "scope"
+            },
+            {
+              "id": "approval"
+            },
+            {
+              "id": "purchase-order"
+            },
+            {
+              "id": "receipt"
+            }
+          ],
+          "components": [
+            {
+              "id": "pan360:amount"
+            },
+            {
+              "id": "pan360:outcome"
+            },
+            {
+              "id": "pan360:scope"
+            },
+            {
+              "id": "pan360:approval"
+            },
+            {
+              "id": "pan360:purchase-order"
+            },
+            {
+              "id": "pan360:receipt"
+            }
+          ],
+          "actions": [
+            {
+              "id": "acknowledge-local-evidence"
+            }
+          ]
+        },
+        "readback": {
+          "packageSha256": "369d57e027220655efe384098ddbaaffeedfa0d64833dd280da9e20b0d1a7d32",
+          "deterministicReplay": true
+        }
+      },
+      "uiConsumer": {
+        "outcome": "RENDERED",
+        "contextId": "pan360:MODIFIED",
+        "scenario": "SEGREGATED_ENTERPRISE",
+        "authority": {
+          "mode": "NONE",
+          "bookingAuthorityGranted": false,
+          "externalCallsAuthorized": false,
+          "customerDataAuthorized": false,
+          "productivePostingAuthorized": false
+        },
+        "screens": [
+          {
+            "screenId": "pan360-local-erv",
+            "order": 0,
+            "sections": [
+              {
+                "sectionId": "local-result",
+                "order": 0,
+                "components": [
+                  {
+                    "componentId": "pan360:amount",
+                    "order": 0,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "amount",
+                      "label": "Observed invoice amount in EUR minor",
+                      "accessibilityLabel": "Observed invoice amount in EUR minor",
+                      "displayKind": "CURRENCY",
+                      "state": "VALUE",
+                      "evidenceRefs": [
+                        "extraction"
+                      ],
+                      "value": 999999
+                    },
+                    "actions": [
+                      {
+                        "actionId": "acknowledge-local-evidence",
+                        "order": 0,
+                        "enabled": true,
+                        "authority": "NONE",
+                        "confirmationIntent": {
+                          "required": true,
+                          "label": "Acknowledge local evidence only"
+                        },
+                        "readbackIntent": {
+                          "label": "Local evidence acknowledgment readback"
+                        },
+                        "requiredEvidenceRefs": [
+                          "decision",
+                          "approval"
+                        ],
+                        "evidenceRefs": [
+                          "decision",
+                          "approval"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "componentId": "pan360:outcome",
+                    "order": 1,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "outcome",
+                      "label": "Local declared decision outcome",
+                      "accessibilityLabel": "Local declared decision outcome",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "evidenceRefs": [
+                        "decision"
+                      ],
+                      "value": "MATCHED"
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:scope",
+                    "order": 2,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "scope",
+                      "label": "Actual matching scope",
+                      "accessibilityLabel": "Actual matching scope",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "evidenceRefs": [
+                        "decision"
+                      ],
+                      "value": "FULL_DECLARED_THREE_WAY_RELATIONAL_MATCH"
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:approval",
+                    "order": 3,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "approval",
+                      "label": "Separate approval process state",
+                      "accessibilityLabel": "Separate approval process state",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "evidenceRefs": [
+                        "approval"
+                      ],
+                      "value": "NOT_REQUIRED"
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:purchase-order",
+                    "order": 4,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "purchase-order",
+                      "label": "PURCHASE_ORDER",
+                      "accessibilityLabel": "PURCHASE_ORDER",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "evidenceRefs": [
+                        "decision"
+                      ],
+                      "value": "threshold-below:PURCHASE_ORDER"
+                    },
+                    "actions": []
+                  },
+                  {
+                    "componentId": "pan360:receipt",
+                    "order": 5,
+                    "kind": "FIELD",
+                    "field": {
+                      "fieldId": "receipt",
+                      "label": "RECEIPT",
+                      "accessibilityLabel": "RECEIPT",
+                      "displayKind": "TEXT",
+                      "state": "VALUE",
+                      "evidenceRefs": [
+                        "decision"
+                      ],
+                      "value": "threshold-below:RECEIPT"
+                    },
+                    "actions": []
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "a11y": {
+          "fieldCount": 6,
+          "actionCount": 1,
+          "fieldLabels": [
+            "Observed invoice amount in EUR minor",
+            "Local declared decision outcome",
+            "Actual matching scope",
+            "Separate approval process state",
+            "PURCHASE_ORDER",
+            "RECEIPT"
+          ],
+          "actionStates": [
+            {
+              "actionId": "acknowledge-local-evidence",
+              "enabled": true
+            }
+          ]
+        },
+        "snapshotDigest": "dda46c67c11421b334a21d6e1a428bd22682523879dd77f81f6be2dd5824a9ef"
+      },
+      "uiSourceTrustedDigest": "369d57e027220655efe384098ddbaaffeedfa0d64833dd280da9e20b0d1a7d32",
+      "reusedLayerIds": {
+        "intakeStorage": "chimpmaera.incoming-invoice/intake-store/v1",
+        "extraction": "ap-02-bounded-key-value-extraction/v1",
+        "matching": "chimpmaera.incoming-invoice/erv-core/v1",
+        "advisor": "EVIDENCE_CITING_ONLY",
+        "dialogue": "chimpmaera.incoming-invoice/setup-dialogue/v1",
+        "ui": "chimpmaera.erv-ui/v1"
+      },
+      "nonclaims": [
+        "SYNTHETIC_STRUCTURED_TEXT_NOT_OCR",
+        "NO_EXTERNAL_SYSTEM_OF_RECORD_READBACK",
+        "NO_PRODUCTION_OR_BOOKING_AUTHORITY",
+        "NEW_VERSIONED_INPUT_AND_CORE_ADMISSION_QUALIFICATION_SEPARATE"
+      ],
+      "ownedFilesystemCleanup": "OWNED_DIRECTORY_REMOVED",
+      "executionDigest": "92acbb029557863bb5e31242566adf5acb4cfababa263ce466837b9f4deab2c3"
+    }
+  }
+}

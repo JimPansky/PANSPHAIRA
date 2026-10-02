@@ -49,6 +49,11 @@ function classify(path, line) {
       || path === "verification/paired-analytics-compatibility-v1.json")
     && line.trim() === `"issue": "${legacyDisplay}#345",`
   ) return "stable-par-xr01-source-issue-identifier";
+  // One byte-preserved public research handoff, not the current product display.
+  if (path === "evidence/erv-workflow/reference-v1/README.de.md"
+    && createHash("sha256").update(read(path)).digest("hex") === "826b69e42bd04329a4fcadf3f02f5d38b937d76adc8d52adf74b0c785e8e0d13"
+    && line.trim() === `Dieses Paket verbindet öffentlich recherchierte Benutzerarbeit mit tatsächlich ausgeführten, synthetischen Prüfungen der vorhandenen ${legacyDisplay}-Eingangsrechnungsverarbeitung. Es ist kein neues Rechnungsfreigabeprogramm und keine Produktionsfreigabe.`)
+    return "exact-digest-public-research-handoff-provenance";
   if (path.startsWith("closure-audits/")) return "closure-audit-provenance";
   if (path.startsWith("docs/evidence/conveyor/")) return "internal-conveyor-evidence";
   if (line.includes("PANSPHAIRA_CANONICAL_JSON_SHA256_V1")) return "stable-algorithm-identifier";

@@ -1,0 +1,346 @@
+{
+  "schemaVersion": "pansphaira.erv-workflow-scenarios/independent-adjudication/v1",
+  "sourceRelease": "2026_10_02_v5",
+  "sourceCommit": "b79686d1656aec89c8b8ad0bdb84e478ac5c856a",
+  "catalogSha256": "0f27979dca0d2d2778ba4dc0d533819dd54337c88ebac7ddb013eeff8872f346",
+  "nativeReportSha256": "4db1a91a850eca8407c924cdc099d38ea048bf6b59cfddf2b1b481054e2e21ee",
+  "nativeProbes": 23,
+  "businessScenarios": 12,
+  "companyContexts": 4,
+  "checks": [
+    {
+      "check": "native-lean",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "NOT_REQUIRED"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "NOT_REQUIRED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-modified-pending",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-below",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "NOT_REQUIRED"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "NOT_REQUIRED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-equal",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "NOT_REQUIRED"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "NOT_REQUIRED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-above",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-missing-receipt",
+      "actual": [
+        "EXECUTED",
+        "EXCEPTION",
+        "BLOCKED_DECISION"
+      ],
+      "expected": [
+        "EXECUTED",
+        "EXCEPTION",
+        "BLOCKED_DECISION"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-quantity-conflict",
+      "actual": [
+        "EXECUTED",
+        "CONFLICT",
+        "BLOCKED_DECISION"
+      ],
+      "expected": [
+        "EXECUTED",
+        "CONFLICT",
+        "BLOCKED_DECISION"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-currency-conflict",
+      "actual": [
+        "EXECUTED",
+        "CONFLICT",
+        "BLOCKED_DECISION"
+      ],
+      "expected": [
+        "EXECUTED",
+        "CONFLICT",
+        "BLOCKED_DECISION"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-boundary200",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-outside200",
+      "actual": [
+        "EXECUTED",
+        "CONFLICT",
+        "BLOCKED_DECISION"
+      ],
+      "expected": [
+        "EXECUTED",
+        "CONFLICT",
+        "BLOCKED_DECISION"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-synthetic-approval",
+      "actual": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "expected": [
+        "EXECUTED",
+        "MATCHED",
+        "REQUIRES_SEPARATE_APPROVAL"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-cost-center-actor",
+      "actual": [
+        "DENIED",
+        "SEPARATE_APPROVAL_ACTOR_DENIED"
+      ],
+      "expected": [
+        "DENIED",
+        "SEPARATE_APPROVAL_ACTOR_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-self-actor",
+      "actual": [
+        "DENIED",
+        "SEPARATE_APPROVAL_ACTOR_DENIED"
+      ],
+      "expected": [
+        "DENIED",
+        "SEPARATE_APPROVAL_ACTOR_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "core-cost-center-extra",
+      "actual": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "expected": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "core-project-extra",
+      "actual": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "expected": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "core-allocations-extra",
+      "actual": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "expected": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "core-entity-extra",
+      "actual": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "expected": [
+        "EXCEPTION",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "lean-mandatory-approval",
+      "actual": [
+        true,
+        "PAN360_APPROVAL_CONFIGURATION_DENIED"
+      ],
+      "expected": [
+        true,
+        "PAN360_APPROVAL_CONFIGURATION_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-duplicate-intake",
+      "actual": [
+        "ACCEPTED",
+        "DUPLICATE_CONTENT_DENIED",
+        "FOUND"
+      ],
+      "expected": [
+        "ACCEPTED",
+        "DUPLICATE_CONTENT_DENIED",
+        "FOUND"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-tampered-document",
+      "actual": [
+        "DENIED",
+        "TAMPERED_CONTENT_DENIED"
+      ],
+      "expected": [
+        "DENIED",
+        "TAMPERED_CONTENT_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "intake-cost-center-extra",
+      "actual": [
+        "DENIED",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "expected": [
+        "DENIED",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "intake-action-extra",
+      "actual": [
+        "DENIED",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "expected": [
+        "DENIED",
+        "INPUT_SHAPE_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "native-productive-effect",
+      "actual": [
+        "DENIED",
+        "EFFECT_DENIED"
+      ],
+      "expected": [
+        "DENIED",
+        "EFFECT_DENIED"
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "INDEPENDENT_TOLERANCE_AND_ONE_CENT",
+      "actual": [
+        24001,
+        24000
+      ],
+      "expected": [
+        24001,
+        24000
+      ],
+      "state": "CONFIRMED"
+    },
+    {
+      "check": "SYNTHETIC_NOT_HUMAN_APPROVAL",
+      "actual": [
+        "APPROVED_LOCAL_EVIDENCE_ONLY",
+        "DECLARED_LOCAL_SYNTHETIC_TEST_ACTORS_ONLY",
+        false
+      ],
+      "expected": [
+        "APPROVED_LOCAL_EVIDENCE_ONLY",
+        "DECLARED_LOCAL_SYNTHETIC_TEST_ACTORS_ONLY",
+        false
+      ],
+      "state": "CONFIRMED"
+    }
+  ],
+  "allRecordedSourceFilesByteUnchanged": 2434,
+  "sourceAndGeneratedBindingsVerified": 16,
+  "independentDecimalToleranceThresholdAndAllocationVerified": true,
+  "noHumanWorkflowPassInferred": true,
+  "completeHumanBusinessWorkflowsProven": 0,
+  "evidenceFilesActuallyReopenedAndHashCompared": 23,
+  "runtimeScope": "Actual existing versioned functions with synthetic inputs. File-backed evidence persistence is not operational invoice/task persistence.",
+  "publicProductIntegrationOrReleaseClaim": false
+}

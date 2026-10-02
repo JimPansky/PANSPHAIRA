@@ -1,0 +1,10 @@
+{
+  "id": "native-tampered-document",
+  "surface": "intakeOriginalInvoiceV1; altered bytes and recomputed caller claim",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "outcome": "DENIED",
+    "reasonCode": "TAMPERED_CONTENT_DENIED"
+  }
+}

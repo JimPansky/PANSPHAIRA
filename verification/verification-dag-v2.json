@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 75,
+  "graphVersion": 76,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "d33ed8189e13d569cea53d294d69b0d6dffaa881c5d590f2b70bd32f13b76f49"
+          "sha256": "481620b9a76a2d3c99a9d404cb29e8d2bba8a775247529752a4cee8f98f4112a"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "919e0f45e146fe884600864c28ccd5fc2a6f2f414c145596d78e516b1d49d7ec"
+          "sha256": "9b18d379b236e4939ff94cf170a014f5b563b8a8ef8186b84e890a13468be8d8"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "25267465c70d2da8debbc14f8a93701190e638d2a946f697a24bc4d19782dd28"
+          "sha256": "9af36836479379bb90c1d2d90d78efe91cc7f8a420ce74522f689becd584212d"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "d1480b5fa7b22ed159f52dd03b05f180ab60c445a2f8c3b81e5f1ba381180a33"
+          "sha256": "000b9dc0530d4c7ad5c00ddaa669fcf2102a0713fc8440661461fc4aa4c34340"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "b39f4ea862c75de7d8cfbee39e7c30b75ccaa1013b73cc086a2513e64c99a426"
+          "sha256": "1aa22002b18a8c373db16e467ab429377a10e65b83b26e72b99ce23e78cb9157"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4986,7 +4986,7 @@
         {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "e0af70c3afda6569703d281fdfdad39c4f3dcebf74ad86913fdaf42ec7616500"
+          "sha256": "cfd642775e4a425498c8be5aaaf816185f4398113cdaa533bdb8f9e7e937ea9f"
         },
         {
           "path": "tests/release-governance.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "eb18a62a79bbd4644fb82425462b137fca4ee330f35b53628b1fa150d485b4af"
+          "sha256": "a813cde55aaa32dfd2cf5d7dae9606e368e1e0fd380f684f941d3e3a8cceddad"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5074,7 +5074,8 @@
         "npm run pan456:test",
         "npm run pan454:test",
         "npm run pan360:test",
-        "npm run pan378:test"
+        "npm run pan378:test",
+        "npm run erv-workflow:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5629,7 +5630,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "cbf87fd0f1deb5664a372ed72314c488cda17ed3b3222c40590e5d2537548383"
+          "sha256": "a931c88f18e3ae8173f0d66ed483c097f0885bcd6fcad2ce92683dabbcfe249b"
         },
         {
           "path": "package-lock.json",
@@ -5989,7 +5990,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e23a37f80cbaf24cf871d7f648dce64cdb89547b7e2e4da5d9dc283924499267"
+          "sha256": "cc88983ae343e945b2ce8f01e9b4b294e585f0443097bfadc407e40c62e1606b"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7317,7 +7318,7 @@
         {
           "path": "packages/knowledge-solution/src/postgres-source.ts",
           "role": "SOURCE",
-          "sha256": "6217ee914846c8f57dedcda798aa470250f9d0d793e5affc09d9b8ca6630a9cf"
+          "sha256": "a96f44e3935c5e5aca0a09c6be888d4e858a8b633ff8b2fd9a6bed5fe97175e7"
         },
         {
           "path": "tests/fixtures/pan462/expected-facts-v1.json",
@@ -7931,7 +7932,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "6cc74426aaa35f70783b3a0de6f0e7a41981a5f50bbaca8a97160d4e9619e55d"
+          "sha256": "2ca3d65f61fba98a7dc787f0dadc27410c8522119c20339ff3cefcf185236709"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8013,7 +8014,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "7dc33334cb4a3ca12634fbeb64e2f4f819684f149d341d7b317677408f9141da"
+          "sha256": "d02ecb1f2da3ef7a7b6319113e9a94e521b92687836d62aaaf912e6e17ca166f"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8048,6 +8049,246 @@
       ],
       "riskClass": "CRITICAL",
       "globalInvalidation": false
+    },
+    {
+      "id": "erv-workflow-native-evidence-v1",
+      "dependsOn": [
+        "pan360-original-erv-execution-v1"
+      ],
+      "inputs": [
+        {
+          "path": "docs/architecture/erv-workflow-native-evidence-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "87dc1e6e62775438f24903d56d3878ff8ac60a2d321d39764833b5a340407b41"
+        },
+        {
+          "path": "scripts/run-erv-workflow-evidence.mjs",
+          "role": "SOURCE",
+          "sha256": "0e0678216447125cb82873010c8d594a3d4dd33fdf583540040b53332c3bb21e"
+        },
+        {
+          "path": "src/erv-workflow-evidence/native-evidence-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "4f5c4c6ebc3cb5dc66edac044189ac854164aee3252610085f3192b264704f40"
+        },
+        {
+          "path": "tests/erv-workflow-evidence/native-evidence.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "d14887cf1e8092c6ae6be3f3e6960a999a183b2c360402dc2d84abc01493d0f4"
+        },
+        {
+          "path": "tests/erv-workflow-evidence/source-admission.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a123f2e9a66f04f1b509af3e54de934c5d52b08ee1d8c07429d98de81482f999"
+        },
+        {
+          "path": "tests/erv-workflow-evidence/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "3663ff4dfdc636dabba8433a8762d8e6b78d84448c932f1d02aebb19a1bcb7bf"
+        },
+        {
+          "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
+          "role": "CONTRACT",
+          "sha256": "69fa560f18ef1b752b6bc0de5e949221cfe604fa5267638630ba282b3c7c8189"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/packet-manifest.json",
+          "role": "CONTRACT",
+          "sha256": "e85842c0e556a269a83310d7902ca4a92868901c52f871a73e19ae5955ba978c"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/README.de.md",
+          "role": "FIXTURE",
+          "sha256": "826b69e42bd04329a4fcadf3f02f5d38b937d76adc8d52adf74b0c785e8e0d13"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/field-matrix.csv",
+          "role": "FIXTURE",
+          "sha256": "3732132d2b3d7e59a29bb9cab87a363cdea362ad683d79a2e9cf4fc01bb62903"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/independent-expectations.json",
+          "role": "FIXTURE",
+          "sha256": "722be7b42082fb897e328bafdfbc61daec1c0207bdb9786676ddda16d835876c"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-adjudication-v5.json",
+          "role": "FIXTURE",
+          "sha256": "33667bddf18140bc3d82bb225da5d8fe881d9f2f9f8d5ab1e717dd0c06b84857"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/core-allocations-extra.json",
+          "role": "FIXTURE",
+          "sha256": "46e823589544dcfcfb94eb8f7a1592ad25ec95307adb190452082c33f83332b1"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/core-cost-center-extra.json",
+          "role": "FIXTURE",
+          "sha256": "40e5666ccca43cc2348c4def15bf671d7067a6af59371260ec007e6a48f76732"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/core-entity-extra.json",
+          "role": "FIXTURE",
+          "sha256": "32859e2053ba270eed9728969d394c658bb102018bb56a7b41f8b315e911347e"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/core-project-extra.json",
+          "role": "FIXTURE",
+          "sha256": "b485cdbe0b14d0acd6502fe06dcba6c4f0559bcae34f572863a4b5f4fc3abdb0"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/intake-action-extra.json",
+          "role": "FIXTURE",
+          "sha256": "2ba880d132da97f283663285ca37b81b236bb61fadb141dfd966351c80f7dee4"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/intake-cost-center-extra.json",
+          "role": "FIXTURE",
+          "sha256": "7981f0ec3c806534587e98d363cdcf4e6a58b618f353f94dd6bf31daa52ac03f"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/lean-mandatory-approval.json",
+          "role": "FIXTURE",
+          "sha256": "5ed6c6eadeaddd3200b8ac487cfd36a027bd287167bc36f4476d2698b32acf05"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-above.json",
+          "role": "FIXTURE",
+          "sha256": "9d678b367bdd4bf1733873cc6a492fb4ec8b9502bac89cc9d4c80dca28dad646"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-below.json",
+          "role": "FIXTURE",
+          "sha256": "8a3246d7c1e2a8acc864fe2dfafe5da77aa8b163518ab6429f45e58c4fdea19c"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-boundary200.json",
+          "role": "FIXTURE",
+          "sha256": "99706407ac9acdc8c2443615fa6b6001c6d17989f8ea10e909818a52cc6b10b8"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-cost-center-actor.json",
+          "role": "FIXTURE",
+          "sha256": "abe99937f3f5faee93ca02c7c428910df7d701c2fe39d4ef2e9b735d038a1949"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-currency-conflict.json",
+          "role": "FIXTURE",
+          "sha256": "c68f2edb034418308b425e1de5d56edf805ac38ade35faaf8c0bcebb5e8f9389"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-duplicate-intake.json",
+          "role": "FIXTURE",
+          "sha256": "45f576685342ffd39b2b467b66da8f2cd2e9d7e9a2b77d71eed5bd6cc862ce2c"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-equal.json",
+          "role": "FIXTURE",
+          "sha256": "6b1c1703a99c4275041b1a9c20f7ec1583889019fbee3064466f6fadf0b3f80d"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-lean.json",
+          "role": "FIXTURE",
+          "sha256": "dab4d818874382f799a9cba966ebbb7c92224155047893930e543289819274cd"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-missing-receipt.json",
+          "role": "FIXTURE",
+          "sha256": "095fdb5840318e185e02d96351515e647abf447414d65c098cd9ad814aa2cae1"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-modified-pending.json",
+          "role": "FIXTURE",
+          "sha256": "d02c1776a15e7e26c13add2740909ba313f91bf2b4af9f96df1e8e5acec33eba"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-observations.json",
+          "role": "FIXTURE",
+          "sha256": "4db1a91a850eca8407c924cdc099d38ea048bf6b59cfddf2b1b481054e2e21ee"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-outside200.json",
+          "role": "FIXTURE",
+          "sha256": "84c71e2a295e8793b44c2693e3ab392536e70fe8905b71d50ad48dbed62a94c4"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-productive-effect.json",
+          "role": "FIXTURE",
+          "sha256": "0d6d208c2dfc8c8da93992046d8e90a339dffef7eddad9df0c6474d03ee2a64c"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-quantity-conflict.json",
+          "role": "FIXTURE",
+          "sha256": "ac1f8f0351b8e2933599b4d7b4d5144ad53a756b78bccaaa49f2bf057c335e83"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-self-actor.json",
+          "role": "FIXTURE",
+          "sha256": "17f2c8ab6aba08f23ffe1e5fb26cf1cbdacd798926ff53b3a281f1bf37e80320"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-synthetic-approval.json",
+          "role": "FIXTURE",
+          "sha256": "e18f67135fd2e49f8b6e37ef353bc6f2a8143623605c988f0fe0eef4e32d92a5"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/native-evidence-v5/native-tampered-document.json",
+          "role": "FIXTURE",
+          "sha256": "96a5b050b309d6c21277d540e2bad8605825b06288d163ca4a79e11c495e7cfe"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/probe-existing-poc.mjs",
+          "role": "FIXTURE",
+          "sha256": "8090e48bc0204c3e84a263373c2b982fd2ae64dcb3d50bdac61907771a1c3672"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/research-design-examples.json",
+          "role": "FIXTURE",
+          "sha256": "c1a0c3dc81eee36ac7bcde5193771d4d0e95bf37c3bffd58479c3f4f9bb71e36"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/research-sources.json",
+          "role": "FIXTURE",
+          "sha256": "252dcbb517fbf0570e2788bc73ad3d17915a96c27d28b6f4a512ff82fc953234"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/scenario-catalog.json",
+          "role": "FIXTURE",
+          "sha256": "0f27979dca0d2d2778ba4dc0d533819dd54337c88ebac7ddb013eeff8872f346"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/workflow-field-role-matrix.json",
+          "role": "FIXTURE",
+          "sha256": "e07fbb1b0b16bed899e78f0bec3a802eab9fa80a5e9caa15f6190eb9693e5863"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/workflow-matrix.csv",
+          "role": "FIXTURE",
+          "sha256": "ba17a6f7b2562f332be91727d62f0364f3e00854759a1c4b157c31fe45f709a9"
+        },
+        {
+          "path": "evidence/erv-workflow/reference-v1/workflow-research.de.md",
+          "role": "FIXTURE",
+          "sha256": "25295b58d9562890f617251208e624f31e5fca12c72a48722e60bb98063471c7"
+        },
+        {
+          "path": "verification/erv-workflow-native-evidence-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "3ad819281e656fe7f5b938ce7f4ddb618e68a65b631293e798c3be518f83d26a"
+        }
+      ],
+      "ownedTests": [
+        "npm run erv-workflow:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Exact admitted public research packet and22 reused kernel/build/profile/document file bindings are checked before native execution; historicalv5 provenance is never relabelled as a new commit/release.",
+        "All23 real unchanged existing PSAi primitives and25 separate expected/actual semantic checks reproduce persisted evidence, including original denials, exceptions and UNKNOWN;0 complete human workflows.",
+        "Company size is descriptive context only; gross native10000EUR rule and8 unexecuted net5000EUR research designs remain separate; exact integer split/tolerance checks do not implement accounting or routing.",
+        "Evidence persistence is not an operational invoice/task database, human form, identity or productive posting/payment; no new ERP/PKI/platform/missing features or reused-core/fixture changes.",
+        "One focused delta review, canonical applicable tests, exact CI/merge/new SOURCE_EVIDENCE_ONLY release and actual public consumer precede task delivery; original390/396 gates and all private/sealed/paused scopes remain."
+      ]
     }
   ]
 }

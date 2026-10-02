@@ -1,0 +1,131 @@
+{
+  "id": "native-duplicate-intake",
+  "surface": "intakeOriginalInvoiceV1 twice, same actual store; readOriginalInvoiceV1",
+  "actualFunctionInvoked": true,
+  "threw": false,
+  "result": {
+    "first": {
+      "outcome": "ACCEPTED",
+      "record": {
+        "schemaVersion": "pansphaira.pan360/invoice-record/v1",
+        "document": {
+          "documentId": "high",
+          "documentKind": "SUPPLIER_INVOICE"
+        },
+        "version": {
+          "versionId": "pan360:version:sha256:1f64e6768b4333e991c27670822929206d64f832178d2d71ec49a4cce97f4885",
+          "ordinal": 1,
+          "contentSha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830",
+          "byteLength": 160
+        },
+        "supplierInvoiceIdentity": {
+          "supplierId": "SYN-PAN360-SUP-001",
+          "invoiceNumber": "SYN-PAN360-HIGH",
+          "identityDigest": "0e8e752efe17e53724476a31d6be0cb13b37e9189947a2b1b57e359679364971"
+        },
+        "original": {
+          "bytesBase64": "UEFOU1BIQUlSQSBTWU5USEVUSUMgU1VQUExJRVIgSU5WT0lDRSBWMQpzdXBwbGllcl9pZD1TWU4tUEFOMzYwLVNVUC0wMDEKaW52b2ljZV9udW1iZXI9U1lOLVBBTjM2MC1ISUdICmlzc3VlX2RhdGU9MjAyNi0xMC0wMgpjdXJyZW5jeT1FVVIKZ3Jvc3NfYW1vdW50PTEyMDAwLjAwCg==",
+          "path": "tests/fixtures/pan360/invoice-high-v1.txt",
+          "provenance": {
+            "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+            "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+            "synthetic": true,
+            "customerData": false,
+            "externalRetrieval": false
+          }
+        },
+        "extraction": {
+          "schemaVersion": "chimpmaera.incoming-invoice/bounded-extraction-report/v1",
+          "documentKind": "AP02_SYNTHETIC_SUPPLIER_INVOICE_KEY_VALUE_V1",
+          "extractorId": "ap-02-bounded-key-value-extraction/v1",
+          "sourceVersionId": "pan360:version:sha256:1f64e6768b4333e991c27670822929206d64f832178d2d71ec49a4cce97f4885",
+          "extractionInputSha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830",
+          "deterministicSyntheticExtraction": true,
+          "fields": {
+            "grossAmountMinor": {
+              "state": "KNOWN",
+              "value": 1200000,
+              "evidence": {
+                "stage": "EXTRACTION",
+                "extractorId": "ap-02-bounded-key-value-extraction/v1",
+                "sourceVersionId": "pan360:version:sha256:1f64e6768b4333e991c27670822929206d64f832178d2d71ec49a4cce97f4885"
+              }
+            },
+            "purchaseOrderNumber": {
+              "state": "UNKNOWN",
+              "reasonCode": "NOT_EXTRACTED"
+            },
+            "receiptReference": {
+              "state": "UNKNOWN",
+              "reasonCode": "NOT_EXTRACTED"
+            }
+          },
+          "observedFieldsDigest": "7ccdbd8ec829e04a59ac490b71b96f30e4e0c54cd5a6e076b60a5be38d6f687a",
+          "nonclaims": [
+            "NO_OCR_OR_MODEL_INFERENCE",
+            "NO_DOCUMENT_AI_ACCURACY_CLAIM",
+            "NO_UNIVERSAL_EXTRACTION_QUALITY_CLAIM"
+          ]
+        },
+        "authority": {
+          "mode": "LOCAL_SYNTHETIC_PROOF",
+          "customerDataAuthorized": false,
+          "productiveBookingAuthorized": false,
+          "externalCallsAuthorized": false
+        },
+        "recordDigest": "28457645af5a9a22c0bc587b652016d6489d3f409903b0b58051ea3aff522275"
+      }
+    },
+    "second": {
+      "outcome": "DENIED",
+      "reasonCode": "DUPLICATE_CONTENT_DENIED"
+    },
+    "readback": {
+      "outcome": "FOUND",
+      "versionId": "pan360:version:sha256:1f64e6768b4333e991c27670822929206d64f832178d2d71ec49a4cce97f4885",
+      "contentSha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830",
+      "recordDigest": "28457645af5a9a22c0bc587b652016d6489d3f409903b0b58051ea3aff522275",
+      "extraction": {
+        "schemaVersion": "chimpmaera.incoming-invoice/bounded-extraction-report/v1",
+        "documentKind": "AP02_SYNTHETIC_SUPPLIER_INVOICE_KEY_VALUE_V1",
+        "extractorId": "ap-02-bounded-key-value-extraction/v1",
+        "sourceVersionId": "pan360:version:sha256:1f64e6768b4333e991c27670822929206d64f832178d2d71ec49a4cce97f4885",
+        "extractionInputSha256": "ee79735415e55e2fcc92c1e67e73f879f2daa5bbe2fbf9c5182adae3f180c830",
+        "deterministicSyntheticExtraction": true,
+        "fields": {
+          "grossAmountMinor": {
+            "state": "KNOWN",
+            "value": 1200000,
+            "evidence": {
+              "stage": "EXTRACTION",
+              "extractorId": "ap-02-bounded-key-value-extraction/v1",
+              "sourceVersionId": "pan360:version:sha256:1f64e6768b4333e991c27670822929206d64f832178d2d71ec49a4cce97f4885"
+            }
+          },
+          "purchaseOrderNumber": {
+            "state": "UNKNOWN",
+            "reasonCode": "NOT_EXTRACTED"
+          },
+          "receiptReference": {
+            "state": "UNKNOWN",
+            "reasonCode": "NOT_EXTRACTED"
+          }
+        },
+        "observedFieldsDigest": "7ccdbd8ec829e04a59ac490b71b96f30e4e0c54cd5a6e076b60a5be38d6f687a",
+        "nonclaims": [
+          "NO_OCR_OR_MODEL_INFERENCE",
+          "NO_DOCUMENT_AI_ACCURACY_CLAIM",
+          "NO_UNIVERSAL_EXTRACTION_QUALITY_CLAIM"
+        ]
+      },
+      "source": {
+        "sourceKind": "LOCAL_SYNTHETIC_FIXTURE",
+        "generator": "PAN360_PUBLIC_HAND_AUTHORED_SYNTHETIC_V1",
+        "synthetic": true,
+        "customerData": false,
+        "externalRetrieval": false
+      }
+    },
+    "storageLifetime": "IN_MEMORY_WITHIN_THIS_PROCESS_NOT_DURABLE_OPERATIONAL_STORAGE"
+  }
+}
