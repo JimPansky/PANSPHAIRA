@@ -1443,6 +1443,41 @@ pan360Node.inputs = pan360Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan360:test")) repositoryIntegrityNode.ownedTests.push("npm run pan360:test");
 dag.graphVersion = 74;
 
+// Original DOC-AI-01: byte-preserved spent real-OCR pilot, complete oracle replay,
+// scoped custody disclosure only. Separate evaluator history, not product ancestry.
+const pan378Inputs = [
+  ["docs/architecture/pan378-spent-pilot-reproduction-v3.md", "DERIVED_EVIDENCE"],
+  ["docs/evidence/PS360-SOURCE-CLOSURE-v1.md", "DERIVED_EVIDENCE"],
+  ["scripts/run-pan378-spent-pilot.mjs", "SOURCE"],
+  ["src/pan378/spent-pilot-replay-v3.mjs", "SOURCE"],
+  ["tests/pan378/spent-pilot-replay.test.mjs", "VALIDATOR"],
+  ["tests/pan378/spent-pilot-admission.test.mjs", "VALIDATOR"],
+  ["tests/pan378/spent-pilot-registration.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json", "CONTRACT"],
+  ["tests/fixtures/pan378/spent-evaluation-v3/new-epoch-v3-evaluated-custody.bundle", "FIXTURE"],
+  ["tests/fixtures/pan378/spent-evaluation-v3/report-v3.json", "DERIVED_EVIDENCE"],
+  ["verification/pan378-spent-pilot-reproduction-v3.json", "DERIVED_EVIDENCE"],
+];
+let pan378Node = dag.nodes.find(({ id }) => id === "pan378-spent-pilot-reproduction-v3");
+if (pan378Node === undefined) {
+  pan378Node = {
+    id: "pan378-spent-pilot-reproduction-v3",
+    dependsOn: [], inputs: [], ownedTests: ["npm run pan378:test"],
+    invariants: [
+      "AP-03 is a synthetic extraction scoring harness; historical parser/fixtures/outcomes are retained, not OCR or model-quality evidence.",
+      "Exact independently frozen source/corpus/runtime/candidate and later spent synthetic disclosure bind a complete unchanged oracle CLI replay; evaluator Git history is never product ancestry.",
+      "FALSIFIED_WITH_EVIDENCE, complete denominators, UNKNOWN and all nine negative probes remain unchanged; no tuning, replacement trust root, new blind trial or positive-score promotion.",
+      "Cleared subprocess environment, fixed local Git/no credentials/config/hooks, read-only custody and owned scratch cleanup are process hygiene, not a host-sandbox claim.",
+      "All original seven criteria and delivery gates remain; source evidence is not a runnable product package or production/customer/booking authority.",
+    ],
+    riskClass: "CRITICAL", globalInvalidation: false,
+  };
+  dag.nodes.push(pan378Node);
+}
+pan378Node.inputs = pan378Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan378:test")) repositoryIntegrityNode.ownedTests.push("npm run pan378:test");
+dag.graphVersion = 75;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1483,6 +1518,7 @@ for (const [inputPath] of pan473Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan467Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan454Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan360Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan378Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

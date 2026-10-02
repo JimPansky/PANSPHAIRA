@@ -1,0 +1,157 @@
+{
+  "schemaVersion": "pansphaira.pan378/spent-pilot-reproduction/v1",
+  "epoch": "MAIN_PAN378_NEW_SOURCE_EPOCH_V3_20261002",
+  "outcome": "REPRODUCED_SPENT_EVALUATION",
+  "verdict": "FALSIFIED_WITH_EVIDENCE",
+  "custodyHead": "151cbc2dd63ca84003b663468e16aadd88f7df1d",
+  "custodyTree": "820adefce0e5135aba690ed7ee3ae1f924d14b8f",
+  "packetManifestSha256": "673c2d406e2b3edf9f612910e1b7bc7c4dc3ecc99a661f7243f47baeaf06204f",
+  "bundleSha256": "4a1a0795c0c7f9649e05e32d7af0aa4e1d05fda913bd7b3530c7eab5295307b7",
+  "reportFileSha256": "93543d7a2e7282431812fc680d9db8b8605095df6b519fdb6ae94201e946448e",
+  "reportWireVersion": "pansphaira.document-ai-pilot/report/v2",
+  "parserSha256": "75953ec8d4f2f21626e0e7d520c0a84d39d00644fc7e8d22840f45240245c97a",
+  "oracleSha256": "941442c935d046401fe811f0ad0066091c9fbaf1c1592af6ad61096f072566c9",
+  "sourceEntryCount": 39,
+  "completeOracleExecuted": true,
+  "oracleExit": 0,
+  "reportByteIdentical": true,
+  "adversarialProbes": 9,
+  "testedScope": {
+    "candidateId": "audit-378-tesseract-5.5.0-eng-generic-parser-v2",
+    "corpusId": "audit-378-fictional-invoices-v2-ec1fd7668deb",
+    "documentCount": 6,
+    "sourceMedia": {
+      "pdf": 3,
+      "image": 3
+    },
+    "runtimeImageManifestSha256": "e76ea7fb7afa055b1948ca4b297edb4ec12b2c60813ebb636ca2d1a421d27898",
+    "modelIdentity": "tesseract-eng-traineddata",
+    "modelWeightsSha256": "7d4322bd2a7749724879683fc3912cb542f19906c83bcc1a52132556427170b2",
+    "parserId": "generic-invoice-parser-v1",
+    "parserSha256": "75953ec8d4f2f21626e0e7d520c0a84d39d00644fc7e8d22840f45240245c97a"
+  },
+  "denominators": {
+    "fieldValues": 24,
+    "lineItems": 12,
+    "taxes": 8,
+    "totals": 6,
+    "dispositions": 6,
+    "documentsExact": 6
+  },
+  "metrics": {
+    "fieldValues": {
+      "denominator": 24,
+      "exactCorrect": 24,
+      "incorrect": 0,
+      "abstained": 0,
+      "falsePositives": 0,
+      "exactRate": 1
+    },
+    "lineItems": {
+      "denominator": 12,
+      "exactCorrect": 6,
+      "incorrect": 0,
+      "abstained": 6,
+      "falsePositives": 0,
+      "exactRate": 0.5
+    },
+    "taxes": {
+      "denominator": 8,
+      "exactCorrect": 8,
+      "incorrect": 0,
+      "abstained": 0,
+      "falsePositives": 0,
+      "exactRate": 1
+    },
+    "totals": {
+      "denominator": 6,
+      "exactCorrect": 5,
+      "incorrect": 0,
+      "abstained": 1,
+      "falsePositives": 0,
+      "exactRate": 0.833333
+    },
+    "dispositions": {
+      "denominator": 6,
+      "exactCorrect": 4,
+      "incorrect": 0,
+      "abstained": 2,
+      "falsePositives": 0,
+      "exactRate": 0.666667
+    },
+    "documentsExact": {
+      "denominator": 6,
+      "exactCorrect": 4,
+      "incorrect": 0,
+      "abstained": 2,
+      "falsePositives": 0,
+      "exactRate": 0.666667
+    }
+  },
+  "errorCount": 9,
+  "abstentionCount": 5,
+  "calibration": {
+    "target": "EXACT_ALL_SCORED_DIMENSIONS",
+    "denominator": 6,
+    "observedConfidenceCount": 6,
+    "abstainedConfidenceCount": 0,
+    "brierScore": 0.291143,
+    "bins": [
+      {
+        "lowerInclusive": 0,
+        "upperInclusive": 0.8,
+        "count": 0,
+        "meanConfidence": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        },
+        "observedExactAccuracy": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        }
+      },
+      {
+        "lowerInclusive": 0.8,
+        "upperInclusive": 0.9,
+        "count": 0,
+        "meanConfidence": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        },
+        "observedExactAccuracy": {
+          "state": "UNKNOWN",
+          "reasonCode": "NO_OBSERVATIONS"
+        }
+      },
+      {
+        "lowerInclusive": 0.9,
+        "upperInclusive": 1,
+        "count": 6,
+        "meanConfidence": {
+          "state": "KNOWN",
+          "value": 0.950228
+        },
+        "observedExactAccuracy": {
+          "state": "KNOWN",
+          "value": 0.666667
+        }
+      }
+    ]
+  },
+  "subprocessEnvironment": "CLEARED_NO_CREDENTIALS_NO_GLOBAL_GIT_CONFIG_NO_HOOKS",
+  "readOnlyCustody": true,
+  "bundleIsSeparateEvidenceHistory": true,
+  "newBlindTrial": false,
+  "newOcrOrParserTrial": false,
+  "parserOracleGeneratorChanged": false,
+  "productionOrBookingAuthority": false,
+  "runnableProductPackage": false,
+  "original7SelfAccepted": false,
+  "nonclaims": [
+    "POSTFREEZE_DISCLOSED_REPRODUCTION_NOT_NEW_BLIND_TRIAL",
+    "NO_AP03_OCR_OR_MODEL_QUALITY_CLAIM",
+    "NO_CUSTOMER_OR_CORPUS_GENERALIZATION_CLAIM",
+    "LOCAL_PROCESS_HYGIENE_NOT_HOST_SANDBOX"
+  ],
+  "scratchRemoved": true
+}
