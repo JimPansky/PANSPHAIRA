@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "60d7de71c2f83ae4e0cc143b9baffef491985ad2a299c785b97ca00c5693366f"
+          "sha256": "a9c3f164194a194cd9feddbfb9802c3ded0c79f860c404af76ab9f50ad9ae468"
         }
       ],
       "ownedTests": [
@@ -7935,7 +7935,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "20f2413678e49a9ad413c6cb6d016289785d400117e202ccf06222d76cd00b77"
+          "sha256": "43e191a185e5f8d9fce0d4a450f6f1882eebec2a2705ee813fa424fc89e26d77"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8017,7 +8017,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "b99562cb5058e4d4924d6cb01e8b4f91af68828ba17566a72cff940c2dfa2491"
+          "sha256": "fe370ea1229d1340973f59e30b2c651a7017a00fcb3652b725c82cfa57064952"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8087,7 +8087,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "8ad17c246438279edb0fe6712d23fe2379d1cd4af772e616b1c028820876d87a"
+          "sha256": "df0bbcc2538608d56e271959bdc6e95497bb3f1c95a5dbb6f96b4d82e6f360e4"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8362,7 +8362,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f0e61283e5e92101b024b132a135e7f8e25b66140d20bf05f0058c24a908c7a7"
+          "sha256": "d2c3eaebd32cf1ac78e25da7e5e006c8893da710299e055ce0ae3fe7a50a8e32"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
