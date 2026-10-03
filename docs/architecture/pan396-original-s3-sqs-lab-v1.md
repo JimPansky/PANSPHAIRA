@@ -1,6 +1,6 @@
 # PAN396 — bounded socket-free S3/SQS invoice lab
 
-This is the first proof owned by #396 under parent #394. It is an optional external test boundary, not PANSPHAIRA runtime, an orchestrator or an Authority source. The original prerequisite gates and eight acceptance criteria are unchanged. Repository integration is a candidate, not issue closure or a release receipt.
+This is the first proof owned by #396 under parent #394. It is an optional external test boundary, not PanSphaira runtime, an orchestrator or an Authority source. The original prerequisite gates and eight acceptance criteria are unchanged. Repository integration is a candidate, not issue closure or a release receipt.
 
 ## Exact inputs and operations
 

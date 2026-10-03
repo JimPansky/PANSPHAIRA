@@ -4986,7 +4986,7 @@
         {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "cfd642775e4a425498c8be5aaaf816185f4398113cdaa533bdb8f9e7e937ea9f"
+          "sha256": "2ba735350e760cb9d9f7f510ced34230b94ed7eae19d1368aef6e54bd17f8f69"
         },
         {
           "path": "tests/release-governance.test.mjs",
@@ -8300,7 +8300,7 @@
         {
           "path": "docs/architecture/pan396-original-s3-sqs-lab-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "123679f57d15e5bcda41a11caa59c14cf4785f5d377a6bbbc81545fc77982edc"
+          "sha256": "3034bfef02eb30054aa698e4a5d758cc44c9641a859afd856350838305531604"
         },
         {
           "path": "packages/contracts/src/floci-invoice-lab-v1.ts",

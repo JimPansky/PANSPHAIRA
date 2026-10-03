@@ -336,7 +336,7 @@ d33a55dabb163748587da37d6028afd18ee041fbea773d2217bffb9835c6435e  ./docs/archite
 83789f40314ab7b474da04b93790abf5e85e4946aa78eb83fd7ff30d244e649b  ./docs/architecture/pan346-current-head-source-qualification.md
 a87c62257b7a093f4c204bd5eaa815eb3c111426bde417ca89d5dd08aacf71da  ./docs/architecture/pan360-original-erv-execution-v1.md
 6e9518884b61a00a37b5971c76aba310deb7567a906ff3b9fa09d187142a26d9  ./docs/architecture/pan378-spent-pilot-reproduction-v3.md
-123679f57d15e5bcda41a11caa59c14cf4785f5d377a6bbbc81545fc77982edc  ./docs/architecture/pan396-original-s3-sqs-lab-v1.md
+3034bfef02eb30054aa698e4a5d758cc44c9641a859afd856350838305531604  ./docs/architecture/pan396-original-s3-sqs-lab-v1.md
 3517d689b5d069711f2b18b7b51d80a2cfc1f12685f3b683543729b4afec1d9a  ./docs/architecture/pan435-436-sales-stock-journey-v1.md
 87fd5c8464e74c57cb21f3b49d7224848368ec00111c8e07e5393e63a9750e56  ./docs/architecture/pan437-neighbor-composition-v1.md
 31e39d11cc0722fbe24e3b490a4e3776a6f27e61e69121f77670817b874e7a7c  ./docs/architecture/pan442-bound-task-handle-v1.md
@@ -2010,7 +2010,7 @@ e1e4304dde40a18146d905885a7d7dc9646a8d22a7702a758ad0da50d1ee00e0  ./tests/poc-sh
 beb037277565ae40641138ea4009e146c0f10aa574cb1e1016e76f26a7d3c593  ./tests/procurement-434/rechnungsabgleich-path.test.mjs
 16c194ab294be01e0812af96a90a6d5dbc96dfb2c94416c74b77328e96ec26c6  ./tests/producer-analytics-manifest.test.ts
 dfe7338a6655c3a70f304f59c3a3e1e748ad62a8b78726eeb125db4e3f16332d  ./tests/protected-audit-timeline.test.ts
-cfd642775e4a425498c8be5aaaf816185f4398113cdaa533bdb8f9e7e937ea9f  ./tests/public-product-spelling.test.mjs
+2ba735350e760cb9d9f7f510ced34230b94ed7eae19d1368aef6e54bd17f8f69  ./tests/public-product-spelling.test.mjs
 33bbaa426b5d1a3c40c5aa38a54b34014277c9accc15c43c01bff2f9bb693597  ./tests/rechnungsabgleich-match-v1.test.ts
 117070e07d3f966d3248e81956ad270ce089dacf6453014a8a2879a596e6c23a  ./tests/rechnungsabgleich-v1.test.ts
 4f18fdf8142689dcb9bcf5457af96108f2d8463e863e36d8fce2e77bdee79f49  ./tests/release-governance.test.mjs
@@ -2239,5 +2239,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-7b6824091f72e0c8967b92f79f6faad9a6491023e7f30e7a739dfea12741e2b1  ./verification/verification-dag-v2.json
+33a0eda16a1fcfcad16c1417798f113004c5ebeb854a70e813cd5ca53a5d8d2f  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

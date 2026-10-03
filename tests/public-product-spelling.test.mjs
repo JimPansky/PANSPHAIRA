@@ -54,6 +54,11 @@ function classify(path, line) {
     && createHash("sha256").update(read(path)).digest("hex") === "826b69e42bd04329a4fcadf3f02f5d38b937d76adc8d52adf74b0c785e8e0d13"
     && line.trim() === `Dieses Paket verbindet öffentlich recherchierte Benutzerarbeit mit tatsächlich ausgeführten, synthetischen Prüfungen der vorhandenen ${legacyDisplay}-Eingangsrechnungsverarbeitung. Es ist kein neues Rechnungsfreigabeprogramm und keine Produktionsfreigabe.`)
     return "exact-digest-public-research-handoff-provenance";
+  // Preserve only the immutable verbatim original issue criterion, not active branding.
+  if (path === "verification/pan396-original-s3-sqs-evidence-v1.json"
+    && createHash("sha256").update(read(path)).digest("hex") === "cb8fda6a864c0a77c8e79b819b317801c66901d4b5ec7ff4cb4c9e8cf3877a68"
+    && line.trim() === String.raw`"originalText": "Route synthetic invoice bytes through controlled S3 Put \u2192 SQS event \u2192 typed ${legacyDisplay} adapter/broker \u2192 existing authority-free ERV core.",`)
+    return "exact-digest-original396-source-criterion";
   if (path.startsWith("closure-audits/")) return "closure-audit-provenance";
   if (path.startsWith("docs/evidence/conveyor/")) return "internal-conveyor-evidence";
   if (line.includes("PANSPHAIRA_CANONICAL_JSON_SHA256_V1")) return "stable-algorithm-identifier";
@@ -191,6 +196,17 @@ test("public release surfaces preserve source/latest/runnable identity boundarie
   assert.match(index, /bounded proofs[\s\S]*development direction/);
   assert.match(index, /\]\(capabilities\.md\)/);
   assert.match(index, /\]\(SECURITY-ASSURANCE\.md\)/);
+});
+
+test("PAN396 original criterion has only exact-digest exact-line provenance admission", () => {
+  const path = "verification/pan396-original-s3-sqs-evidence-v1.json";
+  const line = read(path).split("\n").find((value) => value.includes(`typed ${legacyDisplay} adapter/broker`));
+  assert.ok(line, "the original criterion must remain present without spelling normalization");
+  assert.equal(classify(path, line), "exact-digest-original396-source-criterion");
+  assert.equal(classify(path, line.replace("typed ", "unadmitted ")), null);
+  assert.equal(classify("verification/pan396-unadmitted-neighbor.json", line), null);
+  assert.equal(classify("tests/pan396-unadmitted-neighbor.mjs", line), null);
+  assert.equal(classify("docs/architecture/pan396-original-s3-sqs-lab-v1.md", `not ${legacyDisplay} runtime`), null);
 });
 
 test("every retained all-caps token has an explicit KEEP classification", (t) => {
