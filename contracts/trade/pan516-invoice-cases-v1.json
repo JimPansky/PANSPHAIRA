@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "pansphaira.pan516/synthetic-invoice-cases/v1",
+  "scope": "LOCAL_SYNTHETIC_CODE_BOUND_NOT_PRIVATE_SOURCE_PERMISSION",
+  "commonCaseId": "COMMON-TRADE-01",
+  "currency": "EUR",
+  "quantityUnit": "STK",
+  "invoices": [
+    {
+      "id": "AP-PAN516-PARTIAL-01",
+      "line_id": "1",
+      "po_id": "PO-01",
+      "po_line_id": "1",
+      "quantity": 5,
+      "unit_net_minor": 6000,
+      "net_minor": 30000
+    },
+    {
+      "id": "AP-PAN516-MATCHED-01",
+      "line_id": "1",
+      "po_id": "PO-01",
+      "po_line_id": "1",
+      "quantity": 10,
+      "unit_net_minor": 6000,
+      "net_minor": 60000
+    }
+  ],
+  "nonclaims": [
+    "Not the original COMMON purchase invoice AP-01, which remains 62000 minor.",
+    "Not a holdout or permission to productive posting or payment.",
+    "Synthetic input cases, not fabricated evaluator results."
+  ]
+}

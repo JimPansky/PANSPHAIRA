@@ -491,6 +491,14 @@
       "fromSha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
       "toSha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
       "reason": "Advance graph to v78 and register the additive PAN515 native PAN472/PAN473 trade scope, same-source common June/July events, original positive/negative CLI/process suites and bounded public registration. Preserve every historical migration, immutable admitted-base obligation, original common/legacy identities, prior owner and hard gate; no new platform, sealed source, productive or completion authority."
+    },
+    {
+      "migrationId": "PAN516-NATIVE-PROCUREMENT/INTEGRITY-GENERATOR/V51",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 51,
+      "fromSha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
+      "toSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
+      "reason": "Advance graph to v79 and register one bounded PAN516 native purchase/confirmation/receipt/target-first retry and unchanged ERV composition owner with original four criteria, original negatives and actual retained CLI. Preserve all historical migrations, immutable base obligations, previous owners, common source, original ERV variants/tolerance, hard gates and runnable public manifest; no new platform, private source, productive dispatch/payment or completion authority."
     }
   ],
   "scanScope": {
@@ -533,15 +541,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 836,
+    "filesScanned": 841,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 272,
-    "importFiles": 271,
+    "importSites": 274,
+    "importFiles": 273,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2257,
-    "ledgerUniquePaths": 2257
+    "ledgerEntries": 2265,
+    "ledgerUniquePaths": 2265
   },
   "profiles": [
     {
@@ -614,7 +622,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81"
+      "sha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -991,8 +999,8 @@
     },
     {
       "owner": "procurement-434",
-      "importSites": 1,
-      "importFiles": 1
+      "importSites": 3,
+      "importFiles": 3
     },
     {
       "owner": "rks-01",
@@ -1305,7 +1313,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
+      "sha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
       "basis": "profile-version-migration"
     },
     {

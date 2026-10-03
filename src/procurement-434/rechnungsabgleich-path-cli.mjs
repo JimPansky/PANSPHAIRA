@@ -17,6 +17,8 @@ function usage(code) {
       "",
       "commands:",
       "  demo      run the local sealed purchase normal path (default)",
+      "  native    init|read|apply|liability --root <qualified local synthetic root>",
+      "            apply --command <JSON file>; liability --invoice <id> --confirmation-revision <n>",
       "  help      show this help",
       "",
       "options:",
@@ -31,7 +33,11 @@ function usage(code) {
   process.exit(code);
 }
 
-function main() {
+async function main() {
+  if (process.argv[2] === "native") {
+    try { const {runPan516NativeCli} = await import("./bestellung-cli.mjs"); return runPan516NativeCli(process.argv.slice(3)); }
+    catch (error) { process.stderr.write(`pan516-native error: ${error.message}\n`); process.exitCode = 2; return; }
+  }
   const { values, positionals } = parseArgs({
     allowPositionals: true,
     options: {

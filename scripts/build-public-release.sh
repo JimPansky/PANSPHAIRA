@@ -351,6 +351,15 @@ repository_only_files = {
     "tests/pan515/registration.test.mjs",
     "docs/architecture/pan515-native-trade-state-v1.md",
     "verification/pan515-native-trade-evidence-v1.json",
+    # PAN516 bounded native purchase source evidence; legacy demo remains standalone.
+    "contracts/trade/pan516-invoice-cases-v1.json",
+    "src/procurement-434/bestellung-lifecycle.mjs",
+    "src/procurement-434/bestellung-liability.mjs",
+    "src/procurement-434/bestellung-cli.mjs",
+    "tests/procurement-434/procurement-lifecycle.test.mjs",
+    "tests/procurement-434/procurement-registration.test.mjs",
+    "docs/architecture/pan516-native-procurement-v1.md",
+    "verification/pan516-native-procurement-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 78,
+  "graphVersion": 79,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e03ba1bb5bfa790e3cf131321cab40e0c771ec4e95b4b3b02879f0795e167fd7"
+          "sha256": "538ca23d24b3ef753a4c1f4e098d9ff6455b01f44342495a4a789436e0ed9575"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "2263f4dd517b95c5f2e13ba420f487655c3f5cdf6c354bd799bc0ccfc8112774"
+          "sha256": "b786e64f3866f21f021e17c6f47b3cf20a15ad80d3e7e89ddcc0b31d408686cf"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "60d7de71c2f83ae4e0cc143b9baffef491985ad2a299c785b97ca00c5693366f"
+          "sha256": "a9c3f164194a194cd9feddbfb9802c3ded0c79f860c404af76ab9f50ad9ae468"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "0820c7ff34d911fb0988f190fe45b5770566686c120bb1449992e08ad8b42115"
+          "sha256": "64eda630d3b1f4cbdc3cfe721928bab164f09831391823224e11f4d67d0d262a"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "f934220bf9b3b95683c2e39a365bc4bb3f63b3e8198d04be63cc63f0c11ca809"
+          "sha256": "1333720768c639fa84af27cadb1ab0882d3fd6337d04eb85549eb76bda622d55"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "1215e206dbd64b2143043f1354c9040a4fd3b68acbac8a5282f5594db1362112"
+          "sha256": "4d68e25e8d7e6a1bcbac1afd76f8ce0d6928fd6b80bb91c94182a9677ab1b534"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5077,7 +5077,8 @@
         "npm run pan378:test",
         "npm run erv-workflow:test",
         "npm run pan396:test",
-        "npm run pan515:test"
+        "npm run pan515:test",
+        "npm run pan516:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5632,7 +5633,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "2fda7b804caf68564b59bfff4612739fdf73d1d0183c1ad00be78e6e62ae874d"
+          "sha256": "363e872a166d886369ab568796d70f44ad576f2dda0d38949fa5579ebdeb3f8f"
         },
         {
           "path": "package-lock.json",
@@ -5992,7 +5993,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "995ccf72c4e5010511bce5347c5ba1115cc508968c97da761843681d6c62ea77"
+          "sha256": "41d0f010ee40ebaac6a50a217f8e9287d2e591aeca4f4afa248c7325f880a747"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7934,7 +7935,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "20f2413678e49a9ad413c6cb6d016289785d400117e202ccf06222d76cd00b77"
+          "sha256": "43e191a185e5f8d9fce0d4a450f6f1882eebec2a2705ee813fa424fc89e26d77"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8016,7 +8017,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "b99562cb5058e4d4924d6cb01e8b4f91af68828ba17566a72cff940c2dfa2491"
+          "sha256": "fe370ea1229d1340973f59e30b2c651a7017a00fcb3652b725c82cfa57064952"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8086,7 +8087,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "8ad17c246438279edb0fe6712d23fe2379d1cd4af772e616b1c028820876d87a"
+          "sha256": "df0bbcc2538608d56e271959bdc6e95497bb3f1c95a5dbb6f96b4d82e6f360e4"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8361,7 +8362,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f0e61283e5e92101b024b132a135e7f8e25b66140d20bf05f0058c24a908c7a7"
+          "sha256": "d2c3eaebd32cf1ac78e25da7e5e006c8893da710299e055ce0ae3fe7a50a8e32"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8452,7 +8453,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "ac5cc1c2ee844d70ad8a29d84f42b0750289eac34a02777a41c79ec26a8e2959"
+          "sha256": "66197adc19f4aa6a4d86885bd3e4fe8175e14d22e5860857586ad734927c3010"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8476,6 +8477,73 @@
         "Native real-process competing commits serialize or deny, effect identity excludes transport retry, stale/unit/content/authority/history collisions fail closed without lost quantities or later work.",
         "Existing native writer/diagnosis and M3 availability consumers execute; quarantine availability adapter is not canonical order reservation, absent external freshness remains UNPROVEN.",
         "Feature-specific stop preserves readable immutable history and existing writers; bounded original acceptance, mandatory CI/merge/new source-evidence release and exact public consumer are separate from development proof or PAN-to-KS pairing."
+      ]
+    },
+    {
+      "id": "pan516-native-procurement-v1",
+      "dependsOn": [
+        "pan515-native-trade-state-v1",
+        "ap-04-incoming-invoice-erv-relational-v2"
+      ],
+      "inputs": [
+        {
+          "path": "contracts/trade/pan516-invoice-cases-v1.json",
+          "role": "CONTRACT",
+          "sha256": "f0a37f30d200b8bf9ce914fbe2ab26b0bd9170eb31311b413a7b54e82715103c"
+        },
+        {
+          "path": "src/procurement-434/bestellung-lifecycle.mjs",
+          "role": "SOURCE",
+          "sha256": "443f45c43c1dbddcea183920e6ba5395736ccdc807bf23c5426f699f5885f6dc"
+        },
+        {
+          "path": "src/procurement-434/bestellung-liability.mjs",
+          "role": "SOURCE",
+          "sha256": "733ce7ddaceb8318b0fe7b0ece8965ca61a5aeb1e4ddee857dd3b59c53be1c02"
+        },
+        {
+          "path": "src/procurement-434/bestellung-cli.mjs",
+          "role": "SOURCE",
+          "sha256": "f4a39582822b2531d37d00a1450a51d310d59747dbb881481d60a3abce14d6d5"
+        },
+        {
+          "path": "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+          "role": "SOURCE",
+          "sha256": "c6fecbcc5220d2543568cfa2d1e8524078c4c6967aeffb48a695ac195048f67e"
+        },
+        {
+          "path": "tests/procurement-434/procurement-lifecycle.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "c6728fcf3b6c04b86952d0fb3f0beb7b14f4430d3100dcdf64ff30ff3fef31d0"
+        },
+        {
+          "path": "tests/procurement-434/procurement-registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "dd9890003e602828ca398a2c70b2ee725da2d7a68bf4b9f838316b9ad86b6fc6"
+        },
+        {
+          "path": "docs/architecture/pan516-native-procurement-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "2c8b0840b7b8160047723628cc1049c261b647a19d09c9289f7256160d2fd892"
+        },
+        {
+          "path": "verification/pan516-native-procurement-evidence-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "d790c58f6ba5ebfaf443208a2be86c270133394887a408777849a9835b26e5c8"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan516:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Existing PAN472 target SQLite and qualified PAN473 owner only; native immutable purchase approval, transmission and confirmation revisions remain distinct from productive authority.",
+        "Original common ten with two actual receipts gives accepted ten and remainder history10/2/0; foreign composite identity, supplier, duplicate receipt and unapproved overdelivery fail without effects.",
+        "Price, currency, unit and promise confirmation revisions preserve old commitments; native proposal/approval remains unchanged by supplier confirmation.",
+        "One code-bound invoice grain after receipt aggregation runs the unchanged frozen ERV variants/tolerance; original common deviation2000 and separately labelled synthetic partial/full inputs never grant payment or posting authority.",
+        "Real lost acknowledgment after native target commit is reconciled by exact target-first retry before any new order effect; transport and business-order retries cannot duplicate order, receipt or history.",
+        "Frozen independent original4/negative acceptance, exact mandatory CI, merge, new classified release and anonymous exact source/native consumer precede closure; external channel/rights remain unselected and PAN-to-KS pairing remains separate."
       ]
     }
   ]

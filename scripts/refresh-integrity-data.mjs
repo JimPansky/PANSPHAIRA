@@ -1586,6 +1586,38 @@ pan515Node.inputs = pan515Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan515:test")) repositoryIntegrityNode.ownedTests.push("npm run pan515:test");
 dag.graphVersion = 78;
 
+// PAN516 bounded native purchase and unchanged ERV composition; no new platform.
+const pan516Inputs = [
+  ["contracts/trade/pan516-invoice-cases-v1.json", "CONTRACT"],
+  ["src/procurement-434/bestellung-lifecycle.mjs", "SOURCE"],
+  ["src/procurement-434/bestellung-liability.mjs", "SOURCE"],
+  ["src/procurement-434/bestellung-cli.mjs", "SOURCE"],
+  ["src/procurement-434/rechnungsabgleich-path-cli.mjs", "SOURCE"],
+  ["tests/procurement-434/procurement-lifecycle.test.mjs", "VALIDATOR"],
+  ["tests/procurement-434/procurement-registration.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan516-native-procurement-v1.md", "DERIVED_EVIDENCE"],
+  ["verification/pan516-native-procurement-evidence-v1.json", "DERIVED_EVIDENCE"],
+];
+let pan516Node = dag.nodes.find(({id}) => id === "pan516-native-procurement-v1");
+if (pan516Node === undefined) {
+  pan516Node = {
+    id: "pan516-native-procurement-v1", dependsOn: ["pan515-native-trade-state-v1", "ap-04-incoming-invoice-erv-relational-v2"], inputs: [],
+    ownedTests: ["npm run pan516:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Existing PAN472 target SQLite and qualified PAN473 owner only; native immutable purchase approval, transmission and confirmation revisions remain distinct from productive authority.",
+      "Original common ten with two actual receipts gives accepted ten and remainder history10/2/0; foreign composite identity, supplier, duplicate receipt and unapproved overdelivery fail without effects.",
+      "Price, currency, unit and promise confirmation revisions preserve old commitments; native proposal/approval remains unchanged by supplier confirmation.",
+      "One code-bound invoice grain after receipt aggregation runs the unchanged frozen ERV variants/tolerance; original common deviation2000 and separately labelled synthetic partial/full inputs never grant payment or posting authority.",
+      "Real lost acknowledgment after native target commit is reconciled by exact target-first retry before any new order effect; transport and business-order retries cannot duplicate order, receipt or history.",
+      "Frozen independent original4/negative acceptance, exact mandatory CI, merge, new classified release and anonymous exact source/native consumer precede closure; external channel/rights remain unselected and PAN-to-KS pairing remains separate."
+    ]
+  };
+  dag.nodes.push(pan516Node);
+}
+pan516Node.inputs = pan516Inputs.map(([inputPath,role]) => ({path:inputPath,role,sha256:digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan516:test")) repositoryIntegrityNode.ownedTests.push("npm run pan516:test");
+dag.graphVersion = 79;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1630,6 +1662,7 @@ for (const [inputPath] of pan378Inputs) entries.set(inputPath, null);
 for (const [inputPath] of ervWorkflowInputs) entries.set(inputPath, null);
 for (const [inputPath] of pan396Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan515Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan516Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
