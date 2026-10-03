@@ -360,6 +360,14 @@ repository_only_files = {
     "tests/procurement-434/procurement-registration.test.mjs",
     "docs/architecture/pan516-native-procurement-v1.md",
     "verification/pan516-native-procurement-evidence-v1.json",
+    # PAN517 bounded fulfilment source evidence only; no grants or raw native state.
+    "src/pan517/fulfilment-state.mjs",
+    "src/pan517/delivery-milestones.mjs",
+    "tests/pan517/native-fulfilment.test.mjs",
+    "tests/pan517/calendar-integrity.test.mjs",
+    "tests/pan517/registration.test.mjs",
+    "docs/architecture/pan517-native-fulfilment-v1.md",
+    "verification/pan517-native-fulfilment-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

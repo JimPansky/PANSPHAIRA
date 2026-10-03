@@ -26,7 +26,7 @@
   "nativeQuantityRevision": 1,
   "commonReferenceDigest": "707c00e689b69236f1c3253e25764128a4a7f066544b933d6fda54eed40cfb96",
   "sourceBytePins": {
-    "src/pan515/trade-state.mjs": "3a11854385bf6a8846f88ec9b16d7f7e4736d5844892e75b162adaa1a023af35",
+    "src/pan515/trade-state.mjs": "fb8f81e017089941b98fa92e3cf1efa644c62d2509b95e26ef673c3ccec5cdf0",
     "scripts/run-pan515-trade-state.mjs": "d61fda9dfb68b4dc116d3fe56540f16a4a0e70b340c0d87bf890e07e41e98c19",
     "contracts/trade/common-trade-01-v1.json": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
     "src/pan472/draft-profile.mjs": "82a4a5473f69f489462f0b9a77233af36e31e2c4ae219578c6e5bb55e25aa2ce",
@@ -51,7 +51,7 @@
         "COMMON-TRADE-01"
       ],
       "exitCode": 0,
-      "stdoutSha256": "e53260ef5b4ec9607d6aa511934ad0fb0cf5555a48059a3f99f38d15edd89355",
+      "stdoutSha256": "5cd21c49a1b4d2fab6b3bf68f1e30be9e471484236008a54cf4cf30d4e3b9984",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
@@ -66,7 +66,7 @@
         "LOCAL_SYNTHETIC_OWNER"
       ],
       "exitCode": 0,
-      "stdoutSha256": "6f15c1acca1d04be2e9697d8a493a3b96567a4dcc96c158ce69773ae23fd01c1",
+      "stdoutSha256": "5908af43f52e914dabf7da67088dd1f0a710e94849b47f12bd89b8c8cd278f25",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
@@ -81,7 +81,7 @@
         "2026-06-30T23:59:59+02:00"
       ],
       "exitCode": 0,
-      "stdoutSha256": "c8ddf97c368e1de3fb11048dbba6057e926300400d50afb18b4c6369762538ef",
+      "stdoutSha256": "9061541f340723e553e35f0e28a7e9430353ab8a9f0a777a67e512024046fdd5",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
@@ -96,11 +96,11 @@
         "2026-07-31T23:59:59+02:00"
       ],
       "exitCode": 0,
-      "stdoutSha256": "6dccc3a5232aaa5cca87961b2d4767d0fee2749a869be7f8216a9a9cc4b1aea6",
+      "stdoutSha256": "764facf32c849411011117ec0069c8c9517624c5b4eecd64c7af24aa91baffcd",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
   ],
-  "observedAt": "2026-10-03T11:57:52.963616+00:00",
+  "observedAt": "2026-10-03T20:54:27.500981+00:00",
   "cutoffs": {
     "2026-06-30T23:59:59+02:00": {
       "revision": 4,
@@ -148,7 +148,7 @@
             "beforeDigest": "462dbf4bcafcf8f40d71e95af15bd9cea9054a0a3e712a20ca6615abee4050c8",
             "beleg": {
               "belegArt": "WARENEINGANG",
-              "belegId": "pan515:6ba2d856a86511f3a15b5afdf5abdf604951393b",
+              "belegId": "pan515:370fb28e2b236d941ccb11b3ff76e3f7cb078718",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-24T08:00:00Z"
             },
@@ -157,12 +157,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-fa9b12419b08a9151214aaafabc8ad183cfed7a8-0",
-            "afterDigest": "bc38f9a2561bae8e2455c2d5950f90114557f4ae9ce2d4a119914cd36326cd2b",
+            "afterDigest": "8abdc786f4abfc0f2fafa70c2a446ca64f20f4e617ee27da3e599a613784a426",
             "art": "EINKUNFT",
-            "beforeDigest": "f41687c7a6ba081eaaa301deeec63d9565fef7882d5ed098191eca88359f888f",
+            "beforeDigest": "715487f3720e1b454c74dff57df39fe83db1cbc3d74e49a9929bc32452a72114",
             "beleg": {
               "belegArt": "WARENEINGANG",
-              "belegId": "pan515:1eb28c553a760e75f834a9e11bc9070219255625",
+              "belegId": "pan515:9c4d42d241be846750b0f33f82264cebfb4cf5c4",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-26T08:00:00Z"
             },
@@ -171,12 +171,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-1bcfb3f460c4ad494903c39b8ba3aa87cbdae073-0",
-            "afterDigest": "6ca47cb44febbe1cf823f3dd643bafa44cbf5e5a930250d3a1fbe8d0d30cb704",
+            "afterDigest": "a26454dd5550ad6afbaa05bd9c8b39c9eed14df72ec12c9e672b16f9f413fdd3",
             "art": "RESERVIERUNG",
-            "beforeDigest": "86ba8907e45b58e99a5cc4b4af8fe3e8620158ae5a3689a1aa5cd123c3145bb8",
+            "beforeDigest": "3fccc7a0bdc4cf59afad904fa1bdfa1eb80f9069b85cbaac2d5ab330d554c141",
             "beleg": {
               "belegArt": "KUNDENAUFTRAG",
-              "belegId": "pan515:ac30f1b78c457672a972498120930ffd1d3f5117",
+              "belegId": "pan515:96834c146b5595e41d101e0f18caa6796ba8e71a",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-26T10:00:00Z"
             },
@@ -189,13 +189,13 @@
             "art": "RESERVIERUNG_AUFLUESEN",
             "zeitstempel": "2026-06-29T13:00:00Z",
             "beleg": {
-              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "belegId": "pan515:e3b8ea884407abbe6c333b9c42bdad0c7851ef73",
               "belegArt": "KUNDENAUFTRAG",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-29T13:00:00Z"
             },
-            "beforeDigest": "8993d0154f199f831d6ccefdea2f172f5479300ba261ecb3660508facfadd477",
-            "afterDigest": "963a544640c39232e2e2dfb3359170cfaaca18f1be0b7efd3b834bf850006fe7"
+            "beforeDigest": "33552b5544ebdea20fcb8478bca61f9873dd2961b25b43a9365767ea7a52ec2c",
+            "afterDigest": "288a019928699635b8580cddbcc0d51b40c4a06aa5ec5996b9d79a3ce96d9dfe"
           },
           {
             "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
@@ -203,16 +203,16 @@
             "art": "VERAUSGABE",
             "zeitstempel": "2026-06-29T13:00:00Z",
             "beleg": {
-              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "belegId": "pan515:e3b8ea884407abbe6c333b9c42bdad0c7851ef73",
               "belegArt": "KUNDENAUFTRAG",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-29T13:00:00Z"
             },
-            "beforeDigest": "4db507ea31c36ad1b8b8d2361527ebc6d274c46c1fcae9a7065010dd5d9fe0b2",
-            "afterDigest": "bb16571fa5d05fd946507ea06847ee591eca428e24c20815bd63843716765b79"
+            "beforeDigest": "aeaa2c135422d5052c35288d4fec1baebff3a5e9ffe5eae0b0061a156201862d",
+            "afterDigest": "330310a494824f0a7b07113bb7b64479860da1386e28013fa475f7ca6b48e728"
           }
         ],
-        "lageDigest": "76fa2a6ab67da74fbcd4325f3046df0bdd0ac028696e8ffea4aa69f91ef51684"
+        "lageDigest": "faf73bc032c8134865fe60de1b2a63fc17d423c3a5e6c9e087c90367fa35b2bf"
       }
     },
     "2026-07-31T23:59:59+02:00": {
@@ -261,7 +261,7 @@
             "beforeDigest": "462dbf4bcafcf8f40d71e95af15bd9cea9054a0a3e712a20ca6615abee4050c8",
             "beleg": {
               "belegArt": "WARENEINGANG",
-              "belegId": "pan515:6ba2d856a86511f3a15b5afdf5abdf604951393b",
+              "belegId": "pan515:370fb28e2b236d941ccb11b3ff76e3f7cb078718",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-24T08:00:00Z"
             },
@@ -270,12 +270,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-fa9b12419b08a9151214aaafabc8ad183cfed7a8-0",
-            "afterDigest": "bc38f9a2561bae8e2455c2d5950f90114557f4ae9ce2d4a119914cd36326cd2b",
+            "afterDigest": "8abdc786f4abfc0f2fafa70c2a446ca64f20f4e617ee27da3e599a613784a426",
             "art": "EINKUNFT",
-            "beforeDigest": "f41687c7a6ba081eaaa301deeec63d9565fef7882d5ed098191eca88359f888f",
+            "beforeDigest": "715487f3720e1b454c74dff57df39fe83db1cbc3d74e49a9929bc32452a72114",
             "beleg": {
               "belegArt": "WARENEINGANG",
-              "belegId": "pan515:1eb28c553a760e75f834a9e11bc9070219255625",
+              "belegId": "pan515:9c4d42d241be846750b0f33f82264cebfb4cf5c4",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-26T08:00:00Z"
             },
@@ -284,12 +284,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-1bcfb3f460c4ad494903c39b8ba3aa87cbdae073-0",
-            "afterDigest": "6ca47cb44febbe1cf823f3dd643bafa44cbf5e5a930250d3a1fbe8d0d30cb704",
+            "afterDigest": "a26454dd5550ad6afbaa05bd9c8b39c9eed14df72ec12c9e672b16f9f413fdd3",
             "art": "RESERVIERUNG",
-            "beforeDigest": "86ba8907e45b58e99a5cc4b4af8fe3e8620158ae5a3689a1aa5cd123c3145bb8",
+            "beforeDigest": "3fccc7a0bdc4cf59afad904fa1bdfa1eb80f9069b85cbaac2d5ab330d554c141",
             "beleg": {
               "belegArt": "KUNDENAUFTRAG",
-              "belegId": "pan515:ac30f1b78c457672a972498120930ffd1d3f5117",
+              "belegId": "pan515:96834c146b5595e41d101e0f18caa6796ba8e71a",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-26T10:00:00Z"
             },
@@ -298,12 +298,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-861e9b1cfa59251434ae44d4c2fa5e62de3efcee-0",
-            "afterDigest": "963a544640c39232e2e2dfb3359170cfaaca18f1be0b7efd3b834bf850006fe7",
+            "afterDigest": "288a019928699635b8580cddbcc0d51b40c4a06aa5ec5996b9d79a3ce96d9dfe",
             "art": "RESERVIERUNG_AUFLUESEN",
-            "beforeDigest": "8993d0154f199f831d6ccefdea2f172f5479300ba261ecb3660508facfadd477",
+            "beforeDigest": "33552b5544ebdea20fcb8478bca61f9873dd2961b25b43a9365767ea7a52ec2c",
             "beleg": {
               "belegArt": "KUNDENAUFTRAG",
-              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "belegId": "pan515:e3b8ea884407abbe6c333b9c42bdad0c7851ef73",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-29T13:00:00Z"
             },
@@ -312,12 +312,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-861e9b1cfa59251434ae44d4c2fa5e62de3efcee-1",
-            "afterDigest": "bb16571fa5d05fd946507ea06847ee591eca428e24c20815bd63843716765b79",
+            "afterDigest": "330310a494824f0a7b07113bb7b64479860da1386e28013fa475f7ca6b48e728",
             "art": "VERAUSGABE",
-            "beforeDigest": "4db507ea31c36ad1b8b8d2361527ebc6d274c46c1fcae9a7065010dd5d9fe0b2",
+            "beforeDigest": "aeaa2c135422d5052c35288d4fec1baebff3a5e9ffe5eae0b0061a156201862d",
             "beleg": {
               "belegArt": "KUNDENAUFTRAG",
-              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "belegId": "pan515:e3b8ea884407abbe6c333b9c42bdad0c7851ef73",
               "quelle": "pan515-native",
               "zeitstempel": "2026-06-29T13:00:00Z"
             },
@@ -326,12 +326,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-aa3463a88f66d779e79d3474138fa1dcb5b37ba9-0",
-            "afterDigest": "8cf152393040b130d0c391f2e64aed6a47dbaf60a010b6da839d04f783b895a5",
+            "afterDigest": "7043006bc4d0c86ac4caca429c2f629fc022bec824da3cd7b4b1c6ea9196ad4a",
             "art": "RESERVIERUNG_AUFLUESEN",
-            "beforeDigest": "76fa2a6ab67da74fbcd4325f3046df0bdd0ac028696e8ffea4aa69f91ef51684",
+            "beforeDigest": "faf73bc032c8134865fe60de1b2a63fc17d423c3a5e6c9e087c90367fa35b2bf",
             "beleg": {
               "belegArt": "KUNDENAUFTRAG",
-              "belegId": "pan515:8ec5e31db1906e30d2a54f31514b6d03971fab6c",
+              "belegId": "pan515:e3295392b153cb26522f828a213fcd56bc25fe88",
               "quelle": "pan515-native",
               "zeitstempel": "2026-07-02T13:00:00Z"
             },
@@ -340,12 +340,12 @@
           },
           {
             "aenderungsId": "aenderung:bestand-aa3463a88f66d779e79d3474138fa1dcb5b37ba9-1",
-            "afterDigest": "c6d6f5f33bc9e14bf9061765e0ef904c3e6ba21250ae528d8a219a1e4d4d45ca",
+            "afterDigest": "df5d4d218359b7263515f410fd00ec2439ace3d470f1780c22cdeaed708c89fb",
             "art": "VERAUSGABE",
-            "beforeDigest": "2605b6a35dab7adba4786cecb1ea4b5a9347dd2b58601ae86ee699928bca35f7",
+            "beforeDigest": "b51063a21ae3208ca952eea779be62303e69618073f1d7db84e257e1d70de866",
             "beleg": {
               "belegArt": "KUNDENAUFTRAG",
-              "belegId": "pan515:8ec5e31db1906e30d2a54f31514b6d03971fab6c",
+              "belegId": "pan515:e3295392b153cb26522f828a213fcd56bc25fe88",
               "quelle": "pan515-native",
               "zeitstempel": "2026-07-02T13:00:00Z"
             },
@@ -358,13 +358,13 @@
             "art": "EINKUNFT",
             "zeitstempel": "2026-07-05T12:00:00Z",
             "beleg": {
-              "belegId": "pan515:ff9ac56ed1ec8bea9fc1336d2d9065ece176c46e",
+              "belegId": "pan515:f79eb2dfba9c4fbf853cd4d87088aefb1526670b",
               "belegArt": "KUNDENAUFTRAG",
               "quelle": "pan515-native",
               "zeitstempel": "2026-07-05T12:00:00Z"
             },
-            "beforeDigest": "aa4951ceb9b309402aae11d725aed22ee984b29a1ab2c338691bab8f4ef8f80d",
-            "afterDigest": "6bf2155f00d48114aa116698d851b94f651b15850f7afa4ba8bc4c53f69701a8"
+            "beforeDigest": "5aa0bb50c228b56a9a8324d047d4c277bd14fecedc9a209197786508abb3c4d9",
+            "afterDigest": "58423aa84229c5933dab0cec0cb68565884f505453c73d872607371a083f9d65"
           },
           {
             "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
@@ -372,16 +372,16 @@
             "art": "RESERVIERUNG",
             "zeitstempel": "2026-07-05T12:00:00Z",
             "beleg": {
-              "belegId": "pan515:ff9ac56ed1ec8bea9fc1336d2d9065ece176c46e",
+              "belegId": "pan515:f79eb2dfba9c4fbf853cd4d87088aefb1526670b",
               "belegArt": "KUNDENAUFTRAG",
               "quelle": "pan515-native",
               "zeitstempel": "2026-07-05T12:00:00Z"
             },
-            "beforeDigest": "7e591620e996ba9ae3855a81b44d2f33da40a51311aa4927db816434dc42af79",
-            "afterDigest": "328c1720365afcc71b4386d7196042b2755bb04ba8005a696fba3f20a3e07244"
+            "beforeDigest": "4de07a7b1e87188c80e4ba0b2f00617ce270353ddd303b92f4b98bf0b17932d5",
+            "afterDigest": "97b75442fbe4746fec0d51134e9ab7f3dc1a40c5efbdb71e7b27fe6a4ef4e71c"
           }
         ],
-        "lageDigest": "75d4abb21a930c62660740a1e4692a0c28225f15d767f15eb517faa30b02af88"
+        "lageDigest": "651c5b38ed3906a7941d23ae4dc50fd8ffe03cb02f30c9c2c7681a4db60c6669"
       }
     }
   },
@@ -405,14 +405,14 @@
         "shipped": 0
       },
       "beforeRevision": 0,
-      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "bindingDigest": "d65e227c48565182c3a46eb01c5a6fe08b1ec23c3d2fc345f4eee4e42b8bb8f8",
       "commandDigest": "f9228465f62011a20ce8e0fc2d87fff40f5040d1ee3c284306e703b7f4581db6",
       "correctionOf": null,
       "creditRef": null,
       "disposition": null,
       "effectId": "GR-01",
       "effectiveAt": "2026-06-24T10:00:00+02:00",
-      "eventDigest": "f8b923e35a97900f878b511b1ef5a11efd67ec2842ad8ac34da68e714e43d4fe",
+      "eventDigest": "b3acc79860c8b30c8187fb87ef1c87b312b3a8d14e72a81088a4ce83dfcd82be",
       "firstTransportId": "synthetic:common-gr-01",
       "kind": "RECEIPT",
       "lineId": "1",
@@ -422,13 +422,13 @@
       "previousEventDigest": null,
       "quantity": 8,
       "reason": "COMMON-TRADE-01 native RECEIPT",
-      "recordedAtMs": 1791028672718,
+      "recordedAtMs": 1791060867253,
       "referenceId": "PO-01",
       "reservationChange": null,
       "revision": 1,
       "schemaVersion": "pansphaira.pan515/trade-event/v1",
       "sourceLineId": "1",
-      "stockEvidenceId": "pan515:6ba2d856a86511f3a15b5afdf5abdf604951393b",
+      "stockEvidenceId": "pan515:370fb28e2b236d941ccb11b3ff76e3f7cb078718",
       "unit": "STK",
       "warehouseId": "WH-01"
     },
@@ -451,30 +451,30 @@
         "shipped": 0
       },
       "beforeRevision": 1,
-      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "bindingDigest": "d65e227c48565182c3a46eb01c5a6fe08b1ec23c3d2fc345f4eee4e42b8bb8f8",
       "commandDigest": "a43438f273b63c332e55d97242c614028fcb6919926294a45b38d20ccc49c82b",
       "correctionOf": null,
       "creditRef": null,
       "disposition": null,
       "effectId": "GR-02",
       "effectiveAt": "2026-06-26T10:00:00+02:00",
-      "eventDigest": "b635dbd219a2b417ad7e55d1361d049677913de17dc2384352b9445069ce1026",
+      "eventDigest": "0932c0290396d4241ff9fed8bb29b18fe8b536ccf1c55864a6e584450e82d1c2",
       "firstTransportId": "synthetic:common-gr-02",
       "kind": "RECEIPT",
       "lineId": "1",
       "movementDelta": 2,
       "movementId": "GR-02",
       "orderId": "SO-01",
-      "previousEventDigest": "f8b923e35a97900f878b511b1ef5a11efd67ec2842ad8ac34da68e714e43d4fe",
+      "previousEventDigest": "b3acc79860c8b30c8187fb87ef1c87b312b3a8d14e72a81088a4ce83dfcd82be",
       "quantity": 2,
       "reason": "COMMON-TRADE-01 native RECEIPT",
-      "recordedAtMs": 1791028672748,
+      "recordedAtMs": 1791060867283,
       "referenceId": "PO-01",
       "reservationChange": null,
       "revision": 2,
       "schemaVersion": "pansphaira.pan515/trade-event/v1",
       "sourceLineId": "1",
-      "stockEvidenceId": "pan515:1eb28c553a760e75f834a9e11bc9070219255625",
+      "stockEvidenceId": "pan515:9c4d42d241be846750b0f33f82264cebfb4cf5c4",
       "unit": "STK",
       "warehouseId": "WH-01"
     },
@@ -497,30 +497,30 @@
         "shipped": 0
       },
       "beforeRevision": 2,
-      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "bindingDigest": "d65e227c48565182c3a46eb01c5a6fe08b1ec23c3d2fc345f4eee4e42b8bb8f8",
       "commandDigest": "162b9bd82e44fcf70af7d63bb607698c8c8b82eba909db106c35fbfe1a7ffd9d",
       "correctionOf": null,
       "creditRef": null,
       "disposition": null,
       "effectId": "RS-01",
       "effectiveAt": "2026-06-26T12:00:00+02:00",
-      "eventDigest": "ecee8f642e94bf92c7e2eb5fc659f5dbce8ec800ac0bfac549eea0d38a9cfece",
+      "eventDigest": "972423ec9426873c154274aa6319c3236b6c0bc9c637afeeadae6497950237b9",
       "firstTransportId": "synthetic:common-rs-01",
       "kind": "RESERVE",
       "lineId": "1",
       "movementDelta": 0,
       "movementId": "RS-01",
       "orderId": "SO-01",
-      "previousEventDigest": "b635dbd219a2b417ad7e55d1361d049677913de17dc2384352b9445069ce1026",
+      "previousEventDigest": "0932c0290396d4241ff9fed8bb29b18fe8b536ccf1c55864a6e584450e82d1c2",
       "quantity": 10,
       "reason": "reserve accepted own stock",
-      "recordedAtMs": 1791028672781,
+      "recordedAtMs": 1791060867315,
       "referenceId": null,
       "reservationChange": null,
       "revision": 3,
       "schemaVersion": "pansphaira.pan515/trade-event/v1",
       "sourceLineId": null,
-      "stockEvidenceId": "pan515:ac30f1b78c457672a972498120930ffd1d3f5117",
+      "stockEvidenceId": "pan515:96834c146b5595e41d101e0f18caa6796ba8e71a",
       "unit": "STK",
       "warehouseId": "WH-01"
     },
@@ -543,24 +543,24 @@
         "shipped": 0
       },
       "beforeRevision": 3,
-      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "bindingDigest": "d65e227c48565182c3a46eb01c5a6fe08b1ec23c3d2fc345f4eee4e42b8bb8f8",
       "commandDigest": "c73ebae27572f88321d08b89379a688cea8b963993f45f66eff30b8bfde83b91",
       "correctionOf": null,
       "creditRef": null,
       "disposition": null,
       "effectId": "SH-01",
       "effectiveAt": "2026-06-29T15:00:00+02:00",
-      "eventDigest": "45b26d90a1a9e506e0dd456883e7883781dd8b10914c9412356ce4824a23dfe6",
+      "eventDigest": "a7d0266b1c489c78ed2cf7fc0b62e3303da5b93619c6540822891eba7c21b195",
       "firstTransportId": "synthetic:common-sh-01",
       "kind": "SHIP",
       "lineId": "1",
       "movementDelta": -8,
       "movementId": "SH-01",
       "orderId": "SO-01",
-      "previousEventDigest": "ecee8f642e94bf92c7e2eb5fc659f5dbce8ec800ac0bfac549eea0d38a9cfece",
+      "previousEventDigest": "972423ec9426873c154274aa6319c3236b6c0bc9c637afeeadae6497950237b9",
       "quantity": 8,
       "reason": "COMMON-TRADE-01 native SHIP",
-      "recordedAtMs": 1791028672814,
+      "recordedAtMs": 1791060867347,
       "referenceId": "RS-01",
       "reservationChange": {
         "causeShipment": "SH-01",
@@ -572,7 +572,7 @@
       "revision": 4,
       "schemaVersion": "pansphaira.pan515/trade-event/v1",
       "sourceLineId": null,
-      "stockEvidenceId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+      "stockEvidenceId": "pan515:e3b8ea884407abbe6c333b9c42bdad0c7851ef73",
       "unit": "STK",
       "warehouseId": "WH-01"
     },
@@ -595,24 +595,24 @@
         "shipped": 8
       },
       "beforeRevision": 4,
-      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "bindingDigest": "d65e227c48565182c3a46eb01c5a6fe08b1ec23c3d2fc345f4eee4e42b8bb8f8",
       "commandDigest": "b382a57ce82357b20dc2529e83ded51bac268eca3928ccae4ca841214c659f6a",
       "correctionOf": null,
       "creditRef": null,
       "disposition": null,
       "effectId": "SH-02",
       "effectiveAt": "2026-07-02T15:00:00+02:00",
-      "eventDigest": "7f78dd299d257d971333973386ef6b5fe21fed2af2ea62f980fdfa9bb522db95",
+      "eventDigest": "fc3509380b447062331e01dfcf5738403f06fa94efbf3f69cc496d344fdff959",
       "firstTransportId": "synthetic:common-sh-02",
       "kind": "SHIP",
       "lineId": "1",
       "movementDelta": -2,
       "movementId": "SH-02",
       "orderId": "SO-01",
-      "previousEventDigest": "45b26d90a1a9e506e0dd456883e7883781dd8b10914c9412356ce4824a23dfe6",
+      "previousEventDigest": "a7d0266b1c489c78ed2cf7fc0b62e3303da5b93619c6540822891eba7c21b195",
       "quantity": 2,
       "reason": "COMMON-TRADE-01 native SHIP",
-      "recordedAtMs": 1791028672844,
+      "recordedAtMs": 1791060867377,
       "referenceId": "RS-01",
       "reservationChange": {
         "causeShipment": "SH-02",
@@ -624,7 +624,7 @@
       "revision": 5,
       "schemaVersion": "pansphaira.pan515/trade-event/v1",
       "sourceLineId": null,
-      "stockEvidenceId": "pan515:8ec5e31db1906e30d2a54f31514b6d03971fab6c",
+      "stockEvidenceId": "pan515:e3295392b153cb26522f828a213fcd56bc25fe88",
       "unit": "STK",
       "warehouseId": "WH-01"
     },
@@ -647,30 +647,30 @@
         "shipped": 10
       },
       "beforeRevision": 5,
-      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "bindingDigest": "d65e227c48565182c3a46eb01c5a6fe08b1ec23c3d2fc345f4eee4e42b8bb8f8",
       "commandDigest": "331e45e6ad1107e19684e292a8ef17b585f46c65a6e726cbe4fdb5df958846dc",
       "correctionOf": null,
       "creditRef": "CN-01",
       "disposition": "QUARANTINE",
       "effectId": "RET-01",
       "effectiveAt": "2026-07-05T14:00:00+02:00",
-      "eventDigest": "d9dcc83419f19391b50dc76a6123a52f999de8bf621ed0c6319a468f6b7f350d",
+      "eventDigest": "9523edb6ec843041d887fc7db4d72358e34af030bdf9c63e3eceb540781a7ad2",
       "firstTransportId": "synthetic:common-ret-01",
       "kind": "RETURN",
       "lineId": "1",
       "movementDelta": 1,
       "movementId": "RET-01",
       "orderId": "SO-01",
-      "previousEventDigest": "7f78dd299d257d971333973386ef6b5fe21fed2af2ea62f980fdfa9bb522db95",
+      "previousEventDigest": "fc3509380b447062331e01dfcf5738403f06fa94efbf3f69cc496d344fdff959",
       "quantity": 1,
       "reason": "COMMON-TRADE-01 native RETURN",
-      "recordedAtMs": 1791028672874,
+      "recordedAtMs": 1791060867408,
       "referenceId": "SH-01",
       "reservationChange": null,
       "revision": 6,
       "schemaVersion": "pansphaira.pan515/trade-event/v1",
       "sourceLineId": null,
-      "stockEvidenceId": "pan515:ff9ac56ed1ec8bea9fc1336d2d9065ece176c46e",
+      "stockEvidenceId": "pan515:f79eb2dfba9c4fbf853cd4d87088aefb1526670b",
       "unit": "STK",
       "warehouseId": "WH-01"
     }

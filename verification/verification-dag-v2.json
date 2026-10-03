@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 79,
+  "graphVersion": 80,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "538ca23d24b3ef753a4c1f4e098d9ff6455b01f44342495a4a789436e0ed9575"
+          "sha256": "64b596b7a0853e68aa3dc96eddfe8d050db1da3b24fa1f0468a7e0746c558a0d"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "b786e64f3866f21f021e17c6f47b3cf20a15ad80d3e7e89ddcc0b31d408686cf"
+          "sha256": "c05916f5effb6eee968ed63f2449cbcda44671463f2db664cfeebe2ebac840ec"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "a9c3f164194a194cd9feddbfb9802c3ded0c79f860c404af76ab9f50ad9ae468"
+          "sha256": "32f4eda22b907554111990a53e53d92506b6d3bf61941a5f4fd294a1ef8deee7"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "64eda630d3b1f4cbdc3cfe721928bab164f09831391823224e11f4d67d0d262a"
+          "sha256": "8f226b7299d34a80f56908be732ca0b56b24d14ead557aa31b48e0a419ec3739"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1333720768c639fa84af27cadb1ab0882d3fd6337d04eb85549eb76bda622d55"
+          "sha256": "565c2139ffe930e3ea3198ee107ad20fab28d00a51584df87cccd4339e36a0c8"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "4d68e25e8d7e6a1bcbac1afd76f8ce0d6928fd6b80bb91c94182a9677ab1b534"
+          "sha256": "c27858e767bfdd3051c54c5f01433623dea6e7ae5f123aeda1133fdb6a200e14"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5078,7 +5078,8 @@
         "npm run erv-workflow:test",
         "npm run pan396:test",
         "npm run pan515:test",
-        "npm run pan516:test"
+        "npm run pan516:test",
+        "npm run pan517:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5633,7 +5634,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "363e872a166d886369ab568796d70f44ad576f2dda0d38949fa5579ebdeb3f8f"
+          "sha256": "d4b05382160a4435e6b9b2d61f9068c084e418a09f3cbd16b1ffe3283eff2582"
         },
         {
           "path": "package-lock.json",
@@ -5993,7 +5994,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "41d0f010ee40ebaac6a50a217f8e9287d2e591aeca4f4afa248c7325f880a747"
+          "sha256": "e31f84c24020f4746d6d6250845216c2305734520a7747126fd9b7d98de4e837"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7935,7 +7936,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "43e191a185e5f8d9fce0d4a450f6f1882eebec2a2705ee813fa424fc89e26d77"
+          "sha256": "77108ddf01d0c3416806891324b3424b96188e15dc859183882482ee4ac1e3f8"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8017,7 +8018,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "fe370ea1229d1340973f59e30b2c651a7017a00fcb3652b725c82cfa57064952"
+          "sha256": "51b7d0d012363edf5f27bac2aae7e9a3479ce0fc3b9cf125e4b734df5665b316"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8087,7 +8088,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "df0bbcc2538608d56e271959bdc6e95497bb3f1c95a5dbb6f96b4d82e6f360e4"
+          "sha256": "d0bccd0fb7fcc11325eecfada5a91b9f013e7ffd2f6b17edff05ae577fb1ba7b"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8362,7 +8363,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "d2c3eaebd32cf1ac78e25da7e5e006c8893da710299e055ce0ae3fe7a50a8e32"
+          "sha256": "19f331a219af2a2929d210b21c48fe505d25ddeae2104a114a5dd55ba0d406f5"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8403,7 +8404,7 @@
         {
           "path": "src/pan515/trade-state.mjs",
           "role": "SOURCE",
-          "sha256": "3a11854385bf6a8846f88ec9b16d7f7e4736d5844892e75b162adaa1a023af35"
+          "sha256": "fb8f81e017089941b98fa92e3cf1efa644c62d2509b95e26ef673c3ccec5cdf0"
         },
         {
           "path": "scripts/run-pan515-trade-state.mjs",
@@ -8453,7 +8454,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "66197adc19f4aa6a4d86885bd3e4fe8175e14d22e5860857586ad734927c3010"
+          "sha256": "e8602890599278511177220cdf99559b5b56f55c846784962609c7304db4b061"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8463,7 +8464,7 @@
         {
           "path": "verification/pan515-native-trade-evidence-v1.json",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "d2f525932dd04cbf6b5bead10cfbdcd417c27608786fc72070cbadf75f2091e6"
+          "sha256": "0e2dfd99e506e53c95ca8bb00110b2842df964747d33343ee4a6ddbcdb979da0"
         }
       ],
       "ownedTests": [
@@ -8519,7 +8520,7 @@
         {
           "path": "tests/procurement-434/procurement-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "dd9890003e602828ca398a2c70b2ee725da2d7a68bf4b9f838316b9ad86b6fc6"
+          "sha256": "72f5010a19425a5ce7fcfc55c50b70029fc86652d9f2504e62b62908ff4f2f35"
         },
         {
           "path": "docs/architecture/pan516-native-procurement-v1.md",
@@ -8544,6 +8545,62 @@
         "One code-bound invoice grain after receipt aggregation runs the unchanged frozen ERV variants/tolerance; original common deviation2000 and separately labelled synthetic partial/full inputs never grant payment or posting authority.",
         "Real lost acknowledgment after native target commit is reconciled by exact target-first retry before any new order effect; transport and business-order retries cannot duplicate order, receipt or history.",
         "Frozen independent original4/negative acceptance, exact mandatory CI, merge, new classified release and anonymous exact source/native consumer precede closure; external channel/rights remain unselected and PAN-to-KS pairing remains separate."
+      ]
+    },
+    {
+      "id": "pan517-native-fulfilment-v1",
+      "dependsOn": [
+        "pan515-native-trade-state-v1"
+      ],
+      "inputs": [
+        {
+          "path": "src/pan517/fulfilment-state.mjs",
+          "role": "SOURCE",
+          "sha256": "45720400d7a959b57dec496263046d9a69a1da62eaaedbe83e653d04701a4648"
+        },
+        {
+          "path": "src/pan517/delivery-milestones.mjs",
+          "role": "SOURCE",
+          "sha256": "3f37aaab3489c62151746ae72cb5018e91e09f89f6324f76b66fc1ed90611f96"
+        },
+        {
+          "path": "tests/pan517/native-fulfilment.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "e02dcb3e8c89737e48c96193d2ecfb28237c3442f5ef4f4dee8d61587b2b167a"
+        },
+        {
+          "path": "tests/pan517/calendar-integrity.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "e46c7bd6de659d579c25b6f92e1e2c51027d24b4ddcc1f7bc42d87e353a76d52"
+        },
+        {
+          "path": "tests/pan517/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "45f4e76937b241d1b4b5362a6817bc28a6cbe647cf627e2656626968759101a9"
+        },
+        {
+          "path": "docs/architecture/pan517-native-fulfilment-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "b7e5a2dcedd4dc42049e779dde72dd31d66b9ea90ebee119530ad5483e2021b9"
+        },
+        {
+          "path": "verification/pan517-native-fulfilment-evidence-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "5ff1d548977787a14dacbbe59ae2806490b767c93dc1ffb4549182a45c527d5f"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan517:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Existing PAN472 SQLite/PAN473 native trade transaction and exported entry only; no new database, CLI gate, external identity or productive authority.",
+        "Pick and pack never consume physical stock; actual partial issue consumes only its packed reserved quantity with disjoint native lot allocation, immutable delivery note and remainder.",
+        "One actual return receipt is bounded by its shipment, remains quarantined until a source-bound inspection decision, and is independent from complaint decision or technical credit.",
+        "Published original dispatch promise and revisions retain exact common source and real event calendar instants; impossible dates and clock/offset overflow deny before native mutation.",
+        "Dispatch and actual customer receipt carry explicit separate event types and promise kind/revision; dispatch alone never proves delivery punctuality and readback cannot mutate events.",
+        "Feature-specific stop denies new fulfilment transitions but preserves immutable performed movements and existing reason-bearing business correction; frozen independent acceptance, exact canonical/hosted CI, merge, new release and anonymous readback remain separate gates."
       ]
     }
   ]

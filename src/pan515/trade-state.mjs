@@ -7,6 +7,8 @@ import {scopeProfile,openNative,openScope,readMeta,guardsMatch,TARGET_GUARDS,tra
 import {readLocalJournalControl} from '../../demo/runtime/local-journal-owner.mjs';
 import {bestandslageBerechnenV1,bestandAenderungAnwendenV1} from '../../dist/packages/contracts/src/bestand-nachschub-v1.js';
 import commonReference from '../../contracts/trade/common-trade-01-v1.json' with {type:'json'};
+import {PAN517_COMMAND_V1,validatePan517Command,advancePan517State,isRealTradeInstant,pan517EventEvidence} from '../pan517/fulfilment-state.mjs';
+import {readPan517DeliveryMilestones} from '../pan517/delivery-milestones.mjs';
 export const PAN515_PROFILE_V1='pansphaira.pan515/common-trade/v1';
 const GUARDS=['pan515_binding','pan515_events','pan515_control'].flatMap(table=>['UPDATE','DELETE'].map(action=>({
   name:`${table}_${action.toLowerCase()}_immutable`,
@@ -76,6 +78,7 @@ const grants=new WeakMap();
 const token=v=>typeof v==='string'&&/^(?:synthetic:[a-z0-9-]{3,64}|[A-Z]{2,8}-[0-9]{2})$/.test(v);
 function semantic(c){const {transportId,...content}=c;return content;}
 function validate(c,b){
+  if(c?.schemaVersion===PAN517_COMMAND_V1){validatePan517Command(c,b);return;}
   const extras=c?.kind==='RECEIPT'&&b.caseId==='COMMON-TRADE-01'?['sourceLineId']:c?.kind==='SHIP'?['reservationEventId']:c?.kind==='RETURN'?['disposition','creditRef']:[];
   if(!exact(c,[...COMMAND_KEYS,...extras])||c.schemaVersion!=='pansphaira.pan515/trade-command/v1'||!token(c.effectId)||!token(c.transportId)||!Number.isSafeInteger(c.expectedRevision)||c.expectedRevision<0||!Number.isSafeInteger(c.quantity)||c.quantity<(c.kind==='COUNT_ADJUSTMENT'?0:1)||c.quantity>1000000||typeof c.reason!=='string'||c.reason.length<1||c.reason.length>120||/[\x00-\x1f]/.test(c.reason))fail('PAN515_COMMAND_SHAPE_DENIED');
   if(c.orderId!==b.orderId||c.lineId!==b.lineId||c.articleId!==b.articleId||c.warehouseId!==b.warehouseId)fail('PAN515_COMPOSITE_NATIVE_IDENTITY_DENIED');
@@ -86,7 +89,7 @@ function validate(c,b){
   }else if(c.kind==='RESERVE'?c.referenceId!==null:!token(c.referenceId))fail('PAN515_TRANSITION_OR_REFERENCE_DENIED');
   if(c.kind==='SHIP'&&(!token(c.reservationEventId)||c.reservationEventId===c.effectId))fail('PAN515_TRANSITION_OR_REFERENCE_DENIED');
   if(c.kind==='RETURN'&&(c.disposition!=='QUARANTINE'||!token(c.creditRef)))fail('PAN515_RETURN_DISPOSITION_OR_SOURCE_REF_DENIED');
-  if(typeof c.effectiveAt!=='string'||!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/.test(c.effectiveAt)||!Number.isFinite(Date.parse(c.effectiveAt)))fail('PAN515_EFFECTIVE_DATE_DENIED');
+  if(!isRealTradeInstant(c.effectiveAt))fail('PAN515_EFFECTIVE_DATE_DENIED');
 }
 function empty(b){
   const init=bestandslageBerechnenV1([{artikelId:b.nativeIdentityMapping.stockArticleId,lagerortId:b.nativeIdentityMapping.stockWarehouseId,einheit:'STK',physisch:0,reserviert:0,herkunft:null}]);
@@ -95,10 +98,11 @@ function empty(b){
 }
 function advance(before,c,b){
   validate(c,b);
+  if(before.fulfilment&&c.schemaVersion!==PAN517_COMMAND_V1&&['SHIP','RETURN'].includes(c.kind))fail('PAN517_LEGACY_SHIP_RETURN_BYPASS_DENIED');
   if(before.events.some(e=>e.reservationChange?.id===c.effectId))fail('PAN515_RESERVATION_CHANGE_ID_REUSED_DENIED');
   if(c.expectedRevision!==before.revision)fail('PAN515_STALE_REVISION_DENIED');
   if(before.events.length&&Date.parse(c.effectiveAt)<Date.parse(before.events.at(-1).effectiveAt))fail('PAN515_BACKDATED_OVERWRITE_DENIED');
-  const next=JSON.parse(canonicalJson(before));
+  const next=c.schemaVersion===PAN517_COMMAND_V1?advancePan517State(before,c,b):JSON.parse(canonicalJson(before));
   const move=(art,quantity,part=0)=>{
     if(!quantity)return;
     const date=new Date(c.effectiveAt).toISOString().replace('.000Z','Z');
@@ -116,8 +120,8 @@ function advance(before,c,b){
     for(const lot of next.lots){const take=Math.min(remaining,lot.physical-lot.reserved-lot.blocked);if(take){lot.reserved+=take;allocations.push({lotId:lot.id,quantity:take});remaining-=take;}if(!remaining)break;}
     if(remaining)fail('PAN515_RESERVATION_EXCEEDS_USABLE_STOCK_DENIED');
     next.reservations.push({id:c.effectId,orderId:b.orderId,lineId:b.lineId,remaining:c.quantity,allocations});move('RESERVIERUNG',c.quantity);
-  }else if(c.kind==='SHIP'){
-    const reservation=next.reservations.find(r=>r.id===c.referenceId);
+  }else if(['SHIP','ISSUE'].includes(c.kind)){
+    const reservation=next.reservations.find(r=>r.id===(c.kind==='ISSUE'?c.reservationId:c.referenceId));
     if(!reservation||c.quantity>reservation.remaining)fail('PAN515_SHIPMENT_RESERVATION_REQUIRED_DENIED');
     if(before.events.some(e=>e.effectId===c.reservationEventId||e.reservationChange?.id===c.reservationEventId))fail('PAN515_RESERVATION_CHANGE_ID_REUSED_DENIED');
     let remaining=c.quantity;const allocations=[];
@@ -125,14 +129,19 @@ function advance(before,c,b){
     if(remaining)fail('PAN515_SHIPMENT_ALLOCATION_REQUIRED_DENIED');
     reservation.remaining-=c.quantity;next.shipments.push({id:c.effectId,reservationId:reservation.id,quantity:c.quantity,returned:0,allocations});
     next.quantities.shipped+=c.quantity;move('RESERVIERUNG_AUFLUESEN',c.quantity,0);move('VERAUSGABE',c.quantity,1);
-  }else if(c.kind==='RETURN'){
+  }else if(['RETURN','RETURN_RECEIPT'].includes(c.kind)){
     const shipment=next.shipments.find(s=>s.id===c.referenceId);
     if(!shipment||c.quantity>shipment.quantity-shipment.returned)fail('PAN515_RETURN_EXCEEDS_ACTUAL_SHIPMENT_DENIED');
-    let remaining=c.quantity;
-    for(const a of shipment.allocations){const take=Math.min(remaining,a.quantity-a.returned);if(take){const lot=next.lots.find(l=>l.id===a.lotId);lot.physical+=take;lot.blocked+=take;a.returned+=take;remaining-=take;}if(!remaining)break;}
+    let remaining=c.quantity;const returnedAllocations=[];
+    for(const a of shipment.allocations){const take=Math.min(remaining,a.quantity-a.returned);if(take){const lot=next.lots.find(l=>l.id===a.lotId);lot.physical+=take;lot.blocked+=take;a.returned+=take;returnedAllocations.push({lotId:a.lotId,remainingBlocked:take});remaining-=take;}if(!remaining)break;}
     if(remaining)fail('PAN515_RETURN_SHIPMENT_ALLOCATION_REQUIRED_DENIED');
     shipment.returned+=c.quantity;next.quantities.returned+=c.quantity;move('EINKUNFT',c.quantity,0);move('RESERVIERUNG',c.quantity,1);
-  }else{
+    if(c.kind==='RETURN_RECEIPT')next.fulfilment.returns.at(-1).allocations=returnedAllocations;
+  }else if(c.kind==='RETURN_DECISION'&&c.decision.disposition==='RELEASE'){
+    const r=next.fulfilment.returns.find(r=>r.id===c.referenceId);let remaining=c.quantity;
+    for(const a of r.allocations){const take=Math.min(remaining,a.remainingBlocked);if(take){const lot=next.lots.find(l=>l.id===a.lotId);if(!lot||lot.blocked<take)fail('PAN517_RETURN_ALLOCATION_RELEASE_DENIED');lot.blocked-=take;a.remainingBlocked-=take;remaining-=take;}if(!remaining)break;}
+    if(remaining)fail('PAN517_RETURN_ALLOCATION_RELEASE_DENIED');r.remainingQuarantined-=c.quantity;move('RESERVIERUNG_AUFLUESEN',c.quantity);
+  }else if(c.schemaVersion!==PAN517_COMMAND_V1){
     const lot=next.lots.find(l=>l.id===c.referenceId);
     if(!lot||!before.events.some(e=>e.effectId===c.referenceId&&e.kind==='RECEIPT'))fail('PAN515_ORIGINAL_RECEIPT_REQUIRED_DENIED');
     const delta=c.quantity-(c.kind==='CORRECT_RECEIPT'?lot.received:lot.physical);
@@ -148,7 +157,7 @@ function advance(before,c,b){
   return next;
 }
 function core(before,next,c,b,recordedAtMs){
-  return {schemaVersion:'pansphaira.pan515/trade-event/v1',bindingDigest:digest(b),effectId:c.effectId,movementId:c.effectId,stockEvidenceId:'pan515:'+digest({bindingDigest:digest(b),sourceEventId:c.effectId}).slice(0,40),commandDigest:digest(semantic(c)),firstTransportId:c.transportId,orderId:b.orderId,lineId:b.lineId,articleId:b.articleId,warehouseId:b.warehouseId,unit:b.unit,kind:c.kind,quantity:c.quantity,referenceId:c.referenceId,sourceLineId:c.sourceLineId??null,disposition:c.disposition??null,creditRef:c.creditRef??null,reservationChange:c.kind==='SHIP'?{id:c.reservationEventId,delta:-c.quantity,causeShipment:c.effectId,orderId:b.orderId,lineId:b.lineId}:null,effectiveAt:c.effectiveAt,reason:c.reason,movementDelta:next.quantities.physical-before.quantities.physical,correctionOf:c.kind==='CORRECT_RECEIPT'?before.events.find(e=>e.effectId===c.referenceId)?.eventDigest??null:null,beforeRevision:before.revision,revision:next.revision,beforeQuantities:before.quantities,afterQuantities:next.quantities,previousEventDigest:before.events.at(-1)?.eventDigest??null,recordedAtMs};
+  return {schemaVersion:'pansphaira.pan515/trade-event/v1',bindingDigest:digest(b),effectId:c.effectId,movementId:c.effectId,stockEvidenceId:'pan515:'+digest({bindingDigest:digest(b),sourceEventId:c.effectId}).slice(0,40),commandDigest:digest(semantic(c)),firstTransportId:c.transportId,orderId:b.orderId,lineId:b.lineId,articleId:b.articleId,warehouseId:b.warehouseId,unit:b.unit,kind:c.kind,quantity:c.quantity,referenceId:c.referenceId,sourceLineId:c.sourceLineId??null,disposition:c.disposition??null,creditRef:c.creditRef??null,reservationChange:['SHIP','ISSUE'].includes(c.kind)?{id:c.reservationEventId,delta:-c.quantity,causeShipment:c.effectId,orderId:b.orderId,lineId:b.lineId}:null,effectiveAt:c.effectiveAt,reason:c.reason,movementDelta:next.quantities.physical-before.quantities.physical,correctionOf:c.kind==='CORRECT_RECEIPT'?before.events.find(e=>e.effectId===c.referenceId)?.eventDigest??null:null,beforeRevision:before.revision,revision:next.revision,beforeQuantities:before.quantities,afterQuantities:next.quantities,previousEventDigest:before.events.at(-1)?.eventDigest??null,recordedAtMs,...(c.schemaVersion===PAN517_COMMAND_V1?{fulfilmentEvidence:pan517EventEvidence(next,c)}:{})};
 }
 function project(db,b,asOf=null){
   const rows=db.prepare('SELECT revision,effect_key,command,event FROM pan515_events ORDER BY revision LIMIT 129').all();
@@ -213,7 +222,7 @@ export function executePan515TradeCommand({root,command,grant}){
   }finally{db?.close();lease.release();}
 }
 export function readPan515TradeState({root,asOf=null}){
-  if(asOf!==null&&(typeof asOf!=='string'||!Number.isFinite(Date.parse(asOf))))fail('PAN515_CUTOFF_DATE_DENIED');
+  if(asOf!==null&&!isRealTradeInstant(asOf))fail('PAN515_CUTOFF_DATE_DENIED');
   const db=openNative(root,'target');
-  try{db.exec('BEGIN');const binding=store(db,root),latest=project(db,binding),state=asOf===null?latest:project(db,binding,asOf);return {binding,...state,writeMode:mode(db,binding).mode,asOf,latestRevision:latest.revision,coverage:'COMPLETE_OWNED_EVENT_LEDGER_ONLY',readOnly:true};}finally{db.close();}
+  try{db.exec('BEGIN');const binding=store(db,root),latest=project(db,binding),state=asOf===null?latest:project(db,binding,asOf);return {binding,...state,...(state.fulfilment?{deliveryMilestones:readPan517DeliveryMilestones(state,binding,asOf)}:{}),writeMode:mode(db,binding).mode,asOf,latestRevision:latest.revision,coverage:'COMPLETE_OWNED_EVENT_LEDGER_ONLY',readOnly:true};}finally{db.close();}
 }
