@@ -336,6 +336,21 @@ repository_only_files = {
     "tests/pan396/registration.test.mjs",
     "tests/fixtures/pan396/floci-pin-v1.json",
     "verification/pan396-original-s3-sqs-evidence-v1.json",
+    # PAN515 additive native trade: bounded source evidence only, no raw grants/runtime.
+    "contracts/trade/common-trade-01-v1.json",
+    "src/pan515/trade-state.mjs",
+    "scripts/run-pan515-trade-state.mjs",
+    "tests/fixtures/pan515/native-trade-fixture.mjs",
+    "tests/fixtures/pan515/native-trade-client.mjs",
+    "tests/pan515/native-trade-state.test.mjs",
+    "tests/pan515/common-trade-binding.test.mjs",
+    "tests/pan515/common-native-events.test.mjs",
+    "tests/pan515/native-trade-negative.test.mjs",
+    "tests/pan515/native-process-compatibility.test.mjs",
+    "tests/pan515/native-cli.test.mjs",
+    "tests/pan515/registration.test.mjs",
+    "docs/architecture/pan515-native-trade-state-v1.md",
+    "verification/pan515-native-trade-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

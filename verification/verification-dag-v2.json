@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 77,
+  "graphVersion": 78,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "cec71f666557658b9dfe629346bf79f58be93f000ce400cb3d94c343888076e7"
+          "sha256": "0820c7ff34d911fb0988f190fe45b5770566686c120bb1449992e08ad8b42115"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -5076,7 +5076,8 @@
         "npm run pan360:test",
         "npm run pan378:test",
         "npm run erv-workflow:test",
-        "npm run pan396:test"
+        "npm run pan396:test",
+        "npm run pan515:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5631,7 +5632,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "84a50cf931f192304259b1ec99f39a0c5a1a8a9d1162cbbcb62aa6b1585c1388"
+          "sha256": "319c307404a5fbb0ea215147ad6c8e23b2efd3523fc07ce9e9011aecc46d4d7d"
         },
         {
           "path": "package-lock.json",
@@ -7933,7 +7934,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "3a1cb4dd90a474ede9ffc4d28a61c6fd6a48b66251a0854b18bb51f4224d2462"
+          "sha256": "20f2413678e49a9ad413c6cb6d016289785d400117e202ccf06222d76cd00b77"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8015,7 +8016,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "7b9ce3662dc50ce043fa1fc8a265c17a234241cd20ef0f825cdc1eb2c6ae5ac4"
+          "sha256": "b99562cb5058e4d4924d6cb01e8b4f91af68828ba17566a72cff940c2dfa2491"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8085,7 +8086,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4e4e547d64797010577f0da09569da7d70554f7603dc0555812602ce141823c6"
+          "sha256": "8ad17c246438279edb0fe6712d23fe2379d1cd4af772e616b1c028820876d87a"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8360,7 +8361,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "19fefc6527cae9a7e43f05dfc13e0951a9b3a07d0bfc69f2376b11ad768f760b"
+          "sha256": "f0e61283e5e92101b024b132a135e7f8e25b66140d20bf05f0058c24a908c7a7"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8384,6 +8385,97 @@
         "Exact owned namespace and Docker resource cleanup; parent daemon trusted, no guest socket/customer/cloud credentials/host OS sandbox claim.",
         "Named atomic in-memory fake, actual partial-effect differential and measured runtime/maintenance surfaces are distinct; timeout bound does not itself prove acceptable CI cost.",
         "Source-evidence distribution, original8 independent acceptance, exact-head native CI, merge/new release/public consumer precede closure; no expansion follows automatically."
+      ]
+    },
+    {
+      "id": "pan515-native-trade-state-v1",
+      "dependsOn": [
+        "pan473-writer-scope-cutover-v1",
+        "pan435-436-sales-stock-journey-v1"
+      ],
+      "inputs": [
+        {
+          "path": "contracts/trade/common-trade-01-v1.json",
+          "role": "CONTRACT",
+          "sha256": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160"
+        },
+        {
+          "path": "src/pan515/trade-state.mjs",
+          "role": "SOURCE",
+          "sha256": "3a11854385bf6a8846f88ec9b16d7f7e4736d5844892e75b162adaa1a023af35"
+        },
+        {
+          "path": "scripts/run-pan515-trade-state.mjs",
+          "role": "SOURCE",
+          "sha256": "d61fda9dfb68b4dc116d3fe56540f16a4a0e70b340c0d87bf890e07e41e98c19"
+        },
+        {
+          "path": "tests/fixtures/pan515/native-trade-fixture.mjs",
+          "role": "FIXTURE",
+          "sha256": "e680539b49553cbaa575d0fed12146a8f60686b2e4e01fcf0345d93d10d01f48"
+        },
+        {
+          "path": "tests/fixtures/pan515/native-trade-client.mjs",
+          "role": "FIXTURE",
+          "sha256": "c4ea1e48442b7f9461d2dc450e276d5c131b59c751e3f92a95f5fe4e0e839afe"
+        },
+        {
+          "path": "tests/pan515/native-trade-state.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "0697a9368c02f205eb461d5e32185489d6aea04a00e09dcb06e7921f9cab47b6"
+        },
+        {
+          "path": "tests/pan515/common-trade-binding.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "213faf1521ff9bd55aa3e61d5d0c797f6c33c83ef50d3c9e5d3f76eaaf38cd08"
+        },
+        {
+          "path": "tests/pan515/common-native-events.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a79e928e5be01d7db4b669dcaac44012c75d9a2bba0c4fc7a2c4a13a97ee078e"
+        },
+        {
+          "path": "tests/pan515/native-trade-negative.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a23c7cc9612960f02661870b2a8fdee4598fc350139e4d2dc369a5c61fa5499b"
+        },
+        {
+          "path": "tests/pan515/native-process-compatibility.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "2eda898f8be78f67e66d20dddc9971f67b3093f2526a97f0a7b64d74019b32e4"
+        },
+        {
+          "path": "tests/pan515/native-cli.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "798210bbfea40d9c71055cab155b38a1cabcf4e387f14d9a585de6fe0b38a9d0"
+        },
+        {
+          "path": "tests/pan515/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "0114f31d19a90a45a5629a7583a6f5e970a78b350ec93be2e86db3f1ab99d76c"
+        },
+        {
+          "path": "docs/architecture/pan515-native-trade-state-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "539f7e832f2c67ba0abb54273c491186df97004b8b463d9977999e74e91b2264"
+        },
+        {
+          "path": "verification/pan515-native-trade-evidence-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "d2f525932dd04cbf6b5bead10cfbdcd417c27608786fc72070cbadf75f2091e6"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan515:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "One existing native PAN472 target SQLite/PAN473 owner, exact generation/epoch/quantity revision and explicit native/canonical identity and time mapping; no new database or relabelled six-piece COMMON case.",
+        "Actual immutable receipt/reservation/shipment/quarantined-return and reason-bearing forward correction/count events; disjoint lot allocations and same native event cutoffs, stable reservation-change cause is not another movement.",
+        "Native real-process competing commits serialize or deny, effect identity excludes transport retry, stale/unit/content/authority/history collisions fail closed without lost quantities or later work.",
+        "Existing native writer/diagnosis and M3 availability consumers execute; quarantine availability adapter is not canonical order reservation, absent external freshness remains UNPROVEN.",
+        "Feature-specific stop preserves readable immutable history and existing writers; bounded original acceptance, mandatory CI/merge/new source-evidence release and exact public consumer are separate from development proof or PAN-to-KS pairing."
       ]
     }
   ]
