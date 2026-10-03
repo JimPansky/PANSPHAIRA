@@ -2089,7 +2089,7 @@ ab0f4d8c9c8f208bb6fa0e3248a3679a55a8258d681f4dbb7760a3eed72d6364  ./tools/readme
 65a15a5853714a50d410e431d6e71900fe590a09dc3099ae347fffe8b63e577a  ./tools/video-production-reference/EXTENSION-GUIDE.md
 0c75ff07b3732d5f810725bb58def85c0c595191a541d9405a9ed681acbd22c3  ./tools/video-production-reference/NOTICE
 bb3a0592e9a9a5e9ce0e645e38bbcd55dab90c47adf97a5f9e9186ecaebaf89c  ./tools/video-production-reference/README.md
-2263f4dd517b95c5f2e13ba420f487655c3f5cdf6c354bd799bc0ccfc8112774  ./tools/video-production-reference/SHA256SUMS
+b786e64f3866f21f021e17c6f47b3cf20a15ad80d3e7e89ddcc0b31d408686cf  ./tools/video-production-reference/SHA256SUMS
 49c0ab6c7fe8e28725b57036f9ae921ffca088aa53417a4ff3e45d54c1931c76  ./tools/video-production-reference/assets/synthetic/frame-s01.png
 59ac2035972203d2e4d9704617109aa3205c7e25cc00a39b6de596df461acdc8  ./tools/video-production-reference/assets/synthetic/frame-s02.png
 fc48018519057b6e430a16e188429d91ce08ac82ccde63a2f3e2f1b9e609c9d3  ./tools/video-production-reference/assets/synthetic/frame-s03.png
@@ -2261,5 +2261,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-daca00f93d0245d9cbc10887c8437e08ebea518f121a92c8d8c939dfe51ce478  ./verification/verification-dag-v2.json
+90ddf818a069bf76a2b0d16ea2c6ebde7b67bf1dcf7c59403a644b9a114b0722  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
