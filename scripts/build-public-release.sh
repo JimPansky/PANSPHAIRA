@@ -320,6 +320,22 @@ repository_only_files = {
     "tests/erv-workflow-evidence/registration.test.mjs",
     "tests/erv-workflow-evidence/source-admission.test.mjs",
     "verification/erv-workflow-native-evidence-v1.json",
+    # PAN396 first admitted socket-free synthetic S3/SQS lab: exact source-only
+    # paths, no raw retained state or broad tests/evidence exception.
+    "docs/architecture/pan396-original-s3-sqs-lab-v1.md",
+    "packages/contracts/src/floci-invoice-lab-v1.ts",
+    "src/pan396/floci-http-v1.mjs",
+    "src/pan396/invoice-broker-v1.mjs",
+    "src/pan396/simplest-fake-v1.mjs",
+    "src/pan396/disabled-ui-proof-v1.mjs",
+    "scripts/pan396-original-s3-sqs-proof-v1.mjs",
+    "scripts/pan396-owned-floci-runtime-v1.mjs",
+    "scripts/pan396-owned-cleanup-v1.mjs",
+    "tests/pan396/invoice-broker.test.mjs",
+    "tests/pan396/disabled-ui.test.mjs",
+    "tests/pan396/registration.test.mjs",
+    "tests/fixtures/pan396/floci-pin-v1.json",
+    "verification/pan396-original-s3-sqs-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

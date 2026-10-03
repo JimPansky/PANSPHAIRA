@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 76,
+  "graphVersion": 77,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "481620b9a76a2d3c99a9d404cb29e8d2bba8a775247529752a4cee8f98f4112a"
+          "sha256": "28d47563e1a312b0e0c3925cbfbf7110ea6d6056b2843819e83cfd440ea64b98"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "9b18d379b236e4939ff94cf170a014f5b563b8a8ef8186b84e890a13468be8d8"
+          "sha256": "78dfa508bff65210b30b700083b90812eee5633466cd98f2595a493329a16229"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "9af36836479379bb90c1d2d90d78efe91cc7f8a420ce74522f689becd584212d"
+          "sha256": "fee4eccd26db88641ca2f45dff31947a97646aa4cc12ee14608c9b14605033e4"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "000b9dc0530d4c7ad5c00ddaa669fcf2102a0713fc8440661461fc4aa4c34340"
+          "sha256": "cec71f666557658b9dfe629346bf79f58be93f000ce400cb3d94c343888076e7"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1aa22002b18a8c373db16e467ab429377a10e65b83b26e72b99ce23e78cb9157"
+          "sha256": "f564a75166489e49281cefa6d0ad230c004d4cea19280a1d7a6adb5f6a0ce94e"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -4986,7 +4986,7 @@
         {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "cfd642775e4a425498c8be5aaaf816185f4398113cdaa533bdb8f9e7e937ea9f"
+          "sha256": "2ba735350e760cb9d9f7f510ced34230b94ed7eae19d1368aef6e54bd17f8f69"
         },
         {
           "path": "tests/release-governance.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "a813cde55aaa32dfd2cf5d7dae9606e368e1e0fd380f684f941d3e3a8cceddad"
+          "sha256": "0abd8f3473c6079626c32087d005fcb951111e6b6ee1f910900bb62cba0cf24b"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5075,7 +5075,8 @@
         "npm run pan454:test",
         "npm run pan360:test",
         "npm run pan378:test",
-        "npm run erv-workflow:test"
+        "npm run erv-workflow:test",
+        "npm run pan396:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5630,7 +5631,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "a931c88f18e3ae8173f0d66ed483c097f0885bcd6fcad2ce92683dabbcfe249b"
+          "sha256": "84a50cf931f192304259b1ec99f39a0c5a1a8a9d1162cbbcb62aa6b1585c1388"
         },
         {
           "path": "package-lock.json",
@@ -5990,7 +5991,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "cc88983ae343e945b2ce8f01e9b4b294e585f0443097bfadc407e40c62e1606b"
+          "sha256": "e0397f9ac1a3dfd9ba86e2c0013b9bc8124af42d2b05035ba58eaba8b2d375b7"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7097,7 +7098,7 @@
         {
           "path": "tests/pan462/native-backup-restore.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "2655b8658aa2f9a4991ec5f72e5d148d390f2019c4492232487d2d853ce9160a"
+          "sha256": "38ee21d3620f15aa95d814518a2c7da0144b1f8765cdb4b36c74dfa744f5dc92"
         },
         {
           "path": "verification/pan462-native-backup-restore-boundary-v1.json",
@@ -7313,7 +7314,7 @@
         {
           "path": "packages/knowledge-solution/src/pg-harness.ts",
           "role": "SOURCE",
-          "sha256": "5a02fa90540a756e3ac70330cb95b4192b35da3e507a1efb92d05ed631e22da4"
+          "sha256": "4594ee7b01e12828c09fcecab3dde0244102ccaa9d9721a202ffcf6d18ab2334"
         },
         {
           "path": "packages/knowledge-solution/src/postgres-source.ts",
@@ -7932,7 +7933,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "2ca3d65f61fba98a7dc787f0dadc27410c8522119c20339ff3cefcf185236709"
+          "sha256": "3a1cb4dd90a474ede9ffc4d28a61c6fd6a48b66251a0854b18bb51f4224d2462"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8014,7 +8015,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "d02ecb1f2da3ef7a7b6319113e9a94e521b92687836d62aaaf912e6e17ca166f"
+          "sha256": "7b9ce3662dc50ce043fa1fc8a265c17a234241cd20ef0f825cdc1eb2c6ae5ac4"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8084,7 +8085,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "3663ff4dfdc636dabba8433a8762d8e6b78d84448c932f1d02aebb19a1bcb7bf"
+          "sha256": "4e4e547d64797010577f0da09569da7d70554f7603dc0555812602ce141823c6"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8288,6 +8289,101 @@
         "Company size is descriptive context only; gross native10000EUR rule and8 unexecuted net5000EUR research designs remain separate; exact integer split/tolerance checks do not implement accounting or routing.",
         "Evidence persistence is not an operational invoice/task database, human form, identity or productive posting/payment; no new ERP/PKI/platform/missing features or reused-core/fixture changes.",
         "One focused delta review, canonical applicable tests, exact CI/merge/new SOURCE_EVIDENCE_ONLY release and actual public consumer precede task delivery; original390/396 gates and all private/sealed/paused scopes remain."
+      ]
+    },
+    {
+      "id": "pan396-original-s3-sqs-lab-v1",
+      "dependsOn": [
+        "pan360-original-erv-execution-v1"
+      ],
+      "inputs": [
+        {
+          "path": "docs/architecture/pan396-original-s3-sqs-lab-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "3034bfef02eb30054aa698e4a5d758cc44c9641a859afd856350838305531604"
+        },
+        {
+          "path": "packages/contracts/src/floci-invoice-lab-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "06d1b3c61b563dc9f3aa2b98344e7de91fdbf5e5778f5440d9478dd9a2b44811"
+        },
+        {
+          "path": "src/pan396/floci-http-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "4917d3e9e161ee967d514632f2600aea27075a66028ac89473b5defb431dd096"
+        },
+        {
+          "path": "src/pan396/invoice-broker-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "e5e02301d5612dda8ec6a7c213d829d6c3536734c2d1900db5084e19dd20c4df"
+        },
+        {
+          "path": "src/pan396/simplest-fake-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "4c167565c645f4794db925571152ec27158250e22ae73608390880865a72b023"
+        },
+        {
+          "path": "src/pan396/disabled-ui-proof-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "08435715f88817de74c0a08d91a5871bc30f84e4430e1d4742ab829bcfb5b45d"
+        },
+        {
+          "path": "scripts/pan396-original-s3-sqs-proof-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "d7b5cf13bf6eb8b0e3f07e495b97dfbf90032faca592604337c287d03d8ce6c8"
+        },
+        {
+          "path": "scripts/pan396-owned-floci-runtime-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "5d53cca41ba1012082c468e1574aafffa20906c71ce59fc7906588841c20cff0"
+        },
+        {
+          "path": "scripts/pan396-owned-cleanup-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "b66b496c7add5a584875c02b7bde587509795c406d0924111a6bc18975595084"
+        },
+        {
+          "path": ".github/workflows/pan396-native-proof.yml",
+          "role": "SOURCE",
+          "sha256": "bb489808febfd6773d4307ea970647ff65ba139fdf591236f647ccf02f64f549"
+        },
+        {
+          "path": "tests/pan396/invoice-broker.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a80f8422c77ae8c24b40a34fc4a9f65678a33c6a104c8873087e6cd21e0d339f"
+        },
+        {
+          "path": "tests/pan396/disabled-ui.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a96b9dc3212d56c7ae5f61e2aac6fff6e183af5b9549bb1705509bbbe70792cd"
+        },
+        {
+          "path": "tests/pan396/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "19fefc6527cae9a7e43f05dfc13e0951a9b3a07d0bfc69f2376b11ad768f760b"
+        },
+        {
+          "path": "tests/fixtures/pan396/floci-pin-v1.json",
+          "role": "FIXTURE",
+          "sha256": "c0e71d8b017b426557204d5da8b6f421c651ab5a3059d010450eb730714d4923"
+        },
+        {
+          "path": "verification/pan396-original-s3-sqs-evidence-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "cb8fda6a864c0a77c8e79b819b317801c66901d4b5ec7ff4cb4c9e8cf3877a68"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan396:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Only admitted first synthetic S3/SQS proof with exact source/platform artifact verified before startup; no extra service or general-provider activation.",
+        "Actual object/event/typed broker/intake/core/file readback and denials are bound; original PAN360 core/rules and productive provider authority remain unchanged.",
+        "Exact owned namespace and Docker resource cleanup; parent daemon trusted, no guest socket/customer/cloud credentials/host OS sandbox claim.",
+        "Named atomic in-memory fake, actual partial-effect differential and measured runtime/maintenance surfaces are distinct; timeout bound does not itself prove acceptable CI cost.",
+        "Source-evidence distribution, original8 independent acceptance, exact-head native CI, merge/new release/public consumer precede closure; no expansion follows automatically."
       ]
     }
   ]

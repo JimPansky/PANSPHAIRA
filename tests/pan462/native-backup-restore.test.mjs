@@ -45,6 +45,7 @@ const TARGET_ADMIN = "pan462";
 const TARGET_ADMIN_PW = "pan462-local-test-only";
 const TARGET_RO = "pan462_ro";
 const TARGET_RO_PW = "pan462-ro-local-test-only";
+const TARGET_DATA_LEAF = "target-pg-" + "x".repeat(112);
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function connectWithRetry(client, attempts = 60) {
@@ -59,7 +60,9 @@ async function connectWithRetry(client, attempts = 60) {
 async function startTargetPostgres({ dataDir, port, database, user, password }) {
   rmSync(dataDir, { recursive: true, force: true });
   const instance = new EmbeddedPostgres({
-    databaseDir: dataDir, user, password, port, persistent: true, postgresFlags: ["-k", dataDir],
+    // This distinct synthetic restore target uses only loopback TCP. An
+    // unused checkout/temp-derived Unix socket must not block real restore.
+    databaseDir: dataDir, user, password, port, persistent: true, postgresFlags: ["-c", "unix_socket_directories="],
   });
   await instance.initialise();
   await instance.start();
@@ -124,7 +127,7 @@ before(async () => {
 
   // Real DISTINCT target storage at a matching executable version.
   state.target = await startTargetPostgres({
-    dataDir: path.join(state.root, "target-pg"),
+    dataDir: path.join(state.root, TARGET_DATA_LEAF),
     port: TARGET_PORT, database: TARGET_DB, user: TARGET_ADMIN, password: TARGET_ADMIN_PW,
   });
 
@@ -181,6 +184,16 @@ after(async () => {
 });
 
 // ---------------------------------------------------------------------------
+test("PAN462 TCP-only isolated restore target admits readback with a long owned pathname", async () => {
+  const dataDir = path.join(state.root, TARGET_DATA_LEAF);
+  const socketPath = path.join(dataDir, `.s.PGSQL.${TARGET_PORT}`);
+  assert.ok(Buffer.byteLength(socketPath) > 107);
+  const actual = await state.target.client.query("SHOW unix_socket_directories");
+  assert.equal(actual.rows[0].unix_socket_directories, "");
+  assert.equal(existsSync(socketPath), false);
+  assert.equal(state.restore.outcome, "RESTORED");
+});
+
 test("PAN462-AC01 positive: owned database, files, configuration and key references are captured at a consistent boundary", () => {
   const backup = state.backup;
   assert.equal(backup.boundary, BACKUP_BOUNDARY_V1);
