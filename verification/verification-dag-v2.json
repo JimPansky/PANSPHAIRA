@@ -5632,7 +5632,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "319c307404a5fbb0ea215147ad6c8e23b2efd3523fc07ce9e9011aecc46d4d7d"
+          "sha256": "2fda7b804caf68564b59bfff4612739fdf73d1d0183c1ad00be78e6e62ae874d"
         },
         {
           "path": "package-lock.json",
@@ -8452,7 +8452,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "0114f31d19a90a45a5629a7583a6f5e970a78b350ec93be2e86db3f1ab99d76c"
+          "sha256": "ac5cc1c2ee844d70ad8a29d84f42b0750289eac34a02777a41c79ec26a8e2959"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",

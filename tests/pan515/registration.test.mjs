@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdtempSync,rmSync,readdirSync} from 'node:fs';
+import {join} from 'node:path';
+import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 import {buildVerificationImpactPlanV2} from '../../dist/packages/contracts/src/index.js';
 const load=p=>JSON.parse(readFileSync(p,'utf8'));
@@ -26,7 +28,7 @@ test('one bounded PAN515 owner binds every additive source/test byte and unchang
   const impact=buildVerificationImpactPlanV2({graph,graphPath:'verification/verification-dag-v2.json',baseSha:'1'.repeat(40),headSha:'2'.repeat(40),changedPaths:[row.path],observedInputDigests});
   assert.deepEqual(impact.selectedNodes,[node.id]);assert.deepEqual(impact.selectedTests,['npm run pan515:test']);assert.deepEqual(impact.hardGates,[...graph.hardGates].sort((a,b)=>a.localeCompare(b,'en')));
  }
- const pkg=load('package.json');assert.equal(pkg.scripts['pan515:test'],'node --test tests/pan515/*.test.mjs');assert.equal(pkg.scripts.posttest.split('npm run pan515:test').length,2);
+ const pkg=load('package.json');assert.equal(pkg.scripts['pan515:test'],'TMPDIR="${TMPDIR:-${RUNNER_TEMP:?PAN515_OWNED_SCRATCH_REQUIRED}}" node --test tests/pan515/*.test.mjs');assert.equal(pkg.scripts.posttest.split('npm run pan515:test').length,2);
  assert(pkg.scripts.posttest.endsWith('&& npm run pan360:test && npm run pan378:test && npm run erv-workflow:test'));
 });
 test('curated actual native COMMON facts retain six historical regression separately and cannot self-certify delivery or external freshness',()=>{
@@ -42,4 +44,17 @@ test('curated actual native COMMON facts retain six historical regression separa
  assert.deepEqual(r.actualNativeEvents.map(e=>e.effectId),['GR-01','GR-02','RS-01','SH-01','SH-02','RET-01']);assert.deepEqual(r.actualNativeEvents.filter(e=>e.reservationChange).map(e=>e.reservationChange.id),['RC-01','RC-02']);
  for(const [path,hash] of Object.entries(r.sourceBytePins))assert.equal(sha(path),hash,path+' actual execution source pin');
  assert.equal(r.actualCommandReadbacks.length,4);for(const cmd of r.actualCommandReadbacks)assert.equal(cmd.exitCode,0);
+});
+test('PAN515 canonical test entry binds owned CI RUNNER_TEMP without TMPDIR and preserves explicit scratch preference and fail-closed absence',()=>{
+ const owned=process.env.TMPDIR||process.env.RUNNER_TEMP;assert.ok(owned,'regression harness itself needs an owned scratch root');
+ const root=mkdtempSync(join(owned,'pan515-ci-entry-'));
+ const leaf='node --test tests/pan515/*.test.mjs';const command=load('package.json').scripts['pan515:test'];assert.equal(command.split(leaf).length,2);
+ const program="import assert from 'node:assert/strict';import {dirname} from 'node:path';import {nativeTradeFixture} from './tests/fixtures/pan515/native-trade-fixture.mjs';const f=await nativeTradeFixture({common:true});try{assert.equal(dirname(f.parent),process.env.TMPDIR);console.log('PAN515_NATIVE_OWNED_SCOPE_EXECUTED');}finally{f.close();}";
+ const launch=command.replace(leaf,'node --input-type=module -e '+JSON.stringify(program));
+ const run=env=>spawnSync('bash',['-c',launch],{encoding:'utf8',timeout:20000,env:{PATH:process.env.PATH,...env}});
+ try{
+  const runnerOnly=run({RUNNER_TEMP:root});assert.equal(runnerOnly.status,0,runnerOnly.stderr);assert.match(runnerOnly.stdout,/PAN515_NATIVE_OWNED_SCOPE_EXECUTED/);assert.deepEqual(readdirSync(root),[]);
+  const explicit=run({TMPDIR:root,RUNNER_TEMP:join(root,'not-admitted-and-not-created')});assert.equal(explicit.status,0,explicit.stderr);assert.match(explicit.stdout,/PAN515_NATIVE_OWNED_SCOPE_EXECUTED/);assert.deepEqual(readdirSync(root),[]);
+  const missing=run({});assert.notEqual(missing.status,0);assert.match(missing.stderr,/PAN515_OWNED_SCRATCH_REQUIRED/);assert.doesNotMatch(missing.stdout,/PAN515_NATIVE_OWNED_SCOPE_EXECUTED/);assert.deepEqual(readdirSync(root),[]);
+ }finally{rmSync(root,{recursive:true,force:true});}
 });

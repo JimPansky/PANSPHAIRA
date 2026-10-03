@@ -90,7 +90,7 @@
     "pan467:entry": "node scripts/run-pan467-business-correction.mjs",
     "pan454:test": "TMPDIR=\"${TMPDIR:-${RUNNER_TEMP:?PAN454_OWNED_SCRATCH_REQUIRED}}\" node --test tests/pan454/journey-mediation-evidence.test.mjs",
     "pan360:test": "TMPDIR=\"${TMPDIR:-${RUNNER_TEMP:?PAN360_OWNED_SCRATCH_REQUIRED}}\" node --test tests/pan360/*.test.mjs && node scripts/run-pan360-original-erv.mjs --check",
-    "pan515:test": "node --test tests/pan515/*.test.mjs",
+    "pan515:test": "TMPDIR=\"${TMPDIR:-${RUNNER_TEMP:?PAN515_OWNED_SCRATCH_REQUIRED}}\" node --test tests/pan515/*.test.mjs",
     "pan515:entry": "node scripts/run-pan515-trade-state.mjs",
     "pan396:test": "node --test tests/pan396/*.test.mjs",
     "pan396:native": "node scripts/pan396-original-s3-sqs-proof-v1.mjs",
