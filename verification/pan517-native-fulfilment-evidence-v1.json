@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "pansphaira.pan517/native-proof/v1",
+  "caseId": "COMMON-TRADE-01",
+  "scope": "LOCAL_SYNTHETIC_DISPOSABLE",
+  "leadingStore": "PAN472_TARGET_SQLITE",
+  "interfaceOwner": "src/pan515/trade-state.mjs",
+  "sourceBytePins": {
+    "src/pan515/trade-state.mjs": "fb8f81e017089941b98fa92e3cf1efa644c62d2509b95e26ef673c3ccec5cdf0",
+    "src/pan517/delivery-milestones.mjs": "3f37aaab3489c62151746ae72cb5018e91e09f89f6324f76b66fc1ed90611f96",
+    "src/pan517/fulfilment-state.mjs": "45720400d7a959b57dec496263046d9a69a1da62eaaedbe83e653d04701a4648",
+    "tests/pan517/calendar-integrity.test.mjs": "e46c7bd6de659d579c25b6f92e1e2c51027d24b4ddcc1f7bc42d87e353a76d52",
+    "tests/pan517/native-fulfilment.test.mjs": "e02dcb3e8c89737e48c96193d2ecfb28237c3442f5ef4f4dee8d61587b2b167a"
+  },
+  "sourceBytesStableAcrossExecution": true,
+  "observedAt": "2026-10-03T20:45:51.735731+00:00",
+  "actualExecution": {
+    "command": [
+      "node",
+      "--test",
+      "tests/pan517/native-fulfilment.test.mjs",
+      "tests/pan517/calendar-integrity.test.mjs"
+    ],
+    "exitCode": 0,
+    "counts": {
+      "tests": 15,
+      "passes": 15,
+      "fails": 0,
+      "skips": 0
+    },
+    "testNames": [
+      "P03 AC4 Main impossible calendar date and overflow clocks/offsets are denied before any native event mutation",
+      "P03 AC4 valid UTC and numeric-offset instants including real leap day remain admitted and preserve literal event/promise time",
+      "P03 AC1 native pick and pack do not consume stock; actual partial issue binds reservation remainder and delivery note",
+      "P03 AC2 actual return receipt without credit remains quarantined until a documented inspection release; transport replay never duplicates it",
+      "P03 AC3 complaint decision and technical credit without goods return do not invent stock; later goods return does not invent another credit",
+      "P03 AC4 original published dispatch promise is source-bound and immutable across a forward customer-receipt promise revision",
+      "P03 AC5 dispatch alone never proves customer-receipt punctuality; actual late customer receipt uses its own explicit promise kind and revision",
+      "P03 closed workflow cannot bypass pick/pack/issue with a legacy SHIP after fulfilment began",
+      "P03 original negative: duplicate physical dispatch with a new effect and transport identity",
+      "P03 original negative: return above actually delivered quantity",
+      "P03 original negative: missing reservation",
+      "P03 original negative: quarantined returned stock cannot be reserved as available",
+      "P03 original negative: complaint decision cannot stand in for physical return receipt",
+      "P03 original negative: punctual dispatch without customer receipt is not punctual delivery",
+      "P03 rollback disables only new fulfilment transitions and retains immutable performed movements for business correction"
+    ],
+    "stdoutSha256": "f590fdd97551866d7ca7f7292fbaba7f6114a917111a16139e99b0f516770d6b",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "originalCriteria": [
+    "AC1: Teilversand reduziert nur tatsächlich ausgegebene reservierte Menge; Restmenge und Lieferschein passen zusammen.",
+    "AC2: Rückeingang wird einmalig erfasst und gelangt erst nach dokumentierter Entscheidung in frei nutzbaren Bestand.",
+    "AC3: Retoure ohne Gutschrift und Gutschrift ohne Warenrückgang sind darstellbar, ohne künstliche Gegenbewegung.",
+    "AC4: Verbundener Fall bewahrt ursprüngliche Lieferzusage sowie tatsächliche Ereigniszeit für spätere Analyse.",
+    "AC5: Versand und bestätigter Kundenempfang sind unterschiedliche Meilensteine. Zusageart/-revision und tatsächlicher Ereignistyp werden explizit geliefert; Versand allein belegt keine Kundenempfangs-Termintreue."
+  ],
+  "originalNegativeCriteria": [
+    "doppelter Versand",
+    "Rückgabe über gelieferte Menge",
+    "fehlende Reservierung",
+    "Quarantäne als frei verfügbar",
+    "Reklamationsentscheid als physischer Rückeingang",
+    "rechtzeitiger Versand wird ohne Kundenempfang als rechtzeitige Zustellung ausgewiesen"
+  ],
+  "additionalCliGate": false,
+  "separateDatabaseIntroduced": false,
+  "productiveMovementAuthorized": false,
+  "externalCustomerIdentityProven": false,
+  "productivePostingAuthorized": false,
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+}

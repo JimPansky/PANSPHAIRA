@@ -1618,6 +1618,36 @@ pan516Node.inputs = pan516Inputs.map(([inputPath,role]) => ({path:inputPath,role
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan516:test")) repositoryIntegrityNode.ownedTests.push("npm run pan516:test");
 dag.graphVersion = 79;
 
+// PAN517 bounded native fulfilment; keep the existing transaction and entry owner.
+const pan517Inputs = [
+  ["src/pan517/fulfilment-state.mjs", "SOURCE"],
+  ["src/pan517/delivery-milestones.mjs", "SOURCE"],
+  ["tests/pan517/native-fulfilment.test.mjs", "VALIDATOR"],
+  ["tests/pan517/calendar-integrity.test.mjs", "VALIDATOR"],
+  ["tests/pan517/registration.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan517-native-fulfilment-v1.md", "DERIVED_EVIDENCE"],
+  ["verification/pan517-native-fulfilment-evidence-v1.json", "DERIVED_EVIDENCE"],
+];
+let pan517Node = dag.nodes.find(({id}) => id === "pan517-native-fulfilment-v1");
+if (pan517Node === undefined) {
+  pan517Node = {
+    id: "pan517-native-fulfilment-v1", dependsOn: ["pan515-native-trade-state-v1"], inputs: [],
+    ownedTests: ["npm run pan517:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Existing PAN472 SQLite/PAN473 native trade transaction and exported entry only; no new database, CLI gate, external identity or productive authority.",
+      "Pick and pack never consume physical stock; actual partial issue consumes only its packed reserved quantity with disjoint native lot allocation, immutable delivery note and remainder.",
+      "One actual return receipt is bounded by its shipment, remains quarantined until a source-bound inspection decision, and is independent from complaint decision or technical credit.",
+      "Published original dispatch promise and revisions retain exact common source and real event calendar instants; impossible dates and clock/offset overflow deny before native mutation.",
+      "Dispatch and actual customer receipt carry explicit separate event types and promise kind/revision; dispatch alone never proves delivery punctuality and readback cannot mutate events.",
+      "Feature-specific stop denies new fulfilment transitions but preserves immutable performed movements and existing reason-bearing business correction; frozen independent acceptance, exact canonical/hosted CI, merge, new release and anonymous readback remain separate gates."
+    ]
+  };
+  dag.nodes.push(pan517Node);
+}
+pan517Node.inputs = pan517Inputs.map(([inputPath,role]) => ({path:inputPath,role,sha256:digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan517:test")) repositoryIntegrityNode.ownedTests.push("npm run pan517:test");
+dag.graphVersion = 80;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1663,6 +1693,7 @@ for (const [inputPath] of ervWorkflowInputs) entries.set(inputPath, null);
 for (const [inputPath] of pan396Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan515Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan516Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan517Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
