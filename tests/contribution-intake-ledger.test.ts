@@ -766,8 +766,8 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     graphVersion: number;
     nodes: Array<{ id: string; inputs: Array<{ path: string; role: string; sha256: string }>; ownedTests: string[] }>;
   };
-  // v78 adds the bounded PAN515 native trade owner; all prior released owner bindings remain intact.
-  assert.equal(dag.graphVersion, 78);
+  // v79 adds the bounded PAN516 native procurement owner; all prior released owner bindings remain intact.
+  assert.equal(dag.graphVersion, 79);
   const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
   assert.equal(life06.length, 1);
   const life06Inputs: ReadonlyArray<readonly [string, string]> = [
@@ -802,7 +802,8 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     assert.deepEqual(matches[0], { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
   }
   assert.equal(integrity[0]!.ownedTests.filter((command) => command === "npm run docs:test").length, 1);
-  assert.equal(dag.nodes.length, 84);
+  assert.equal(dag.nodes.length, 85);
+  assert.equal(dag.nodes.filter(({ id }) => id === "pan516-native-procurement-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan515-native-trade-state-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan396-original-s3-sqs-lab-v1").length, 1);
   const semantic = dag.nodes.filter(({ id }) => id === "pan487-product-purpose-semantic-successor-v1");

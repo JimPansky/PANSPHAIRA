@@ -1,0 +1,444 @@
+{
+  "schemaVersion": "pansphaira.pan516/native-proof/v1",
+  "observedAt": "2026-10-03T17:05:09.800Z",
+  "scope": "LOCAL_SYNTHETIC_DISPOSABLE",
+  "caseId": "COMMON-TRADE-01",
+  "leadingStore": "PAN472_TARGET_SQLITE",
+  "sourceBytePins": {
+    "contracts/trade/common-trade-01-v1.json": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+    "contracts/trade/pan516-invoice-cases-v1.json": "f0a37f30d200b8bf9ce914fbe2ab26b0bd9170eb31311b413a7b54e82715103c",
+    "src/procurement-434/bestellung-lifecycle.mjs": "443f45c43c1dbddcea183920e6ba5395736ccdc807bf23c5426f699f5885f6dc",
+    "src/procurement-434/bestellung-liability.mjs": "733ce7ddaceb8318b0fe7b0ece8965ca61a5aeb1e4ddee857dd3b59c53be1c02",
+    "src/procurement-434/bestellung-cli.mjs": "f4a39582822b2531d37d00a1450a51d310d59747dbb881481d60a3abce14d6d5",
+    "src/procurement-434/rechnungsabgleich-path.mjs": "3c16a8087edec0848adea783492c16253c0718c239d793bf15ca9b8e3e23f0d3",
+    "src/procurement-434/rechnungsabgleich-path-cli.mjs": "c6fecbcc5220d2543568cfa2d1e8524078c4c6967aeffb48a695ac195048f67e",
+    "packages/contracts/src/beschaffung-wareneingang-v1.ts": "ce5c64ce53bd8fa55658c7116cb99f6c136873b9bcfd9c133a5b16a0a71ac21c",
+    "packages/contracts/src/incoming-invoice-erv.ts": "6ba5250783df35f60602a11437c843272ab014bf24e69135cfbf52dfb41750cf",
+    "packages/contracts/src/rechnungsabgleich-match-v1.ts": "592028b694e5d5c779cddbb660090c3c110a63c41b797382e288cd9328430745",
+    "tests/fixtures/incoming-invoice/ap-04-erv-cases-v1.json": "136bbdfcb61bf48ab0043d828dbf797e9b9156f58d284cc7f9b921da59040845"
+  },
+  "sourceBytesStableAcrossExecution": true,
+  "actualCommandReadbacks": [
+    {
+      "label": "prepare",
+      "command": [
+        "node",
+        "scripts/run-pan515-trade-state.mjs",
+        "initialize",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--owner",
+        "LOCAL_SYNTHETIC_OWNER",
+        "--case",
+        "COMMON-TRADE-01"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "f35f9957e42f662c45e702827b7a6faa35d375bec54b702e6580cd48b512edf8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "INITIALIZED"
+    },
+    {
+      "label": "initialize",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "init",
+        "--root",
+        "<OWNED_NATIVE_ROOT>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "44477be399a430aee597f8a5db81705d067a6661d7a2415aa11018f77f9df8e1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "PROCUREMENT_INITIALIZED"
+    },
+    {
+      "label": "approve",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "apply",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--command",
+        "<OWNED_COMMAND_FILE>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "af7a535b6a4cd814cc11c539179b87180fde03af3666403f28c7184bf7945b70",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "COMMITTED"
+    },
+    {
+      "label": "transmit",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "apply",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--command",
+        "<OWNED_COMMAND_FILE>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "26c408bd9d13186c5ef1c106959e37600730edd653e2815b73ff8342458a75bf",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "COMMITTED"
+    },
+    {
+      "label": "target-first-retry",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "apply",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--command",
+        "<OWNED_COMMAND_FILE>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "fd6d1b0393274934bb59dac4d74ca3f0060666e831bf24b78d9a2131a6414a3e",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "RECONCILED_NO_DUPLICATE"
+    },
+    {
+      "label": "confirm",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "apply",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--command",
+        "<OWNED_COMMAND_FILE>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "81a54c8b0fd89b2c6568f66c60d0a1ddc51a128420af925dd6958299a2d30b63",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "COMMITTED"
+    },
+    {
+      "label": "receipt-0",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "apply",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--command",
+        "<OWNED_COMMAND_FILE>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "41552004cb4b1b3b58454a61c34b6838c7f2ae3352aed97e92ac01c351922815",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "COMMITTED"
+    },
+    {
+      "label": "receipt-1",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "apply",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--command",
+        "<OWNED_COMMAND_FILE>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "95f03f0eb8d9503ac388dadba4eca14931314b070e5f533cdb87c98ee19ab4c1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "COMMITTED"
+    },
+    {
+      "label": "read",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "read",
+        "--root",
+        "<OWNED_NATIVE_ROOT>"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "3600fc8c1ad56b82e58a1dbbc31b1bbe58532afc44ce9d77adc538482df6ca04",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "NATIVE_READ"
+    },
+    {
+      "label": "original-conflict",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "liability",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--invoice",
+        "AP-01",
+        "--confirmation-revision",
+        "1"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "6899d77376bff5a05cd11346b664ea388a34a411831ffcc19b3d338edc5994d1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "LIABILITY_BASIS"
+    },
+    {
+      "label": "partial-one-grain",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "liability",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--invoice",
+        "AP-PAN516-PARTIAL-01",
+        "--confirmation-revision",
+        "1"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "591017f11fec2a6198342e427f2eced262ea9713185e95b97ac2034a9976e1f8",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "LIABILITY_BASIS"
+    },
+    {
+      "label": "full-local-match",
+      "command": [
+        "node",
+        "src/procurement-434/rechnungsabgleich-path-cli.mjs",
+        "native",
+        "liability",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--invoice",
+        "AP-PAN516-MATCHED-01",
+        "--confirmation-revision",
+        "1"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "54b3babf1fe8cef70973c8e98b958c2896146ae72f8053c1326bb6aa36877950",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "outcome": "LIABILITY_BASIS"
+    }
+  ],
+  "acceptedQuantity": 10,
+  "remainingQuantity": 0,
+  "remainingQuantityHistory": [
+    {
+      "remainingQuantity": 10,
+      "revision": 0,
+      "sourceReference": null
+    },
+    {
+      "receiptId": "wareneingang:proof-gr-0",
+      "remainingQuantity": 2,
+      "revision": 4,
+      "sourceReference": "synthetic:source-receipt-0"
+    },
+    {
+      "revision": 5,
+      "sourceReference": "synthetic:source-receipt-1",
+      "receiptId": "wareneingang:proof-gr-1",
+      "remainingQuantity": 0
+    }
+  ],
+  "approvalTerms": {
+    "currency": "EUR",
+    "promisedAt": "2026-06-25T23:59:59+02:00",
+    "unit": "STK",
+    "unitPriceMinor": 6000
+  },
+  "confirmedRevisions": [
+    {
+      "revision": 1,
+      "previousConfirmationDigest": null,
+      "terms": {
+        "currency": "EUR",
+        "promisedAt": "2026-06-25T23:59:59+02:00",
+        "unit": "STK",
+        "unitPriceMinor": 6000
+      },
+      "sourceReference": "synthetic:source-confirm",
+      "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5"
+    }
+  ],
+  "transmissionState": "LOCAL_TARGET_PERSISTED_EXTERNAL_UNPROVEN",
+  "transmissionCount": 1,
+  "actualRetryObservation": {
+    "outcome": "EXACT_TARGET_ALREADY_APPLIED",
+    "key": "f09535617c8b3e8d1dbc16ebfe8b0f6b3bb1992729b7390e5384fb0876d8c7f2",
+    "recordDigest": "3ce7b803ce52cab6b17109fbd6c7b9c89fca5650da92fab2e6ce89eb80b8840a",
+    "firstEffectId": "synthetic:proof-transmit",
+    "readBeforeAnyNewOrderEffect": true,
+    "newOrderEffect": false
+  },
+  "liabilities": [
+    {
+      "invoiceId": "AP-01",
+      "status": "UNRESOLVED_AMOUNT_DEVIATION",
+      "orderedQuantity": 10,
+      "acceptedQuantity": 10,
+      "invoicedQuantity": 10,
+      "remainingInvoiceQuantity": 0,
+      "expectedAmountMinor": 60000,
+      "invoiceAmountMinor": 62000,
+      "varianceMinor": 2000,
+      "invoiceGrainCount": 1,
+      "receiptEventCount": 2,
+      "ervOutcome": "CONFLICT",
+      "matchingMode": "THREE_WAY_INVOICE_PO_RECEIPT_V1",
+      "tolerancePolicy": "STRICT_ZERO_V1",
+      "source": {
+        "invoiceId": "AP-01",
+        "invoiceAmountMinor": 62000,
+        "commonSourceFileSha256": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+        "invoiceSource": {
+          "path": "contracts/trade/common-trade-01-v1.json",
+          "sha256": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+          "locator": "contracts/trade/common-trade-01-v1.json#purchase_invoice"
+        },
+        "mapping": {
+          "caseId": "COMMON-TRADE-01",
+          "canonicalOrderId": "PO-01",
+          "canonicalLineId": "1",
+          "nativeOrderId": "bestellung:pan516-common",
+          "nativePositionId": "position:common-01",
+          "nativeSupplierId": "lieferant:synthetic-01",
+          "sourceSupplierId": "SYN-SUP-001",
+          "nativeArticleId": "EINK-ART-A01",
+          "sourceAuthority": "CODE_OWNED_LOCAL_SYNTHETIC_PARTY_MAPPING_NOT_EXTERNAL_ATTESTATION"
+        },
+        "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5",
+        "confirmationRevision": 1,
+        "receiptEventDigests": [
+          "9d9cfa709698ae3d82256052e9ac003dd84b0729576f0a13e5692e2e7d1f7197",
+          "7982dc2a2b17cfa79f38a240d9e06513f023fcfcdb79d0cf571c995213d6954c"
+        ],
+        "frozenErvRegistryCanonicalSha256": "899d8dfc44be526011c35ad5aba4c2cb89bca433f1520e61fe05268d4816ad20",
+        "leadingBindingDigest": "e8fb0e9cf474833d594d4fdac50ab1431973289a14188925e37ad2dec9781947"
+      },
+      "paymentOrder": null,
+      "authority": {
+        "paymentOrderAuthorized": false,
+        "productiveDispatchAuthorized": false,
+        "bookingAuthorityGranted": false
+      }
+    },
+    {
+      "invoiceId": "AP-PAN516-PARTIAL-01",
+      "status": "UNRESOLVED_PARTIAL_INVOICE",
+      "orderedQuantity": 10,
+      "acceptedQuantity": 10,
+      "invoicedQuantity": 5,
+      "remainingInvoiceQuantity": 5,
+      "expectedAmountMinor": 30000,
+      "invoiceAmountMinor": 30000,
+      "varianceMinor": 0,
+      "invoiceGrainCount": 1,
+      "receiptEventCount": 2,
+      "ervOutcome": "MATCHED",
+      "matchingMode": "THREE_WAY_INVOICE_PO_RECEIPT_V1",
+      "tolerancePolicy": "STRICT_ZERO_V1",
+      "source": {
+        "invoiceId": "AP-PAN516-PARTIAL-01",
+        "invoiceAmountMinor": 30000,
+        "commonSourceFileSha256": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+        "invoiceSource": {
+          "path": "contracts/trade/pan516-invoice-cases-v1.json",
+          "sha256": "f0a37f30d200b8bf9ce914fbe2ab26b0bd9170eb31311b413a7b54e82715103c",
+          "locator": "contracts/trade/pan516-invoice-cases-v1.json#AP-PAN516-PARTIAL-01"
+        },
+        "mapping": {
+          "caseId": "COMMON-TRADE-01",
+          "canonicalOrderId": "PO-01",
+          "canonicalLineId": "1",
+          "nativeOrderId": "bestellung:pan516-common",
+          "nativePositionId": "position:common-01",
+          "nativeSupplierId": "lieferant:synthetic-01",
+          "sourceSupplierId": "SYN-SUP-001",
+          "nativeArticleId": "EINK-ART-A01",
+          "sourceAuthority": "CODE_OWNED_LOCAL_SYNTHETIC_PARTY_MAPPING_NOT_EXTERNAL_ATTESTATION"
+        },
+        "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5",
+        "confirmationRevision": 1,
+        "receiptEventDigests": [
+          "9d9cfa709698ae3d82256052e9ac003dd84b0729576f0a13e5692e2e7d1f7197",
+          "7982dc2a2b17cfa79f38a240d9e06513f023fcfcdb79d0cf571c995213d6954c"
+        ],
+        "frozenErvRegistryCanonicalSha256": "899d8dfc44be526011c35ad5aba4c2cb89bca433f1520e61fe05268d4816ad20",
+        "leadingBindingDigest": "e8fb0e9cf474833d594d4fdac50ab1431973289a14188925e37ad2dec9781947"
+      },
+      "paymentOrder": null,
+      "authority": {
+        "paymentOrderAuthorized": false,
+        "productiveDispatchAuthorized": false,
+        "bookingAuthorityGranted": false
+      }
+    },
+    {
+      "invoiceId": "AP-PAN516-MATCHED-01",
+      "status": "RELEASED_LOCAL_SYNTHETIC",
+      "orderedQuantity": 10,
+      "acceptedQuantity": 10,
+      "invoicedQuantity": 10,
+      "remainingInvoiceQuantity": 0,
+      "expectedAmountMinor": 60000,
+      "invoiceAmountMinor": 60000,
+      "varianceMinor": 0,
+      "invoiceGrainCount": 1,
+      "receiptEventCount": 2,
+      "ervOutcome": "MATCHED",
+      "matchingMode": "THREE_WAY_INVOICE_PO_RECEIPT_V1",
+      "tolerancePolicy": "STRICT_ZERO_V1",
+      "source": {
+        "invoiceId": "AP-PAN516-MATCHED-01",
+        "invoiceAmountMinor": 60000,
+        "commonSourceFileSha256": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+        "invoiceSource": {
+          "path": "contracts/trade/pan516-invoice-cases-v1.json",
+          "sha256": "f0a37f30d200b8bf9ce914fbe2ab26b0bd9170eb31311b413a7b54e82715103c",
+          "locator": "contracts/trade/pan516-invoice-cases-v1.json#AP-PAN516-MATCHED-01"
+        },
+        "mapping": {
+          "caseId": "COMMON-TRADE-01",
+          "canonicalOrderId": "PO-01",
+          "canonicalLineId": "1",
+          "nativeOrderId": "bestellung:pan516-common",
+          "nativePositionId": "position:common-01",
+          "nativeSupplierId": "lieferant:synthetic-01",
+          "sourceSupplierId": "SYN-SUP-001",
+          "nativeArticleId": "EINK-ART-A01",
+          "sourceAuthority": "CODE_OWNED_LOCAL_SYNTHETIC_PARTY_MAPPING_NOT_EXTERNAL_ATTESTATION"
+        },
+        "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5",
+        "confirmationRevision": 1,
+        "receiptEventDigests": [
+          "9d9cfa709698ae3d82256052e9ac003dd84b0729576f0a13e5692e2e7d1f7197",
+          "7982dc2a2b17cfa79f38a240d9e06513f023fcfcdb79d0cf571c995213d6954c"
+        ],
+        "frozenErvRegistryCanonicalSha256": "899d8dfc44be526011c35ad5aba4c2cb89bca433f1520e61fe05268d4816ad20",
+        "leadingBindingDigest": "e8fb0e9cf474833d594d4fdac50ab1431973289a14188925e37ad2dec9781947"
+      },
+      "paymentOrder": null,
+      "authority": {
+        "paymentOrderAuthorized": false,
+        "productiveDispatchAuthorized": false,
+        "bookingAuthorityGranted": false
+      }
+    }
+  ],
+  "negativeAndCompatibilityCommand": "npm run pan516:test",
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "productiveDispatchAuthorized": false,
+  "paymentOrderAuthorized": false,
+  "separateDatabaseIntroduced": false,
+  "externalChannelSelected": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+}
