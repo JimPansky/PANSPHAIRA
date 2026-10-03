@@ -49,6 +49,29 @@ const PKG = path.join(ROOT, "packages", "knowledge-solution");
 const NOW_MS = 1758532800000;
 const DATA_DIR = pgDataDirFor(ROOT);
 
+// Fullproof V2 failed before TCP admission because the checkout-derived
+// Unix socket pathname exceeded PostgreSQL's 107-byte limit. Exercise the
+// real shared harness with a deliberately longer path, not a mocked server.
+test("KTS-03 TCP-only harness boots from a long checkout path and leaves zero owned residue", async () => {
+  const longDataDir = path.join(DATA_DIR, "long-checkout-" + "x".repeat(112));
+  assert.ok(Buffer.byteLength(path.join(longDataDir, `.s.PGSQL.${PG_PORT}`)) > 107);
+  const harness = await startRealPostgres(longDataDir);
+  try {
+    const sockets = await harness.admin.query<{ unix_socket_directories: string }>("SHOW unix_socket_directories");
+    assert.equal(sockets.rows[0]?.unix_socket_directories, "");
+    const readback = await readMarginContextFromPostgresV1({
+      conn: { host: "127.0.0.1", port: PG_PORT, database: PG_DATABASE, user: PG_RO_USER, password: PG_RO_PASSWORD },
+      schema: PG_SCHEMA,
+      client: harness.ro,
+    });
+    assert.equal(readback.readback.rowCount, 3);
+    assert.equal(existsSync(path.join(longDataDir, `.s.PGSQL.${PG_PORT}`)), false);
+  } finally {
+    await harness.stop();
+  }
+  assert.equal(existsSync(longDataDir), false);
+});
+
 const loadSpec = (): MethodSpecV1 => {
   const spec = JSON.parse(readFileSync(path.join(PKG, "specs", "margin-threshold.spec.json"), "utf8")) as unknown;
   if (!validateMethodSpecV1(spec)) throw new Error("SPEC_DENIED");

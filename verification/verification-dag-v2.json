@@ -7314,7 +7314,7 @@
         {
           "path": "packages/knowledge-solution/src/pg-harness.ts",
           "role": "SOURCE",
-          "sha256": "5a02fa90540a756e3ac70330cb95b4192b35da3e507a1efb92d05ed631e22da4"
+          "sha256": "4594ee7b01e12828c09fcecab3dde0244102ccaa9d9721a202ffcf6d18ab2334"
         },
         {
           "path": "packages/knowledge-solution/src/postgres-source.ts",

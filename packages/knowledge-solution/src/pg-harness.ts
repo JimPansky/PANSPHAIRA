@@ -205,12 +205,12 @@ export async function startRealPostgres(dataDir: string): Promise<PgHarness> {
     password: PG_ADMIN_PASSWORD,
     port: PG_PORT,
     persistent: true,
-    // Portability: relocate the Unix-domain socket (and the postmaster lock
-    // file it derives) off the host /tmp, which in sandboxed CI is a tiny
-    // tmpfs that ENOSPCs at /tmp/.s.PGSQL.<port>.lock. The data dir is the
-    // socket dir; all test/CLI clients connect over TCP 127.0.0.1, so the
-    // socket itself is unused by the harness.
-    postgresFlags: ["-k", dataDir],
+    // All harness/CLI clients use loopback TCP. Disable the unused Unix
+    // listener instead of relocating it: checkout-derived paths can exceed
+    // the AF_UNIX pathname limit, while host /tmp can exhaust its lock space.
+    // Empty unix_socket_directories creates no socket or socket-lock file;
+    // it does not weaken TCP authentication, SQL grants, or owned teardown.
+    postgresFlags: ["-c", "unix_socket_directories="],
   });
   await instance.initialise();
   await instance.start();
