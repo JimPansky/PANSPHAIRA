@@ -1,0 +1,693 @@
+{
+  "schemaVersion": "pansphaira.pan515/native-proof/v1",
+  "scope": "LOCAL_SYNTHETIC_DISPOSABLE",
+  "caseId": "COMMON-TRADE-01",
+  "nativeIdentityMapping": {
+    "nativeOrderId": "synthetic:order-42",
+    "nativeLineId": "synthetic:line-1",
+    "nativePartnerId": "synthetic:customer-7",
+    "stockArticleId": "SYN-ART-001",
+    "stockWarehouseId": "LAGER-01",
+    "canonicalOrderId": "SO-01",
+    "canonicalLineId": "1",
+    "canonicalItemId": "ARTICLE-A",
+    "canonicalWarehouseId": "WH-01",
+    "sourceId": "SYN-COMMON",
+    "tenantId": "SYN-TENANT-01",
+    "entityId": "SYN-ENTITY-01"
+  },
+  "nativeDateMapping": {
+    "nativeDateSeconds": 1767225600,
+    "canonicalAcceptedAt": "2026-06-20T10:00:00+02:00",
+    "nativeDateIsBusinessAcceptance": false,
+    "businessEventTimeOwner": "PAN515_NATIVE_EVENT_EFFECTIVE_AT"
+  },
+  "orderQuantity": 10,
+  "nativeQuantityRevision": 1,
+  "commonReferenceDigest": "707c00e689b69236f1c3253e25764128a4a7f066544b933d6fda54eed40cfb96",
+  "sourceBytePins": {
+    "src/pan515/trade-state.mjs": "3a11854385bf6a8846f88ec9b16d7f7e4736d5844892e75b162adaa1a023af35",
+    "scripts/run-pan515-trade-state.mjs": "d61fda9dfb68b4dc116d3fe56540f16a4a0e70b340c0d87bf890e07e41e98c19",
+    "contracts/trade/common-trade-01-v1.json": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+    "src/pan472/draft-profile.mjs": "82a4a5473f69f489462f0b9a77233af36e31e2c4ae219578c6e5bb55e25aa2ce",
+    "src/pan472/persistent-draft-transfer.mjs": "6b9970f49c7b3173a6f183d806e1231fa079c405ed4285ba0c47ae1043b67232",
+    "src/pan473/writer-scope-cutover.mjs": "d6290fa2b19c68598bb70f8429a9c41547a04197b04663946843942a61546cd2",
+    "src/pan473/independent-scope-diagnosis.mjs": "9195fca634d92b6f2f5be8315ef3e296e1f3323e51856d75e5723e4a056df84c",
+    "src/pan473/scope-profile.mjs": "2598816b13bd41bb4272cddf05fa2570ba770e5fb4b7f3df5876dffc1d076059",
+    "packages/contracts/src/bestand-nachschub-v1.ts": "ac42f06a963731ed8f5a9da83fe3de319794d1ee8d2dd7a92c3af5bc1ca8b7bf"
+  },
+  "actualCommandReadbacks": [
+    {
+      "label": "initialize",
+      "command": [
+        "node",
+        "scripts/run-pan515-trade-state.mjs",
+        "prepare",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--owner",
+        "LOCAL_SYNTHETIC_OWNER",
+        "--case",
+        "COMMON-TRADE-01"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "e53260ef5b4ec9607d6aa511934ad0fb0cf5555a48059a3f99f38d15edd89355",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "apply",
+      "command": [
+        "node",
+        "scripts/run-pan515-trade-state.mjs",
+        "apply-common",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--owner",
+        "LOCAL_SYNTHETIC_OWNER"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "6f15c1acca1d04be2e9697d8a493a3b96567a4dcc96c158ce69773ae23fd01c1",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "june",
+      "command": [
+        "node",
+        "scripts/run-pan515-trade-state.mjs",
+        "read",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--as-of",
+        "2026-06-30T23:59:59+02:00"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "c8ddf97c368e1de3fb11048dbba6057e926300400d50afb18b4c6369762538ef",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "label": "july",
+      "command": [
+        "node",
+        "scripts/run-pan515-trade-state.mjs",
+        "read",
+        "--root",
+        "<OWNED_NATIVE_ROOT>",
+        "--as-of",
+        "2026-07-31T23:59:59+02:00"
+      ],
+      "exitCode": 0,
+      "stdoutSha256": "6dccc3a5232aaa5cca87961b2d4767d0fee2749a869be7f8216a9a9cc4b1aea6",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "observedAt": "2026-10-03T11:57:52.963616+00:00",
+  "cutoffs": {
+    "2026-06-30T23:59:59+02:00": {
+      "revision": 4,
+      "quantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 2,
+        "reserved": 2,
+        "returned": 0,
+        "shipped": 8
+      },
+      "lots": [
+        {
+          "blocked": 0,
+          "id": "GR-01",
+          "physical": 0,
+          "received": 8,
+          "reserved": 0
+        },
+        {
+          "blocked": 0,
+          "id": "GR-02",
+          "physical": 2,
+          "received": 2,
+          "reserved": 2
+        }
+      ],
+      "stock": {
+        "schemaVersion": "cm.fachprofil/bestand/v1",
+        "positions": [
+          {
+            "artikelId": "SYN-ART-001",
+            "lagerortId": "LAGER-01",
+            "einheit": "STK",
+            "physisch": 2,
+            "reserviert": 2,
+            "herkunft": null
+          }
+        ],
+        "verlauf": [
+          {
+            "aenderungsId": "aenderung:bestand-c27c28dbf46ea23248c3497f5efc3329ce0b841f-0",
+            "afterDigest": "8f2f1cd15e58d0243824211dfe8e52f3df254774286ddff66e1e5f1ccda644b1",
+            "art": "EINKUNFT",
+            "beforeDigest": "462dbf4bcafcf8f40d71e95af15bd9cea9054a0a3e712a20ca6615abee4050c8",
+            "beleg": {
+              "belegArt": "WARENEINGANG",
+              "belegId": "pan515:6ba2d856a86511f3a15b5afdf5abdf604951393b",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-24T08:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-24T08:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-fa9b12419b08a9151214aaafabc8ad183cfed7a8-0",
+            "afterDigest": "bc38f9a2561bae8e2455c2d5950f90114557f4ae9ce2d4a119914cd36326cd2b",
+            "art": "EINKUNFT",
+            "beforeDigest": "f41687c7a6ba081eaaa301deeec63d9565fef7882d5ed098191eca88359f888f",
+            "beleg": {
+              "belegArt": "WARENEINGANG",
+              "belegId": "pan515:1eb28c553a760e75f834a9e11bc9070219255625",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-26T08:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-26T08:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-1bcfb3f460c4ad494903c39b8ba3aa87cbdae073-0",
+            "afterDigest": "6ca47cb44febbe1cf823f3dd643bafa44cbf5e5a930250d3a1fbe8d0d30cb704",
+            "art": "RESERVIERUNG",
+            "beforeDigest": "86ba8907e45b58e99a5cc4b4af8fe3e8620158ae5a3689a1aa5cd123c3145bb8",
+            "beleg": {
+              "belegArt": "KUNDENAUFTRAG",
+              "belegId": "pan515:ac30f1b78c457672a972498120930ffd1d3f5117",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-26T10:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-26T10:00:00Z"
+          },
+          {
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "aenderungsId": "aenderung:bestand-861e9b1cfa59251434ae44d4c2fa5e62de3efcee-0",
+            "art": "RESERVIERUNG_AUFLUESEN",
+            "zeitstempel": "2026-06-29T13:00:00Z",
+            "beleg": {
+              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "belegArt": "KUNDENAUFTRAG",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-29T13:00:00Z"
+            },
+            "beforeDigest": "8993d0154f199f831d6ccefdea2f172f5479300ba261ecb3660508facfadd477",
+            "afterDigest": "963a544640c39232e2e2dfb3359170cfaaca18f1be0b7efd3b834bf850006fe7"
+          },
+          {
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "aenderungsId": "aenderung:bestand-861e9b1cfa59251434ae44d4c2fa5e62de3efcee-1",
+            "art": "VERAUSGABE",
+            "zeitstempel": "2026-06-29T13:00:00Z",
+            "beleg": {
+              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "belegArt": "KUNDENAUFTRAG",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-29T13:00:00Z"
+            },
+            "beforeDigest": "4db507ea31c36ad1b8b8d2361527ebc6d274c46c1fcae9a7065010dd5d9fe0b2",
+            "afterDigest": "bb16571fa5d05fd946507ea06847ee591eca428e24c20815bd63843716765b79"
+          }
+        ],
+        "lageDigest": "76fa2a6ab67da74fbcd4325f3046df0bdd0ac028696e8ffea4aa69f91ef51684"
+      }
+    },
+    "2026-07-31T23:59:59+02:00": {
+      "revision": 6,
+      "quantities": {
+        "available": 0,
+        "blocked": 1,
+        "physical": 1,
+        "reserved": 0,
+        "returned": 1,
+        "shipped": 10
+      },
+      "lots": [
+        {
+          "blocked": 1,
+          "id": "GR-01",
+          "physical": 1,
+          "received": 8,
+          "reserved": 0
+        },
+        {
+          "blocked": 0,
+          "id": "GR-02",
+          "physical": 0,
+          "received": 2,
+          "reserved": 0
+        }
+      ],
+      "stock": {
+        "schemaVersion": "cm.fachprofil/bestand/v1",
+        "positions": [
+          {
+            "artikelId": "SYN-ART-001",
+            "lagerortId": "LAGER-01",
+            "einheit": "STK",
+            "physisch": 1,
+            "reserviert": 1,
+            "herkunft": null
+          }
+        ],
+        "verlauf": [
+          {
+            "aenderungsId": "aenderung:bestand-c27c28dbf46ea23248c3497f5efc3329ce0b841f-0",
+            "afterDigest": "8f2f1cd15e58d0243824211dfe8e52f3df254774286ddff66e1e5f1ccda644b1",
+            "art": "EINKUNFT",
+            "beforeDigest": "462dbf4bcafcf8f40d71e95af15bd9cea9054a0a3e712a20ca6615abee4050c8",
+            "beleg": {
+              "belegArt": "WARENEINGANG",
+              "belegId": "pan515:6ba2d856a86511f3a15b5afdf5abdf604951393b",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-24T08:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-24T08:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-fa9b12419b08a9151214aaafabc8ad183cfed7a8-0",
+            "afterDigest": "bc38f9a2561bae8e2455c2d5950f90114557f4ae9ce2d4a119914cd36326cd2b",
+            "art": "EINKUNFT",
+            "beforeDigest": "f41687c7a6ba081eaaa301deeec63d9565fef7882d5ed098191eca88359f888f",
+            "beleg": {
+              "belegArt": "WARENEINGANG",
+              "belegId": "pan515:1eb28c553a760e75f834a9e11bc9070219255625",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-26T08:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-26T08:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-1bcfb3f460c4ad494903c39b8ba3aa87cbdae073-0",
+            "afterDigest": "6ca47cb44febbe1cf823f3dd643bafa44cbf5e5a930250d3a1fbe8d0d30cb704",
+            "art": "RESERVIERUNG",
+            "beforeDigest": "86ba8907e45b58e99a5cc4b4af8fe3e8620158ae5a3689a1aa5cd123c3145bb8",
+            "beleg": {
+              "belegArt": "KUNDENAUFTRAG",
+              "belegId": "pan515:ac30f1b78c457672a972498120930ffd1d3f5117",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-26T10:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-26T10:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-861e9b1cfa59251434ae44d4c2fa5e62de3efcee-0",
+            "afterDigest": "963a544640c39232e2e2dfb3359170cfaaca18f1be0b7efd3b834bf850006fe7",
+            "art": "RESERVIERUNG_AUFLUESEN",
+            "beforeDigest": "8993d0154f199f831d6ccefdea2f172f5479300ba261ecb3660508facfadd477",
+            "beleg": {
+              "belegArt": "KUNDENAUFTRAG",
+              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-29T13:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-29T13:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-861e9b1cfa59251434ae44d4c2fa5e62de3efcee-1",
+            "afterDigest": "bb16571fa5d05fd946507ea06847ee591eca428e24c20815bd63843716765b79",
+            "art": "VERAUSGABE",
+            "beforeDigest": "4db507ea31c36ad1b8b8d2361527ebc6d274c46c1fcae9a7065010dd5d9fe0b2",
+            "beleg": {
+              "belegArt": "KUNDENAUFTRAG",
+              "belegId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-06-29T13:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-06-29T13:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-aa3463a88f66d779e79d3474138fa1dcb5b37ba9-0",
+            "afterDigest": "8cf152393040b130d0c391f2e64aed6a47dbaf60a010b6da839d04f783b895a5",
+            "art": "RESERVIERUNG_AUFLUESEN",
+            "beforeDigest": "76fa2a6ab67da74fbcd4325f3046df0bdd0ac028696e8ffea4aa69f91ef51684",
+            "beleg": {
+              "belegArt": "KUNDENAUFTRAG",
+              "belegId": "pan515:8ec5e31db1906e30d2a54f31514b6d03971fab6c",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-07-02T13:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-07-02T13:00:00Z"
+          },
+          {
+            "aenderungsId": "aenderung:bestand-aa3463a88f66d779e79d3474138fa1dcb5b37ba9-1",
+            "afterDigest": "c6d6f5f33bc9e14bf9061765e0ef904c3e6ba21250ae528d8a219a1e4d4d45ca",
+            "art": "VERAUSGABE",
+            "beforeDigest": "2605b6a35dab7adba4786cecb1ea4b5a9347dd2b58601ae86ee699928bca35f7",
+            "beleg": {
+              "belegArt": "KUNDENAUFTRAG",
+              "belegId": "pan515:8ec5e31db1906e30d2a54f31514b6d03971fab6c",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-07-02T13:00:00Z"
+            },
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "zeitstempel": "2026-07-02T13:00:00Z"
+          },
+          {
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "aenderungsId": "aenderung:bestand-55ab258341cfd10235824e874a6987716f3f00e7-0",
+            "art": "EINKUNFT",
+            "zeitstempel": "2026-07-05T12:00:00Z",
+            "beleg": {
+              "belegId": "pan515:ff9ac56ed1ec8bea9fc1336d2d9065ece176c46e",
+              "belegArt": "KUNDENAUFTRAG",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-07-05T12:00:00Z"
+            },
+            "beforeDigest": "aa4951ceb9b309402aae11d725aed22ee984b29a1ab2c338691bab8f4ef8f80d",
+            "afterDigest": "6bf2155f00d48114aa116698d851b94f651b15850f7afa4ba8bc4c53f69701a8"
+          },
+          {
+            "schemaVersion": "cm.fachprofil/bestandsverlauf/v1",
+            "aenderungsId": "aenderung:bestand-55ab258341cfd10235824e874a6987716f3f00e7-1",
+            "art": "RESERVIERUNG",
+            "zeitstempel": "2026-07-05T12:00:00Z",
+            "beleg": {
+              "belegId": "pan515:ff9ac56ed1ec8bea9fc1336d2d9065ece176c46e",
+              "belegArt": "KUNDENAUFTRAG",
+              "quelle": "pan515-native",
+              "zeitstempel": "2026-07-05T12:00:00Z"
+            },
+            "beforeDigest": "7e591620e996ba9ae3855a81b44d2f33da40a51311aa4927db816434dc42af79",
+            "afterDigest": "328c1720365afcc71b4386d7196042b2755bb04ba8005a696fba3f20a3e07244"
+          }
+        ],
+        "lageDigest": "75d4abb21a930c62660740a1e4692a0c28225f15d767f15eb517faa30b02af88"
+      }
+    }
+  },
+  "actualNativeEvents": [
+    {
+      "afterQuantities": {
+        "available": 8,
+        "blocked": 0,
+        "physical": 8,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 0
+      },
+      "articleId": "ARTICLE-A",
+      "beforeQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 0,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 0
+      },
+      "beforeRevision": 0,
+      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "commandDigest": "f9228465f62011a20ce8e0fc2d87fff40f5040d1ee3c284306e703b7f4581db6",
+      "correctionOf": null,
+      "creditRef": null,
+      "disposition": null,
+      "effectId": "GR-01",
+      "effectiveAt": "2026-06-24T10:00:00+02:00",
+      "eventDigest": "f8b923e35a97900f878b511b1ef5a11efd67ec2842ad8ac34da68e714e43d4fe",
+      "firstTransportId": "synthetic:common-gr-01",
+      "kind": "RECEIPT",
+      "lineId": "1",
+      "movementDelta": 8,
+      "movementId": "GR-01",
+      "orderId": "SO-01",
+      "previousEventDigest": null,
+      "quantity": 8,
+      "reason": "COMMON-TRADE-01 native RECEIPT",
+      "recordedAtMs": 1791028672718,
+      "referenceId": "PO-01",
+      "reservationChange": null,
+      "revision": 1,
+      "schemaVersion": "pansphaira.pan515/trade-event/v1",
+      "sourceLineId": "1",
+      "stockEvidenceId": "pan515:6ba2d856a86511f3a15b5afdf5abdf604951393b",
+      "unit": "STK",
+      "warehouseId": "WH-01"
+    },
+    {
+      "afterQuantities": {
+        "available": 10,
+        "blocked": 0,
+        "physical": 10,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 0
+      },
+      "articleId": "ARTICLE-A",
+      "beforeQuantities": {
+        "available": 8,
+        "blocked": 0,
+        "physical": 8,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 0
+      },
+      "beforeRevision": 1,
+      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "commandDigest": "a43438f273b63c332e55d97242c614028fcb6919926294a45b38d20ccc49c82b",
+      "correctionOf": null,
+      "creditRef": null,
+      "disposition": null,
+      "effectId": "GR-02",
+      "effectiveAt": "2026-06-26T10:00:00+02:00",
+      "eventDigest": "b635dbd219a2b417ad7e55d1361d049677913de17dc2384352b9445069ce1026",
+      "firstTransportId": "synthetic:common-gr-02",
+      "kind": "RECEIPT",
+      "lineId": "1",
+      "movementDelta": 2,
+      "movementId": "GR-02",
+      "orderId": "SO-01",
+      "previousEventDigest": "f8b923e35a97900f878b511b1ef5a11efd67ec2842ad8ac34da68e714e43d4fe",
+      "quantity": 2,
+      "reason": "COMMON-TRADE-01 native RECEIPT",
+      "recordedAtMs": 1791028672748,
+      "referenceId": "PO-01",
+      "reservationChange": null,
+      "revision": 2,
+      "schemaVersion": "pansphaira.pan515/trade-event/v1",
+      "sourceLineId": "1",
+      "stockEvidenceId": "pan515:1eb28c553a760e75f834a9e11bc9070219255625",
+      "unit": "STK",
+      "warehouseId": "WH-01"
+    },
+    {
+      "afterQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 10,
+        "reserved": 10,
+        "returned": 0,
+        "shipped": 0
+      },
+      "articleId": "ARTICLE-A",
+      "beforeQuantities": {
+        "available": 10,
+        "blocked": 0,
+        "physical": 10,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 0
+      },
+      "beforeRevision": 2,
+      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "commandDigest": "162b9bd82e44fcf70af7d63bb607698c8c8b82eba909db106c35fbfe1a7ffd9d",
+      "correctionOf": null,
+      "creditRef": null,
+      "disposition": null,
+      "effectId": "RS-01",
+      "effectiveAt": "2026-06-26T12:00:00+02:00",
+      "eventDigest": "ecee8f642e94bf92c7e2eb5fc659f5dbce8ec800ac0bfac549eea0d38a9cfece",
+      "firstTransportId": "synthetic:common-rs-01",
+      "kind": "RESERVE",
+      "lineId": "1",
+      "movementDelta": 0,
+      "movementId": "RS-01",
+      "orderId": "SO-01",
+      "previousEventDigest": "b635dbd219a2b417ad7e55d1361d049677913de17dc2384352b9445069ce1026",
+      "quantity": 10,
+      "reason": "reserve accepted own stock",
+      "recordedAtMs": 1791028672781,
+      "referenceId": null,
+      "reservationChange": null,
+      "revision": 3,
+      "schemaVersion": "pansphaira.pan515/trade-event/v1",
+      "sourceLineId": null,
+      "stockEvidenceId": "pan515:ac30f1b78c457672a972498120930ffd1d3f5117",
+      "unit": "STK",
+      "warehouseId": "WH-01"
+    },
+    {
+      "afterQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 2,
+        "reserved": 2,
+        "returned": 0,
+        "shipped": 8
+      },
+      "articleId": "ARTICLE-A",
+      "beforeQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 10,
+        "reserved": 10,
+        "returned": 0,
+        "shipped": 0
+      },
+      "beforeRevision": 3,
+      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "commandDigest": "c73ebae27572f88321d08b89379a688cea8b963993f45f66eff30b8bfde83b91",
+      "correctionOf": null,
+      "creditRef": null,
+      "disposition": null,
+      "effectId": "SH-01",
+      "effectiveAt": "2026-06-29T15:00:00+02:00",
+      "eventDigest": "45b26d90a1a9e506e0dd456883e7883781dd8b10914c9412356ce4824a23dfe6",
+      "firstTransportId": "synthetic:common-sh-01",
+      "kind": "SHIP",
+      "lineId": "1",
+      "movementDelta": -8,
+      "movementId": "SH-01",
+      "orderId": "SO-01",
+      "previousEventDigest": "ecee8f642e94bf92c7e2eb5fc659f5dbce8ec800ac0bfac549eea0d38a9cfece",
+      "quantity": 8,
+      "reason": "COMMON-TRADE-01 native SHIP",
+      "recordedAtMs": 1791028672814,
+      "referenceId": "RS-01",
+      "reservationChange": {
+        "causeShipment": "SH-01",
+        "delta": -8,
+        "id": "RC-01",
+        "lineId": "1",
+        "orderId": "SO-01"
+      },
+      "revision": 4,
+      "schemaVersion": "pansphaira.pan515/trade-event/v1",
+      "sourceLineId": null,
+      "stockEvidenceId": "pan515:08fab40ac573f927a74fc9fe96197033360741ef",
+      "unit": "STK",
+      "warehouseId": "WH-01"
+    },
+    {
+      "afterQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 0,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 10
+      },
+      "articleId": "ARTICLE-A",
+      "beforeQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 2,
+        "reserved": 2,
+        "returned": 0,
+        "shipped": 8
+      },
+      "beforeRevision": 4,
+      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "commandDigest": "b382a57ce82357b20dc2529e83ded51bac268eca3928ccae4ca841214c659f6a",
+      "correctionOf": null,
+      "creditRef": null,
+      "disposition": null,
+      "effectId": "SH-02",
+      "effectiveAt": "2026-07-02T15:00:00+02:00",
+      "eventDigest": "7f78dd299d257d971333973386ef6b5fe21fed2af2ea62f980fdfa9bb522db95",
+      "firstTransportId": "synthetic:common-sh-02",
+      "kind": "SHIP",
+      "lineId": "1",
+      "movementDelta": -2,
+      "movementId": "SH-02",
+      "orderId": "SO-01",
+      "previousEventDigest": "45b26d90a1a9e506e0dd456883e7883781dd8b10914c9412356ce4824a23dfe6",
+      "quantity": 2,
+      "reason": "COMMON-TRADE-01 native SHIP",
+      "recordedAtMs": 1791028672844,
+      "referenceId": "RS-01",
+      "reservationChange": {
+        "causeShipment": "SH-02",
+        "delta": -2,
+        "id": "RC-02",
+        "lineId": "1",
+        "orderId": "SO-01"
+      },
+      "revision": 5,
+      "schemaVersion": "pansphaira.pan515/trade-event/v1",
+      "sourceLineId": null,
+      "stockEvidenceId": "pan515:8ec5e31db1906e30d2a54f31514b6d03971fab6c",
+      "unit": "STK",
+      "warehouseId": "WH-01"
+    },
+    {
+      "afterQuantities": {
+        "available": 0,
+        "blocked": 1,
+        "physical": 1,
+        "reserved": 0,
+        "returned": 1,
+        "shipped": 10
+      },
+      "articleId": "ARTICLE-A",
+      "beforeQuantities": {
+        "available": 0,
+        "blocked": 0,
+        "physical": 0,
+        "reserved": 0,
+        "returned": 0,
+        "shipped": 10
+      },
+      "beforeRevision": 5,
+      "bindingDigest": "c19b05b97552ec3f56ae9309f6dfd036d49567e1f551549bbd5ca057eef03fde",
+      "commandDigest": "331e45e6ad1107e19684e292a8ef17b585f46c65a6e726cbe4fdb5df958846dc",
+      "correctionOf": null,
+      "creditRef": "CN-01",
+      "disposition": "QUARANTINE",
+      "effectId": "RET-01",
+      "effectiveAt": "2026-07-05T14:00:00+02:00",
+      "eventDigest": "d9dcc83419f19391b50dc76a6123a52f999de8bf621ed0c6319a468f6b7f350d",
+      "firstTransportId": "synthetic:common-ret-01",
+      "kind": "RETURN",
+      "lineId": "1",
+      "movementDelta": 1,
+      "movementId": "RET-01",
+      "orderId": "SO-01",
+      "previousEventDigest": "7f78dd299d257d971333973386ef6b5fe21fed2af2ea62f980fdfa9bb522db95",
+      "quantity": 1,
+      "reason": "COMMON-TRADE-01 native RETURN",
+      "recordedAtMs": 1791028672874,
+      "referenceId": "SH-01",
+      "reservationChange": null,
+      "revision": 6,
+      "schemaVersion": "pansphaira.pan515/trade-event/v1",
+      "sourceLineId": null,
+      "stockEvidenceId": "pan515:ff9ac56ed1ec8bea9fc1336d2d9065ece176c46e",
+      "unit": "STK",
+      "warehouseId": "WH-01"
+    }
+  ],
+  "negativeAndCompatibilityTests": "npm run pan515:test",
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "productivePostingAuthorized": false,
+  "separateDatabaseIntroduced": false,
+  "externalFreshnessAuthorityGranted": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE",
+  "notClaims": [
+    "No arbitrary orders/tenants/units/providers",
+    "No human usability or external billing/credit posting",
+    "No new productive or host authority",
+    "No second approved context or holdout",
+    "No readback or release acceptance from this development proof"
+  ],
+  "sourceBytesStableAcrossExecution": true
+}

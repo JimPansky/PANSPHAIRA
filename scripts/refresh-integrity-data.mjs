@@ -1550,6 +1550,42 @@ pan396Node.inputs = pan396Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan396:test")) repositoryIntegrityNode.ownedTests.push("npm run pan396:test");
 dag.graphVersion = 77;
 
+// PAN515 additive native trade scope; existing draft and M3 owners are retained.
+const pan515Inputs = [
+  ["contracts/trade/common-trade-01-v1.json", "CONTRACT"],
+  ["src/pan515/trade-state.mjs", "SOURCE"],
+  ["scripts/run-pan515-trade-state.mjs", "SOURCE"],
+  ["tests/fixtures/pan515/native-trade-fixture.mjs", "FIXTURE"],
+  ["tests/fixtures/pan515/native-trade-client.mjs", "FIXTURE"],
+  ["tests/pan515/native-trade-state.test.mjs", "VALIDATOR"],
+  ["tests/pan515/common-trade-binding.test.mjs", "VALIDATOR"],
+  ["tests/pan515/common-native-events.test.mjs", "VALIDATOR"],
+  ["tests/pan515/native-trade-negative.test.mjs", "VALIDATOR"],
+  ["tests/pan515/native-process-compatibility.test.mjs", "VALIDATOR"],
+  ["tests/pan515/native-cli.test.mjs", "VALIDATOR"],
+  ["tests/pan515/registration.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan515-native-trade-state-v1.md", "DERIVED_EVIDENCE"],
+  ["verification/pan515-native-trade-evidence-v1.json", "DERIVED_EVIDENCE"],
+];
+let pan515Node = dag.nodes.find(({ id }) => id === "pan515-native-trade-state-v1");
+if (pan515Node === undefined) {
+  pan515Node = {
+    id: "pan515-native-trade-state-v1", dependsOn: ["pan473-writer-scope-cutover-v1", "pan435-436-sales-stock-journey-v1"], inputs: [],
+    ownedTests: ["npm run pan515:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "One existing native PAN472 target SQLite/PAN473 owner, exact generation/epoch/quantity revision and explicit native/canonical identity and time mapping; no new database or relabelled six-piece COMMON case.",
+      "Actual immutable receipt/reservation/shipment/quarantined-return and reason-bearing forward correction/count events; disjoint lot allocations and same native event cutoffs, stable reservation-change cause is not another movement.",
+      "Native real-process competing commits serialize or deny, effect identity excludes transport retry, stale/unit/content/authority/history collisions fail closed without lost quantities or later work.",
+      "Existing native writer/diagnosis and M3 availability consumers execute; quarantine availability adapter is not canonical order reservation, absent external freshness remains UNPROVEN.",
+      "Feature-specific stop preserves readable immutable history and existing writers; bounded original acceptance, mandatory CI/merge/new source-evidence release and exact public consumer are separate from development proof or PAN-to-KS pairing.",
+    ],
+  };
+  dag.nodes.push(pan515Node);
+}
+pan515Node.inputs = pan515Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan515:test")) repositoryIntegrityNode.ownedTests.push("npm run pan515:test");
+dag.graphVersion = 78;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1593,6 +1629,7 @@ for (const [inputPath] of pan360Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan378Inputs) entries.set(inputPath, null);
 for (const [inputPath] of ervWorkflowInputs) entries.set(inputPath, null);
 for (const [inputPath] of pan396Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan515Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
