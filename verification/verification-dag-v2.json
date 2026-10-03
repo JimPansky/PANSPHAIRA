@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "481620b9a76a2d3c99a9d404cb29e8d2bba8a775247529752a4cee8f98f4112a"
+          "sha256": "28d47563e1a312b0e0c3925cbfbf7110ea6d6056b2843819e83cfd440ea64b98"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "9b18d379b236e4939ff94cf170a014f5b563b8a8ef8186b84e890a13468be8d8"
+          "sha256": "78dfa508bff65210b30b700083b90812eee5633466cd98f2595a493329a16229"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "9af36836479379bb90c1d2d90d78efe91cc7f8a420ce74522f689becd584212d"
+          "sha256": "fee4eccd26db88641ca2f45dff31947a97646aa4cc12ee14608c9b14605033e4"
         }
       ],
       "ownedTests": [
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1aa22002b18a8c373db16e467ab429377a10e65b83b26e72b99ce23e78cb9157"
+          "sha256": "f564a75166489e49281cefa6d0ad230c004d4cea19280a1d7a6adb5f6a0ce94e"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "a813cde55aaa32dfd2cf5d7dae9606e368e1e0fd380f684f941d3e3a8cceddad"
+          "sha256": "0abd8f3473c6079626c32087d005fcb951111e6b6ee1f910900bb62cba0cf24b"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5991,7 +5991,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "cc88983ae343e945b2ce8f01e9b4b294e585f0443097bfadc407e40c62e1606b"
+          "sha256": "e0397f9ac1a3dfd9ba86e2c0013b9bc8124af42d2b05035ba58eaba8b2d375b7"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",

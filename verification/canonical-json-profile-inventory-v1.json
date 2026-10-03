@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "1aa22002b18a8c373db16e467ab429377a10e65b83b26e72b99ce23e78cb9157"
+        "sha256": "f564a75166489e49281cefa6d0ad230c004d4cea19280a1d7a6adb5f6a0ce94e"
       }
     ]
   },
@@ -475,6 +475,14 @@
       "fromSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
       "toSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
       "reason": "Advance graph to v76 with one bounded user-authorized ERV workflow evidence owner, exact immutable public research packet, source-qualified real unchanged PSAi primitives, persisted outputs/expectedactual/gaps and mandatory replay. Preserve all historical v5 evidence,22 reused kernel/build/profile/document bindings,0 human workflows, denials/UNKNOWN, prior owners/migrations/hard gates, README R1 and runnable payloads; no operational database, identity/routing/new platform or390396 admission."
+    },
+    {
+      "migrationId": "PAN396-ORIGINAL-S3-SQS/INTEGRITY-GENERATOR/V49",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 49,
+      "fromSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
+      "toSha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
+      "reason": "Advance graph to v77 and register one bounded optional native S3/SQS lab using unchanged original PAN360 intake/core, closed typed broker, exact disabled service/UI probes and issue-owned cleanup. Preserve every prior migration, immutable admitted-base obligation, existing owner/hard gate, README, runnable manifest, original trust/privacy and Main-only sealed custody; no generic AWS, productive or completion authority."
     }
   ],
   "scanScope": {
@@ -517,15 +525,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 814,
+    "filesScanned": 825,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 271,
     "importFiles": 270,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2228,
-    "ledgerUniquePaths": 2228
+    "ledgerEntries": 2243,
+    "ledgerUniquePaths": 2243
   },
   "profiles": [
     {
@@ -598,7 +606,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0"
+      "sha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1284,7 +1292,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
+      "sha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
       "basis": "profile-version-migration"
     },
     {
