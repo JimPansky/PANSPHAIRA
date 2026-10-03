@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "28d47563e1a312b0e0c3925cbfbf7110ea6d6056b2843819e83cfd440ea64b98"
+          "sha256": "e03ba1bb5bfa790e3cf131321cab40e0c771ec4e95b4b3b02879f0795e167fd7"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "f564a75166489e49281cefa6d0ad230c004d4cea19280a1d7a6adb5f6a0ce94e"
+          "sha256": "f934220bf9b3b95683c2e39a365bc4bb3f63b3e8198d04be63cc63f0c11ca809"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "0abd8f3473c6079626c32087d005fcb951111e6b6ee1f910900bb62cba0cf24b"
+          "sha256": "1215e206dbd64b2143043f1354c9040a4fd3b68acbac8a5282f5594db1362112"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5992,7 +5992,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e0397f9ac1a3dfd9ba86e2c0013b9bc8124af42d2b05035ba58eaba8b2d375b7"
+          "sha256": "995ccf72c4e5010511bce5347c5ba1115cc508968c97da761843681d6c62ea77"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
