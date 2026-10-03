@@ -1513,6 +1513,43 @@ ervWorkflowNode.inputs = ervWorkflowInputs.map(([inputPath, role]) => ({ path: i
 if (!repositoryIntegrityNode.ownedTests.includes("npm run erv-workflow:test")) repositoryIntegrityNode.ownedTests.push("npm run erv-workflow:test");
 dag.graphVersion = 76;
 
+// PAN396 admitted first proof only; reuse the unchanged PAN360 owner.
+const pan396Inputs = [
+  ["docs/architecture/pan396-original-s3-sqs-lab-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/contracts/src/floci-invoice-lab-v1.ts", "CONTRACT"],
+  ["src/pan396/floci-http-v1.mjs", "SOURCE"],
+  ["src/pan396/invoice-broker-v1.mjs", "SOURCE"],
+  ["src/pan396/simplest-fake-v1.mjs", "SOURCE"],
+  ["src/pan396/disabled-ui-proof-v1.mjs", "SOURCE"],
+  ["scripts/pan396-original-s3-sqs-proof-v1.mjs", "SOURCE"],
+  ["scripts/pan396-owned-floci-runtime-v1.mjs", "SOURCE"],
+  ["scripts/pan396-owned-cleanup-v1.mjs", "SOURCE"],
+  [".github/workflows/pan396-native-proof.yml", "SOURCE"],
+  ["tests/pan396/invoice-broker.test.mjs", "VALIDATOR"],
+  ["tests/pan396/disabled-ui.test.mjs", "VALIDATOR"],
+  ["tests/pan396/registration.test.mjs", "VALIDATOR"],
+  ["tests/fixtures/pan396/floci-pin-v1.json", "FIXTURE"],
+  ["verification/pan396-original-s3-sqs-evidence-v1.json", "DERIVED_EVIDENCE"],
+];
+let pan396Node = dag.nodes.find(({ id }) => id === "pan396-original-s3-sqs-lab-v1");
+if (pan396Node === undefined) {
+  pan396Node = {
+    id: "pan396-original-s3-sqs-lab-v1", dependsOn: ["pan360-original-erv-execution-v1"], inputs: [],
+    ownedTests: ["npm run pan396:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Only admitted first synthetic S3/SQS proof with exact source/platform artifact verified before startup; no extra service or general-provider activation.",
+      "Actual object/event/typed broker/intake/core/file readback and denials are bound; original PAN360 core/rules and productive provider authority remain unchanged.",
+      "Exact owned namespace and Docker resource cleanup; parent daemon trusted, no guest socket/customer/cloud credentials/host OS sandbox claim.",
+      "Named atomic in-memory fake, actual partial-effect differential and measured runtime/maintenance surfaces are distinct; timeout bound does not itself prove acceptable CI cost.",
+      "Source-evidence distribution, original8 independent acceptance, exact-head native CI, merge/new release/public consumer precede closure; no expansion follows automatically.",
+    ],
+  };
+  dag.nodes.push(pan396Node);
+}
+pan396Node.inputs = pan396Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan396:test")) repositoryIntegrityNode.ownedTests.push("npm run pan396:test");
+dag.graphVersion = 77;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1555,6 +1592,7 @@ for (const [inputPath] of pan454Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan360Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan378Inputs) entries.set(inputPath, null);
 for (const [inputPath] of ervWorkflowInputs) entries.set(inputPath, null);
+for (const [inputPath] of pan396Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

@@ -1,0 +1,60 @@
+name: PAN396 socket-free original proof
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pan396-native-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pan396-native:
+    name: Exact-head S3 SQS invoice boundary and named fake comparison
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out exact candidate without retained credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Set up accepted Node runtime
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: 24.19.0
+          architecture: x64
+      - name: Compile exact locked source
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build --silent
+      - name: Acquire exact platform artifact outside internal guest execution
+        run: |
+          mkdir -m 700 "$RUNNER_TEMP/pan396-anonymous-docker"
+          timeout 180s docker --config "$RUNNER_TEMP/pan396-anonymous-docker" pull --platform linux/amd64 floci/floci@sha256:2e2343974a15137a6bda6de5a9e0b16207f97a786cc57ee9c2bf25d14a67b84c
+      - name: Execute original native matrix and owned cleanup within admitted bound
+        env:
+          EXPECTED_PAN_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          timeout --kill-after=30s 180s node scripts/pan396-original-s3-sqs-proof-v1.mjs "$RUNNER_TEMP/pan396-native-owned"
+          git diff --exit-code
+      - name: Remove only exact invocation resources after interruption
+        if: always()
+        run: |
+          if test -f "$RUNNER_TEMP/pan396-native-owned/runtime-owner.json"; then
+            node scripts/pan396-owned-cleanup-v1.mjs "$RUNNER_TEMP/pan396-native-owned/runtime-owner.json"
+          fi
+      - name: Preserve only explicitly sanitized public summary
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: pan396-native-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/pan396-native-owned/public-summary.json
+          if-no-files-found: error
+          retention-days: 14

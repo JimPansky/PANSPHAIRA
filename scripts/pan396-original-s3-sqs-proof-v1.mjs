@@ -1,0 +1,95 @@
+// Reproducible actual PAN396 minimal Floci -> typed adapter -> unchanged authority-free ERV proof.
+// Raw HTTP/receipt evidence is LOCAL synthetic retained state; NEVER publish output directory wholesale.
+import assert from 'node:assert/strict';
+import {mkdir,readFile,writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+import {performance} from 'node:perf_hooks';
+import {execFileSync} from 'node:child_process';
+import {OwnedFlociRuntimeV1} from './pan396-owned-floci-runtime-v1.mjs';
+import {FlociLabHttpV1,sha256,md5,OPERATIONS} from '../src/pan396/floci-http-v1.mjs';
+import {Pan396InvoiceBrokerV1,verifyPan396BoundedEvidenceV1} from '../src/pan396/invoice-broker-v1.mjs';
+import {SimplestAtomicS3SqsFakeV1,pan396HighBindingV1} from '../src/pan396/simplest-fake-v1.mjs';
+import {originalInvoiceRequestV1} from '../src/pan360/original-invoice-input-v1.mjs';
+import {verifyPan396DisabledUiV1} from '../src/pan396/disabled-ui-proof-v1.mjs';
+const out=resolve(process.argv[2]??'');assert(process.argv[2],'Explicit owned fresh output path required');await mkdir(out,{recursive:false});
+const runtime=new OwnedFlociRuntimeV1();const audit=[];let client;let binding;let envelope;let queueUrl;let bucketCreated=false;let failure;
+const actualHead=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+assert(/^[0-9a-f]{40}$/.test(actualHead));if(process.env.EXPECTED_PAN_HEAD)assert.equal(actualHead,process.env.EXPECTED_PAN_HEAD);
+await writeFile(out+'/runtime-owner.json',JSON.stringify({name:runtime.name,label:runtime.label,head:actualHead})+'\n',{flag:'wx'});
+const proof={at:new Date().toISOString(),state:'NOT_PASS_UNTIL_ALL_ACTUAL_STEPS_AND_CLEANUP',nativeProviderSubstituted:false,originalIssueStillOpen:true,finalAcceptance:false,originalCoreAndRulesUnchanged:true,completeHumanBusinessWorkflowsProven:0};
+const snapshot=(broker,result)=>({outcome:result.outcome,reasonCode:result.reasonCode??null,partialEffects:result.partialEffects??{},statistics:broker.statistics});
+const alter=(m,fn)=>{const c=structuredClone(m);const b=JSON.parse(c.body);fn(b);c.body=JSON.stringify(b);c.bodyMd5=md5(c.body);return c;};
+const denialCopies=[['wrong-bucket','WRONG_BUCKET_DENIED',m=>alter(m,b=>b.Records[0].s3.bucket.name+='-wrong')],['wrong-queue','WRONG_QUEUE_DENIED',m=>({...m,queueUrl:m.queueUrl+'-wrong'})],['foreign-scope','FOREIGN_SCOPE_DENIED',m=>({...m,namespace:m.namespace+'-foreign'})],['stale-event-time','STALE_EVENT_DENIED',m=>alter(m,b=>b.Records[0].eventTime='2000-01-01T00:00:00.000Z')],['substituted-payload-metadata','SUBSTITUTED_EVENT_PAYLOAD_DENIED',m=>alter(m,b=>b.Records[0].s3.object.eTag='0'.repeat(32))]];
+async function sourceDenials(lease,message,reader){const rows=[];for(const [id,reason,copy]of denialCopies){const b=new Pan396InvoiceBrokerV1(lease,{readObject:reader});const result=await b.process(copy(message));assert.equal(result.reasonCode,reason);assert.equal(b.statistics.objectReadAttempts,0);assert.equal(b.statistics.coreInvocations,0);rows.push({id,negativeInputKind:'EXPLICIT_CONTROLLED_ALTERATION_OF_PROVIDER_EVENT_COPY_NOT_NATIVE_API_OUTPUT',...snapshot(b,result)});}return rows;}
+async function delayedLiveRead(r,reader){const actual=await reader(r);await new Promise((resolve,reject)=>{const timer=setTimeout(resolve,100);r.signal.addEventListener('abort',()=>{clearTimeout(timer);reject(new Error('OWNED_DELAY_ABORTED'));},{once:true});});return actual;}
+const nativeStarted=performance.now();
+try{
+ await runtime.start();proof.image=runtime.imageIdentity;proof.boundary=runtime.actualBoundary;proof.healthNotAdmissionTruth=runtime.health;
+ client=new FlociLabHttpV1(runtime.endpoint,{namespace:runtime.name,audit});const bucket=runtime.name+'-invoice';const name=runtime.name+'-events';
+ proof.disabledUiDenials=await verifyPan396DisabledUiV1(client);
+ proof.disabledServiceDenials=[];for(const service of ['ec2','dynamodb','lambda','sts']){const r=await client.denyDisabledService(service);assert.equal(r.status,400);assert(r.text.includes('ServiceNotAvailableException'));proof.disabledServiceDenials.push({service,status:r.status,responseSha256:sha256(r.bytes)});}
+ let r=await client.s3('CreateBucket',bucket,'',{method:'PUT'});assert.equal(r.status,200);bucketCreated=true;r=await client.s3('ListBuckets');assert(r.text.includes(bucket));
+ const q=await client.sqs('CreateQueue',{QueueName:name});assert.equal(q.status,200);queueUrl=q.value.QueueUrl;
+ const attrs=await client.sqs('GetQueueAttributes',{QueueUrl:queueUrl,AttributeNames:['QueueArn']});assert.equal(attrs.status,200);
+ const independentUrl=await client.sqs('GetQueueUrl',{QueueName:name});assert.equal(independentUrl.value.QueueUrl,queueUrl);
+ const xml='<NotificationConfiguration><QueueConfiguration><Id>pan396-owned</Id><Queue>'+attrs.value.Attributes.QueueArn+'</Queue><Event>s3:ObjectCreated:Put</Event></QueueConfiguration></NotificationConfiguration>';
+ r=await client.s3('PutBucketNotificationConfiguration',bucket,'',{method:'PUT',query:'?notification',body:xml,headers:{'Content-Type':'application/xml'}});assert.equal(r.status,200);
+ binding=pan396HighBindingV1(runtime.name,queueUrl);const invoice=originalInvoiceRequestV1();assert.equal(sha256(invoice.bytes),binding.contentSha256);
+ const put=await client.s3('PutObject',bucket,binding.key,{method:'PUT',body:invoice.bytes});assert.equal(put.status,200);
+ const object=await client.s3('GetObject',bucket,binding.key);assert.equal(object.status,200);assert.deepEqual(object.bytes,Buffer.from(invoice.bytes));
+ const head=await client.s3('HeadObject',bucket,binding.key,{method:'HEAD'});assert.equal(head.status,200);assert.equal(head.headers.etag,object.headers.etag);
+ const listed=await client.s3('ListObjectsV2',bucket,'',{query:'?list-type=2'});assert.equal(listed.status,200);assert(listed.text.includes(binding.key));
+ const received=await client.sqs('ReceiveMessage',{QueueUrl:queueUrl,MaxNumberOfMessages:10,WaitTimeSeconds:0});assert.equal(received.status,200);assert.equal(received.value.Messages.length,1);
+ const m=received.value.Messages[0];assert.deepEqual(Object.keys(m).sort(),['MessageId','ReceiptHandle','Body','MD5OfBody'].sort());
+ envelope={schemaVersion:'pansphaira.pan396/event-envelope/v1',namespace:runtime.name,queueUrl,messageId:m.MessageId,receiptHandle:m.ReceiptHandle,body:m.Body,bodyMd5:m.MD5OfBody};
+ await writeFile(out+'/controlled-producer-and-ordinary-receive.json',JSON.stringify({put:{status:put.status,requestSha256:put.auditRow.requestSha256,responseSha256:put.auditRow.responseSha256},independentObject:{status:object.status,contentSha256:sha256(object.bytes),eTag:object.headers.etag},ordinaryReceiveChangesVisibilityAndReceiptState:true,envelope,binding},null,2)+'\n',{flag:'wx'});
+ const reader=async({signal,...scope})=>{assert.equal(scope.namespace,runtime.name);assert.equal(scope.bucket,bucket);assert.equal(scope.key,binding.key);assert.equal(scope.operation,'GetObject');const actual=await client.s3('GetObject',bucket,binding.key,{signal});return {...scope,status:actual.status,bytes:actual.bytes,eTag:actual.headers.etag};};
+ const broker=new Pan396InvoiceBrokerV1(binding,{readObject:reader,persistEvidence:async(_id,record,{signal})=>writeFile(out+'/bounded-evidence.json',JSON.stringify(record,null,2)+'\n',{flag:'wx',signal}),readEvidence:async(_id,{signal})=>JSON.parse(await readFile(out+'/bounded-evidence.json',{encoding:'utf8',signal}))});
+ const positive=await broker.process(envelope);assert.equal(positive.outcome,'BOUNDED_EVIDENCE_VERIFIED');assert.equal(broker.statistics.coreInvocations,1);assert(verifyPan396BoundedEvidenceV1(JSON.parse(await readFile(out+'/bounded-evidence.json','utf8'))));proof.nativePositive={...snapshot(broker,positive),evidenceSha256:positive.evidence.evidenceSha256,observedInvoiceAmountMinor:positive.evidence.decision.matchedAmountMinor,productivePostingAuthorized:positive.productivePostingAuthorized,bookingAuthorityGranted:positive.bookingAuthorityGranted};
+ const acknowledgement=await client.sqs('DeleteMessage',{QueueUrl:queueUrl,ReceiptHandle:m.ReceiptHandle});assert.equal(acknowledgement.status,200);
+ proof.nativeDenials=await sourceDenials(binding,envelope,reader);
+ let result=await broker.process(envelope);assert.equal(result.reasonCode,'DUPLICATE_EVENT_DENIED');assert.equal(broker.statistics.coreInvocations,1);proof.nativeDenials.push({id:'duplicate-event',negativeInputKind:'REPLAY_OF_ACTUAL_NATIVE_EVENT',...snapshot(broker,result)});
+ r=await client.s3('PutObject',bucket,binding.key,{method:'PUT',body:invoice.bytes});assert.equal(r.status,200);
+ const second=await client.sqs('ReceiveMessage',{QueueUrl:queueUrl,MaxNumberOfMessages:10,WaitTimeSeconds:0});assert.equal(second.value.Messages.length,1);const secondMessage=second.value.Messages[0];const secondEnvelope={...envelope,messageId:secondMessage.MessageId,receiptHandle:secondMessage.ReceiptHandle,body:secondMessage.Body,bodyMd5:secondMessage.MD5OfBody};result=await broker.process(secondEnvelope);assert.equal(result.reasonCode,'KEY_CONFLICT_DENIED');assert.equal(broker.statistics.coreInvocations,1);proof.nativeDenials.push({id:'key-conflict',negativeInputKind:'SECOND_ACTUAL_NATIVE_PUT_AND_EVENT_SAME_RESERVED_KEY',...snapshot(broker,result)});
+ const timeoutBroker=new Pan396InvoiceBrokerV1({...binding,deadlineEpochMs:Date.now()+30},{readObject:r=>delayedLiveRead(r,reader)});result=await timeoutBroker.process(envelope);assert.equal(result.reasonCode,'TIMEOUT');assert.equal(timeoutBroker.statistics.coreInvocations,0);proof.nativeDenials.push({id:'timeout',negativeInputKind:'DETERMINISTIC_OWNED_DELAY_AT_LIVE_GET_DELIVERY_NOT_CLOUD_TIMEOUT_CLAIM',...snapshot(timeoutBroker,result)});
+ r=await client.s3('PutObject',bucket,binding.key,{method:'PUT',body:originalInvoiceRequestV1('below').bytes});assert.equal(r.status,200);const staleBroker=new Pan396InvoiceBrokerV1(binding,{readObject:reader});result=await staleBroker.process(envelope);assert.equal(result.reasonCode,'STALE_OR_SUBSTITUTED_OBJECT_DENIED');assert.equal(staleBroker.statistics.coreInvocations,0);proof.nativeDenials.push({id:'stale-object-payload',negativeInputKind:'ACTUAL_NATIVE_OVERWRITE_WITH_DIFFERENT_PINNED_PUBLIC_SYNTHETIC_INVOICE_OLD_EVENT_RETAINED',...snapshot(staleBroker,result)});
+ r=await client.s3('DeleteObject',bucket,binding.key,{method:'DELETE'});assert(r.status>=200&&r.status<300);const missingBroker=new Pan396InvoiceBrokerV1(binding,{readObject:reader});result=await missingBroker.process(envelope);assert.equal(result.reasonCode,'MISSING_OBJECT_READBACK');assert.equal(missingBroker.statistics.coreInvocations,0);proof.nativeDenials.push({id:'missing-object-readback',negativeInputKind:'ACTUAL_NATIVE_OBJECT_DELETE_BEFORE_READBACK',...snapshot(missingBroker,result)});
+ r=await client.sqs('PurgeQueue',{QueueUrl:queueUrl});assert.equal(r.status,200);const count=await client.sqs('GetQueueAttributes',{QueueUrl:queueUrl,AttributeNames:['ApproximateNumberOfMessages','ApproximateNumberOfMessagesNotVisible']});assert.equal(count.value.Attributes.ApproximateNumberOfMessages,'0');assert.equal(count.value.Attributes.ApproximateNumberOfMessagesNotVisible,'0');
+ r=await client.sqs('DeleteQueue',{QueueUrl:queueUrl});assert.equal(r.status,200);const noQueues=await client.sqs('ListQueues',{});assert.equal((noQueues.value.QueueUrls??[]).length,0);
+ const partialKey=runtime.name+'/partial.txt';const partialPut=await client.s3('PutObject',bucket,partialKey,{method:'PUT',body:invoice.bytes});const partialRead=await client.s3('GetObject',bucket,partialKey);assert.equal(partialPut.status,200);assert.equal(partialRead.status,200);assert.deepEqual(partialRead.bytes,Buffer.from(invoice.bytes));proof.nativePartialEffect={putStatus:partialPut.status,objectStatus:partialRead.status,objectSha256:sha256(partialRead.bytes),destinationQueueIndependentlyAbsent:true,objectEffectLandedWithoutNotification:true,noBlindRepeatOrPretendedRollback:true};
+}catch(error){failure=error;proof.error={name:error.name,message:error.message,stack:error.stack};}
+finally{
+ if(client&&binding){try{
+  for(const key of [binding.key,runtime.name+'/partial.txt']){const deleted=await client.s3('DeleteObject',binding.bucket,key,{method:'DELETE'});assert(deleted.status>=200&&deleted.status<300);const missing=await client.s3('GetObject',binding.bucket,key);assert.equal(missing.status,404);}
+  const objects=await client.s3('ListObjectsV2',binding.bucket,'',{query:'?list-type=2'});assert.equal([...objects.text.matchAll(/<Key>/g)].length,0);
+  if(bucketCreated){const removed=await client.s3('DeleteBucket',binding.bucket,'',{method:'DELETE'});assert(removed.status>=200&&removed.status<300);}
+  if(queueUrl){const purge=await client.sqs('PurgeQueue',{QueueUrl:queueUrl});assert([200,400].includes(purge.status));await client.sqs('DeleteQueue',{QueueUrl:queueUrl});}
+  const buckets=await client.s3('ListBuckets');const queues=await client.sqs('ListQueues',{});proof.providerCleanup={objectKeysBeforeBucketRemoval:[],bucketNames:[...buckets.text.matchAll(/<Name>([^<]+)<\/Name>/g)].map(m=>m[1]),queueUrls:queues.value.QueueUrls??[]};assert.equal(proof.providerCleanup.bucketNames.length,0);assert.equal(proof.providerCleanup.queueUrls.length,0);
+ }catch(error){failure??=error;proof.providerCleanupError=error.message;}}
+ try{proof.runtimeCleanup=runtime.cleanup();}catch(error){failure??=error;proof.runtimeCleanupError=error.message;}
+ proof.nativeProofAndCleanupDurationMs=Math.round(performance.now()-nativeStarted);
+ await writeFile(out+'/actual-http-audit.json',JSON.stringify(audit,null,2)+'\n',{flag:'wx'});
+}
+try{if(!failure){
+ const started=performance.now();const fake=new SimplestAtomicS3SqsFakeV1(binding);const bytes=originalInvoiceRequestV1().bytes;const fp=await fake.put(binding.key,bytes);const fr=r=>fake.readObject(r);const fb=new Pan396InvoiceBrokerV1(binding,{readObject:fr});const positive=await fb.process(fp.message);assert.equal(positive.outcome,'BOUNDED_EVIDENCE_VERIFIED');const rows=await sourceDenials(binding,fp.message,fr);let r=await fb.process(fp.message);assert.equal(r.reasonCode,'DUPLICATE_EVENT_DENIED');rows.push({id:'duplicate-event',...snapshot(fb,r)});const second=await fake.put(binding.key,bytes);r=await fb.process(second.message);assert.equal(r.reasonCode,'KEY_CONFLICT_DENIED');rows.push({id:'key-conflict',...snapshot(fb,r)});const tb=new Pan396InvoiceBrokerV1({...binding,deadlineEpochMs:Date.now()+30},{readObject:r=>delayedLiveRead(r,fr)});r=await tb.process(fp.message);assert.equal(r.reasonCode,'TIMEOUT');rows.push({id:'timeout',...snapshot(tb,r)});await fake.put(binding.key,originalInvoiceRequestV1('below').bytes);const sb=new Pan396InvoiceBrokerV1(binding,{readObject:fr});r=await sb.process(fp.message);assert.equal(r.reasonCode,'STALE_OR_SUBSTITUTED_OBJECT_DENIED');rows.push({id:'stale-object-payload',...snapshot(sb,r)});fake.objects.delete(binding.key);const mb=new Pan396InvoiceBrokerV1(binding,{readObject:fr});r=await mb.process(fp.message);assert.equal(r.reasonCode,'MISSING_OBJECT_READBACK');rows.push({id:'missing-object-readback',...snapshot(mb,r)});fake.purge();const partial=await fake.put(binding.namespace+'/partial.txt',bytes);assert.equal(partial.outcome,'FAKE_QUEUE_MISSING_NO_OBJECT_EFFECT');assert.equal(fake.objects.size,0);
+ proof.fakeComparison={boundary:'EXPLICIT_SIMPLEST_ATOMIC_MAP_LIST_FAKE_NOT_NATIVE_NOT_ALL_POSSIBLE_FAKES',positive:snapshot(fb,positive),denials:rows,partial:{outcome:partial.outcome,objectCount:fake.objects.size},cleanup:fake.purge(),proofAndCleanupDurationMs:Math.round(performance.now()-started)};
+ assert.deepEqual(proof.nativeDenials.map(r=>[r.id,r.reasonCode]),rows.map(r=>[r.id,r.reasonCode]));
+ proof.observedDifferential={nativeMissingQueuePutReturned200AndObjectLanded:true,namedAtomicFakeRefusedBeforeObjectWrite:true,meaningfulBoundaryClass:'OBJECT_STORE_NOTIFICATION_NON_ATOMIC_PARTIAL_EFFECT_NOT_MODELED_BY_NAMED_SIMPLEST_ATOMIC_FAKE',notClaimedAllFakesOrProductionAws:true};
+ const exercised=Object.fromEntries(['s3','sqs'].map(s=>[s,[...new Set(audit.filter(r=>r.service===s).map(r=>r.operation))].sort()]));assert.deepEqual(exercised.s3,[...OPERATIONS.s3].sort());assert.deepEqual(exercised.sqs,[...OPERATIONS.sqs].sort());proof.exercisedDeclaredOperations=exercised;
+ proof.state='ACTUAL_NATIVE_TYPED_ADAPTER_UNCHANGED_CORE_AND_MATCHED_FAKE_MATRIX_DEVELOPMENT_PROOF_ONLY_NOT_FINAL_ACCEPTANCE';
+}}catch(error){failure=error;proof.state='NOT_PASS_FAKE_COMPARISON_OR_OPERATION_RECONCILIATION';proof.error={name:error.name,message:error.message,stack:error.stack};}
+await writeFile(out+'/receipt.json',JSON.stringify(proof,null,2)+'\n',{flag:'wx'});
+// Explicitly selected public-safe artifact. Do not publish raw audit/envelopes,
+// retained synthetic receipts or the output directory wholesale.
+const publicSummary={schemaVersion:'pansphaira.pan396/native-public-summary/v1',at:proof.at,head:actualHead,
+ state:failure?'NOT_PASS':'NATIVE_PROOF_EXECUTED_DELIVERY_GATES_SEPARATE',image:proof.image,
+ boundary:proof.boundary?{noDockerSocket:proof.boundary.noDockerSocket,noRealAwsCredentials:proof.boundary.noRealAwsCredentials,networkInternal:proof.boundary.networkInternal,notHostOsSandbox:true,explicitEnabledServices:proof.boundary.explicitEnabledServices,explicitDisabledServiceCount:proof.boundary.explicitDisabledServiceCount}:null,
+ nativeDurationMs:proof.nativeProofAndCleanupDurationMs,fakeDurationMs:proof.fakeComparison?.proofAndCleanupDurationMs??null,nativePositive:proof.nativePositive??null,
+ nativeDenials:proof.nativeDenials?.map(({id,reasonCode,statistics,negativeInputKind})=>({id,reasonCode,statistics,negativeInputKind}))??[],
+ disabledServiceDenials:proof.disabledServiceDenials??[],disabledUiDenials:proof.disabledUiDenials??[],exercisedDeclaredOperations:proof.exercisedDeclaredOperations??null,
+ differential:proof.observedDifferential??null,providerResidueZero:proof.providerCleanup?.bucketNames?.length===0&&proof.providerCleanup?.queueUrls?.length===0,
+ runtimeResidueZero:proof.runtimeCleanup?.allOwnedExecutionResourcesZero===true,partialEffectsNotRolledBackOrBlindlyRetried:proof.nativePartialEffect?.noBlindRepeatOrPretendedRollback===true,
+ nativeProviderSubstituted:false,completeHumanBusinessWorkflowsProven:0,productivePostingAuthorized:false,bookingAuthorityGranted:false,
+ promotion:false,finalAcceptance:false,notAwsCompatibilitySecurityOrProduction:true,error:failure?String(failure.message):null};
+await writeFile(out+'/public-summary.json',JSON.stringify(publicSummary,null,2)+'\n',{flag:'wx'});
+console.log(JSON.stringify({state:proof.state,nativeDurationMs:proof.nativeProofAndCleanupDurationMs,fakeDurationMs:proof.fakeComparison?.proofAndCleanupDurationMs,nativePositive:proof.nativePositive,nativeDenialCount:proof.nativeDenials?.length,differential:proof.observedDifferential,providerCleanup:proof.providerCleanup,runtimeCleanup:proof.runtimeCleanup,error:proof.error??proof.providerCleanupError??proof.runtimeCleanupError??null,finalAcceptance:false},null,2));if(failure)throw failure;

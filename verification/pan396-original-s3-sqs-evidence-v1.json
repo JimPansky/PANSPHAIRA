@@ -1,0 +1,492 @@
+{
+  "schemaVersion": "pansphaira.pan396/original-owner-observations/v1",
+  "at": "2026-10-03T03:47:36.204954+00:00",
+  "state": "CANDIDATE_OWNER_OBSERVATIONS_NOT_INDEPENDENT_ACCEPTANCE_NOT_RELEASE",
+  "originalIssue": 396,
+  "parent": 394,
+  "originalBodySha256": "0ee9948d211d61895eb8a8ca84d302ca659ca3f5789155746f229fb0cee7e5f1",
+  "sourceMain": "0e0c741259190e60578132da8a454756a1e5cbe1",
+  "image": {
+    "ref": "floci/floci@sha256:2e2343974a15137a6bda6de5a9e0b16207f97a786cc57ee9c2bf25d14a67b84c",
+    "imageId": "sha256:2e2343974a15137a6bda6de5a9e0b16207f97a786cc57ee9c2bf25d14a67b84c",
+    "source": "560b3e4aae61cea3ac7d4d51843bdffd0e3085fd",
+    "version": "2.1.0",
+    "sourceLabelVerified": true,
+    "verifiedBeforeCreateAndStart": true
+  },
+  "declaredOperations": {
+    "s3": [
+      "CreateBucket",
+      "PutBucketNotificationConfiguration",
+      "PutObject",
+      "GetObject",
+      "HeadObject",
+      "ListObjectsV2",
+      "DeleteObject",
+      "DeleteBucket",
+      "ListBuckets"
+    ],
+    "sqs": [
+      "CreateQueue",
+      "GetQueueAttributes",
+      "GetQueueUrl",
+      "ReceiveMessage",
+      "DeleteMessage",
+      "PurgeQueue",
+      "DeleteQueue",
+      "ListQueues"
+    ]
+  },
+  "positiveOperations": {
+    "s3": [
+      "CreateBucket",
+      "DeleteBucket",
+      "DeleteObject",
+      "GetObject",
+      "HeadObject",
+      "ListBuckets",
+      "ListObjectsV2",
+      "PutBucketNotificationConfiguration",
+      "PutObject"
+    ],
+    "sqs": [
+      "CreateQueue",
+      "DeleteMessage",
+      "DeleteQueue",
+      "GetQueueAttributes",
+      "GetQueueUrl",
+      "ListQueues",
+      "PurgeQueue",
+      "ReceiveMessage"
+    ]
+  },
+  "criteria": [
+    {
+      "id": "PAN396-AC01",
+      "originalText": "Pin exact floci source/image identity and verify it before startup.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC02",
+      "originalText": "Start a minimal configuration without `/var/run/docker.sock` and with no real AWS/customer credentials.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC03",
+      "originalText": "Enable and exercise only the declared S3/SQS operations.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC04",
+      "originalText": "Route synthetic invoice bytes through controlled S3 Put \u2192 SQS event \u2192 typed PANSPHAIRA adapter/broker \u2192 existing authority-free ERV core.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC05",
+      "originalText": "Independently read back object, message and resulting bounded evidence; bind exact inputs, scope, operations and outputs.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC06",
+      "originalText": "Prove denial for wrong bucket/queue, foreign scope, duplicate event/key conflict, stale/substituted payload, timeout and missing readback.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC07",
+      "originalText": "Purge all owned resources and prove zero residue.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    },
+    {
+      "id": "PAN396-AC08",
+      "originalText": "Compare defect-finding value, runtime and maintenance cost against the simplest in-memory fake.",
+      "ownerState": "EXECUTED_OBSERVATIONS_RETAINED_INDEPENDENT_ACCEPTANCE_PENDING"
+    }
+  ],
+  "nativePositive": {
+    "outcome": "BOUNDED_EVIDENCE_VERIFIED",
+    "reasonCode": null,
+    "partialEffects": {},
+    "statistics": {
+      "objectReadAttempts": 1,
+      "intakeInvocations": 1,
+      "intakeInserted": 1,
+      "coreInvocations": 1,
+      "evidencePersisted": 1,
+      "independentEvidenceReads": 1,
+      "reservedKeys": 1,
+      "reservedEvents": 1
+    },
+    "evidenceSha256": "7b8dfceb0dabd6ec86fa29d63a26d8150eddedaa46a095434fdc41dbe978d221",
+    "observedInvoiceAmountMinor": 1200000,
+    "productivePostingAuthorized": false,
+    "bookingAuthorityGranted": false
+  },
+  "nativeDenials": [
+    {
+      "id": "wrong-bucket",
+      "negativeInputKind": "EXPLICIT_CONTROLLED_ALTERATION_OF_PROVIDER_EVENT_COPY_NOT_NATIVE_API_OUTPUT",
+      "outcome": "DENIED",
+      "reasonCode": "WRONG_BUCKET_DENIED",
+      "statistics": {
+        "objectReadAttempts": 0,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 0,
+        "reservedEvents": 0
+      }
+    },
+    {
+      "id": "wrong-queue",
+      "negativeInputKind": "EXPLICIT_CONTROLLED_ALTERATION_OF_PROVIDER_EVENT_COPY_NOT_NATIVE_API_OUTPUT",
+      "outcome": "DENIED",
+      "reasonCode": "WRONG_QUEUE_DENIED",
+      "statistics": {
+        "objectReadAttempts": 0,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 0,
+        "reservedEvents": 0
+      }
+    },
+    {
+      "id": "foreign-scope",
+      "negativeInputKind": "EXPLICIT_CONTROLLED_ALTERATION_OF_PROVIDER_EVENT_COPY_NOT_NATIVE_API_OUTPUT",
+      "outcome": "DENIED",
+      "reasonCode": "FOREIGN_SCOPE_DENIED",
+      "statistics": {
+        "objectReadAttempts": 0,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 0,
+        "reservedEvents": 0
+      }
+    },
+    {
+      "id": "stale-event-time",
+      "negativeInputKind": "EXPLICIT_CONTROLLED_ALTERATION_OF_PROVIDER_EVENT_COPY_NOT_NATIVE_API_OUTPUT",
+      "outcome": "DENIED",
+      "reasonCode": "STALE_EVENT_DENIED",
+      "statistics": {
+        "objectReadAttempts": 0,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 0,
+        "reservedEvents": 0
+      }
+    },
+    {
+      "id": "substituted-payload-metadata",
+      "negativeInputKind": "EXPLICIT_CONTROLLED_ALTERATION_OF_PROVIDER_EVENT_COPY_NOT_NATIVE_API_OUTPUT",
+      "outcome": "DENIED",
+      "reasonCode": "SUBSTITUTED_EVENT_PAYLOAD_DENIED",
+      "statistics": {
+        "objectReadAttempts": 0,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 0,
+        "reservedEvents": 0
+      }
+    },
+    {
+      "id": "duplicate-event",
+      "negativeInputKind": "REPLAY_OF_ACTUAL_NATIVE_EVENT",
+      "outcome": "DENIED",
+      "reasonCode": "DUPLICATE_EVENT_DENIED",
+      "statistics": {
+        "objectReadAttempts": 1,
+        "intakeInvocations": 1,
+        "intakeInserted": 1,
+        "coreInvocations": 1,
+        "evidencePersisted": 1,
+        "independentEvidenceReads": 1,
+        "reservedKeys": 1,
+        "reservedEvents": 1
+      }
+    },
+    {
+      "id": "key-conflict",
+      "negativeInputKind": "SECOND_ACTUAL_NATIVE_PUT_AND_EVENT_SAME_RESERVED_KEY",
+      "outcome": "DENIED",
+      "reasonCode": "KEY_CONFLICT_DENIED",
+      "statistics": {
+        "objectReadAttempts": 1,
+        "intakeInvocations": 1,
+        "intakeInserted": 1,
+        "coreInvocations": 1,
+        "evidencePersisted": 1,
+        "independentEvidenceReads": 1,
+        "reservedKeys": 1,
+        "reservedEvents": 1
+      }
+    },
+    {
+      "id": "timeout",
+      "negativeInputKind": "DETERMINISTIC_OWNED_DELAY_AT_LIVE_GET_DELIVERY_NOT_CLOUD_TIMEOUT_CLAIM",
+      "outcome": "DENIED",
+      "reasonCode": "TIMEOUT",
+      "statistics": {
+        "objectReadAttempts": 1,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 1,
+        "reservedEvents": 1
+      }
+    },
+    {
+      "id": "stale-object-payload",
+      "negativeInputKind": "ACTUAL_NATIVE_OVERWRITE_WITH_DIFFERENT_PINNED_PUBLIC_SYNTHETIC_INVOICE_OLD_EVENT_RETAINED",
+      "outcome": "DENIED",
+      "reasonCode": "STALE_OR_SUBSTITUTED_OBJECT_DENIED",
+      "statistics": {
+        "objectReadAttempts": 1,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 1,
+        "reservedEvents": 1
+      }
+    },
+    {
+      "id": "missing-object-readback",
+      "negativeInputKind": "ACTUAL_NATIVE_OBJECT_DELETE_BEFORE_READBACK",
+      "outcome": "DENIED",
+      "reasonCode": "MISSING_OBJECT_READBACK",
+      "statistics": {
+        "objectReadAttempts": 1,
+        "intakeInvocations": 0,
+        "intakeInserted": 0,
+        "coreInvocations": 0,
+        "evidencePersisted": 0,
+        "independentEvidenceReads": 0,
+        "reservedKeys": 1,
+        "reservedEvents": 1
+      }
+    }
+  ],
+  "disabledServiceDenials": [
+    {
+      "service": "ec2",
+      "status": 400,
+      "responseSha256": "87efdd4161001d17dcbc310b4ccb51ad0e2706539dfb192c0daf068f72e57105"
+    },
+    {
+      "service": "dynamodb",
+      "status": 400,
+      "responseSha256": "6c6e7860e1e6ca941f624c90093e8a98d061a72af12c97d4e9b352f7626d8c9d"
+    },
+    {
+      "service": "lambda",
+      "status": 400,
+      "responseSha256": "1de4b8416a0eddf5af984c045523a050b526d8bf9c83448cc68ced0bade6dda8"
+    },
+    {
+      "service": "sts",
+      "status": 400,
+      "responseSha256": "1f4d5d6c0cdcdcb0fef868ce6037b53444d9747abcfa7311b11c2ce877ad1580"
+    }
+  ],
+  "disabledUiObservations": [
+    {
+      "alias": "_floci",
+      "status": 200,
+      "ready": false,
+      "url": null,
+      "error": "The Floci web console is disabled (set floci.services.ui.enabled=true to enable it).",
+      "responseSha256": "64a6086d30f443810fb29bd17fe063d233d7605b9a68007c6567b8cf330a7c8a"
+    },
+    {
+      "alias": "_floci",
+      "interstitialStatus": 200,
+      "interstitialIsNotAdmission": true,
+      "sidecarStartDeniedByEffectiveConfig": true
+    },
+    {
+      "alias": "_localstack",
+      "status": 200,
+      "ready": false,
+      "url": null,
+      "error": "The Floci web console is disabled (set floci.services.ui.enabled=true to enable it).",
+      "responseSha256": "64a6086d30f443810fb29bd17fe063d233d7605b9a68007c6567b8cf330a7c8a"
+    },
+    {
+      "alias": "_localstack",
+      "interstitialStatus": 200,
+      "interstitialIsNotAdmission": true,
+      "sidecarStartDeniedByEffectiveConfig": true
+    }
+  ],
+  "uiPinnedPublicSource": [
+    {
+      "url": "https://raw.githubusercontent.com/floci-io/floci/560b3e4aae61cea3ac7d4d51843bdffd0e3085fd/src/main/java/io/github/hectorvent/floci/lifecycle/UiController.java",
+      "status": 200,
+      "sha256": "d3fa233ced7b0594c31c6770fba9761f56d55d61beffdfa97886808b193f4949",
+      "gitBlob": "72e70a14977fbc27c584921bb3eab7a1d7216dd0",
+      "bytes": 2501,
+      "sourceCommit": "560b3e4aae61cea3ac7d4d51843bdffd0e3085fd",
+      "noRuntime": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/floci-io/floci/560b3e4aae61cea3ac7d4d51843bdffd0e3085fd/src/main/java/io/github/hectorvent/floci/services/floci/ui/FlociUiManager.java",
+      "status": 200,
+      "sha256": "1fc79296631e60dfd9b77c54d323522a36afd6cd5abf7ee2bd278acf9877a28e",
+      "gitBlob": "f6159f2cef94206290e481464c3e0377af0c33c0",
+      "bytes": 40929,
+      "sourceCommit": "560b3e4aae61cea3ac7d4d51843bdffd0e3085fd",
+      "noRuntime": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/floci-io/floci/560b3e4aae61cea3ac7d4d51843bdffd0e3085fd/src/main/java/io/github/hectorvent/floci/core/common/AwsRestRouteScopeFilter.java",
+      "status": 200,
+      "sha256": "0b154128cccfc9770bbf40ef3bb84964e095774e49ca1f9b1d1f1b8efea1fa1d",
+      "gitBlob": "c9819cfc24fda0578e1c0e38456a774a69ee4322",
+      "bytes": 2975,
+      "sourceCommit": "560b3e4aae61cea3ac7d4d51843bdffd0e3085fd"
+    }
+  ],
+  "uiInitialWrongRoutingNotPassRetained": true,
+  "originalDeadlineTwoFailuresRetained": true,
+  "runtimeAndMaintenanceSnapshot": {
+    "nativeCostMs": 672,
+    "fakeCostMs": 38,
+    "runtimeRatio": 17.68421052631579,
+    "nativeIsWarmLocalInputCacheNotColdHostedCi": true,
+    "registryPullDurationSecondsSeparateNotClaimedCold": 3.020083,
+    "hostedCiRuntimeOrProviderMaintenanceUnknown": true,
+    "maintenanceProxyOnlySourceSurfaceNotHoursUsdOrSuperiority": {
+      "sharedTypedContractAndBroker": {
+        "paths": [
+          "packages/contracts/src/floci-invoice-lab-v1.ts",
+          "src/pan396/invoice-broker-v1.mjs"
+        ],
+        "bytes": 15838,
+        "physicalLines": 131
+      },
+      "nativeSpecificTransportLifecycleAndProof": {
+        "paths": [
+          "src/pan396/floci-http-v1.mjs",
+          "scripts/pan396-owned-floci-runtime-v1.mjs",
+          "scripts/pan396-original-s3-sqs-proof-v1.mjs"
+        ],
+        "bytes": 30142,
+        "physicalLines": 170
+      },
+      "namedFakeAndSharedBindingHelper": {
+        "paths": [
+          "src/pan396/simplest-fake-v1.mjs"
+        ],
+        "bytes": 2260,
+        "physicalLines": 18
+      },
+      "newUnitTestsAndImagePin": {
+        "paths": [
+          "tests/pan396/invoice-broker.test.mjs",
+          "tests/fixtures/pan396/floci-pin-v1.json"
+        ],
+        "bytes": 12965,
+        "physicalLines": 200
+      }
+    }
+  },
+  "sourceSnapshotPins": [
+    {
+      "path": "packages/contracts/src/floci-invoice-lab-v1.ts",
+      "sha256": "06d1b3c61b563dc9f3aa2b98344e7de91fdbf5e5778f5440d9478dd9a2b44811",
+      "bytes": 6399,
+      "physicalLines": 71
+    },
+    {
+      "path": "src/pan396/invoice-broker-v1.mjs",
+      "sha256": "e5e02301d5612dda8ec6a7c213d829d6c3536734c2d1900db5084e19dd20c4df",
+      "bytes": 9439,
+      "physicalLines": 60
+    },
+    {
+      "path": "src/pan396/floci-http-v1.mjs",
+      "sha256": "9514ad580b1ad3359f43b8a7f030a4fbb02ee23414a21d7409fb869a42ac7eaa",
+      "bytes": 7346,
+      "physicalLines": 55
+    },
+    {
+      "path": "src/pan396/simplest-fake-v1.mjs",
+      "sha256": "4c167565c645f4794db925571152ec27158250e22ae73608390880865a72b023",
+      "bytes": 2260,
+      "physicalLines": 18
+    },
+    {
+      "path": "tests/pan396/invoice-broker.test.mjs",
+      "sha256": "a80f8422c77ae8c24b40a34fc4a9f65678a33c6a104c8873087e6cd21e0d339f",
+      "bytes": 9728,
+      "physicalLines": 36
+    },
+    {
+      "path": "scripts/pan396-owned-floci-runtime-v1.mjs",
+      "sha256": "5d53cca41ba1012082c468e1574aafffa20906c71ce59fc7906588841c20cff0",
+      "bytes": 6384,
+      "physicalLines": 39
+    },
+    {
+      "path": "tests/fixtures/pan396/floci-pin-v1.json",
+      "sha256": "c0e71d8b017b426557204d5da8b6f421c651ab5a3059d010450eb730714d4923",
+      "bytes": 3237,
+      "physicalLines": 164
+    },
+    {
+      "path": "scripts/pan396-original-s3-sqs-proof-v1.mjs",
+      "sha256": "5e437541703643b961560f95cbbd94a370e1674c38a8a50db4d152de84b999c8",
+      "bytes": 16412,
+      "physicalLines": 76
+    }
+  ],
+  "observedDifferential": {
+    "nativeMissingQueuePutReturned200AndObjectLanded": true,
+    "namedAtomicFakeRefusedBeforeObjectWrite": true,
+    "meaningfulBoundaryClass": "OBJECT_STORE_NOTIFICATION_NON_ATOMIC_PARTIAL_EFFECT_NOT_MODELED_BY_NAMED_SIMPLEST_ATOMIC_FAKE",
+    "notClaimedAllFakesOrProductionAws": true
+  },
+  "cleanup": {
+    "providerObjectsBucketsMessagesQueuesZero": true,
+    "exactNativeContainerVolumeNetworkZero": true,
+    "exactUiDeltaContainerVolumeNetworkZero": true,
+    "sharedImageAndEvidenceRetained": true
+  },
+  "nativeProviderSubstituted": false,
+  "completeHumanBusinessWorkflowsProven": 0,
+  "productivePostingAuthorized": false,
+  "bookingAuthorityGranted": false,
+  "hostedCiCost": "UNKNOWN_UNTIL_ACTUAL_EXACT_CANDIDATE_JOB_STEP_ARTIFACT_READBACK",
+  "promotion": false,
+  "followOnServiceAdmission": false,
+  "finalAcceptance": false,
+  "releaseVerified": false,
+  "closureEligible": false,
+  "nonclaims": [
+    "NO_AWS_COMPATIBILITY_OR_SECURITY",
+    "NO_PRODUCTIVE_CUSTOMER_OR_CLOUD_AUTHORITY",
+    "NOT_HOST_OS_SANDBOX",
+    "NOT_WHOLE_SESSION_NETWORK_FREE",
+    "ONE_IN_MEMORY_LEASE_NOT_GLOBAL_DURABLE_DEDUP",
+    "NAMED_SIMPLEST_FAKE_NOT_ALL_FAKES",
+    "MAINTENANCE_SURFACE_NOT_ENGINEER_HOURS_USD",
+    "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+  ]
+}
