@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "bbf6781d1488f26b1b9058ae814d087f397726c845a0e21b73eeaeb8be2fc2f4"
+        "sha256": "0912daabaa30f6f0400e64dafcf11130037dd8a7d89f4d10e10b1bcb2f40058e"
       }
     ]
   },
@@ -539,6 +539,14 @@
       "fromSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
       "toSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
       "reason": "Advance graph to v83 with one bounded read-only J03 exact retained released-pair qualification owner. Preserve the same delivered six-intent run, separately evidenced native persistence, HELD KS250 second context, all prior migrations, immutable base obligations, old owners and mandatory gates. No provider registry mutation, source/publication or execution rights, latest/main admission, runnable distribution or issue-closure authority."
+    },
+    {
+      "migrationId": "PAN526-PORTABLE-RUNTIME/INTEGRITY-GENERATOR/V57",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 57,
+      "fromSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
+      "toSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
+      "reason": "Advance graph to v84 with one additive optional source-bound PAN-H01 portable local runtime owner. Preserve the early immutable shared contract, corrected Node-agent/platform binding, actual released native baseline, ten measured cold starts/40 raw phases, existing legacy installer/Compose/source owners and runnable payload, every previous immutable migration/byte obligation and hard gate. No receipt/caller-role authority, provider/host rights, remote effect route, paired acceptance, Main/CLOSED waiting gate or whole-release/closure claim."
     }
   ],
   "scanScope": {
@@ -581,15 +589,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 858,
+    "filesScanned": 867,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 277,
-    "importFiles": 276,
+    "importSites": 279,
+    "importFiles": 278,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2296,
-    "ledgerUniquePaths": 2296
+    "ledgerEntries": 2315,
+    "ledgerUniquePaths": 2315
   },
   "profiles": [
     {
@@ -662,7 +670,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19"
+      "sha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1048,6 +1056,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan526",
+      "importSites": 2,
+      "importFiles": 2
+    },
+    {
       "owner": "procurement-434",
       "importSites": 3,
       "importFiles": 3
@@ -1363,7 +1376,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
+      "sha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
       "basis": "profile-version-migration"
     },
     {

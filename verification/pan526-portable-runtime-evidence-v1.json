@@ -1,0 +1,286 @@
+{
+  "schemaVersion": "pansphaira.portable-runtime/product-evidence/v1",
+  "issue": 526,
+  "originalCriteria": [
+    "AC1: Die bestehende lokale Demo separat reproduzieren: exakte Source-/Imagepins, Produkt-, Runtime- und Vertragsversionen sowie Instanz-/Mandanten-/Generationsbindung in einem strukturierten RuntimeIdentity-Vertrag.",
+    "AC2: Zehn Kaltstarts unter demselben dokumentierten x86_64-Testprofil ausf\u00fchren; Init, Idle, Last und Restore getrennt mit Rohbelegen f\u00fcr Zeit und Ressourcen dokumentieren. Keine gesch\u00e4tzten Werte als Messung ausgeben.",
+    "AC3: ReadinessReceipt pr\u00fcft tats\u00e4chliche Identit\u00e4t, Fachprobe und Grenzen; HTTP 200 mit absichtlich falschem Fachwert ergibt NOT_READY. Liveness allein \u00f6ffnet keine Route.",
+    "AC4: Getrennte Desired-/Observed-Zust\u00e4nde mit opaque Secret-Referenzen. Lifecycle-Auftr\u00e4ge typisiert sowie audience-/tenant-/generation-/digestgebunden; unklaren Ausgang als outcome_unknown erhalten.",
+    "AC5: Lokalen Loopback-Installer unver\u00e4ndert sicher erhalten. Neue Hosted-Adapter sind opt-in und werden isoliert getestet; keine bestehende Bindung durch 0.0.0.0 umgehen."
+  ],
+  "originalNegatives": [
+    "main/latest statt qualifiziertem Pin",
+    "falsche tats\u00e4chliche Runtimegeneration",
+    "HTTP200 mit falschem Fachwert",
+    "unbekannte Component-ID oder neue Rechte",
+    "Secrets in Identity/Receipt"
+  ],
+  "immutableSharedContract": {
+    "commit": "700c7ca369e2ac7aca4973480b4e265bfcffb454",
+    "tree": "05f95b1ac76444a588c9a00b0e326f798d65221a",
+    "sha256": "7c49eb32b45d4942f81828713babd45ef643a4d63b230e039445e6e9c2c6ebcb",
+    "path": "contracts/runtime-portability/candidates/portable-runtime-development-v1.schema.json",
+    "exactAnonymousProductTests": {
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "skipped": 0
+    },
+    "publicationBeforeTenColdStarts": true,
+    "noReciprocalClosedOrMainWaitGate": true
+  },
+  "independentFrozenReceiptCorrection": {
+    "receiptSha256": "c87c60983b90b6677704042e568112e3a3b768fc2ee1e5120a85e2d3105a07c3",
+    "pins": {
+      "src/pan526/runtime-contract.mjs": "6eac3aaebe8f4ebac94a5b2406de46fcfec3e9456f1ab9d55ba727dd4711cdc2",
+      "contracts/runtime-portability/portable-runtime-v1.schema.json": "7c49eb32b45d4942f81828713babd45ef643a4d63b230e039445e6e9c2c6ebcb",
+      "tests/pan526/runtime-contract.test.mjs": "9b8a705d71887684b1d019cebcc858d3b0afc9d40cf0e000b5935940d683e230",
+      "dist/packages/contracts/src/canonical-json.js": "de0215e19c2f0bb36c18b9a7cdae969e2771a32f57f8c80d833d2a75643b79ea"
+    },
+    "counts": {
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0
+    },
+    "lifecycleReceiptFindingClosedForExactBytes": true,
+    "scope": "Independent frozen contract tests; existing local dependencies, no native rerun",
+    "newNativeRunClaimed": false
+  },
+  "currentProductBytePins": {
+    "contracts/runtime-portability/portable-runtime-v1.schema.json": "7c49eb32b45d4942f81828713babd45ef643a4d63b230e039445e6e9c2c6ebcb",
+    "src/pan526/runtime-contract.mjs": "6eac3aaebe8f4ebac94a5b2406de46fcfec3e9456f1ab9d55ba727dd4711cdc2",
+    "src/pan526/local-runtime-adapter.mjs": "46d7622ce8385afdd9c2568a3e284cb4552f2997f9889aced66d2bd374c30a3c",
+    "scripts/read-pan526-portable-local-runtime-v1.mjs": "56038ba48834d272de4ba933bdb00e4c98a6a6eba8b68af88d00d77a8f6485dc",
+    "tests/pan526/local-runtime-native.test.mjs": "ce73438949d0707232eb5776560ca6dac6f6051385d6aa049d2051f90fbbc252"
+  },
+  "actualNativeIntegration": {
+    "nativeSourceCommit": "39720e8862911df72bc674ad52f813e2df2f3d1e",
+    "nativeSourceTree": "a958b381bd766a848b754058d018e63a354f1754",
+    "nativeImageIdDigest": "sha256:af86dfad47ccc1f0fc23224989d853dec65e24153a4b8a3a2cf630f418405328",
+    "nativeCounts": {
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0
+    },
+    "unitAndCliCounts": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "skipped": 0
+    },
+    "nativeExpectedIdentity": {
+      "architecture": "x86_64",
+      "authorityProfile": "SAFE_GUIDED",
+      "componentId": "pansphaira-local-demo",
+      "configurationDigest": "b1939217424c9efebe168dc1ada60d6d401b453bfc5a2fdca734c951756bd7d6",
+      "contractVersion": "1.0.0",
+      "effectiveRights": [
+        "demo.status.read",
+        "demo.provider.bound.read",
+        "demo.governed.effect"
+      ],
+      "generation": 1,
+      "imageDigest": "sha256:af86dfad47ccc1f0fc23224989d853dec65e24153a4b8a3a2cf630f418405328",
+      "instanceId": "pansphaira-e2e-1791133155270767199-1",
+      "networkDigest": "ee3a62d47a814ced386973ca3c8ae32949f036fea8d89fbef0a6ee8658a60014",
+      "policyDigest": "901f6dfe3c409e3c489503dfe783847927e0a14dc84fdbf0e5cb13ffd7c31397",
+      "productVersion": "0.2.0-poc.20260810.5",
+      "runtime": {
+        "name": "node",
+        "version": "24.14.1"
+      },
+      "schemaVersion": "pansphaira.portable-runtime/identity/v1",
+      "sourceCommit": "39720e8862911df72bc674ad52f813e2df2f3d1e",
+      "sourceTree": "a958b381bd766a848b754058d018e63a354f1754",
+      "templateDigest": "f35377c67289c34b8065b4697123b3819cb28dc165a60b5db7c77d29a506d964",
+      "tenantId": "panskys-zoo-demo"
+    },
+    "nativeObservedIdentity": {
+      "architecture": "x86_64",
+      "authorityProfile": "SAFE_GUIDED",
+      "componentId": "pansphaira-local-demo",
+      "configurationDigest": "b1939217424c9efebe168dc1ada60d6d401b453bfc5a2fdca734c951756bd7d6",
+      "contractVersion": "1.0.0",
+      "effectiveRights": [
+        "demo.status.read",
+        "demo.provider.bound.read",
+        "demo.governed.effect"
+      ],
+      "generation": 1,
+      "imageDigest": "sha256:af86dfad47ccc1f0fc23224989d853dec65e24153a4b8a3a2cf630f418405328",
+      "instanceId": "pansphaira-e2e-1791133155270767199-1",
+      "networkDigest": "ee3a62d47a814ced386973ca3c8ae32949f036fea8d89fbef0a6ee8658a60014",
+      "policyDigest": "901f6dfe3c409e3c489503dfe783847927e0a14dc84fdbf0e5cb13ffd7c31397",
+      "productVersion": "0.2.0-poc.20260810.5",
+      "runtime": {
+        "name": "node",
+        "version": "24.14.1"
+      },
+      "schemaVersion": "pansphaira.portable-runtime/identity/v1",
+      "sourceCommit": "39720e8862911df72bc674ad52f813e2df2f3d1e",
+      "sourceTree": "a958b381bd766a848b754058d018e63a354f1754",
+      "templateDigest": "f35377c67289c34b8065b4697123b3819cb28dc165a60b5db7c77d29a506d964",
+      "tenantId": "panskys-zoo-demo"
+    },
+    "actualHttp200WrongBusinessAndRestored": {
+      "sourceCommit": "39720e8862911df72bc674ad52f813e2df2f3d1e",
+      "instanceId": "pansphaira-e2e-1791133155270767199-1",
+      "before": {
+        "boundaryObservation": {
+          "dockerSocketMounted": false,
+          "loopbackOnly": true,
+          "ownedResourcesOnly": true,
+          "privileged": false
+        },
+        "executionAuthorityGranted": false,
+        "expectedIdentityDigest": "49683ea11ab1ecf39a6bf29677c050f7f32136e6efb64ce715429c0d4702c712",
+        "observedAtMs": 1791134944509,
+        "observedIdentityDigest": "49683ea11ab1ecf39a6bf29677c050f7f32136e6efb64ce715429c0d4702c712",
+        "probe": {
+          "expectedValueDigest": "c86d0ebd9ebc0384db5ecfa9accf485d85bf184672e11f676f750e7ca24f9c38",
+          "httpStatus": 200,
+          "observedValueDigest": "c86d0ebd9ebc0384db5ecfa9accf485d85bf184672e11f676f750e7ca24f9c38",
+          "probeId": "pansphaira-demo-order-readback-v1",
+          "sourceObservationDigest": "00e343de2ade8914b8840a6b1dc728c6b7ddde2addde404bf3a2ad94ffff92ed"
+        },
+        "reasonCodes": [],
+        "schemaVersion": "pansphaira.portable-runtime/readiness/v1",
+        "state": "READY"
+      },
+      "wrong": {
+        "boundaryObservation": {
+          "dockerSocketMounted": false,
+          "loopbackOnly": true,
+          "ownedResourcesOnly": true,
+          "privileged": false
+        },
+        "executionAuthorityGranted": false,
+        "expectedIdentityDigest": "49683ea11ab1ecf39a6bf29677c050f7f32136e6efb64ce715429c0d4702c712",
+        "observedAtMs": 1791134944702,
+        "observedIdentityDigest": "49683ea11ab1ecf39a6bf29677c050f7f32136e6efb64ce715429c0d4702c712",
+        "probe": {
+          "expectedValueDigest": "c86d0ebd9ebc0384db5ecfa9accf485d85bf184672e11f676f750e7ca24f9c38",
+          "httpStatus": 200,
+          "observedValueDigest": "21f60402d6e272fcd7081377e93c1225976db3a28a52ac5e193117038e541f92",
+          "probeId": "pansphaira-demo-order-readback-v1",
+          "sourceObservationDigest": "724e7f12499201a0e3dc286ffa966b59eeb5aa7cc170ecd966339176456f71bd"
+        },
+        "reasonCodes": [
+          "BUSINESS_PROBE_MISMATCH"
+        ],
+        "schemaVersion": "pansphaira.portable-runtime/readiness/v1",
+        "state": "NOT_READY"
+      },
+      "restored": {
+        "boundaryObservation": {
+          "dockerSocketMounted": false,
+          "loopbackOnly": true,
+          "ownedResourcesOnly": true,
+          "privileged": false
+        },
+        "executionAuthorityGranted": false,
+        "expectedIdentityDigest": "49683ea11ab1ecf39a6bf29677c050f7f32136e6efb64ce715429c0d4702c712",
+        "observedAtMs": 1791134944879,
+        "observedIdentityDigest": "49683ea11ab1ecf39a6bf29677c050f7f32136e6efb64ce715429c0d4702c712",
+        "probe": {
+          "expectedValueDigest": "c86d0ebd9ebc0384db5ecfa9accf485d85bf184672e11f676f750e7ca24f9c38",
+          "httpStatus": 200,
+          "observedValueDigest": "c86d0ebd9ebc0384db5ecfa9accf485d85bf184672e11f676f750e7ca24f9c38",
+          "probeId": "pansphaira-demo-order-readback-v1",
+          "sourceObservationDigest": "00e343de2ade8914b8840a6b1dc728c6b7ddde2addde404bf3a2ad94ffff92ed"
+        },
+        "reasonCodes": [],
+        "schemaVersion": "pansphaira.portable-runtime/readiness/v1",
+        "state": "READY"
+      },
+      "actualNativeQuantityChangedAndRestored": true,
+      "productionAuthority": false
+    },
+    "actualLifecycleReceiptStore": {
+      "native-interrupted-1791134944354": {
+        "completedAtMs": 1791134944412,
+        "executionAuthorityGranted": false,
+        "jobDigest": "b8e36e4b82956b3f57d03c09db630bc9f4641d51b67ab7ef88f0651e1618ae6f",
+        "jobId": "native-interrupted-1791134944354",
+        "observedStateDigest": null,
+        "outcome": "outcome_unknown",
+        "reasonCode": "DISPATCH_INTERRUPTED",
+        "schemaVersion": "pansphaira.portable-runtime/lifecycle-receipt/v1"
+      },
+      "native-interrupted-one": {
+        "completedAtMs": 1791134425016,
+        "executionAuthorityGranted": false,
+        "jobDigest": "73ee3ba0da756206508ad60e740ba147f42c3f0a3ae9fc622c0b0c71824fc3d8",
+        "jobId": "native-interrupted-one",
+        "observedStateDigest": null,
+        "outcome": "outcome_unknown",
+        "reasonCode": "DISPATCH_INTERRUPTED",
+        "schemaVersion": "pansphaira.portable-runtime/lifecycle-receipt/v1"
+      },
+      "native-restart-1791134943669": {
+        "completedAtMs": 1791134944353,
+        "executionAuthorityGranted": false,
+        "jobDigest": "dd8f92b9f542c8bc84beaf360f66302fc1853bf08e8cd17ee711b807fffcd47a",
+        "jobId": "native-restart-1791134943669",
+        "observedStateDigest": "04fcb7d5ccb0a026669f4f79be9a602667eb100990a700d9c8b85c7b1ce3387c",
+        "outcome": "succeeded",
+        "reasonCode": "OBSERVED_TARGET_REACHED",
+        "schemaVersion": "pansphaira.portable-runtime/lifecycle-receipt/v1"
+      },
+      "native-restart-one": {
+        "completedAtMs": 1791134424956,
+        "executionAuthorityGranted": false,
+        "jobDigest": "31927edbc7a1edcc455e7c533d20336a071a23a4109d4dc7e18c1bedc9275864",
+        "jobId": "native-restart-one",
+        "observedStateDigest": "2a79f8c4da92ac63ce198f2d7eebfdf9df7b2f2042c813f8a5e967cd894c709f",
+        "outcome": "succeeded",
+        "reasonCode": "OBSERVED_TARGET_REACHED",
+        "schemaVersion": "pansphaira.portable-runtime/lifecycle-receipt/v1"
+      }
+    },
+    "unchangedLegacyInstallerComposeUsed": true,
+    "nativeActualSourceIsReleased39720e8NotDevelopmentCandidate": true
+  },
+  "actualTenColdStarts": {
+    "actualTrialCount": 10,
+    "actualPhaseCount": 40,
+    "actualSampleCount": 684,
+    "actualStatsRowCount": 2995,
+    "rawPublicEvidencePath": "verification/pan526-cold-start-resource-raw-v1.json",
+    "rawPublicEvidenceSha256": "cf3512c5ac3a55cba600cb788a302a0df04700b3f547a09ae618d96385c7b984",
+    "privateCompletedReceiptSha256": "b92447a2def57e9d28908941db8614a606034f36929cfb74c16b522ec3d697b3",
+    "allActualTrialCommandsExitZero": true,
+    "separateInitIdleLoadRestore": true,
+    "actualArchiveAndWritableLayerRestoreRequired": true,
+    "actualDeletedRecreatedFiveVolumesEachTrial": true,
+    "actualNativeIdentityAndBusinessDigestRestoredEachTrial": true,
+    "ownedContainersVolumesNetworksResidueZero": true,
+    "nativeImageCacheRetained": true,
+    "failedDataVolumeOnlyV1RetainedNotPassed": true,
+    "measuredAdapterSourceBytePins": {
+      "src/pan526/runtime-contract.mjs": "6eac3aaebe8f4ebac94a5b2406de46fcfec3e9456f1ab9d55ba727dd4711cdc2",
+      "src/pan526/local-runtime-adapter.mjs": "46d7622ce8385afdd9c2568a3e284cb4552f2997f9889aced66d2bd374c30a3c",
+      "contracts/runtime-portability/portable-runtime-v1.schema.json": "7c49eb32b45d4942f81828713babd45ef643a4d63b230e039445e6e9c2c6ebcb",
+      "scripts/read-pan526-portable-local-runtime-v1.mjs": "56038ba48834d272de4ba933bdb00e4c98a6a6eba8b68af88d00d77a8f6485dc",
+      "dist/packages/contracts/src/canonical-json.js": "de0215e19c2f0bb36c18b9a7cdae969e2771a32f57f8c80d833d2a75643b79ea"
+    }
+  },
+  "legacySourceBytePins": {
+    "demo/install.sh": "747a975556b3755404e98c7e60705906071a0a6c17dc42b6be2a90e407428984",
+    "demo/uninstall.sh": "e72bf4f86af24b0017497dcaca63927c64aab9fa558b83970d1d2d8240b972bb",
+    "demo/compose.yaml": "0777d35cbed997987ab2bd642c8fd71e7ab17be8437d6a894d653a693382a753",
+    "demo/readback.sh": "236dc0f85921126e7fdb400743a6fd8ecd9e8fb44d77dbd9d7ac57ec4f302371",
+    "demo/seed-and-flow.sh": "3a93b1d3c84e09cae8a5ae2f8b66432ac20503df7746f84b1dba0671a7c54d44"
+  },
+  "sourceRightsGranted": false,
+  "executionAuthorityGranted": false,
+  "productiveAuthority": false,
+  "noNewPublicRemoteHttpEndpoint": true,
+  "fullIntegrationAcceptanceClaimed": false,
+  "fullproofCiMergeReleaseAcceptanceClaimed": false,
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+}

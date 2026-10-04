@@ -395,6 +395,26 @@ repository_only_files = {
     "tests/pan525/registration.test.mjs",
     "docs/architecture/pan525-exact-qualified-pair-v1.md",
     "verification/pan525-exact-qualified-pair-evidence-v1.json",
+    # PAN526 portable local runtime source/evidence only; legacy runnable payload unchanged.
+    "contracts/runtime-portability/candidates/runtime-identity-development-v1.schema.json",
+    "contracts/runtime-portability/candidates/runtime-identity-development-v2.schema.json",
+    "contracts/runtime-portability/candidates/portable-runtime-development-v1.schema.json",
+    "contracts/runtime-portability/portable-runtime-v1.schema.json",
+    "src/pan526/runtime-contract.mjs",
+    "src/pan526/local-runtime-adapter.mjs",
+    "scripts/read-pan526-portable-local-runtime-v1.mjs",
+    "tests/pan526/ks-node-agent-candidate.test.mjs",
+    "tests/pan526/runtime-contract.test.mjs",
+    "tests/pan526/local-runtime-adapter.test.mjs",
+    "tests/pan526/local-runtime-cli.test.mjs",
+    "tests/pan526/local-runtime-native.test.mjs",
+    "tests/pan526/registration.test.mjs",
+    "docs/architecture/pan526-runtime-identity-development-v1.md",
+    "docs/architecture/pan526-runtime-identity-development-v2.md",
+    "docs/architecture/pan526-portable-runtime-development-v1.md",
+    "docs/architecture/pan526-portable-local-runtime-v1.md",
+    "verification/pan526-portable-runtime-evidence-v1.json",
+    "verification/pan526-cold-start-resource-raw-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

@@ -1784,6 +1784,113 @@ pan525Node.inputs = pan525Inputs.map(([inputPath,role]) => ({path:inputPath,role
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan525:test")) repositoryIntegrityNode.ownedTests.push("npm run pan525:test");
 dag.graphVersion = 83;
 
+// PAN526 H01: optional source-bound local adapter, unchanged legacy demo.
+// Early shared contract publication is not whole-release or native authority.
+const pan526Inputs = [
+  [
+    "contracts/runtime-portability/candidates/runtime-identity-development-v1.schema.json",
+    "SCHEMA"
+  ],
+  [
+    "contracts/runtime-portability/candidates/runtime-identity-development-v2.schema.json",
+    "SCHEMA"
+  ],
+  [
+    "contracts/runtime-portability/candidates/portable-runtime-development-v1.schema.json",
+    "SCHEMA"
+  ],
+  [
+    "contracts/runtime-portability/portable-runtime-v1.schema.json",
+    "SCHEMA"
+  ],
+  [
+    "src/pan526/runtime-contract.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan526/local-runtime-adapter.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/read-pan526-portable-local-runtime-v1.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/pan526/ks-node-agent-candidate.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan526/runtime-contract.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan526/local-runtime-adapter.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan526/local-runtime-cli.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan526/local-runtime-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan526/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "docs/architecture/pan526-runtime-identity-development-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "docs/architecture/pan526-runtime-identity-development-v2.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "docs/architecture/pan526-portable-runtime-development-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "docs/architecture/pan526-portable-local-runtime-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan526-portable-runtime-evidence-v1.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan526-cold-start-resource-raw-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan526Node = dag.nodes.find(({id}) => id === "pan526-portable-runtime-v1");
+if (pan526Node === undefined) {
+  pan526Node = {
+  "id": "pan526-portable-runtime-v1",
+  "dependsOn": [
+    "toolchain-central"
+  ],
+  "inputs": [],
+  "ownedTests": [
+    "npm run pan526:test"
+  ],
+  "riskClass": "HIGH",
+  "globalInvalidation": false,
+  "invariants": [
+    "One immutable shared Identity/Desired/Observed/Readiness/Lifecycle contract, component-bound actual Node agent distinct from Superset platform; shape, roles and receipts do not confer authority. Historical candidates and independent exact-byte correction remain preserved.",
+    "Explicit local-owner opt-in and exact clean native source/tree/image, instance/tenant/generation/configuration/template/policy/network binding; no main/latest, unknown component/rights, secret fields or loopback bypass. Actual native observation and HTTP200 wrong-business NOT_READY are separate from schema shape validation.",
+    "Typed audience/tenant/generation/digest-bound lifecycle applies only to inspected owned native PanSphaira resources; Desired/Observed and opaque secret references remain distinct; durable interrupted outcome_unknown is not retried or relabelled as success/failure.",
+    "Ten actual x86_64 cold starts,40 independent Init/Idle/Load/Restore raw phases with genuine timestamps/resources, actual native archive restoration and zero owned residue. No estimated values, reboot/cache-flush claim, missing writable-layer substitution, new independent native rerun or general statistical analysis.",
+    "Legacy loopback installer/Compose/security and runnable payload stay unchanged. New optional local source adapter is not a remote effect route, registry promotion, productive permission or turnkey hosted package; original five criteria/five negatives and canonical proof/required CI/protected merge/release/anonymous product/closure remain separate without Main or reciprocal CLOSED gate."
+  ]
+};
+  dag.nodes.push(pan526Node);
+}
+pan526Node.inputs = pan526Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan526:test")) repositoryIntegrityNode.ownedTests.push("npm run pan526:test");
+dag.graphVersion = 84;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1833,6 +1940,7 @@ for (const [inputPath] of pan517Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan524Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan520Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan525Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan526Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
