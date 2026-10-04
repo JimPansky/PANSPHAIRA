@@ -8,6 +8,9 @@ export const EXTERNAL_BI_SERVICE_CONFIG_SCHEMA_V2 =
 export const EXTERNAL_BI_SERVICE_READBACK_SCHEMA_V2 =
   "chimpmaera.external-bi-service/readback/v2" as const;
 export const EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2 = "v0.8.0" as const;
+// J01 exact opt-in selection; legacy default is retained, not rewritten.
+export const PAN524_J02_PRODUCT_VERSION_V1 = "v0.18.1" as const;
+export const PAN524_J02_PAIR_PROFILE_ID_V1 = "KS_J02_0181_C2_V1" as const;
 export const EXTERNAL_BI_SERVICE_CONTRACT_ID_V2 =
   "superset-bi-agent.external" as const;
 export const EXTERNAL_BI_SERVICE_CONTRACT_VERSION_V2 = "2.0.0" as const;
@@ -67,6 +70,28 @@ const OWNER_COMPATIBILITY_PROFILE_V2 = deepFreeze({
   })),
 } as const);
 
+type OwnerCompatibilityProfileV2 = Readonly<{
+  schemaVersion: string;
+  product: Readonly<{ id: string; version: string; component: string }>;
+  contract: Readonly<{ id: string; version: string }>;
+  capabilities: readonly Readonly<{ id: string; action: string; authority: string; externalIntent?: false }>[];
+}>;
+const OWNER_J02_COMPATIBILITY_PROFILE_V1 = deepFreeze({
+  ...OWNER_COMPATIBILITY_PROFILE_V2,
+  product: { ...OWNER_COMPATIBILITY_PROFILE_V2.product, version: PAN524_J02_PRODUCT_VERSION_V1 },
+  capabilities: [
+    ...OWNER_COMPATIBILITY_PROFILE_V2.capabilities,
+    { id: "superset.trusted-apply", action: "trusted-apply", authority: "trusted-approval-only", externalIntent: false },
+    { id: "superset.trusted-readback", action: "trusted-readback", authority: "trusted-approval-only", externalIntent: false },
+    { id: "superset.trusted-rollback", action: "trusted-rollback", authority: "trusted-approval-only", externalIntent: false },
+  ],
+} as const);
+function ownerProfileForProductVersion(version: unknown): OwnerCompatibilityProfileV2 | null {
+  if (version === EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2) return OWNER_COMPATIBILITY_PROFILE_V2;
+  if (version === PAN524_J02_PRODUCT_VERSION_V1) return OWNER_J02_COMPATIBILITY_PROFILE_V1;
+  return null;
+}
+
 const OWNER_GRAPH_PROFILE_V2 = deepFreeze({
   acceptedIncumbent: "adaptive-v1",
   candidatePromotion: "none",
@@ -83,6 +108,7 @@ const OWNER_BOUNDARY_PROFILE_V2 = deepFreeze({
 
 const ENV_KEYS = Object.freeze([
   "BI_AGENT_BASE_URL",
+  "BI_AGENT_PAIR_PROFILE",
   "BI_AGENT_EXPECTED_PRODUCT_VERSION",
   "BI_AGENT_EXPECTED_CONTRACT_VERSION",
   "BI_AGENT_TIMEOUT_MS",
@@ -97,6 +123,7 @@ export type ExternalBiServiceReasonCodeV2 =
   | "EXTERNAL_BI_SERVICE_URL_DENIED"
   | "EXTERNAL_BI_SERVICE_TIMEOUT_DENIED"
   | "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED"
+  | "EXTERNAL_BI_SERVICE_COMPATIBILITY_PROFILE_DENIED"
   | "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED"
   | "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED"
   | "EXTERNAL_BI_SERVICE_DIGEST_DENIED"
@@ -112,7 +139,7 @@ export interface ExternalBiServiceConfigV2 {
   readonly schemaVersion: typeof EXTERNAL_BI_SERVICE_CONFIG_SCHEMA_V2;
   readonly enabled: boolean;
   readonly biAgentBaseUrl: string | null;
-  readonly expectedProductVersion: typeof EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2;
+  readonly expectedProductVersion: typeof EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2 | typeof PAN524_J02_PRODUCT_VERSION_V1;
   readonly expectedContractVersion: typeof EXTERNAL_BI_SERVICE_CONTRACT_VERSION_V2;
   readonly timeoutMs: number;
   readonly requiredCapabilities: readonly typeof EXTERNAL_BI_SERVICE_CAPABILITIES_V2[number][];
@@ -126,7 +153,7 @@ export type ExternalBiServiceConfigDecisionV2 =
 export interface ExternalBiServiceReadbackV2 {
   readonly schemaVersion: typeof EXTERNAL_BI_SERVICE_READBACK_SCHEMA_V2;
   readonly outcome: "READY";
-  readonly productVersion: typeof EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2;
+  readonly productVersion: typeof EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2 | typeof PAN524_J02_PRODUCT_VERSION_V1;
   readonly contractVersion: typeof EXTERNAL_BI_SERVICE_CONTRACT_VERSION_V2;
   readonly capabilities: readonly typeof EXTERNAL_BI_SERVICE_CAPABILITIES_V2[number][];
   readonly acceptedGraphIncumbent: "adaptive-v1";
@@ -341,6 +368,12 @@ export function configureExternalBiServiceV2(
   if (!biAgentBaseUrl) return configDenied("EXTERNAL_BI_SERVICE_URL_DENIED");
   const timeoutMs = parseTimeout(envSnapshot.BI_AGENT_TIMEOUT_MS);
   if (timeoutMs === null) return configDenied("EXTERNAL_BI_SERVICE_TIMEOUT_DENIED");
+  const selection = envSnapshot.BI_AGENT_PAIR_PROFILE;
+  if (selection !== undefined && selection !== "" && selection !== PAN524_J02_PAIR_PROFILE_ID_V1) {
+    return configDenied("EXTERNAL_BI_SERVICE_COMPATIBILITY_PROFILE_DENIED");
+  }
+  const selectedProductVersion = selection === PAN524_J02_PAIR_PROFILE_ID_V1
+    ? PAN524_J02_PRODUCT_VERSION_V1 : OWNER_COMPATIBILITY_PROFILE_V2.product.version;
   const decision = immutable({
     outcome: "VERIFIED" as const,
     reasonCodes: ["EXTERNAL_BI_SERVICE_CONFIG_VERIFIED"] as const,
@@ -348,7 +381,7 @@ export function configureExternalBiServiceV2(
       schemaVersion: EXTERNAL_BI_SERVICE_CONFIG_SCHEMA_V2,
       enabled: true,
       biAgentBaseUrl,
-      expectedProductVersion: OWNER_COMPATIBILITY_PROFILE_V2.product.version,
+      expectedProductVersion: selectedProductVersion,
       expectedContractVersion: OWNER_COMPATIBILITY_PROFILE_V2.contract.version,
       timeoutMs,
       requiredCapabilities: [...EXTERNAL_BI_SERVICE_CAPABILITIES_V2],
@@ -385,7 +418,7 @@ function ownerConfigError(value: unknown): ExternalBiServiceReasonCodeV2 | null 
   ]) || value.schemaVersion !== EXTERNAL_BI_SERVICE_CONFIG_SCHEMA_V2 || value.enabled !== true) {
     return "EXTERNAL_BI_SERVICE_REQUEST_DENIED";
   }
-  if (value.expectedProductVersion !== OWNER_COMPATIBILITY_PROFILE_V2.product.version) {
+  if (ownerProfileForProductVersion(value.expectedProductVersion) === null) {
     return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
   }
   if (value.expectedContractVersion !== OWNER_COMPATIBILITY_PROFILE_V2.contract.version) {
@@ -405,24 +438,49 @@ function ownerConfigError(value: unknown): ExternalBiServiceReasonCodeV2 | null 
   return null;
 }
 
-function matchesOwnerProduct(value: unknown): boolean {
+function matchesOwnerProduct(value: unknown, profile: OwnerCompatibilityProfileV2): boolean {
   return exactKeys(value, ["id", "version", "component"])
-    && sameCanonicalValue(value, OWNER_COMPATIBILITY_PROFILE_V2.product);
+    && sameCanonicalValue(value, profile.product);
 }
 
-function matchesOwnerContract(value: unknown): boolean {
+function matchesOwnerContract(value: unknown, profile: OwnerCompatibilityProfileV2): boolean {
   return exactKeys(value, ["id", "version"])
-    && sameCanonicalValue(value, OWNER_COMPATIBILITY_PROFILE_V2.contract);
+    && sameCanonicalValue(value, profile.contract);
 }
 
-function matchesOwnerCapabilities(value: unknown): boolean {
+function matchesOwnerCapabilities(value: unknown, profile: OwnerCompatibilityProfileV2): boolean {
   return Array.isArray(value)
-    && value.length === OWNER_COMPATIBILITY_PROFILE_V2.capabilities.length
-    && value.every((item, index) => exactKeys(item, ["id", "action", "authority"])
-      && sameCanonicalValue(item, OWNER_COMPATIBILITY_PROFILE_V2.capabilities[index]));
+    && value.length === profile.capabilities.length
+    && value.every((item, index) => {
+      const expected = profile.capabilities[index]!;
+      const keys = expected.externalIntent === false ? ["id", "action", "authority", "externalIntent"] : ["id", "action", "authority"];
+      return exactKeys(item, keys) && sameCanonicalValue(item, expected);
+    });
 }
 
-function validateAttestation(value: unknown): ExternalBiServiceReasonCodeV2 | null {
+const PAN524_J02_PROVIDER_PROFILE_DIGEST_V1 = "sha256:9d50be8fad2ba9f3432e1461a2a9d9b08a567097d5f9a88ec86b7405230f9b04";
+const PAN524_J02_AGENT_ARTIFACT_V1 = deepFreeze({
+  packageName: "@chimpmaera-bi/agent", packageVersion: "0.18.1",
+  packageSha256: "826bcc27fa1a59514001b550a8d07c2fd129bf68089ddc98bdf626b2eb346145", component: "bi-agent-runtime",
+} as const);
+function validateSelectedProviderProfile(value: unknown, profile: OwnerCompatibilityProfileV2, attestation: unknown): ExternalBiServiceReasonCodeV2 | null {
+  if (!exactKeys(value, ["schemaVersion", "product", "artifact", "contract", "attestations", "consumerProfile", "allowedOperations", "registry", "execution", "integrity"])
+    || value.schemaVersion !== "superset-bi-agent.external/provider-profile/v1") return "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED";
+  if (!matchesOwnerProduct(value.product, profile)) return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
+  if (!matchesOwnerContract(value.contract, profile)) return "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED";
+  if (!exactKeys(value.artifact, ["packageName", "packageVersion", "packageSha256", "component"])
+    || !sameCanonicalValue(value.artifact, PAN524_J02_AGENT_ARTIFACT_V1)) return "EXTERNAL_BI_SERVICE_DIGEST_DENIED";
+  if (!Array.isArray(value.attestations) || value.attestations.length !== 1
+    || !sameCanonicalValue(value.attestations[0], attestation)) return "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED";
+  const proof = value.integrity;
+  if (!exactKeys(proof, ["algorithm", "digest"]) || proof.algorithm !== "sha256-canonical-json") return "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED";
+  try {
+    if (proof.digest !== PAN524_J02_PROVIDER_PROFILE_DIGEST_V1 || proof.digest !== digest(bodyWithout(value, "integrity"))) return "EXTERNAL_BI_SERVICE_DIGEST_DENIED";
+  } catch { return "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED"; }
+  return null;
+}
+
+function validateAttestation(value: unknown, profile: OwnerCompatibilityProfileV2): ExternalBiServiceReasonCodeV2 | null {
   if (!exactKeys(value, [
     "schemaVersion", "product", "contract", "capabilities", "graph", "boundaries", "attestation",
   ]) || value.schemaVersion !== EXTERNAL_BI_SERVICE_ATTESTATION_SCHEMA_V2) {
@@ -437,9 +495,9 @@ function validateAttestation(value: unknown): ExternalBiServiceReasonCodeV2 | nu
   try {
     if (proof.digest !== digest(bodyWithout(value, "attestation"))) return "EXTERNAL_BI_SERVICE_DIGEST_DENIED";
   } catch { return "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED"; }
-  if (!matchesOwnerProduct(value.product)) return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
-  if (!matchesOwnerContract(value.contract)) return "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED";
-  if (!matchesOwnerCapabilities(value.capabilities)) return "EXTERNAL_BI_SERVICE_CAPABILITY_MISSING";
+  if (!matchesOwnerProduct(value.product, profile)) return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
+  if (!matchesOwnerContract(value.contract, profile)) return "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED";
+  if (!matchesOwnerCapabilities(value.capabilities, profile)) return "EXTERNAL_BI_SERVICE_CAPABILITY_MISSING";
   if (!exactKeys(value.graph, ["acceptedIncumbent", "candidatePromotion"])
     || !sameCanonicalValue(value.graph, OWNER_GRAPH_PROFILE_V2)) return "EXTERNAL_BI_SERVICE_CAPABILITY_MISSING";
   if (!exactKeys(value.boundaries, [
@@ -463,6 +521,43 @@ function unsafeRequestValue(value: unknown): boolean {
   return Object.entries(value).some(([key, item]) => FORBIDDEN_REQUEST_KEY.test(key.replace(/[^A-Za-z0-9]/g, "")) || unsafeRequestValue(item));
 }
 
+// A planning-policy enum is not free SQL or an executable request. Admit only
+// this exact published extraction tuple, at its typed result path, for J02.
+// Every other response field and every caller input retain the original filter.
+function unsafeIntentResult(value: unknown, request: ExternalBiServiceIntentRequestV2, profile: OwnerCompatibilityProfileV2): boolean {
+  if (profile.product.version === PAN524_J02_PRODUCT_VERSION_V1 && request.action === "plan"
+    && exactKeys(value, ["schemaVersion", "planId", "objective", "evidenceBinding", "graph", "planning", "authority", "trustedWorkflow"])
+    && value.schemaVersion === "superset-bi-agent.external/plan/v2"
+    && sameCanonicalValue(value.authority, { proposalOnly: true, persistentActionAllowed: false, modelMutationAuthority: false })
+    && sameCanonicalValue(value.graph, OWNER_GRAPH_PROFILE_V2)
+    && sameCanonicalValue(value.planning, {
+      policyVersion: "chimpmaera.bi/planning-policy/v1", taskClass: "extraction", pattern: "direct-execute-check",
+      validationDepth: "exact", toolBudget: 4, stepBudget: 6,
+      fallback: "retain-incumbent-and-return-evidence-bound-partial",
+    })) {
+    const planning = value.planning as Record<string, unknown>;
+    return unsafeRequestValue({ ...value, planning: { ...planning, pattern: "owner-bound-planning-enum" } });
+  }
+  if (profile.product.version === PAN524_J02_PRODUCT_VERSION_V1 && request.action === "preview"
+    && exactKeys(value, ["schemaVersion", "previewId", "planId", "evidenceBinding", "graph", "hypotheses", "kpiCandidates", "visualizationProposal", "confidence", "blindSpots", "userCorrection", "authority"])
+    && value.schemaVersion === "superset-bi-agent.external/preview/v2"
+    && sameCanonicalValue(value.graph, OWNER_GRAPH_PROFILE_V2)
+    && sameCanonicalValue(value.authority, {
+      proposalOnly: true, applyPerformed: false, sourceRowsReturned: false,
+      modelMutationAuthority: false, approvalRequiredBeforePersistence: true,
+    })
+    && sameCanonicalValue(value.userCorrection, {
+      requiredBeforePersistence: true,
+      questions: ["Confirm KPI grain and units", "Confirm anomaly business thresholds", "Select executive or operational emphasis"],
+    })) {
+    return unsafeRequestValue({ ...value, userCorrection: {
+      requiredBeforePersistence: true,
+      questions: ["Confirm KPI grain and units", "Confirm anomaly business thresholds", "owner-bound-correction-question"],
+    } });
+  }
+  return unsafeRequestValue(value);
+}
+
 function validateIntentRequest(request: unknown): ExternalBiServiceReasonCodeV2 | null {
   if (!isRecord(request) || typeof request.requestId !== "string"
     || !REQUEST_ID.test(request.requestId)) return "EXTERNAL_BI_SERVICE_REQUEST_DENIED";
@@ -483,6 +578,7 @@ function validateIntentEnvelope(
   value: unknown,
   request: ExternalBiServiceIntentRequestV2,
   attestationDigest: string,
+  profile: OwnerCompatibilityProfileV2,
 ): ExternalBiServiceReasonCodeV2 | null {
   if (!exactKeys(value, [
     "schemaVersion", "requestId", "action", "runtime", "capabilityAttestationDigest", "result", "integrity",
@@ -503,10 +599,10 @@ function validateIntentEnvelope(
   try {
     if (integrity.digest !== digest(bodyWithout(value, "integrity"))) return "EXTERNAL_BI_SERVICE_DIGEST_DENIED";
   } catch { return "EXTERNAL_BI_SERVICE_RESPONSE_MALFORMED"; }
-  if (!matchesOwnerProduct(runtime.product)) return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
-  if (!matchesOwnerContract(runtime.contract)) return "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED";
+  if (!matchesOwnerProduct(runtime.product, profile)) return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
+  if (!matchesOwnerContract(runtime.contract, profile)) return "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED";
   if (value.capabilityAttestationDigest !== attestationDigest) return "EXTERNAL_BI_SERVICE_DIGEST_DENIED";
-  if (unsafeRequestValue(result)) return "EXTERNAL_BI_SERVICE_UNSAFE_REQUEST_DENIED";
+  if (unsafeIntentResult(result, request, profile)) return "EXTERNAL_BI_SERVICE_UNSAFE_REQUEST_DENIED";
   if (request.action === "status" && result.status !== "READY") return "EXTERNAL_BI_SERVICE_STATUS_MALFORMED";
   return null;
 }
@@ -519,6 +615,7 @@ const REASON_CODES_V2 = new Set<ExternalBiServiceReasonCodeV2>([
   "EXTERNAL_BI_SERVICE_URL_DENIED",
   "EXTERNAL_BI_SERVICE_TIMEOUT_DENIED",
   "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED",
+  "EXTERNAL_BI_SERVICE_COMPATIBILITY_PROFILE_DENIED",
   "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED",
   "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED",
   "EXTERNAL_BI_SERVICE_DIGEST_DENIED",
@@ -589,6 +686,8 @@ export async function invokeExternalBiServiceV2(
   if (configError) return intentFailure("DENIED", configError);
   if (!ownerDerived) return intentFailure("DENIED", "EXTERNAL_BI_SERVICE_REQUEST_DENIED");
   const config = decisionSnapshot.config as unknown as ExternalBiServiceConfigV2;
+  const expectedProfile = ownerProfileForProductVersion(config.expectedProductVersion);
+  if (expectedProfile === null) return intentFailure("DENIED", "EXTERNAL_BI_SERVICE_COMPATIBILITY_PROFILE_DENIED");
   const baseUrl = config.biAgentBaseUrl;
   if (baseUrl === null) return intentFailure("DENIED", "EXTERNAL_BI_SERVICE_URL_DENIED");
 
@@ -613,10 +712,21 @@ export async function invokeExternalBiServiceV2(
     } catch {
       return intentFailure("DENIED", "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED");
     }
-    const attestationError = validateAttestation(attestation);
+    const attestationError = validateAttestation(attestation, expectedProfile);
     if (attestationError) return intentFailure("DENIED", attestationError);
     const proof = (attestation as Record<string, unknown>).attestation as Record<string, unknown>;
     const attestationDigest = proof.digest as string;
+    if (config.expectedProductVersion === PAN524_J02_PRODUCT_VERSION_V1) {
+      const profileResponse = await fetchImpl(endpoint(baseUrl, "/v2/provider-profile"), {
+        method: "GET", signal: AbortSignal.timeout(config.timeoutMs),
+      });
+      if (!profileResponse.ok) return intentFailure("UNAVAILABLE", "EXTERNAL_BI_SERVICE_UNAVAILABLE");
+      let providerProfile: unknown;
+      try { providerProfile = safeJsonClone(await responseJson(profileResponse)); }
+      catch { return intentFailure("DENIED", "EXTERNAL_BI_SERVICE_ATTESTATION_MALFORMED"); }
+      const profileError = validateSelectedProviderProfile(providerProfile, expectedProfile, attestation);
+      if (profileError) return intentFailure("DENIED", profileError);
+    }
     const payload = {
       schemaVersion: EXTERNAL_BI_SERVICE_REQUEST_SCHEMA_V2,
       requestId: safeRequest.requestId,
@@ -636,7 +746,7 @@ export async function invokeExternalBiServiceV2(
     } catch {
       return intentFailure("DENIED", "EXTERNAL_BI_SERVICE_RESPONSE_MALFORMED");
     }
-    const responseError = validateIntentEnvelope(value, safeRequest, attestationDigest);
+    const responseError = validateIntentEnvelope(value, safeRequest, attestationDigest, expectedProfile);
     if (responseError) return intentFailure("DENIED", responseError);
     const record = value as Record<string, unknown>;
     const integrity = record.integrity as Record<string, unknown>;
@@ -669,7 +779,7 @@ export async function probeExternalBiServiceV2(
       readback: {
         schemaVersion: EXTERNAL_BI_SERVICE_READBACK_SCHEMA_V2,
         outcome: "READY",
-        productVersion: OWNER_COMPATIBILITY_PROFILE_V2.product.version,
+        productVersion: decision.outcome === "VERIFIED" ? decision.config.expectedProductVersion : EXTERNAL_BI_SERVICE_PRODUCT_VERSION_V2,
         contractVersion: OWNER_COMPATIBILITY_PROFILE_V2.contract.version,
         capabilities: [...EXTERNAL_BI_SERVICE_CAPABILITIES_V2],
         acceptedGraphIncumbent: "adaptive-v1",

@@ -1648,6 +1648,54 @@ pan517Node.inputs = pan517Inputs.map(([inputPath,role]) => ({path:inputPath,role
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan517:test")) repositoryIntegrityNode.ownedTests.push("npm run pan517:test");
 dag.graphVersion = 80;
 
+// PAN524 exact optional external BI profile; retain legacy owner and all hard gates.
+const pan524Inputs = [
+  [
+    "scripts/verify-pan524-exact-bi-pair-v1.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/fixtures/pan524/published-j02-provider-v0181.json",
+    "FIXTURE"
+  ],
+  ["tests/fixtures/pan524/published-plan-extraction-response-v1.json", "FIXTURE"],
+  ["tests/fixtures/pan524/published-preview-response-v1.json", "FIXTURE"],
+  [
+    "tests/pan524/exact-bi-pair-profile.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan524/delivery-surface.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan524/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "verification/pan524-exact-bi-pair-evidence-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan524Node = dag.nodes.find(({id}) => id === "pan524-exact-bi-pair-v1");
+if (pan524Node === undefined) {
+  pan524Node = {
+    id: "pan524-exact-bi-pair-v1", dependsOn: ["external-bi-service-v2"], inputs: [],
+    ownedTests: ["npm run pan524:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Legacy v0.8.0 default retained; only explicit code-owned KS_J02_0181_C2_V1 selects exact v0.18.1/2.0.0 package and provider profile before every intent.",
+      "Exact complete attestation and capability tuple; unknown, missing, root-version, substituted or redigested wildcard identity fails before dispatch.",
+      "Only six existing external intents; three known trusted-only partial descriptors do not enable mutation, credentials, raw rows, SQL or direct Superset access. Existing order receiver remains separate.",
+      "Immutable contract supplied early through existing J02 custody; actual unchanged real synthetic provider and current PAN client paired run precedes final original acceptance. J03 consumes the same qualified run without mutual CLOSED prerequisites.",
+      "Source-evidence distribution only; independent original4/negative acceptance, canonical proof, hosted CI, protected merge, new release and anonymous exact consumer readback precede closure. No registry promotion or productive/source authority."
+    ]
+  };
+  dag.nodes.push(pan524Node);
+}
+pan524Node.inputs = pan524Inputs.map(([inputPath,role]) => ({path:inputPath,role,sha256:digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan524:test")) repositoryIntegrityNode.ownedTests.push("npm run pan524:test");
+dag.graphVersion = 81;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1694,6 +1742,7 @@ for (const [inputPath] of pan396Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan515Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan516Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan517Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan524Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

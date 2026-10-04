@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 80,
+  "graphVersion": 81,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "64b596b7a0853e68aa3dc96eddfe8d050db1da3b24fa1f0468a7e0746c558a0d"
+          "sha256": "8d95a37d95b2e152e364f6c32906395c9e4cba4039791c72063f888f2a63389e"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3637,7 +3637,7 @@
         {
           "path": "packages/contracts/src/external-bi-service.ts",
           "role": "CONTRACT",
-          "sha256": "7ea7c5e68ee6aa190313521ffecc9b6b01b0f829e7c7bcc6bf85ffa4e734ba37"
+          "sha256": "11e26f1ec9396d79aeedc867b939f56f89839612fb78e0085bf2ab7e7d8474c5"
         },
         {
           "path": "tests/external-bi-service.test.ts",
@@ -3657,7 +3657,7 @@
         {
           "path": "docs/EXTERNAL-BI-SERVICE.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "0acab93aad3d62c74b88e0a44fb07387dcbd26bc889f7ab8d7d13a9171e9322a"
+          "sha256": "49ec4939efe14db30bdc471e249b7edd84bf19e0ff2e11b648054110689db45d"
         },
         {
           "path": "verification/external-bi-service-paired-compatibility-v1.json",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "c05916f5effb6eee968ed63f2449cbcda44671463f2db664cfeebe2ebac840ec"
+          "sha256": "2e570730be4b6d792478ba2a9f7e53b8f05927541d9c13a458ebc60ae1ec43da"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "32f4eda22b907554111990a53e53d92506b6d3bf61941a5f4fd294a1ef8deee7"
+          "sha256": "ad9865e918ee9d54337588652c1b2f5c8b6f3aa382de309550b7d4b667b584f5"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "8f226b7299d34a80f56908be732ca0b56b24d14ead557aa31b48e0a419ec3739"
+          "sha256": "2c50397eca39cd1a294750b10eae469fb3f2c9f75da30e70e27b8e35f8b65c46"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "565c2139ffe930e3ea3198ee107ad20fab28d00a51584df87cccd4339e36a0c8"
+          "sha256": "14245ab9ef501e79e08790fee943f782244873d054563dc57bdb89589a9f0418"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "c27858e767bfdd3051c54c5f01433623dea6e7ae5f123aeda1133fdb6a200e14"
+          "sha256": "9af257c21e5c4fc6bdbe66c21c3464ac463002d4a38ea8094b3cef0ed5a4a937"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5079,7 +5079,8 @@
         "npm run pan396:test",
         "npm run pan515:test",
         "npm run pan516:test",
-        "npm run pan517:test"
+        "npm run pan517:test",
+        "npm run pan524:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5634,7 +5635,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "d4b05382160a4435e6b9b2d61f9068c084e418a09f3cbd16b1ffe3283eff2582"
+          "sha256": "a1f65e481bcc140cdcb375188b0fcdda9a6e9eba2d31386c7166c4d8ca8fe1c9"
         },
         {
           "path": "package-lock.json",
@@ -5994,7 +5995,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e31f84c24020f4746d6d6250845216c2305734520a7747126fd9b7d98de4e837"
+          "sha256": "1a210565ec153885f986dc762960c299f0250313871ae8bbbf939e8f5d02647e"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7936,7 +7937,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "77108ddf01d0c3416806891324b3424b96188e15dc859183882482ee4ac1e3f8"
+          "sha256": "a0eee87c8ddfd9d059ba86f115d28d3df0dc6f9d87d9e519517499cb1e7d4e37"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8018,7 +8019,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "51b7d0d012363edf5f27bac2aae7e9a3479ce0fc3b9cf125e4b734df5665b316"
+          "sha256": "857783041c55b4baee82562984b4397deaf71cbf8c916d8120c5ef5db1a23e19"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8088,7 +8089,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "d0bccd0fb7fcc11325eecfada5a91b9f013e7ffd2f6b17edff05ae577fb1ba7b"
+          "sha256": "0a65bd0cf903a06916a231e657b821d43645630866a86e05af1ccb1f45a5a9e8"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8363,7 +8364,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "19f331a219af2a2929d210b21c48fe505d25ddeae2104a114a5dd55ba0d406f5"
+          "sha256": "6229515ed7f92ef76045687e9c6c177531d9b94b7862561f479972da76ec88db"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8454,7 +8455,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "e8602890599278511177220cdf99559b5b56f55c846784962609c7304db4b061"
+          "sha256": "c7dc963d773c87700ed6ee3aa04e6ac9f2f4ac9f1e307e289c56febab439e582"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8520,7 +8521,7 @@
         {
           "path": "tests/procurement-434/procurement-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "72f5010a19425a5ce7fcfc55c50b70029fc86652d9f2504e62b62908ff4f2f35"
+          "sha256": "233ecac43348468476f7d31a41f3a7a7ad94470c46233f8ae02025c857d34a39"
         },
         {
           "path": "docs/architecture/pan516-native-procurement-v1.md",
@@ -8576,7 +8577,7 @@
         {
           "path": "tests/pan517/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "45f4e76937b241d1b4b5362a6817bc28a6cbe647cf627e2656626968759101a9"
+          "sha256": "7d0b6ff1745bb2df66b6215d23a6701769b2a7a920e1f00f9dec748c2b5df9f1"
         },
         {
           "path": "docs/architecture/pan517-native-fulfilment-v1.md",
@@ -8601,6 +8602,66 @@
         "Published original dispatch promise and revisions retain exact common source and real event calendar instants; impossible dates and clock/offset overflow deny before native mutation.",
         "Dispatch and actual customer receipt carry explicit separate event types and promise kind/revision; dispatch alone never proves delivery punctuality and readback cannot mutate events.",
         "Feature-specific stop denies new fulfilment transitions but preserves immutable performed movements and existing reason-bearing business correction; frozen independent acceptance, exact canonical/hosted CI, merge, new release and anonymous readback remain separate gates."
+      ]
+    },
+    {
+      "id": "pan524-exact-bi-pair-v1",
+      "dependsOn": [
+        "external-bi-service-v2"
+      ],
+      "inputs": [
+        {
+          "path": "scripts/verify-pan524-exact-bi-pair-v1.mjs",
+          "role": "SOURCE",
+          "sha256": "402ba404bfc5cb27e79170ba9cbe8fd612e195fc60a2525e5e364cf4aeab43de"
+        },
+        {
+          "path": "tests/fixtures/pan524/published-j02-provider-v0181.json",
+          "role": "FIXTURE",
+          "sha256": "e30b5efe4279b9756203834501061c048e163668b7d81fe281717dc0ad56aeab"
+        },
+        {
+          "path": "tests/fixtures/pan524/published-plan-extraction-response-v1.json",
+          "role": "FIXTURE",
+          "sha256": "1d0f181df51394cf8d3f324eaf432272d18ae7f78c54463bd11801fe9efbb924"
+        },
+        {
+          "path": "tests/fixtures/pan524/published-preview-response-v1.json",
+          "role": "FIXTURE",
+          "sha256": "4fc42f129068c6e261dbafe557bc8276e2c6b0442b90abc3828cbbb6cf9a109a"
+        },
+        {
+          "path": "tests/pan524/exact-bi-pair-profile.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "af891156d1b2dfec11aca7ebcea127d0c3e16d855ed2cb8f04b15680538f28b9"
+        },
+        {
+          "path": "tests/pan524/delivery-surface.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "01c74f5f13278bfdf262d1c07a4c44c4726409ab28a4c4a8aac3bdec1968a5ec"
+        },
+        {
+          "path": "tests/pan524/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "73b7eda1782fee57ee2ff5dfe792c580d95b01d25dbb9bffd1c6fb9da4bec99c"
+        },
+        {
+          "path": "verification/pan524-exact-bi-pair-evidence-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "619e9d78d6c70c8011461740d5e2da9647f5776818da0e072ba13e273a8b49a5"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan524:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Legacy v0.8.0 default retained; only explicit code-owned KS_J02_0181_C2_V1 selects exact v0.18.1/2.0.0 package and provider profile before every intent.",
+        "Exact complete attestation and capability tuple; unknown, missing, root-version, substituted or redigested wildcard identity fails before dispatch.",
+        "Only six existing external intents; three known trusted-only partial descriptors do not enable mutation, credentials, raw rows, SQL or direct Superset access. Existing order receiver remains separate.",
+        "Immutable contract supplied early through existing J02 custody; actual unchanged real synthetic provider and current PAN client paired run precedes final original acceptance. J03 consumes the same qualified run without mutual CLOSED prerequisites.",
+        "Source-evidence distribution only; independent original4/negative acceptance, canonical proof, hosted CI, protected merge, new release and anonymous exact consumer readback precede closure. No registry promotion or productive/source authority."
       ]
     }
   ]
