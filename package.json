@@ -194,6 +194,7 @@
     "learning-routing:test:compiled": "node --test dist/tests/learning-routing.test.js dist/tests/learning-routing-outcome.test.js dist/tests/learning-routing-threats.test.js dist/tests/learning-routing-baseline.test.js dist/tests/learning-routing-recommender.test.js",
     "voice:test:compiled": "node --test dist/tests/voice-local-ptt.test.js",
     "external-bi-service:test:compiled": "node --test dist/tests/external-bi-service.test.js",
+    "pan524:test": "node --test tests/pan524/*.test.mjs",
     "fnd-ps-fu-01:test:compiled": "node --test dist/tests/cks-12/readonly-kaleidosphere-bridge.test.js",
     "trust-compatibility-foundation-closure:test:compiled": "node --test dist/tests/trust-compatibility-foundation-closure.test.js",
     "external-video-service:test:compiled": "node --test dist/tests/external-video-service.test.js",
