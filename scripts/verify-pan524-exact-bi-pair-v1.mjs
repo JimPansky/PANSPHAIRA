@@ -30,6 +30,7 @@ const status=await invoke('status');assert.equal(status.status,'READY');
 // A fresh genuine control runtime has no catalog until its first analysis.
 const analysis=await invoke('analyze');assert.equal(analysis.status,'ANALYZED_READ_ONLY');assert.equal(analysis.sourceMode,'fixture');
 assert.equal(analysis.safety.sourceReadOnly,true);assert.equal(analysis.safety.rawSourceRowsReturned,false);assert.equal(analysis.safety.credentialsReturned,false);
+assert(Object.hasOwn(analysis,'receiptId') && typeof analysis.receiptId==='string' && analysis.receiptId.length>0,'actual public receipt identity required; never manufacture or pass undefined');
 const discovery=await invoke('discovery',{command:'start',sessionId:runId});
 const plan=await invoke('plan',{objective:'Review weekly order value and coverage',receiptId:analysis.receiptId});
 assert.equal(plan.graph.acceptedIncumbent,'adaptive-v1');assert.equal(plan.authority.persistentActionAllowed,false);

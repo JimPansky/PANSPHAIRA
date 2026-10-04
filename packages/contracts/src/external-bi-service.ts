@@ -521,6 +521,43 @@ function unsafeRequestValue(value: unknown): boolean {
   return Object.entries(value).some(([key, item]) => FORBIDDEN_REQUEST_KEY.test(key.replace(/[^A-Za-z0-9]/g, "")) || unsafeRequestValue(item));
 }
 
+// A planning-policy enum is not free SQL or an executable request. Admit only
+// this exact published extraction tuple, at its typed result path, for J02.
+// Every other response field and every caller input retain the original filter.
+function unsafeIntentResult(value: unknown, request: ExternalBiServiceIntentRequestV2, profile: OwnerCompatibilityProfileV2): boolean {
+  if (profile.product.version === PAN524_J02_PRODUCT_VERSION_V1 && request.action === "plan"
+    && exactKeys(value, ["schemaVersion", "planId", "objective", "evidenceBinding", "graph", "planning", "authority", "trustedWorkflow"])
+    && value.schemaVersion === "superset-bi-agent.external/plan/v2"
+    && sameCanonicalValue(value.authority, { proposalOnly: true, persistentActionAllowed: false, modelMutationAuthority: false })
+    && sameCanonicalValue(value.graph, OWNER_GRAPH_PROFILE_V2)
+    && sameCanonicalValue(value.planning, {
+      policyVersion: "chimpmaera.bi/planning-policy/v1", taskClass: "extraction", pattern: "direct-execute-check",
+      validationDepth: "exact", toolBudget: 4, stepBudget: 6,
+      fallback: "retain-incumbent-and-return-evidence-bound-partial",
+    })) {
+    const planning = value.planning as Record<string, unknown>;
+    return unsafeRequestValue({ ...value, planning: { ...planning, pattern: "owner-bound-planning-enum" } });
+  }
+  if (profile.product.version === PAN524_J02_PRODUCT_VERSION_V1 && request.action === "preview"
+    && exactKeys(value, ["schemaVersion", "previewId", "planId", "evidenceBinding", "graph", "hypotheses", "kpiCandidates", "visualizationProposal", "confidence", "blindSpots", "userCorrection", "authority"])
+    && value.schemaVersion === "superset-bi-agent.external/preview/v2"
+    && sameCanonicalValue(value.graph, OWNER_GRAPH_PROFILE_V2)
+    && sameCanonicalValue(value.authority, {
+      proposalOnly: true, applyPerformed: false, sourceRowsReturned: false,
+      modelMutationAuthority: false, approvalRequiredBeforePersistence: true,
+    })
+    && sameCanonicalValue(value.userCorrection, {
+      requiredBeforePersistence: true,
+      questions: ["Confirm KPI grain and units", "Confirm anomaly business thresholds", "Select executive or operational emphasis"],
+    })) {
+    return unsafeRequestValue({ ...value, userCorrection: {
+      requiredBeforePersistence: true,
+      questions: ["Confirm KPI grain and units", "Confirm anomaly business thresholds", "owner-bound-correction-question"],
+    } });
+  }
+  return unsafeRequestValue(value);
+}
+
 function validateIntentRequest(request: unknown): ExternalBiServiceReasonCodeV2 | null {
   if (!isRecord(request) || typeof request.requestId !== "string"
     || !REQUEST_ID.test(request.requestId)) return "EXTERNAL_BI_SERVICE_REQUEST_DENIED";
@@ -565,7 +602,7 @@ function validateIntentEnvelope(
   if (!matchesOwnerProduct(runtime.product, profile)) return "EXTERNAL_BI_SERVICE_PRODUCT_VERSION_DENIED";
   if (!matchesOwnerContract(runtime.contract, profile)) return "EXTERNAL_BI_SERVICE_CONTRACT_VERSION_DENIED";
   if (value.capabilityAttestationDigest !== attestationDigest) return "EXTERNAL_BI_SERVICE_DIGEST_DENIED";
-  if (unsafeRequestValue(result)) return "EXTERNAL_BI_SERVICE_UNSAFE_REQUEST_DENIED";
+  if (unsafeIntentResult(result, request, profile)) return "EXTERNAL_BI_SERVICE_UNSAFE_REQUEST_DENIED";
   if (request.action === "status" && result.status !== "READY") return "EXTERNAL_BI_SERVICE_STATUS_MALFORMED";
   return null;
 }

@@ -371,6 +371,8 @@ repository_only_files = {
     # PAN524 current exact pair qualification remains source evidence, not a standalone runtime.
     "scripts/verify-pan524-exact-bi-pair-v1.mjs",
     "tests/fixtures/pan524/published-j02-provider-v0181.json",
+    "tests/fixtures/pan524/published-plan-extraction-response-v1.json",
+    "tests/fixtures/pan524/published-preview-response-v1.json",
     "tests/pan524/exact-bi-pair-profile.test.mjs",
     "tests/pan524/delivery-surface.test.mjs",
     "tests/pan524/registration.test.mjs",

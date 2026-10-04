@@ -515,6 +515,14 @@
       "fromSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
       "toSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
       "reason": "Advance graph to v81 with one bounded J01 exact current BI pair owner; retain existing legacy external BI source owner, four original criteria/negatives, full attestation/artifact identity and independently owned real provider pairing. Preserve all prior migrations, immutable base obligations, hard gates, source/privacy boundaries and runnable manifest; no wildcard, registry promotion, productive or closure authority."
+    },
+    {
+      "migrationId": "PAN524-CLOSED-RESPONSE-METADATA-FIXTURES/INTEGRITY-GENERATOR/V54",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 54,
+      "fromSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
+      "toSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
+      "reason": "Bind two genuine released plan/preview captures to the existing graph81 J01 owner for closed exact response-origin metadata regression. Preserve the entire reviewed V53 migration, scanner, legacy request denial, immutable base obligations, hard gates and all existing owners; no registry or productive authority."
     }
   ],
   "scanScope": {
@@ -564,8 +572,8 @@
     "importFiles": 275,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2278,
-    "ledgerUniquePaths": 2278
+    "ledgerEntries": 2280,
+    "ledgerUniquePaths": 2280
   },
   "profiles": [
     {
@@ -638,7 +646,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b"
+      "sha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1334,7 +1342,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
+      "sha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
       "basis": "profile-version-migration"
     },
     {

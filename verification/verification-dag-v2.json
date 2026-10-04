@@ -3637,7 +3637,7 @@
         {
           "path": "packages/contracts/src/external-bi-service.ts",
           "role": "CONTRACT",
-          "sha256": "63f3b8899aba0487fc2acd6bd5706de32cdfceeaa57d722113bb2d8a5ad66439"
+          "sha256": "11e26f1ec9396d79aeedc867b939f56f89839612fb78e0085bf2ab7e7d8474c5"
         },
         {
           "path": "tests/external-bi-service.test.ts",
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "0bbd14c6629c29b9cc0ef7f4e27ad01ca039b09bd20b82e20dbf604019971f17"
+          "sha256": "2c50397eca39cd1a294750b10eae469fb3f2c9f75da30e70e27b8e35f8b65c46"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "d1ce0d1d891052a510a6c1bf98c4dc7dd2e533360fa9c95c74b040dc9af82863"
+          "sha256": "14245ab9ef501e79e08790fee943f782244873d054563dc57bdb89589a9f0418"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "bd63fc7e21655b1f90a3aed0bce35f17934ece4a9f76843da3d184f211d65f9f"
+          "sha256": "9af257c21e5c4fc6bdbe66c21c3464ac463002d4a38ea8094b3cef0ed5a4a937"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -8613,7 +8613,7 @@
         {
           "path": "scripts/verify-pan524-exact-bi-pair-v1.mjs",
           "role": "SOURCE",
-          "sha256": "f6d183f656278e865a1239d26d5c30cc33b87c29f19d8cb2815c7e15ac5e7759"
+          "sha256": "402ba404bfc5cb27e79170ba9cbe8fd612e195fc60a2525e5e364cf4aeab43de"
         },
         {
           "path": "tests/fixtures/pan524/published-j02-provider-v0181.json",
@@ -8621,9 +8621,19 @@
           "sha256": "e30b5efe4279b9756203834501061c048e163668b7d81fe281717dc0ad56aeab"
         },
         {
+          "path": "tests/fixtures/pan524/published-plan-extraction-response-v1.json",
+          "role": "FIXTURE",
+          "sha256": "1d0f181df51394cf8d3f324eaf432272d18ae7f78c54463bd11801fe9efbb924"
+        },
+        {
+          "path": "tests/fixtures/pan524/published-preview-response-v1.json",
+          "role": "FIXTURE",
+          "sha256": "4fc42f129068c6e261dbafe557bc8276e2c6b0442b90abc3828cbbb6cf9a109a"
+        },
+        {
           "path": "tests/pan524/exact-bi-pair-profile.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "37431bcd0d0c8eb8852d760f7b87694ce4f766de393d3221f357bf69d8ab13aa"
+          "sha256": "af891156d1b2dfec11aca7ebcea127d0c3e16d855ed2cb8f04b15680538f28b9"
         },
         {
           "path": "tests/pan524/delivery-surface.test.mjs",
@@ -8633,12 +8643,12 @@
         {
           "path": "tests/pan524/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f712dc29e6d3be91a16cc8966ddd875b53f0da43838fef5f03b5249e1855432d"
+          "sha256": "73b7eda1782fee57ee2ff5dfe792c580d95b01d25dbb9bffd1c6fb9da4bec99c"
         },
         {
           "path": "verification/pan524-exact-bi-pair-evidence-v1.json",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "09e565484347e0dafe969b4797dca820a0d6f7c9d2aafbf25176c5a2945ba76a"
+          "sha256": "619e9d78d6c70c8011461740d5e2da9647f5776818da0e072ba13e273a8b49a5"
         }
       ],
       "ownedTests": [

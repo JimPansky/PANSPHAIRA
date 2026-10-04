@@ -1,0 +1,160 @@
+{
+  "schemaVersion": "superset-bi-agent.external/intent-result/v2",
+  "requestId": "pan524-ce0fb66334f744c9b4bc170a1262ee92-plan-preview",
+  "action": "preview",
+  "runtime": {
+    "product": {
+      "id": "superset-bi-agent",
+      "version": "v0.18.1",
+      "component": "bi-agent-runtime"
+    },
+    "contract": {
+      "id": "superset-bi-agent.external",
+      "version": "2.0.0"
+    }
+  },
+  "capabilityAttestationDigest": "sha256:7379d493c1dceeaa83a1266e420cb866efb2216c3b56c0d93212863c5b87bb8a",
+  "result": {
+    "schemaVersion": "superset-bi-agent.external/preview/v2",
+    "previewId": "preview-465d675d3360b20eda470191",
+    "planId": "plan-465d675d3360b20eda470191",
+    "evidenceBinding": {
+      "receiptId": "mssql-c8cc52a50bc776e118821d7b",
+      "snapshotSha256": "293a896156d8f6269c4ad33e8d632da653ea180d35a4ea5f390b0be52ce3e44a"
+    },
+    "graph": {
+      "acceptedIncumbent": "adaptive-v1",
+      "candidatePromotion": "none"
+    },
+    "hypotheses": [
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:technical_coverage_blind_spots.reason_code"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_snapshots.container_name"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_extracts.reason_code"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_facts.schema_name"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_facts.relation_name"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_facts.object_name"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_facts.object_kind"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_facts.column_name"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:catalog_relations.status"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:technical_tables_capacity.num_rows_estimate"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:technical_tables_capacity.last_analyzed"
+      },
+      {
+        "hypothesis": "missing_values may affect KPI trust or process performance",
+        "confidence": 0.45,
+        "status": "requires-targeted-domain-test",
+        "evidence": "profile:technical_tables_capacity.stale_stats"
+      }
+    ],
+    "kpiCandidates": [],
+    "visualizationProposal": {
+      "mode": "preview-only",
+      "proposals": [
+        {
+          "type": "sankey_or_process_flow",
+          "purpose": "cross-entity/process relationship",
+          "safeguards": [
+            "no implied causality",
+            "bounded categories"
+          ]
+        },
+        {
+          "type": "ranked_bar_with_evidence_table",
+          "purpose": "quality/anomaly prioritization",
+          "safeguards": [
+            "sample-bound label",
+            "absolute and rate"
+          ]
+        },
+        {
+          "type": "detail_table",
+          "purpose": "drilldown and evidence readback",
+          "safeguards": [
+            "aggregate-first",
+            "no sensitive raw rows"
+          ]
+        }
+      ],
+      "responsive": true,
+      "overviewToDrilldown": true,
+      "persistentMutation": false
+    },
+    "confidence": 0.82,
+    "blindSpots": [
+      "kpi-semantics-require-user-confirmation"
+    ],
+    "userCorrection": {
+      "requiredBeforePersistence": true,
+      "questions": [
+        "Confirm KPI grain and units",
+        "Confirm anomaly business thresholds",
+        "Select executive or operational emphasis"
+      ]
+    },
+    "authority": {
+      "proposalOnly": true,
+      "applyPerformed": false,
+      "sourceRowsReturned": false,
+      "modelMutationAuthority": false,
+      "approvalRequiredBeforePersistence": true
+    }
+  },
+  "integrity": {
+    "algorithm": "sha256-canonical-json",
+    "digest": "sha256:66007da58af6cc046db7014b85dc74f97ce1703098bffebeed677277164223c1"
+  }
+}

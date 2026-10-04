@@ -74,3 +74,57 @@ test('J01 exact published artifact and attestation set deny redigested package s
     assert.equal(result.outcome,'DENIED');assert.deepEqual(result.reasonCodes,[code]);assert.equal(posts,0);
   }
 });
+
+// Actual released typed-handler capture; these are declared unit transport probes,
+// not a replacement provider or new paired runtime acceptance.
+const SYNTHETIC_NEGATIVE_MARKER='synthetic-not-permitted';
+const actualPlan=JSON.parse(readFileSync('tests/fixtures/pan524/published-plan-extraction-response-v1.json','utf8'));
+function planEnvelope(edit=()=>{},legacy=false){
+  return async(input,options)=>{
+    if(String(input).endsWith('/v2/capabilities')){
+      const att=structuredClone(source.attestation);if(legacy){att.product.version='v0.8.0';att.capabilities=att.capabilities.slice(0,6);}return new Response(JSON.stringify(resign(att)),{status:200});
+    }
+    if(String(input).endsWith('/v2/provider-profile'))return new Response(JSON.stringify(source.providerProfile),{status:200});
+    const req=JSON.parse(options.body),value=structuredClone(actualPlan);value.requestId=req.requestId;edit(value.result);if(legacy)value.runtime.product.version='v0.8.0';
+    const {integrity,...body}=value;const canonical=v=>v===null||typeof v!=='object'?JSON.stringify(v):Array.isArray(v)?'['+v.map(canonical).join(',')+']':'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}';value.integrity={algorithm:'sha256-canonical-json',digest:'sha256:'+createHash('sha256').update(canonical(body)).digest('hex')};return new Response(JSON.stringify(value),{status:200});
+  };
+}
+test('J01 actual selected read-only extraction plan admits its closed informational direct-execute-check enum, never execution authority',async()=>{
+  const {invokeExternalBiServiceV2}=await import('../../dist/packages/contracts/src/index.js');const cfg=configureExternalBiServiceV2({BI_AGENT_BASE_URL:'http://127.0.0.1:18790',BI_AGENT_PAIR_PROFILE:'KS_J02_0181_C2_V1'});
+  const result=await invokeExternalBiServiceV2(cfg,{requestId:'j01-plan-capture',action:'plan',input:{objective:'Review weekly order value and coverage'}},planEnvelope());
+  assert.equal(result.outcome,'VERIFIED');assert.equal(result.readback.result.planning.pattern,'direct-execute-check');assert.equal(result.readback.result.authority.persistentActionAllowed,false);
+});
+test('J01 closed plan enum cannot carry SQL credentials rows or authority changes and is not a blanket text exception',async()=>{
+  const {invokeExternalBiServiceV2}=await import('../../dist/packages/contracts/src/index.js');const cfg=configureExternalBiServiceV2({BI_AGENT_BASE_URL:'http://127.0.0.1:18790',BI_AGENT_PAIR_PROFILE:'KS_J02_0181_C2_V1'});
+  for(const edit of [v=>v.planning.pattern='direct-execute-check SELECT 1',v=>v.planning.password=SYNTHETIC_NEGATIVE_MARKER,v=>v.rawRows=[{x:1}],v=>v.authority.persistentActionAllowed=true,v=>v.planning.taskClass='unknown',v=>v.unknown='apparently-safe-extra',v=>v.objective='direct-execute-check',v=>v.extraText='SELECT x FROM y']){
+    const result=await invokeExternalBiServiceV2(cfg,{requestId:'j01-plan-negative',action:'plan',input:{objective:'Review weekly order value'}},planEnvelope(edit));assert.equal(result.outcome,'DENIED');assert.deepEqual(result.reasonCodes,['EXTERNAL_BI_SERVICE_UNSAFE_REQUEST_DENIED']);
+  }
+  const legacy=configureExternalBiServiceV2({BI_AGENT_BASE_URL:'http://127.0.0.1:18790'});const result=await invokeExternalBiServiceV2(legacy,{requestId:'j01-legacy-unchanged',action:'plan',input:{objective:'Review weekly order value'}},planEnvelope(()=>{},true));assert.equal(result.outcome,'DENIED');
+});
+test('J01 plan metadata enum never relaxes forbidden request text or undefined optional receipt fields',async()=>{
+  const {invokeExternalBiServiceV2}=await import('../../dist/packages/contracts/src/index.js');const cfg=configureExternalBiServiceV2({BI_AGENT_BASE_URL:'http://127.0.0.1:18790',BI_AGENT_PAIR_PROFILE:'KS_J02_0181_C2_V1'});let fetched=0;
+  for(const input of [{objective:'direct-execute-check'},{objective:'Review weekly order value',receiptId:undefined}]){
+    const result=await invokeExternalBiServiceV2(cfg,{requestId:'j01-plan-input-denied',action:'plan',input},async()=>{fetched++;throw new Error('forbidden input reached transport');});assert.equal(result.outcome,'DENIED');
+  }assert.equal(fetched,0);
+});
+
+const actualPreview=JSON.parse(readFileSync('tests/fixtures/pan524/published-preview-response-v1.json','utf8'));
+function previewEnvelope(edit=()=>{}){
+  return async(input,options)=>{
+    if(String(input).endsWith('/v2/capabilities'))return new Response(JSON.stringify(source.attestation),{status:200});
+    if(String(input).endsWith('/v2/provider-profile'))return new Response(JSON.stringify(source.providerProfile),{status:200});
+    const req=JSON.parse(options.body),value=structuredClone(actualPreview);value.requestId=req.requestId;edit(value.result);
+    const {integrity,...body}=value;const canonical=v=>v===null||typeof v!=='object'?JSON.stringify(v):Array.isArray(v)?'['+v.map(canonical).join(',')+']':'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canonical(v[k])).join(',')+'}';value.integrity={algorithm:'sha256-canonical-json',digest:'sha256:'+createHash('sha256').update(canonical(body)).digest('hex')};return new Response(JSON.stringify(value),{status:200});
+  };
+}
+test('J01 actual selected proposal preview admits only its exact informational correction questions, never SQL forwarding',async()=>{
+  const {invokeExternalBiServiceV2}=await import('../../dist/packages/contracts/src/index.js');const cfg=configureExternalBiServiceV2({BI_AGENT_BASE_URL:'http://127.0.0.1:18790',BI_AGENT_PAIR_PROFILE:'KS_J02_0181_C2_V1'});
+  const result=await invokeExternalBiServiceV2(cfg,{requestId:'j01-preview-capture',action:'preview',input:{objective:'Preview weekly order value and coverage'}},previewEnvelope());
+  assert.equal(result.outcome,'VERIFIED');assert.deepEqual(result.readback.result.userCorrection,actualPreview.result.userCorrection);assert.equal(result.readback.result.authority.applyPerformed,false);
+});
+test('J01 rehashed preview metadata cannot smuggle new SQL questions credentials rows unknown fields or persistence authority',async()=>{
+  const {invokeExternalBiServiceV2}=await import('../../dist/packages/contracts/src/index.js');const cfg=configureExternalBiServiceV2({BI_AGENT_BASE_URL:'http://127.0.0.1:18790',BI_AGENT_PAIR_PROFILE:'KS_J02_0181_C2_V1'});
+  for(const edit of [v=>v.userCorrection.questions[2]='Select executive or operational emphasis; SELECT x FROM y',v=>v.userCorrection.password=SYNTHETIC_NEGATIVE_MARKER,v=>v.rawRows=[{x:1}],v=>v.authority.applyPerformed=true,v=>v.userCorrection.unknown='apparently-safe-extra',v=>v.unknown='apparently-safe-extra',v=>v.extraText='SELECT x FROM y',v=>v.userCorrection.questions.push('apparently-safe-extra')]){
+    const result=await invokeExternalBiServiceV2(cfg,{requestId:'j01-preview-negative',action:'preview',input:{objective:'Preview weekly order value'}},previewEnvelope(edit));assert.equal(result.outcome,'DENIED');assert.deepEqual(result.reasonCodes,['EXTERNAL_BI_SERVICE_UNSAFE_REQUEST_DENIED']);
+  }
+});

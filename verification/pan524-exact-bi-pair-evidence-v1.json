@@ -17,12 +17,14 @@
     "- bequemer Wildcard-Fallback"
   ],
   "sourceBytePins": {
-    "packages/contracts/src/external-bi-service.ts": "63f3b8899aba0487fc2acd6bd5706de32cdfceeaa57d722113bb2d8a5ad66439",
+    "packages/contracts/src/external-bi-service.ts": "11e26f1ec9396d79aeedc867b939f56f89839612fb78e0085bf2ab7e7d8474c5",
     "docs/EXTERNAL-BI-SERVICE.md": "49ec4939efe14db30bdc471e249b7edd84bf19e0ff2e11b648054110689db45d",
-    "scripts/verify-pan524-exact-bi-pair-v1.mjs": "f6d183f656278e865a1239d26d5c30cc33b87c29f19d8cb2815c7e15ac5e7759",
+    "scripts/verify-pan524-exact-bi-pair-v1.mjs": "402ba404bfc5cb27e79170ba9cbe8fd612e195fc60a2525e5e364cf4aeab43de",
     "tests/fixtures/pan524/published-j02-provider-v0181.json": "e30b5efe4279b9756203834501061c048e163668b7d81fe281717dc0ad56aeab",
-    "tests/pan524/exact-bi-pair-profile.test.mjs": "37431bcd0d0c8eb8852d760f7b87694ce4f766de393d3221f357bf69d8ab13aa",
-    "tests/pan524/delivery-surface.test.mjs": "01c74f5f13278bfdf262d1c07a4c44c4726409ab28a4c4a8aac3bdec1968a5ec"
+    "tests/pan524/exact-bi-pair-profile.test.mjs": "af891156d1b2dfec11aca7ebcea127d0c3e16d855ed2cb8f04b15680538f28b9",
+    "tests/pan524/delivery-surface.test.mjs": "01c74f5f13278bfdf262d1c07a4c44c4726409ab28a4c4a8aac3bdec1968a5ec",
+    "tests/fixtures/pan524/published-plan-extraction-response-v1.json": "1d0f181df51394cf8d3f324eaf432272d18ae7f78c54463bd11801fe9efbb924",
+    "tests/fixtures/pan524/published-preview-response-v1.json": "4fc42f129068c6e261dbafe557bc8276e2c6b0442b90abc3828cbbb6cf9a109a"
   },
   "sourceBytesStableAcrossExecution": true,
   "actualFocusedExecution": {
@@ -36,12 +38,12 @@
     ],
     "exitCode": 0,
     "counts": {
-      "tests": 35,
-      "passes": 35,
+      "tests": 40,
+      "passes": 40,
       "fails": 0,
       "skips": 0
     },
-    "stdoutSha256": "031980f43637d976155526f7113a4e956a3179aef40ccab0405e139e44de0e89"
+    "stdoutSha256": "8fa32aaf01f874dda6fe22123fa8b1e95667d0b92fd70fe4a09a991c5497d654"
   },
   "legacyDefaultPreserved": true,
   "directOrderReceiverUnchanged": true,
@@ -50,5 +52,15 @@
   "registryPromotionAuthorized": false,
   "finalAcceptance": false,
   "closureEligible": false,
-  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE",
+  "responseOriginMetadataCorrection": {
+    "genuineReleasedPlanAndPreviewCaptures": true,
+    "selectedExactProfileAndTypedActionOnly": true,
+    "closedExactResultRootAndMetadataTuples": true,
+    "requestFilterUnchanged": true,
+    "unknownFieldsSqlCredentialsRawRowsAndAuthorityMutationsDeniedAfterRehash": true,
+    "previousUndefinedReceiptHypothesisDisproved": true,
+    "actualAnalyzeReceiptPresentString": true,
+    "captureReplayNotNewRuntimeAcceptance": true
+  }
 }

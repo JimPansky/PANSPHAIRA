@@ -1658,6 +1658,8 @@ const pan524Inputs = [
     "tests/fixtures/pan524/published-j02-provider-v0181.json",
     "FIXTURE"
   ],
+  ["tests/fixtures/pan524/published-plan-extraction-response-v1.json", "FIXTURE"],
+  ["tests/fixtures/pan524/published-preview-response-v1.json", "FIXTURE"],
   [
     "tests/pan524/exact-bi-pair-profile.test.mjs",
     "VALIDATOR"
