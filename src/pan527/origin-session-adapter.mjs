@@ -1,0 +1,215 @@
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { constants, closeSync, fstatSync, lstatSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
+import { isAbsolute, join, resolve } from "node:path";
+import { createServer as createHttpsServer } from "node:https";
+import { buildPocGuidedDemoSetupPlanV1, expectedPocGuidedDemoTemplatesV1 } from "../../dist/packages/contracts/src/index.js";
+import { PocEarlyAdminCoordinatorV1, createPocEarlyAdminDashboardServerV1 } from "../../dist/packages/setup-coordinator/src/index.js";
+import { canonicalJson } from "../../dist/packages/contracts/src/canonical-json.js";
+import { runtimeIdentityDigestV1, validateRuntimeIdentityV1 } from "../pan526/runtime-contract.mjs";
+
+// Optional ingress only; the existing local installer/HTTP profile is unchanged.
+export function validateHostedOriginV1(value) {
+  if (typeof value !== "string" || !/^https:\/\/[a-z0-9.-]+(?::[1-9][0-9]{0,4})?$/.test(value)) {
+    throw new Error("HOSTED_ORIGIN_DENIED");
+  }
+  let url;
+  try { url = new URL(value); } catch { throw new Error("HOSTED_ORIGIN_DENIED"); }
+  if (url.origin !== value || url.protocol !== "https:" || url.username || url.password
+    || url.hostname.endsWith(".") || !/^[a-z0-9]+(?:[.-][a-z0-9]+)*$/.test(url.hostname)
+    || (url.port && (Number(url.port) < 1 || Number(url.port) > 65535))) {
+    throw new Error("HOSTED_ORIGIN_DENIED");
+  }
+  return value;
+}
+
+const audience = "pansphaira-hosted-origin-v1";
+const cookieName = "__Host-pan527-session";
+const hash = (value) => createHash("sha256").update(value).digest("hex");
+function exactData(value, keys, code) {
+  if (!value || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) throw new Error(code);
+  const ds = Object.getOwnPropertyDescriptors(value);
+  if (Reflect.ownKeys(ds).some((key) => typeof key !== "string")
+    || JSON.stringify(Object.keys(ds).sort()) !== JSON.stringify([...keys].sort())
+    || Object.values(ds).some((d) => d.get || d.set || !d.enumerable)) throw new Error(code);
+}
+function privateBytes(path) {
+  const fd = openSync(path, constants.O_RDONLY | constants.O_NOFOLLOW);
+  try {
+    const stat = fstatSync(fd);
+    if (!stat.isFile() || (stat.mode & 0o777) !== 0o600 || stat.nlink !== 1
+      || stat.uid !== process.getuid() || stat.size > 262144) throw new Error("HOSTED_AUTH_UNAVAILABLE");
+    return readFileSync(fd);
+  } finally { closeSync(fd); }
+}
+function privateRoot(path) {
+  if (typeof path !== "string" || !isAbsolute(path) || resolve(path) !== path || realpathSync(path) !== path) throw new Error("HOSTED_STATE_ROOT_DENIED");
+  const stat = lstatSync(path);
+  if (!stat.isDirectory() || stat.isSymbolicLink() || (stat.mode & 0o777) !== 0o700 || stat.uid !== process.getuid()) throw new Error("HOSTED_STATE_ROOT_DENIED");
+  return path;
+}
+function atomicPrivate(path, value) {
+  const tmp = path + "." + randomBytes(12).toString("hex");
+  try {
+    writeFileSync(tmp, canonicalJson(value) + "\n", { flag: "wx", mode: 0o600 });
+    renameSync(tmp, path);
+  } finally { try { unlinkSync(tmp); } catch (error) { if (error.code !== "ENOENT") throw error; } }
+}
+function denyHeaderAuthority(headers) {
+  if (!headers || typeof headers !== "object" || Object.getPrototypeOf(headers) !== Object.prototype) throw new Error("HOSTED_HEADER_AUTHORITY_DENIED");
+  const ds = Object.getOwnPropertyDescriptors(headers);
+  for (const key of Reflect.ownKeys(ds)) {
+    if (typeof key !== "string" || ds[key].get || ds[key].set || !ds[key].enumerable
+      || /^(?:authorization|proxy-authorization|forwarded|x-forwarded-.+|x-(?:tenant.*|role.*|user.*|authenticated.*|authority.*|identity.*|instance.*|generation.*|api-key|token))$/i.test(key)) {
+      throw new Error("HOSTED_HEADER_AUTHORITY_DENIED");
+    }
+  }
+}
+
+// Owner-local constructor and issuance only. No HTTP route can mint a session.
+// A runtime identity/role/receipt itself is not execution authorization.
+export function createProtectedSessionAdapterV1(options) {
+  if (!options || Object.getOwnPropertyDescriptor(options, "optIn")?.value !== true) throw new Error("HOSTED_OPT_IN_REQUIRED");
+  exactData(options, ["optIn", "origin", "identity", "stateRoot"], "HOSTED_SESSION_OPTIONS_DENIED");
+  const origin = validateHostedOriginV1(options.origin);
+  const identity = validateRuntimeIdentityV1(options.identity);
+  if (identity.componentId !== "pansphaira-local-demo") throw new Error("HOSTED_RUNTIME_BINDING_DENIED");
+  const root = privateRoot(options.stateRoot);
+  const keyPath = join(root, "session-auth.key"); const storePath = join(root, "sessions.json");
+  try { const fd = openSync(keyPath, "wx", 0o600); try { writeFileSync(fd, randomBytes(32).toString("hex") + "\n"); } finally { closeSync(fd); } }
+  catch (error) { if (error.code !== "EEXIST") throw error; }
+  const binding = Object.freeze({ audience, origin, instanceId: identity.instanceId, tenantId: identity.tenantId, generation: identity.generation, identityDigest: runtimeIdentityDigestV1(identity) });
+  function key() {
+    privateRoot(root); const value = privateBytes(keyPath).toString("utf8").trim();
+    if (!/^[a-f0-9]{64}$/.test(value)) throw new Error("HOSTED_AUTH_UNAVAILABLE");
+    return Buffer.from(value, "hex");
+  }
+  function envelope(payload) { return { payload, mac: createHmac("sha256", key()).update(canonicalJson(payload)).digest("hex") }; }
+  try {
+    const fd = openSync(storePath, "wx", 0o600);
+    try { writeFileSync(fd, canonicalJson(envelope({ schemaVersion: "pansphaira.hosted-session/store/v1", sessions: {} })) + "\n"); }
+    finally { closeSync(fd); }
+  } catch (error) { if (error.code !== "EEXIST") throw error; }
+  function load() {
+    try {
+      const item = JSON.parse(privateBytes(storePath).toString("utf8"));
+      exactData(item, ["payload", "mac"], "HOSTED_AUTH_UNAVAILABLE");
+      exactData(item.payload, ["schemaVersion", "sessions"], "HOSTED_AUTH_UNAVAILABLE");
+      if (item.payload.schemaVersion !== "pansphaira.hosted-session/store/v1" || !/^[a-f0-9]{64}$/.test(item.mac)) throw new Error("HOSTED_AUTH_UNAVAILABLE");
+      const actual = createHmac("sha256", key()).update(canonicalJson(item.payload)).digest();
+      if (!timingSafeEqual(actual, Buffer.from(item.mac, "hex")) || !item.payload.sessions
+        || Object.getPrototypeOf(item.payload.sessions) !== Object.prototype || Object.keys(item.payload.sessions).length > 256) throw new Error("HOSTED_AUTH_UNAVAILABLE");
+      return item.payload;
+    } catch { throw new Error("HOSTED_AUTH_UNAVAILABLE"); }
+  }
+  load();
+  function issueOwnerSession(principal) {
+    exactData(principal, ["subjectId", "role", "expiresAtMs"], "HOSTED_PRINCIPAL_DENIED");
+    const now = Date.now();
+    if (typeof principal.subjectId !== "string" || !/^[a-z0-9][a-z0-9:_-]{0,79}$/.test(principal.subjectId)
+      || !["reader", "reviewer"].includes(principal.role) || !Number.isSafeInteger(principal.expiresAtMs)
+      || principal.expiresAtMs <= now || principal.expiresAtMs > now + 1800000) throw new Error("HOSTED_PRINCIPAL_DENIED");
+    privateRoot(root); const lockPath = join(root, "session-write.lock"); const fd = openSync(lockPath, "wx", 0o600);
+    try {
+      const payload = load(); for (const [digest, row] of Object.entries(payload.sessions)) if (row.expiresAtMs <= now) delete payload.sessions[digest];
+      if (Object.keys(payload.sessions).length >= 256) throw new Error("HOSTED_SESSION_CAPACITY_DENIED");
+      const token = randomBytes(32).toString("hex"); const csrf = randomBytes(32).toString("hex");
+      payload.sessions[hash(token)] = { binding, ...principal, issuedAtMs: now, csrfDigest: hash(csrf) };
+      atomicPrivate(storePath, envelope(payload));
+      const cookieHeader = cookieName + "=" + token;
+      return Object.freeze({ cookieHeader, csrf, setCookie: cookieHeader + "; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=" + Math.max(1, Math.floor((principal.expiresAtMs - now) / 1000)) });
+    } finally { closeSync(fd); unlinkSync(lockPath); }
+  }
+  function authenticate(headers) {
+    denyHeaderAuthority(headers);
+    const cookie = headers.cookie;
+    if (typeof cookie !== "string" || cookie.length > 4096) throw new Error("HOSTED_SESSION_DENIED");
+    const pairs = cookie.split(";").map((v) => v.trim()).filter((v) => v.startsWith(cookieName + "="));
+    if (pairs.length !== 1 || !new RegExp("^" + cookieName + "=[a-f0-9]{64}$").test(pairs[0])) throw new Error("HOSTED_SESSION_DENIED");
+    const token = pairs[0].slice(cookieName.length + 1); const payload = load(); const row = payload.sessions[hash(token)];
+    if (!row) throw new Error("HOSTED_SESSION_DENIED");
+    exactData(row, ["binding", "subjectId", "role", "expiresAtMs", "issuedAtMs", "csrfDigest"], "HOSTED_SESSION_DENIED");
+    if (canonicalJson(row.binding) !== canonicalJson(binding) || !["reader", "reviewer"].includes(row.role)
+      || !Number.isSafeInteger(row.expiresAtMs) || !Number.isSafeInteger(row.issuedAtMs)
+      || row.issuedAtMs > Date.now() || row.expiresAtMs <= Date.now() || row.expiresAtMs > row.issuedAtMs + 1800000
+      || !/^[a-f0-9]{64}$/.test(row.csrfDigest)) throw new Error("HOSTED_SESSION_DENIED");
+    return Object.freeze({ tenantId: identity.tenantId, subjectId: row.subjectId, role: row.role, instanceId: identity.instanceId, generation: identity.generation });
+  }
+  function responseCookie(headers) {
+    authenticate(headers);
+    const pair = headers.cookie.split(";").map((value) => value.trim()).find((value) => value.startsWith(cookieName + "="));
+    const row = load().sessions[hash(pair.slice(cookieName.length + 1))];
+    const remaining = Math.floor((row.expiresAtMs - Date.now()) / 1000);
+    if (remaining < 1) throw new Error("HOSTED_SESSION_DENIED");
+    return pair + "; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=" + remaining;
+  }
+  return Object.freeze({ origin, binding, issueOwnerSession, authenticate, responseCookie });
+}
+
+function reply(response, status, code) {
+  response.writeHead(status, { "content-type": "application/json", "cache-control": "no-store" });
+  response.end(JSON.stringify({ error: code }));
+}
+
+// Closed existing native product handlers, not a general-purpose reverse proxy.
+// This optional local test ingress neither implements OIDC nor creates a portal.
+export function createOptionalHttpsProductIngressV1(options) {
+  if (!options || Object.getOwnPropertyDescriptor(options, "optIn")?.value !== true) throw new Error("HOSTED_OPT_IN_REQUIRED");
+  exactData(options, ["optIn", "origin", "tls", "tenants"], "HOSTED_INGRESS_OPTIONS_DENIED");
+  const origin = validateHostedOriginV1(options.origin); const url = new URL(origin);
+  exactData(options.tls, ["keyPath", "certPath"], "HOSTED_TLS_OPTIONS_DENIED");
+  const key = privateBytes(options.tls.keyPath); const cert = privateBytes(options.tls.certPath);
+  if (!Array.isArray(options.tenants) || Object.getPrototypeOf(options.tenants) !== Array.prototype
+    || options.tenants.length < 1 || options.tenants.length > 8) throw new Error("HOSTED_TENANTS_DENIED");
+  const tenantSpecs = options.tenants.map((spec) => {
+    exactData(spec, ["identity", "stateRoot", "productRoot"], "HOSTED_TENANTS_DENIED");
+    const identity = validateRuntimeIdentityV1(spec.identity);
+    if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(identity.tenantId)) throw new Error("HOSTED_TENANTS_DENIED");
+    return { identity, stateRoot: privateRoot(spec.stateRoot), productRoot: privateRoot(spec.productRoot) };
+  });
+  const roots = tenantSpecs.flatMap((spec) => [spec.stateRoot, spec.productRoot]);
+  if (new Set(tenantSpecs.map((spec) => spec.identity.tenantId)).size !== tenantSpecs.length
+    || roots.some((root, i) => roots.some((other, j) => i !== j && (root === other || root.startsWith(other + "/"))))) throw new Error("HOSTED_TENANTS_DENIED");
+  const products = new Map();
+  const server = createHttpsServer({ key, cert, minVersion: "TLSv1.3", maxHeaderSize: 8192 }, async (request, response) => {
+    response.setHeader("cache-control", "no-store"); response.setHeader("x-content-type-options", "nosniff");
+    response.setHeader("referrer-policy", "no-referrer"); response.setHeader("strict-transport-security", "max-age=86400");
+    response.setHeader("content-security-policy", "default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
+    try {
+      const addr = server.address();
+      if (!request.socket.encrypted || !addr || addr.address !== "127.0.0.1" || request.socket.remoteAddress !== "127.0.0.1"
+        || request.socket.localPort !== Number(url.port || 443)) return reply(response, 403, "HOSTED_LOOPBACK_BOUNDARY_DENIED");
+      if (request.headers.host !== url.host) return reply(response, 421, "HOSTED_HOST_DENIED");
+      denyHeaderAuthority(request.headers);
+      for (const name of ["host", "origin", "cookie", "content-length", "content-type"]) {
+        if (request.rawHeaders.filter((_, i) => i % 2 === 0 && request.rawHeaders[i].toLowerCase() === name).length > 1) return reply(response, 403, "HOSTED_DUPLICATE_HEADER_DENIED");
+      }
+      if ((request.headers.origin !== undefined && request.headers.origin !== origin)
+        || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights))$/.exec(request.url ?? "");
+      if (!match || request.method !== "GET") return reply(response, 404, "HOSTED_ROUTE_DENIED");
+      const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
+      product.sessions.authenticate(request.headers);
+      response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
+      request.url = match[2];
+      await product.handler(request, response);
+    } catch (error) {
+      if (response.headersSent) { response.destroy(); return; }
+      const code = error instanceof Error ? error.message : "HOSTED_AUTH_UNAVAILABLE";
+      if (code === "HOSTED_HEADER_AUTHORITY_DENIED") reply(response, 403, code);
+      else if (code === "HOSTED_SESSION_DENIED") reply(response, 401, code);
+      else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
+    }
+  });
+  const showcase = JSON.parse(readFileSync(new URL("../../examples/poc-release/showcase-v1.json", import.meta.url), "utf8"));
+  const plan = buildPocGuidedDemoSetupPlanV1(showcase, expectedPocGuidedDemoTemplatesV1(), { templateId: "quick-tour" });
+  for (const spec of tenantSpecs) {
+    const sessions = createProtectedSessionAdapterV1({ optIn: true, origin, identity: spec.identity, stateRoot: spec.stateRoot });
+    const coordinator = new PocEarlyAdminCoordinatorV1(plan, spec.productRoot, { resume: true });
+    const nativeServer = createPocEarlyAdminDashboardServerV1(coordinator);
+    products.set(spec.identity.tenantId, { sessions, handler: nativeServer.listeners("request")[0] });
+  }
+  server.maxHeadersCount = 32; server.requestTimeout = 5000; server.headersTimeout = 5000; server.keepAliveTimeout = 1000;
+  server.on("upgrade", (_request, socket) => socket.end("HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 0\r\n\r\n"));
+  for (const event of ["checkContinue", "checkExpectation"]) server.on(event, (_request, response) => reply(response, 417, "HOSTED_EXPECTATION_DENIED"));
+  return Object.freeze({ server, sessionAdapter(tenantId) { const product = products.get(tenantId); if (!product) throw new Error("HOSTED_TENANT_DENIED"); return product.sessions; } });
+}
