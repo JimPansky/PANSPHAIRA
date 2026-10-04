@@ -13,7 +13,7 @@ const expected=[
  'tests/fixtures/pan396/floci-pin-v1.json','verification/pan396-original-s3-sqs-evidence-v1.json',
 ];
 test('one bounded PAN396 owner, unchanged original owners/hard gates and exact source-evidence classification',()=>{
- const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,80);
+ const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,81);
  const nodes=graph.nodes.filter(n=>n.id==='pan396-original-s3-sqs-lab-v1');assert.equal(nodes.length,1);const node=nodes[0];
  assert.deepEqual(node.dependsOn,['pan360-original-erv-execution-v1']);assert.deepEqual(node.ownedTests,['npm run pan396:test']);assert.equal(node.globalInvalidation,false);
  assert.deepEqual(node.inputs.map(r=>r.path),expected);assert.equal(node.inputs.length,new Set(node.inputs.map(r=>r.path)).size);

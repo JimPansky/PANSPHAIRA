@@ -507,6 +507,14 @@
       "fromSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
       "toSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
       "reason": "Advance graph to v80 and register one bounded P03 native fulfilment owner using the existing PAN515 transaction and exported entry, original five criteria/six negatives and real calendar/rollback validation. Preserve every historical migration, immutable base obligation, existing owner and hard gate, common source and runnable manifest; no new CLI gate, productive movement, private source or completion authority."
+    },
+    {
+      "migrationId": "PAN520-NATIVE-PROJECTIONS/INTEGRITY-GENERATOR/V53",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 53,
+      "fromSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
+      "toSha256": "c3cfc03c0d27a68f789f43da521a7d70d5e199016127fa47cd990ec55fb82c79",
+      "reason": "Advance graph to v81 and register one bounded P06 native O2C/P2P/STOCK projection owner. Preserve every historical migration, admitted immutable obligation, normalized profile pin/non-equivalence metadata, old source owner, common reference and mandatory hard gate. Existing target read snapshot and unchanged liability/ERV evaluator, field-specific unavailable facts, original assigned promises, opaque durable revocation and selective question dependencies remain bounded; actual KS pairing and original final delivery gates are not inferred from local source evidence."
     }
   ],
   "scanScope": {
@@ -549,15 +557,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 846,
+    "filesScanned": 850,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 275,
-    "importFiles": 274,
+    "importSites": 276,
+    "importFiles": 275,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2272,
-    "ledgerUniquePaths": 2272
+    "ledgerEntries": 2279,
+    "ledgerUniquePaths": 2279
   },
   "profiles": [
     {
@@ -630,7 +638,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d"
+      "sha256": "c3cfc03c0d27a68f789f43da521a7d70d5e199016127fa47cd990ec55fb82c79"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1011,6 +1019,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan520",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "procurement-434",
       "importSites": 3,
       "importFiles": 3
@@ -1326,7 +1339,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
+      "sha256": "c3cfc03c0d27a68f789f43da521a7d70d5e199016127fa47cd990ec55fb82c79",
       "basis": "profile-version-migration"
     },
     {
