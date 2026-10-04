@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "pansphaira.pan520/native-projection-proof/v1",
+  "caseId": "COMMON-TRADE-01",
+  "scope": "LOCAL_SYNTHETIC_DISPOSABLE",
+  "leadingStore": "PAN472_TARGET_SQLITE",
+  "interfaceOwner": "src/pan515/trade-state.mjs",
+  "observedAt": "2026-10-04T02:40:05.359427+00:00",
+  "sourceBytePins": {
+    "src/pan515/trade-state.mjs": "2683948f11df1978e7d4d02ce3fd60d430f55a7f7cd4bc7aa6d7d0041e576ddd",
+    "src/pan520/native-projection.mjs": "229de4c8fa1e2f6938cae56f8fdf5fb8046af30963a5e1b9ef3e9a855d589146",
+    "src/procurement-434/bestellung-lifecycle.mjs": "75d2fe66f879876f0de2975fdf4a5e3623b5596cba167ff0184553b593cca325",
+    "src/procurement-434/bestellung-liability.mjs": "7ee400e6703a1db93936c0a5e04e3a687cff7ccc821a1bb2cff513f8dc6c280f",
+    "src/pan517/fulfilment-state.mjs": "45720400d7a959b57dec496263046d9a69a1da62eaaedbe83e653d04701a4648",
+    "src/pan517/delivery-milestones.mjs": "3f37aaab3489c62151746ae72cb5018e91e09f89f6324f76b66fc1ed90611f96",
+    "packages/contracts/src/bestand-nachschub-v1.ts": "ac42f06a963731ed8f5a9da83fe3de319794d1ee8d2dd7a92c3af5bc1ca8b7bf",
+    "contracts/trade/common-trade-01-v1.json": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
+    "contracts/trade/pan520-projection-contract-v1.json": "fcff403d002b1b877a895e0c8c1b4c9532e9785acdc300310e997fe76835f85e",
+    "tests/pan520/native-projection.test.mjs": "8295945cb3383b6fbcb438b2610797f03733d86106dc7509ae9ef961d2e78012",
+    "tests/pan520/native-procurement-projection.test.mjs": "7a484e74b03074a1088a04ae6a4629b8b645b2097b734d605893dd483da52ebc"
+  },
+  "sourceBytesStableAcrossExecution": true,
+  "implementedProfiles": [
+    "O2C",
+    "P2P",
+    "STOCK"
+  ],
+  "originalCriteria": [
+    "- [ ] AC1: Vorhandene, fehlende und neu erforderliche Felder sind je konkreter Fachfrage belegt; Preis-/Zusage-/Ereigniszeitlücken im flachen M1-Ledger werden ausdrücklich geschlossen oder als nicht verfügbar ausgewiesen.",
+    "- [ ] AC2: Snapshot, Grain, Rechte, erlaubte Operationen und Provenienz begleiten jede Projektion; keine freie SQL-/Credential-Passage.",
+    "- [ ] AC3: Änderungen invalidieren nur betroffene Ergebnisse. Die alte direkte Auftragsprojektion behält ihre Bedeutung.",
+    "- [ ] AC4: Mindestens ein tatsächlicher PAN-Producer wird mit KS K03 oder K04 über den neuen Vertrag ausgeführt; bekannte Ersatzdaten alleine schließen dieses Integrationskriterium nicht.",
+    "- [ ] AC5: Die gemeinsame Semantik in diesem gemeinsamen Referenzfall und COMMON-TRADE-01 gilt für die schmale Übergabe. O2C-, P2P- und Bestandsprofile deklarieren ihre Felder einzeln; fehlende FiBu-/Kapazitätsdaten blockieren nur die dazugehörige Frage. Echter Producer→KS-Nachweis ist eine gemeinsame Abnahme, kein Warten auf gegenseitiges CLOSED."
+  ],
+  "originalNegativeCriteria": [
+    "- gleichnamige Fremdposition",
+    "- fehlende Historie als Null",
+    "- Recht entzogen nach Planung",
+    "- nachträglich geänderte Zusage",
+    "- Doppelzählung mehrerer Receipts"
+  ],
+  "actualNativeExecution": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/pan520/native-projection.test.mjs",
+      "tests/pan520/native-procurement-projection.test.mjs"
+    ],
+    "exitCode": 0,
+    "counts": {
+      "tests": 12,
+      "passes": 12,
+      "fails": 0,
+      "skips": 0
+    },
+    "testNames": [
+      "P06 native P2P aggregates two actual receipts before one-grain reused liability, exposes price2000 and original on-time quantity8",
+      "P06 P2P missing confirmed price and promise hold only those questions while real accepted quantity remains known",
+      "P06 P2P cutoff excludes a later real receipt and does not invent a missing invoice business date for price history",
+      "P06 original later-promise negative never repairs old receipt timeliness and invalidates only the new price-source revision",
+      "P06 AC1 real native June stock is projected as2/2/0/0 and absent history or valuation stays unavailable, never zero",
+      "P06 O2C current native order price and actual dispatch remain distinct from unavailable billed net and customer receipt facts",
+      "P06 closed source request rejects question-array getters without invoking untrusted code or mutating the native source",
+      "P06 original revoked-after-plan negative uses the existing durable native control and cannot reuse an opaque planned read",
+      "P06 selective invalidation changes only customer-receipt dependencies when a real later customer promise is appended",
+      "P06 original foreign-position plus closed SQL credential role and currency negatives leave actual source rows unchanged",
+      "P06 opaque plans reject cloned handles and plans rather than trusting portable caller metadata",
+      "P06 actual later issue and quarantined return retain the original June stock cutoff and produce July1/0/1/0 without dispatch repairing OTIF"
+    ],
+    "stdoutSha256": "610ad1668e6560d7025b7e12085cfed2e7e08f2bda7820d637686ea301b55ddb",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "sameExistingTargetReadTransaction": true,
+  "existingLiabilityAndFrozenErvCoreReused": true,
+  "nativeRowsUnchangedAcrossProjectionReadAssertionsExecuted": true,
+  "originalPromiseAssignedPerNativeReceiptRetained": true,
+  "nativePlanOpaqueAndCurrentRightsRechecked": true,
+  "questionDependentInvalidationExecuted": true,
+  "actualKsPairedExecutionQualified": false,
+  "productiveAuthorityGranted": false,
+  "separateDatabaseIntroduced": false,
+  "freeSqlOrCredentialsPassed": false,
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE",
+  "notClaims": [
+    "NOT_A_NEW_INDEPENDENT_APPROVED_CONTEXT_OR_HOLDOUT",
+    "NO_PRODUCTIVE_STOCK_CARRIER_OR_CUSTOMER_IDENTITY_AUTHORITY",
+    "NO_NATIVE_OUTBOUND_BILLING_FIBU_CAPACITY_OR_VALUATION_INFERENCE",
+    "NO_REAL_KS_PAIR_ACCEPTANCE_FROM_LOCAL_TESTS",
+    "NO_FINAL_RELEASE_OR_CLOSURE_FROM_THIS_DEVELOPMENT_RECEIPT"
+  ]
+}

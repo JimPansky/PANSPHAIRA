@@ -1,0 +1,118 @@
+{
+  "schemaVersion": "pansphaira.pan520/native-projection-contract/v1",
+  "revision": 1,
+  "scope": "LOCAL_SYNTHETIC_CODE_BOUND_COMMON_AND_EXISTING_NATIVE_TARGET_ONLY",
+  "requestSchema": "pansphaira.pan520/projection-request/v1",
+  "snapshotSchema": "pansphaira.pan520/projection-snapshot/v1",
+  "planSchema": "pansphaira.pan520/projection-plan/v1",
+  "sourceContext": {
+    "id": "COMMON-TRADE-01",
+    "revision": 1,
+    "not_a_holdout": true,
+    "not_a_second_approved_context": true
+  },
+  "profiles": {
+    "STOCK": [
+      "STOCK_POSITION",
+      "STOCK_RUNWAY",
+      "STOCK_VALUE"
+    ],
+    "P2P": [
+      "PROCUREMENT_QUANTITY",
+      "PROCUREMENT_PRICE_VARIANCE",
+      "PROCUREMENT_TIMELINESS"
+    ],
+    "O2C": [
+      "ORDER_SOURCE",
+      "DISPATCH_TIMELINESS",
+      "CUSTOMER_RECEIPT_TIMELINESS",
+      "BILLED_NET"
+    ]
+  },
+  "questionFields": {
+    "STOCK_POSITION": [
+      "physical",
+      "reserved",
+      "quarantined",
+      "free"
+    ],
+    "STOCK_RUNWAY": [
+      "stockRunwayDays"
+    ],
+    "STOCK_VALUE": [
+      "stockValueMinor"
+    ],
+    "ORDER_SOURCE": [
+      "orderQuantity",
+      "nativeOrderStatus",
+      "nativeOperationalDateSeconds",
+      "businessAcceptanceAt",
+      "declaredReferenceAcceptanceAt",
+      "orderUnitNetMinor",
+      "orderSourceNetMinor"
+    ],
+    "DISPATCH_TIMELINESS": [
+      "totalIssuedQuantity",
+      "onTimeDispatchedQuantity",
+      "dispatchPositionOtif"
+    ],
+    "CUSTOMER_RECEIPT_TIMELINESS": [
+      "customerReceiptOnTimeQuantity"
+    ],
+    "BILLED_NET": [
+      "billedNetMinor",
+      "billedNetByMonth"
+    ],
+    "PROCUREMENT_QUANTITY": [
+      "orderedQuantity",
+      "acceptedQuantity",
+      "remainingQuantity"
+    ],
+    "PROCUREMENT_PRICE_VARIANCE": [
+      "invoicedQuantity",
+      "invoiceAmountMinor",
+      "expectedInvoiceNetMinor",
+      "supplierPriceVarianceMinor"
+    ],
+    "PROCUREMENT_TIMELINESS": [
+      "onTimeAcceptedQuantity"
+    ]
+  },
+  "scopeKeys": [
+    "sourceId",
+    "tenantId",
+    "entityId",
+    "orderId",
+    "lineId",
+    "articleId",
+    "warehouseId",
+    "currency",
+    "unit"
+  ],
+  "fieldStates": [
+    "KNOWN",
+    "UNAVAILABLE"
+  ],
+  "missingValueIsNullNeverImplicitZero": true,
+  "immutableSnapshotContains": [
+    "profile",
+    "grain",
+    "snapshot",
+    "facts",
+    "rights",
+    "provenance",
+    "questionDependencies",
+    "projectionDigest"
+  ],
+  "questionInvalidationBasis": "EXACT_RELEVANT_NATIVE_FACTS_AND_ORIGINAL_ASSIGNED_PROMISE_SOURCE_NOT_WHOLE_LEDGER_REVISION",
+  "rights": "EXACT_EXISTING_NATIVE_OWNER_SOURCE_SCOPE_AND_DURABLE_PROFILE_STOP_REVOKE_CHECKED_AT_PLAN_AND_USE",
+  "portableAuthorityGranted": false,
+  "directLegacyOrderMeaningChanged": false,
+  "freeSqlOrCredentialPassage": false,
+  "matcherReimplemented": false,
+  "newDatabaseIntroduced": false,
+  "actualProducerToKsK03OrK04RequiredForOriginalAcceptance": true,
+  "referenceDocumentsPromotedToNativeBilling": false,
+  "unknownFinancialHistoryValuationCapacityRemainQuestionSpecific": true,
+  "maturity": "DEVELOPMENT_SOURCE_EVIDENCE_NOT_FINAL_PAIRED_OR_PRODUCTIVE_AUTHORITY"
+}

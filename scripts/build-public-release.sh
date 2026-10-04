@@ -377,6 +377,14 @@ repository_only_files = {
     "tests/pan524/delivery-surface.test.mjs",
     "tests/pan524/registration.test.mjs",
     "verification/pan524-exact-bi-pair-evidence-v1.json",
+    # PAN520 bounded typed native projections: source evidence only, no paired/authority promotion.
+    "contracts/trade/pan520-projection-contract-v1.json",
+    "src/pan520/native-projection.mjs",
+    "tests/pan520/native-projection.test.mjs",
+    "tests/pan520/native-procurement-projection.test.mjs",
+    "tests/pan520/registration.test.mjs",
+    "docs/architecture/pan520-native-projections-v1.md",
+    "verification/pan520-native-projection-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

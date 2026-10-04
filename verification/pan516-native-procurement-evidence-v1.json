@@ -1,14 +1,14 @@
 {
   "schemaVersion": "pansphaira.pan516/native-proof/v1",
-  "observedAt": "2026-10-03T17:05:09.800Z",
+  "observedAt": "2026-10-04T02:45:06.114Z",
   "scope": "LOCAL_SYNTHETIC_DISPOSABLE",
   "caseId": "COMMON-TRADE-01",
   "leadingStore": "PAN472_TARGET_SQLITE",
   "sourceBytePins": {
     "contracts/trade/common-trade-01-v1.json": "2b76e8537646f727b75b157a3b5529a44b94e2e8ee551b5fcef9f5d3bd3c8160",
     "contracts/trade/pan516-invoice-cases-v1.json": "f0a37f30d200b8bf9ce914fbe2ab26b0bd9170eb31311b413a7b54e82715103c",
-    "src/procurement-434/bestellung-lifecycle.mjs": "443f45c43c1dbddcea183920e6ba5395736ccdc807bf23c5426f699f5885f6dc",
-    "src/procurement-434/bestellung-liability.mjs": "733ce7ddaceb8318b0fe7b0ece8965ca61a5aeb1e4ddee857dd3b59c53be1c02",
+    "src/procurement-434/bestellung-lifecycle.mjs": "75d2fe66f879876f0de2975fdf4a5e3623b5596cba167ff0184553b593cca325",
+    "src/procurement-434/bestellung-liability.mjs": "7ee400e6703a1db93936c0a5e04e3a687cff7ccc821a1bb2cff513f8dc6c280f",
     "src/procurement-434/bestellung-cli.mjs": "f4a39582822b2531d37d00a1450a51d310d59747dbb881481d60a3abce14d6d5",
     "src/procurement-434/rechnungsabgleich-path.mjs": "3c16a8087edec0848adea783492c16253c0718c239d793bf15ca9b8e3e23f0d3",
     "src/procurement-434/rechnungsabgleich-path-cli.mjs": "c6fecbcc5220d2543568cfa2d1e8524078c4c6967aeffb48a695ac195048f67e",
@@ -33,7 +33,7 @@
         "COMMON-TRADE-01"
       ],
       "exitCode": 0,
-      "stdoutSha256": "f35f9957e42f662c45e702827b7a6faa35d375bec54b702e6580cd48b512edf8",
+      "stdoutSha256": "8880faa5dfe705b0dadce17c599366eeffd923965f2565af9b9bda58ecd69bbc",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "INITIALIZED"
     },
@@ -48,7 +48,7 @@
         "<OWNED_NATIVE_ROOT>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "44477be399a430aee597f8a5db81705d067a6661d7a2415aa11018f77f9df8e1",
+      "stdoutSha256": "3af992c67b584fc102b4ef4d83984a5ead74fcba097c6db543fd8ef13c03e3ba",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "PROCUREMENT_INITIALIZED"
     },
@@ -65,7 +65,7 @@
         "<OWNED_COMMAND_FILE>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "af7a535b6a4cd814cc11c539179b87180fde03af3666403f28c7184bf7945b70",
+      "stdoutSha256": "44c518861da340335bb77b66b42950e0e68e3a1f5e078e24a956a8815cb15f27",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "COMMITTED"
     },
@@ -82,7 +82,7 @@
         "<OWNED_COMMAND_FILE>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "26c408bd9d13186c5ef1c106959e37600730edd653e2815b73ff8342458a75bf",
+      "stdoutSha256": "1624e3039b269f5e064da17c61b8c8cde21c032584069d2e09999d4ac136646f",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "COMMITTED"
     },
@@ -99,7 +99,7 @@
         "<OWNED_COMMAND_FILE>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "fd6d1b0393274934bb59dac4d74ca3f0060666e831bf24b78d9a2131a6414a3e",
+      "stdoutSha256": "af56f30ab8be28635d9e22603e74b71cdac0f4274658945006e9d08e2f909957",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "RECONCILED_NO_DUPLICATE"
     },
@@ -116,7 +116,7 @@
         "<OWNED_COMMAND_FILE>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "81a54c8b0fd89b2c6568f66c60d0a1ddc51a128420af925dd6958299a2d30b63",
+      "stdoutSha256": "28f86826229e1d75bf06220a716f0d34a0e27e9b95cfccd9644a5bd3b91925c4",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "COMMITTED"
     },
@@ -133,7 +133,7 @@
         "<OWNED_COMMAND_FILE>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "41552004cb4b1b3b58454a61c34b6838c7f2ae3352aed97e92ac01c351922815",
+      "stdoutSha256": "7c666f281bc4ef2f5363bab4a3c8d69b4650d909ca3c1487bd4442574445585c",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "COMMITTED"
     },
@@ -150,7 +150,7 @@
         "<OWNED_COMMAND_FILE>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "95f03f0eb8d9503ac388dadba4eca14931314b070e5f533cdb87c98ee19ab4c1",
+      "stdoutSha256": "305d7810412f916445249e109aa290623202ef390375e51181364119f14694a0",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "COMMITTED"
     },
@@ -165,7 +165,7 @@
         "<OWNED_NATIVE_ROOT>"
       ],
       "exitCode": 0,
-      "stdoutSha256": "3600fc8c1ad56b82e58a1dbbc31b1bbe58532afc44ce9d77adc538482df6ca04",
+      "stdoutSha256": "2c56b0fc0e792209a415c5067915102fbb20326063f3accac30579c5a7d9619e",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "NATIVE_READ"
     },
@@ -184,7 +184,7 @@
         "1"
       ],
       "exitCode": 0,
-      "stdoutSha256": "6899d77376bff5a05cd11346b664ea388a34a411831ffcc19b3d338edc5994d1",
+      "stdoutSha256": "99bfe88a93f084243f800c60f804da87b1d4f3c6b3e4e231d24cb088cb15e564",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "LIABILITY_BASIS"
     },
@@ -203,7 +203,7 @@
         "1"
       ],
       "exitCode": 0,
-      "stdoutSha256": "591017f11fec2a6198342e427f2eced262ea9713185e95b97ac2034a9976e1f8",
+      "stdoutSha256": "659771da882a70a89b3bcb7a7872cf146c5ad49952a4f64ad6033c671f737a84",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "LIABILITY_BASIS"
     },
@@ -222,7 +222,7 @@
         "1"
       ],
       "exitCode": 0,
-      "stdoutSha256": "54b3babf1fe8cef70973c8e98b958c2896146ae72f8053c1326bb6aa36877950",
+      "stdoutSha256": "9a99b2f519af6d6058401b45180457f2f3d76e49551822a28243c0de59857ec4",
       "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "outcome": "LIABILITY_BASIS"
     }
@@ -272,8 +272,8 @@
   "transmissionCount": 1,
   "actualRetryObservation": {
     "outcome": "EXACT_TARGET_ALREADY_APPLIED",
-    "key": "f09535617c8b3e8d1dbc16ebfe8b0f6b3bb1992729b7390e5384fb0876d8c7f2",
-    "recordDigest": "3ce7b803ce52cab6b17109fbd6c7b9c89fca5650da92fab2e6ce89eb80b8840a",
+    "key": "fe4abb6ffcb3fdf831f32ba0533566f02dd0b53e3ded4f9653af3dd7a9a16751",
+    "recordDigest": "c500a87a4185c08fe98453a2ee78cd02b54d05d56dd141a6f1aa3b43b221cec7",
     "firstEffectId": "synthetic:proof-transmit",
     "readBeforeAnyNewOrderEffect": true,
     "newOrderEffect": false
@@ -317,11 +317,11 @@
         "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5",
         "confirmationRevision": 1,
         "receiptEventDigests": [
-          "9d9cfa709698ae3d82256052e9ac003dd84b0729576f0a13e5692e2e7d1f7197",
-          "7982dc2a2b17cfa79f38a240d9e06513f023fcfcdb79d0cf571c995213d6954c"
+          "b7afd687573621c305f112a9af7f649d8872ec792b153b5b4f0e3136403eecef",
+          "46a4ae125bd88f08ada00cebee9626a979f618070205b140515b175349bf0803"
         ],
         "frozenErvRegistryCanonicalSha256": "899d8dfc44be526011c35ad5aba4c2cb89bca433f1520e61fe05268d4816ad20",
-        "leadingBindingDigest": "e8fb0e9cf474833d594d4fdac50ab1431973289a14188925e37ad2dec9781947"
+        "leadingBindingDigest": "5a99de6a2447b8cffb992b37e658a83cad50121c6d0390a1100945e8566479b2"
       },
       "paymentOrder": null,
       "authority": {
@@ -368,11 +368,11 @@
         "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5",
         "confirmationRevision": 1,
         "receiptEventDigests": [
-          "9d9cfa709698ae3d82256052e9ac003dd84b0729576f0a13e5692e2e7d1f7197",
-          "7982dc2a2b17cfa79f38a240d9e06513f023fcfcdb79d0cf571c995213d6954c"
+          "b7afd687573621c305f112a9af7f649d8872ec792b153b5b4f0e3136403eecef",
+          "46a4ae125bd88f08ada00cebee9626a979f618070205b140515b175349bf0803"
         ],
         "frozenErvRegistryCanonicalSha256": "899d8dfc44be526011c35ad5aba4c2cb89bca433f1520e61fe05268d4816ad20",
-        "leadingBindingDigest": "e8fb0e9cf474833d594d4fdac50ab1431973289a14188925e37ad2dec9781947"
+        "leadingBindingDigest": "5a99de6a2447b8cffb992b37e658a83cad50121c6d0390a1100945e8566479b2"
       },
       "paymentOrder": null,
       "authority": {
@@ -419,11 +419,11 @@
         "confirmationDigest": "5d16c3a0ec501c2ce8f3a034256c82f4b6ac69c57cb3f64663da634059e7eec5",
         "confirmationRevision": 1,
         "receiptEventDigests": [
-          "9d9cfa709698ae3d82256052e9ac003dd84b0729576f0a13e5692e2e7d1f7197",
-          "7982dc2a2b17cfa79f38a240d9e06513f023fcfcdb79d0cf571c995213d6954c"
+          "b7afd687573621c305f112a9af7f649d8872ec792b153b5b4f0e3136403eecef",
+          "46a4ae125bd88f08ada00cebee9626a979f618070205b140515b175349bf0803"
         ],
         "frozenErvRegistryCanonicalSha256": "899d8dfc44be526011c35ad5aba4c2cb89bca433f1520e61fe05268d4816ad20",
-        "leadingBindingDigest": "e8fb0e9cf474833d594d4fdac50ab1431973289a14188925e37ad2dec9781947"
+        "leadingBindingDigest": "5a99de6a2447b8cffb992b37e658a83cad50121c6d0390a1100945e8566479b2"
       },
       "paymentOrder": null,
       "authority": {

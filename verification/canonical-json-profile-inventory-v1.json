@@ -523,6 +523,14 @@
       "fromSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
       "toSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
       "reason": "Bind two genuine released plan/preview captures to the existing graph81 J01 owner for closed exact response-origin metadata regression. Preserve the entire reviewed V53 migration, scanner, legacy request denial, immutable base obligations, hard gates and all existing owners; no registry or productive authority."
+    },
+    {
+      "migrationId": "PAN520-CURRENT-NATIVE-PROJECTIONS/INTEGRITY-GENERATOR/V55",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 55,
+      "fromSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
+      "toSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
+      "reason": "Advance graph to v82 with one additive native P06 projection owner beside released J01 graph81/V54. Preserve every historical migration, admitted byte obligation, existing native/source owner, legacy direct-read meaning, response/request safety boundary and mandatory hard gate. No KS selector rewrite, portable or productive authority, billing inference or completion claim."
     }
   ],
   "scanScope": {
@@ -565,15 +573,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 850,
+    "filesScanned": 854,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 276,
-    "importFiles": 275,
+    "importSites": 277,
+    "importFiles": 276,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2280,
-    "ledgerUniquePaths": 2280
+    "ledgerEntries": 2287,
+    "ledgerUniquePaths": 2287
   },
   "profiles": [
     {
@@ -646,7 +654,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157"
+      "sha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -912,19 +920,14 @@
   ],
   "consumerFamilies": [
     {
-      "owner": "analytics",
-      "importSites": 2,
-      "importFiles": 2
+      "owner": "demo",
+      "importSites": 9,
+      "importFiles": 9
     },
     {
       "owner": "cks",
       "importSites": 4,
       "importFiles": 4
-    },
-    {
-      "owner": "cks-12",
-      "importSites": 1,
-      "importFiles": 1
     },
     {
       "owner": "competence-runtime",
@@ -935,26 +938,6 @@
       "owner": "contracts",
       "importSites": 141,
       "importFiles": 141
-    },
-    {
-      "owner": "cscl-03",
-      "importSites": 1,
-      "importFiles": 1
-    },
-    {
-      "owner": "cscl-11",
-      "importSites": 1,
-      "importFiles": 1
-    },
-    {
-      "owner": "cscl-13",
-      "importSites": 2,
-      "importFiles": 2
-    },
-    {
-      "owner": "demo",
-      "importSites": 9,
-      "importFiles": 9
     },
     {
       "owner": "dev-worker",
@@ -975,6 +958,41 @@
       "owner": "local-knowledge",
       "importSites": 1,
       "importFiles": 1
+    },
+    {
+      "owner": "usage-insights",
+      "importSites": 2,
+      "importFiles": 2
+    },
+    {
+      "owner": "scripts",
+      "importSites": 15,
+      "importFiles": 15
+    },
+    {
+      "owner": "analytics",
+      "importSites": 2,
+      "importFiles": 2
+    },
+    {
+      "owner": "cks-12",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
+      "owner": "cscl-03",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
+      "owner": "cscl-11",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
+      "owner": "cscl-13",
+      "importSites": 2,
+      "importFiles": 2
     },
     {
       "owner": "pan442",
@@ -1027,6 +1045,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan520",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "procurement-434",
       "importSites": 3,
       "importFiles": 3
@@ -1042,19 +1065,9 @@
       "importFiles": 1
     },
     {
-      "owner": "scripts",
-      "importSites": 15,
-      "importFiles": 15
-    },
-    {
       "owner": "tests",
       "importSites": 63,
       "importFiles": 62
-    },
-    {
-      "owner": "usage-insights",
-      "importSites": 2,
-      "importFiles": 2
     },
     {
       "owner": "video-production-reference",
@@ -1342,7 +1355,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
+      "sha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
       "basis": "profile-version-migration"
     },
     {

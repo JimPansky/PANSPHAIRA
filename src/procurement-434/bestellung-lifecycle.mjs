@@ -11,6 +11,9 @@ const OWNER='LOCAL_SYNTHETIC_OWNER';
 const SCHEMA='pansphaira.pan516/procurement-command/v1';
 const GUARDS=['pan516_binding','pan516_events','pan516_target_orders'].flatMap(table=>['UPDATE','DELETE'].map(action=>({name:table+'_'+action.toLowerCase()+'_immutable',sql:`CREATE TRIGGER ${table}_${action.toLowerCase()}_immutable BEFORE ${action} ON ${table} BEGIN SELECT RAISE(ABORT,'PAN516_HISTORY_IMMUTABLE_DENIED'); END`})));
 const grants=new WeakMap();
+const observedReadSnapshots=new WeakMap();
+const observeRead=s=>{observedReadSnapshots.set(s,digest(s));return s;};
+export const isPan516ObservedReadSnapshot=s=>observedReadSnapshots.has(s)&&observedReadSnapshots.get(s)===digest(s);
 const token=v=>typeof v==='string'&&/^synthetic:[a-z0-9-]{3,64}$/.test(v);
 const semantic=c=>{const {transportId,...value}=c;return value;};
 function native(root){const s=readPan515TradeState({root});return {tradeBindingDigest:digest(s.binding),sourceProfileDigest:s.binding.sourceProfileDigest,targetEpoch:s.binding.targetEpoch};}
@@ -18,10 +21,10 @@ function qualified(root){const d=diagnosePan473WriterScope({root});if(d.outcome!
 function termsValid(t,draft){
   if(!exact(t,['unitPriceMinor','currency','unit','promisedAt'])||!Number.isSafeInteger(t.unitPriceMinor)||t.unitPriceMinor<0||t.unitPriceMinor>1000000000||t.currency!==draft.positionen[0].waehrung||t.unit!==draft.positionen[0].einheit||typeof t.promisedAt!=='string'||!Number.isFinite(Date.parse(t.promisedAt)))fail('PAN516_PROPOSED_TERMS_DENIED');
 }
-function binding(db,root){
+function binding(db,root,expectedNative=null){
   if(!guardsMatch(db,GUARDS))fail('PAN516_HISTORY_GUARDS_REQUIRED_DENIED');
   const row=db.prepare('SELECT record FROM pan516_binding WHERE id=1').get();if(!row)fail('PAN516_LEADING_BINDING_REQUIRED_DENIED');
-  const b=JSON.parse(row.record),now=native(root);for(const key of Object.keys(now))if(b[key]!==now[key])fail('PAN516_LEADING_BINDING_DRIFT_DENIED');
+  const b=JSON.parse(row.record),now=expectedNative??native(root);for(const key of Object.keys(now))if(b[key]!==now[key])fail('PAN516_LEADING_BINDING_DRIFT_DENIED');
   const rebuilt=bestellungsentwurfBildenV1(b.purchase);if(rebuilt.outcome!=='ENTWURF'||canonicalJson(rebuilt.entwurf)!==canonicalJson(b.draft))fail('PAN516_PURCHASE_DRAFT_BINDING_DENIED');termsValid(b.proposedTerms,b.draft);return b;
 }
 export function initializePan516Procurement({root,owner,purchase,terms}){
@@ -124,5 +127,12 @@ export function executePan516ProcurementCommand({root,command,grant}){
   });}finally{db?.close();lease.release();}
 }
 export function readPan516Procurement({root}){
-  const db=openNative(root,'target');try{db.exec('BEGIN');const b=binding(db,root),state=project(db,b);return {...state,binding:b,leadingStore:b.leadingStore,readOnly:true,authority:{productiveDispatchAuthorized:false,paymentOrderAuthorized:false,externalChannelSelected:false}};}finally{db.close();}
+  const db=openNative(root,'target');try{db.exec('BEGIN');const b=binding(db,root),state=project(db,b);return observeRead({...state,binding:b,leadingStore:b.leadingStore,readOnly:true,authority:{productiveDispatchAuthorized:false,paymentOrderAuthorized:false,externalChannelSelected:false}});}finally{db.close();}
+}
+
+// P06 reuses this exact leading-store reconstruction inside its already open
+// read-only target transaction; it is not a second connection or shadow ledger.
+export function readPan516ProcurementProjectionSnapshot({db,tradeBinding}){
+  const b=binding(db,null,{tradeBindingDigest:digest(tradeBinding),sourceProfileDigest:tradeBinding.sourceProfileDigest,targetEpoch:tradeBinding.targetEpoch}),state=project(db,b);
+  return observeRead({...state,binding:b,leadingStore:b.leadingStore,readOnly:true,authority:{productiveDispatchAuthorized:false,paymentOrderAuthorized:false,externalChannelSelected:false}});
 }

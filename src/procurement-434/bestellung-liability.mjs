@@ -3,7 +3,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {canonicalJson,digest,fail} from '../pan473/scope-profile.mjs';
-import {readPan516Procurement} from './bestellung-lifecycle.mjs';
+import {readPan516Procurement,isPan516ObservedReadSnapshot} from './bestellung-lifecycle.mjs';
 import {evaluateErvMatchingCaseV1,referenceContentSha256V1,AP04_ERV_CASE_PACK_SHA256_V1} from '../../dist/packages/contracts/src/incoming-invoice-erv.js';
 import {AP04_ERV_CASE_PACK_CANONICAL_SHA256_V1} from '../../dist/packages/contracts/src/rechnungsabgleich-match-v1.js';
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -20,7 +20,11 @@ function sources(invoiceId){
   return {common,pack,invoice,invoiceSource};
 }
 export function evaluatePan516ProcurementLiability({root,invoiceId,expectedConfirmationRevision}){
-  const state=readPan516Procurement({root}),b=state.binding,{common,pack,invoice,invoiceSource}=sources(invoiceId),last=state.confirmations.at(-1),position=state.effectiveDraft.positionen[0];
+  return evaluatePan516ProcurementLiabilitySnapshot({state:readPan516Procurement({root}),invoiceId,expectedConfirmationRevision});
+}
+export function evaluatePan516ProcurementLiabilitySnapshot({state,invoiceId,expectedConfirmationRevision}){
+  if(!isPan516ObservedReadSnapshot(state))fail('PAN516_ACTUAL_OBSERVED_SNAPSHOT_REQUIRED_DENIED');
+  const b=state.binding,{common,pack,invoice,invoiceSource}=sources(invoiceId),last=state.confirmations.at(-1),position=state.effectiveDraft.positionen[0];
   if(invoiceId!==invoice.id||invoice.po_id!==MAPPING.canonicalOrderId||invoice.po_line_id!==MAPPING.canonicalLineId||b.draft.bestellungId!==MAPPING.nativeOrderId||position.positionId!==MAPPING.nativePositionId||position.artikelId!==MAPPING.nativeArticleId)fail('PAN516_INVOICE_COMPOSITE_SOURCE_GRAIN_DENIED');
   if(b.draft.lieferantId!==MAPPING.nativeSupplierId)fail('PAN516_INVOICE_SOURCE_SUPPLIER_DENIED');
   if(!last||!Number.isSafeInteger(expectedConfirmationRevision)||expectedConfirmationRevision!==last.revision)fail('PAN516_CONFIRMED_TERMS_REVISION_REQUIRED_DENIED');
