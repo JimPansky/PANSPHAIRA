@@ -1,0 +1,653 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.pansphaira.invalid/portable-runtime/v1",
+  "$comment": "Shared shape contract only. Valid identity is not observation, readiness, source rights or an execution grant. One led PAN contract; KS consumes this same immutable schema.",
+  "$ref": "#/$defs/RuntimeIdentity",
+  "$defs": {
+    "Commit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "Digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "Version": {
+      "type": "string",
+      "maxLength": 64,
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
+    "ScopeId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_-]{0,63}$"
+    },
+    "RuntimeIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "componentId",
+        "sourceCommit",
+        "sourceTree",
+        "imageDigest",
+        "architecture",
+        "productVersion",
+        "runtime",
+        "contractVersion",
+        "instanceId",
+        "tenantId",
+        "generation",
+        "authorityProfile",
+        "effectiveRights",
+        "configurationDigest",
+        "templateDigest",
+        "policyDigest",
+        "networkDigest"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.portable-runtime/identity/v1"
+        },
+        "componentId": {
+          "enum": [
+            "pansphaira-local-demo",
+            "kaleidosphere-bi-agent"
+          ]
+        },
+        "sourceCommit": {
+          "$ref": "#/$defs/Commit"
+        },
+        "sourceTree": {
+          "$ref": "#/$defs/Commit"
+        },
+        "imageDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "architecture": {
+          "const": "x86_64"
+        },
+        "productVersion": {
+          "$ref": "#/$defs/Version"
+        },
+        "runtime": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "name",
+            "version"
+          ],
+          "properties": {
+            "name": {
+              "enum": [
+                "node",
+                "superset"
+              ]
+            },
+            "version": {
+              "$ref": "#/$defs/Version"
+            }
+          }
+        },
+        "contractVersion": {
+          "const": "1.0.0"
+        },
+        "instanceId": {
+          "$ref": "#/$defs/ScopeId"
+        },
+        "tenantId": {
+          "$ref": "#/$defs/ScopeId"
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "authorityProfile": {
+          "const": "SAFE_GUIDED"
+        },
+        "effectiveRights": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "configurationDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "templateDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "policyDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "networkDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "componentId": {
+                "const": "pansphaira-local-demo"
+              }
+            },
+            "required": [
+              "componentId"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "runtime": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "const": "node"
+                  }
+                }
+              },
+              "effectiveRights": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "demo.status.read",
+                    "demo.provider.bound.read",
+                    "demo.governed.effect"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "componentId": {
+                "const": "kaleidosphere-bi-agent"
+              }
+            },
+            "required": [
+              "componentId"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "runtime": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "const": "node"
+                  }
+                }
+              },
+              "effectiveRights": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "bi.catalog.read",
+                    "bi.query.bound.read",
+                    "bi.drilldown.bound.read"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "TimestampMs": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 8640000000000000
+    },
+    "BusinessProbe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "probeId",
+        "httpStatus",
+        "expectedValueDigest",
+        "observedValueDigest",
+        "sourceObservationDigest"
+      ],
+      "properties": {
+        "probeId": {
+          "enum": [
+            "pansphaira-demo-order-readback-v1",
+            "kaleidosphere-bi-readback-v1"
+          ]
+        },
+        "httpStatus": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 599
+        },
+        "expectedValueDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observedValueDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "sourceObservationDigest": {
+          "$ref": "#/$defs/Digest"
+        }
+      }
+    },
+    "BoundaryObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "loopbackOnly",
+        "privileged",
+        "dockerSocketMounted",
+        "ownedResourcesOnly"
+      ],
+      "properties": {
+        "loopbackOnly": {
+          "type": "boolean"
+        },
+        "privileged": {
+          "type": "boolean"
+        },
+        "dockerSocketMounted": {
+          "type": "boolean"
+        },
+        "ownedResourcesOnly": {
+          "type": "boolean"
+        }
+      }
+    },
+    "ReadinessAssessmentInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expectedIdentity",
+        "observedIdentity",
+        "observedAtMs",
+        "probe",
+        "boundaryObservation"
+      ],
+      "properties": {
+        "expectedIdentity": {
+          "$ref": "#/$defs/RuntimeIdentity"
+        },
+        "observedIdentity": {
+          "$ref": "#/$defs/RuntimeIdentity"
+        },
+        "observedAtMs": {
+          "$ref": "#/$defs/TimestampMs"
+        },
+        "probe": {
+          "$ref": "#/$defs/BusinessProbe"
+        },
+        "boundaryObservation": {
+          "$ref": "#/$defs/BoundaryObservation"
+        }
+      }
+    },
+    "ReadinessReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "state",
+        "reasonCodes",
+        "expectedIdentityDigest",
+        "observedIdentityDigest",
+        "observedAtMs",
+        "probe",
+        "boundaryObservation",
+        "executionAuthorityGranted"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.portable-runtime/readiness/v1"
+        },
+        "state": {
+          "enum": [
+            "READY",
+            "NOT_READY"
+          ]
+        },
+        "reasonCodes": {
+          "type": "array",
+          "uniqueItems": true,
+          "maxItems": 5,
+          "items": {
+            "enum": [
+              "RUNTIME_IDENTITY_MISMATCH",
+              "BUSINESS_PROBE_HTTP_FAILED",
+              "BUSINESS_PROBE_MISMATCH",
+              "RUNTIME_BOUNDARY_DENIED",
+              "BUSINESS_PROBE_SCOPE_MISMATCH"
+            ]
+          }
+        },
+        "expectedIdentityDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observedIdentityDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "observedAtMs": {
+          "$ref": "#/$defs/TimestampMs"
+        },
+        "probe": {
+          "$ref": "#/$defs/BusinessProbe"
+        },
+        "boundaryObservation": {
+          "$ref": "#/$defs/BoundaryObservation"
+        },
+        "executionAuthorityGranted": {
+          "const": false
+        }
+      }
+    },
+    "SecretReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot",
+        "referenceId"
+      ],
+      "properties": {
+        "slot": {
+          "enum": [
+            "api-auth",
+            "control-auth",
+            "espo-auth",
+            "doli-auth"
+          ]
+        },
+        "referenceId": {
+          "type": "string",
+          "pattern": "^opaque:[a-f0-9]{32}$"
+        }
+      }
+    },
+    "DesiredState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "identity",
+        "phase",
+        "secretReferences"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.portable-runtime/desired/v1"
+        },
+        "identity": {
+          "$ref": "#/$defs/RuntimeIdentity"
+        },
+        "phase": {
+          "enum": [
+            "running",
+            "stopped"
+          ]
+        },
+        "secretReferences": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/SecretReference"
+          }
+        }
+      }
+    },
+    "ObservedState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "identity",
+        "phase",
+        "secretReferences",
+        "observedAtMs"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.portable-runtime/observed/v1"
+        },
+        "identity": {
+          "$ref": "#/$defs/RuntimeIdentity"
+        },
+        "phase": {
+          "enum": [
+            "running",
+            "stopped",
+            "not_observed"
+          ]
+        },
+        "secretReferences": {
+          "type": "array",
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/SecretReference"
+          }
+        },
+        "observedAtMs": {
+          "$ref": "#/$defs/TimestampMs"
+        }
+      }
+    },
+    "LifecycleJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "jobId",
+        "action",
+        "audience",
+        "tenantId",
+        "instanceId",
+        "componentId",
+        "generation",
+        "identityDigest",
+        "desiredStateDigest",
+        "issuedAtMs",
+        "deadlineMs"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.portable-runtime/lifecycle-job/v1"
+        },
+        "jobId": {
+          "$ref": "#/$defs/ScopeId"
+        },
+        "action": {
+          "enum": [
+            "start",
+            "stop",
+            "restart"
+          ]
+        },
+        "audience": {
+          "enum": [
+            "pansphaira-local-runtime-v1",
+            "kaleidosphere-runtime-v1"
+          ]
+        },
+        "tenantId": {
+          "$ref": "#/$defs/ScopeId"
+        },
+        "instanceId": {
+          "$ref": "#/$defs/ScopeId"
+        },
+        "componentId": {
+          "enum": [
+            "pansphaira-local-demo",
+            "kaleidosphere-bi-agent"
+          ]
+        },
+        "generation": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "identityDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "desiredStateDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "issuedAtMs": {
+          "$ref": "#/$defs/TimestampMs"
+        },
+        "deadlineMs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30000
+        }
+      }
+    },
+    "LifecycleReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schemaVersion",
+        "jobId",
+        "jobDigest",
+        "outcome",
+        "reasonCode",
+        "observedStateDigest",
+        "completedAtMs",
+        "executionAuthorityGranted"
+      ],
+      "properties": {
+        "schemaVersion": {
+          "const": "pansphaira.portable-runtime/lifecycle-receipt/v1"
+        },
+        "jobId": {
+          "$ref": "#/$defs/ScopeId"
+        },
+        "jobDigest": {
+          "$ref": "#/$defs/Digest"
+        },
+        "outcome": {
+          "enum": [
+            "succeeded",
+            "failed",
+            "outcome_unknown"
+          ]
+        },
+        "reasonCode": {
+          "enum": [
+            "OBSERVED_TARGET_REACHED",
+            "OBSERVED_TARGET_NOT_REACHED",
+            "DISPATCH_INTERRUPTED",
+            "DISPATCH_FAILED"
+          ]
+        },
+        "observedStateDigest": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "completedAtMs": {
+          "$ref": "#/$defs/TimestampMs"
+        },
+        "executionAuthorityGranted": {
+          "const": false
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "outcome": {
+                "const": "succeeded"
+              }
+            },
+            "required": [
+              "outcome"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "reasonCode": {
+                "enum": [
+                  "OBSERVED_TARGET_REACHED"
+                ]
+              },
+              "observedStateDigest": {
+                "$ref": "#/$defs/Digest"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "outcome": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "outcome"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "reasonCode": {
+                "enum": [
+                  "OBSERVED_TARGET_NOT_REACHED",
+                  "DISPATCH_FAILED"
+                ]
+              },
+              "observedStateDigest": {
+                "$ref": "#/$defs/Digest"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "type": "object",
+            "properties": {
+              "outcome": {
+                "const": "outcome_unknown"
+              }
+            },
+            "required": [
+              "outcome"
+            ]
+          },
+          "then": {
+            "type": "object",
+            "properties": {
+              "reasonCode": {
+                "enum": [
+                  "DISPATCH_INTERRUPTED"
+                ]
+              },
+              "observedStateDigest": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
