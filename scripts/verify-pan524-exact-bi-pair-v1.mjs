@@ -27,9 +27,10 @@ async function invoke(action,input){
   assert.equal(value.outcome,'VERIFIED',action+': '+JSON.stringify(value));return value.readback.result;
 }
 const status=await invoke('status');assert.equal(status.status,'READY');
-const discovery=await invoke('discovery',{command:'start',sessionId:runId});
+// A fresh genuine control runtime has no catalog until its first analysis.
 const analysis=await invoke('analyze');assert.equal(analysis.status,'ANALYZED_READ_ONLY');assert.equal(analysis.sourceMode,'fixture');
 assert.equal(analysis.safety.sourceReadOnly,true);assert.equal(analysis.safety.rawSourceRowsReturned,false);assert.equal(analysis.safety.credentialsReturned,false);
+const discovery=await invoke('discovery',{command:'start',sessionId:runId});
 const plan=await invoke('plan',{objective:'Review weekly order value and coverage',receiptId:analysis.receiptId});
 assert.equal(plan.graph.acceptedIncumbent,'adaptive-v1');assert.equal(plan.authority.persistentActionAllowed,false);
 const preview=await invoke('preview',{objective:'Preview weekly order value and coverage',receiptId:analysis.receiptId});
@@ -80,7 +81,7 @@ assert.equal(forbiddenFetches,0);
 process.stdout.write(JSON.stringify({schemaVersion:'pansphaira.pan524/live-pair-observations/v1',outcome:'PASS',runId,
   pairProfile:'KS_J02_0181_C2_V1',providerProfileDigest:profile.integrity.digest,providerArtifact:profile.artifact,
   consumerCompiledSha256:createHash('sha256').update(await readFile(new URL('../dist/packages/contracts/src/external-bi-service.js',import.meta.url))).digest('hex'),
-  operationsActuallyExecuted:['status','discovery','analyze','plan','preview','readback'],
+  operationsActuallyExecuted:['status','analyze','discovery','plan','preview','readback'],
   operationResultDigests:Object.fromEntries(Object.entries(operations).map(([k,v])=>[k,sha(v)])),
   observedSourceMode:analysis.sourceMode,observedRuntimeValidation:analysis.evidence.runtimeValidation,
   graphIncumbent:plan.graph.acceptedIncumbent,previewProposalOnly:preview.authority.proposalOnly,supersetReadback:readback.superset.status,

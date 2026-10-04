@@ -21,7 +21,8 @@ The legacy default pair remains SBA product `v0.8.0` and external contract
 there is no automatic latest-version negotiation.
 PanSphaira owns the expected compatibility profile
 `pansphaira.external-bi-service/compatibility-profile/v2`; transport
-configuration cannot select, replace or attest that profile. CM first verifies
+configuration cannot supply, replace or attest that profile. A closed named
+selection may choose only the code-owned pair described below. CM first verifies
 `GET /v2/capabilities`, including the canonical SHA-256 digest, the exact
 product and contract identities, the six capability descriptors, the accepted
 Adaptive Graph incumbent `adaptive-v1`, and the declared

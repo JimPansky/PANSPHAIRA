@@ -368,6 +368,13 @@ repository_only_files = {
     "tests/pan517/registration.test.mjs",
     "docs/architecture/pan517-native-fulfilment-v1.md",
     "verification/pan517-native-fulfilment-evidence-v1.json",
+    # PAN524 current exact pair qualification remains source evidence, not a standalone runtime.
+    "scripts/verify-pan524-exact-bi-pair-v1.mjs",
+    "tests/fixtures/pan524/published-j02-provider-v0181.json",
+    "tests/pan524/exact-bi-pair-profile.test.mjs",
+    "tests/pan524/delivery-surface.test.mjs",
+    "tests/pan524/registration.test.mjs",
+    "verification/pan524-exact-bi-pair-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

@@ -13,3 +13,8 @@ test('J01 real pair runner refuses an implicit endpoint before network or provid
   const result=spawnSync(process.execPath,['scripts/verify-pan524-exact-bi-pair-v1.mjs'],{encoding:'utf8'});
   assert.notEqual(result.status,0);assert.match(result.stderr,/PAN524_EXPLICIT_PROVIDER_URL_REQUIRED/);
 });
+
+test('J01 fresh-provider runner obtains its analyzed catalog before starting discovery',()=>{
+  const text=readFileSync('scripts/verify-pan524-exact-bi-pair-v1.mjs','utf8');
+  assert(text.indexOf("const analysis=await invoke('analyze')")<text.indexOf("const discovery=await invoke('discovery'"),'fresh owned fixture has no catalog before the real analyze operation');
+});

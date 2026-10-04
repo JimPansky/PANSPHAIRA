@@ -507,6 +507,14 @@
       "fromSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
       "toSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
       "reason": "Advance graph to v80 and register one bounded P03 native fulfilment owner using the existing PAN515 transaction and exported entry, original five criteria/six negatives and real calendar/rollback validation. Preserve every historical migration, immutable base obligation, existing owner and hard gate, common source and runnable manifest; no new CLI gate, productive movement, private source or completion authority."
+    },
+    {
+      "migrationId": "PAN524-EXACT-BI-PAIR/INTEGRITY-GENERATOR/V53",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 53,
+      "fromSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
+      "toSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
+      "reason": "Advance graph to v81 with one bounded J01 exact current BI pair owner; retain existing legacy external BI source owner, four original criteria/negatives, full attestation/artifact identity and independently owned real provider pairing. Preserve all prior migrations, immutable base obligations, hard gates, source/privacy boundaries and runnable manifest; no wildcard, registry promotion, productive or closure authority."
     }
   ],
   "scanScope": {
@@ -549,15 +557,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 846,
+    "filesScanned": 850,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 275,
-    "importFiles": 274,
+    "importSites": 276,
+    "importFiles": 275,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2272,
-    "ledgerUniquePaths": 2272
+    "ledgerEntries": 2278,
+    "ledgerUniquePaths": 2278
   },
   "profiles": [
     {
@@ -630,7 +638,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d"
+      "sha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1027,8 +1035,8 @@
     },
     {
       "owner": "scripts",
-      "importSites": 14,
-      "importFiles": 14
+      "importSites": 15,
+      "importFiles": 15
     },
     {
       "owner": "tests",
@@ -1326,7 +1334,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
+      "sha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
       "basis": "profile-version-migration"
     },
     {

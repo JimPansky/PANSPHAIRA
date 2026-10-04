@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "pansphaira.pan524/exact-profile-development-evidence/v1",
+  "issue": 524,
+  "profile": "KS_J02_0181_C2_V1",
+  "providerCommit": "92f47ef2d5dc74bd44fa3a71c7a296da23c9b928",
+  "providerProfileDigest": "sha256:9d50be8fad2ba9f3432e1461a2a9d9b08a567097d5f9a88ec86b7405230f9b04",
+  "originalCriteria": [
+    "- [ ] AC1: Statischer Konflikt wird als gezielter Consumer-Test reproduziert; keine unbewiesene Behauptung eines bereits getesteten Komplettausfalls.",
+    "- [ ] AC2: Akzeptierte Identit\u00e4t und Contractversion sind exakt gebunden; unbekannte oder fehlende Attestations bleiben sichtbar abgewiesen.",
+    "- [ ] AC3: Keine Credentials, Rohdaten oder freien SQL-Statements passieren PAN; direkter Auftragsreceiver bleibt getrennt.",
+    "- [ ] AC4: Der aktuelle PAN-Consumer und der echte KS-Provider bestehen ein neues gepaartes Integrationsszenario. Der unver\u00e4nderliche PAN-Vertragskandidat wird vorher f\u00fcr J02 freigegeben; die Register-/Freigabeaggregation in J03 verwendet denselben Lauf, ohne dass ein CLOSED-Zyklus entsteht."
+  ],
+  "originalNegatives": [
+    "- falsche Produktversion",
+    "- KS-Root-Version mit Agent-Version verwechselt",
+    "- zus\u00e4tzliche unbekannte Attestation",
+    "- bequemer Wildcard-Fallback"
+  ],
+  "sourceBytePins": {
+    "packages/contracts/src/external-bi-service.ts": "63f3b8899aba0487fc2acd6bd5706de32cdfceeaa57d722113bb2d8a5ad66439",
+    "docs/EXTERNAL-BI-SERVICE.md": "49ec4939efe14db30bdc471e249b7edd84bf19e0ff2e11b648054110689db45d",
+    "scripts/verify-pan524-exact-bi-pair-v1.mjs": "f6d183f656278e865a1239d26d5c30cc33b87c29f19d8cb2815c7e15ac5e7759",
+    "tests/fixtures/pan524/published-j02-provider-v0181.json": "e30b5efe4279b9756203834501061c048e163668b7d81fe281717dc0ad56aeab",
+    "tests/pan524/exact-bi-pair-profile.test.mjs": "37431bcd0d0c8eb8852d760f7b87694ce4f766de393d3221f357bf69d8ab13aa",
+    "tests/pan524/delivery-surface.test.mjs": "01c74f5f13278bfdf262d1c07a4c44c4726409ab28a4c4a8aac3bdec1968a5ec"
+  },
+  "sourceBytesStableAcrossExecution": true,
+  "actualFocusedExecution": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "dist/tests/external-bi-service.test.js",
+      "tests/pan524/exact-bi-pair-profile.test.mjs",
+      "tests/pan524/delivery-surface.test.mjs"
+    ],
+    "exitCode": 0,
+    "counts": {
+      "tests": 35,
+      "passes": 35,
+      "fails": 0,
+      "skips": 0
+    },
+    "stdoutSha256": "031980f43637d976155526f7113a4e956a3179aef40ccab0405e139e44de0e89"
+  },
+  "legacyDefaultPreserved": true,
+  "directOrderReceiverUnchanged": true,
+  "providerStubIntroduced": false,
+  "currentFrozenPairAcceptanceClaimed": false,
+  "registryPromotionAuthorized": false,
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+}
