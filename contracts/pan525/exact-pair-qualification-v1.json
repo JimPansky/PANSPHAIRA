@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "pansphaira.pan525/exact-pair-qualification/v1",
+  "profileId": "KS_J02_0181_C2_V1",
+  "outcome": "EXACT_KNOWN_PAIR_OBSERVED_NATIVE_QUALIFICATION_HELD",
+  "pair": {
+    "consumer": {
+      "repository": "JoFe2/PANSPHAIRA",
+      "commit": "0efa10b545cfa617e7b6e8c58fe5bc768e0158aa",
+      "tree": "13d4bdb9472b75f934b574ea49e2a2354223b9cb",
+      "releaseTag": "2026_10_04_v1",
+      "releaseId": 402968332,
+      "compiledHandlerSha256": "e64851e88630d6f6d180d04aa85612e268e6a357d5d26f57450cfc2d91d0e610"
+    },
+    "provider": {
+      "repository": "JoFe2/KaleidoSphere",
+      "commit": "92f47ef2d5dc74bd44fa3a71c7a296da23c9b928",
+      "tree": "e485b9a99c6dd53b1cceac5782919f8d96194dbc",
+      "releaseTag": "2026_10_03_v4",
+      "releaseId": 402588631,
+      "productVersion": "v0.18.1",
+      "artifact": {
+        "packageName": "@chimpmaera-bi/agent",
+        "packageVersion": "0.18.1",
+        "packageSha256": "826bcc27fa1a59514001b550a8d07c2fd129bf68089ddc98bdf626b2eb346145",
+        "component": "bi-agent-runtime"
+      },
+      "sourceArchiveSha256": "a893019fc0c660edf6f07c995eeb58afa19a8631b868cced94a90db5350d579c",
+      "providerProfileDigest": "sha256:9d50be8fad2ba9f3432e1461a2a9d9b08a567097d5f9a88ec86b7405230f9b04"
+    },
+    "contractVersion": "2.0.0",
+    "configuration": {
+      "pairProfile": "KS_J02_0181_C2_V1",
+      "sourceMode": "fixture",
+      "engine": "mssql",
+      "llmMode": "stub",
+      "externalTrustedMutationAllowed": false
+    }
+  },
+  "sourceScope": "KNOWN_PUBLIC_SYNTHETIC_FIXTURE_NOT_A_SECOND_APPROVED_CONTEXT",
+  "observedOperations": [
+    "status",
+    "analyze",
+    "discovery",
+    "plan",
+    "preview",
+    "readback"
+  ],
+  "operationResultDigests": {
+    "status": "sha256:17beeaf52ac432afc7e0cbe1117e73e6aed2de24f8cab1fd29b72fdfdaf0c0f0",
+    "discovery": "sha256:acb871fefad8b07ad907f2eb6eb12eb7c11654a75d3d3d688184f797c650cc85",
+    "analysis": "sha256:a3ade230029fabd7d4383d8611ab94dfd17ddd4ec91a33d60986719b8382e274",
+    "plan": "sha256:ca1c1e1872dba8be85bfcbd55727361fe12d60591e009992a14cf5c51ac9af81",
+    "preview": "sha256:e143ccf49a1f48fca0f89b06e2fe769e6e946adcdc47a3f0d9a1225a5e2b8e8c",
+    "readback": "sha256:5e1bf852a91b1bc2539dc742076d9eb3e4abee553ba3a3a88465b39d4daf3298"
+  },
+  "observedSourceMode": "fixture",
+  "observedRuntimeValidation": "SYNTHETIC_UNVALIDATED",
+  "nativeUpgradeAndPersistence": {
+    "state": "HELD",
+    "reason": "EXACT_PAIR_NATIVE_UPGRADE_AND_PERSISTENCE_PROOF_NOT_SUPPLIED_BY_J01_FIXTURE_HTTP_RUN"
+  },
+  "ks250IndependentSecondContext": {
+    "state": "HELD",
+    "reason": "KNOWN_SYNTHETIC_FIXTURE_IS_NOT_INDEPENDENT_SECOND_CONTEXT_OR_SOURCE_PUBLICATION_AUTHORITY"
+  },
+  "registryPromotionPerformed": false,
+  "sourceRightsGranted": false,
+  "executionAuthorityGranted": false,
+  "proposalOnly": true,
+  "provenance": {
+    "kind": "RETAINED_ACTUAL_DELIVERED_J01_PAIR_NOT_NEW_J03_RUNTIME_PROOF",
+    "publicIssue": 524,
+    "publicClosureComment": 5979221360,
+    "samePairReceiptSha256": "38d63f7e176afbb5998f4c96ba922e377e01ca874042b4053f45bc4d6ca94ecb",
+    "actualOperationsDigestBound": true,
+    "handshakeIsNotNativeFunctionalOrRegistryPass": true
+  }
+}

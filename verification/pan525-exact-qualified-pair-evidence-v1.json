@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "pansphaira.pan525/exact-qualified-pair-evidence/v1",
+  "issue": 525,
+  "profile": "KS_J02_0181_C2_V1",
+  "pair": {
+    "consumer": {
+      "repository": "JoFe2/PANSPHAIRA",
+      "commit": "0efa10b545cfa617e7b6e8c58fe5bc768e0158aa",
+      "tree": "13d4bdb9472b75f934b574ea49e2a2354223b9cb",
+      "releaseTag": "2026_10_04_v1",
+      "releaseId": 402968332,
+      "compiledHandlerSha256": "e64851e88630d6f6d180d04aa85612e268e6a357d5d26f57450cfc2d91d0e610"
+    },
+    "provider": {
+      "repository": "JoFe2/KaleidoSphere",
+      "commit": "92f47ef2d5dc74bd44fa3a71c7a296da23c9b928",
+      "tree": "e485b9a99c6dd53b1cceac5782919f8d96194dbc",
+      "releaseTag": "2026_10_03_v4",
+      "releaseId": 402588631,
+      "productVersion": "v0.18.1",
+      "artifact": {
+        "packageName": "@chimpmaera-bi/agent",
+        "packageVersion": "0.18.1",
+        "packageSha256": "826bcc27fa1a59514001b550a8d07c2fd129bf68089ddc98bdf626b2eb346145",
+        "component": "bi-agent-runtime"
+      },
+      "sourceArchiveSha256": "a893019fc0c660edf6f07c995eeb58afa19a8631b868cced94a90db5350d579c",
+      "providerProfileDigest": "sha256:9d50be8fad2ba9f3432e1461a2a9d9b08a567097d5f9a88ec86b7405230f9b04"
+    },
+    "contractVersion": "2.0.0",
+    "configuration": {
+      "pairProfile": "KS_J02_0181_C2_V1",
+      "sourceMode": "fixture",
+      "engine": "mssql",
+      "llmMode": "stub",
+      "externalTrustedMutationAllowed": false
+    }
+  },
+  "originalCriteria": [
+    "- [ ] AC1: Consumer, Provider, Konfiguration, Quelle und Ergebnis sind durch exakte Identitäten gebunden; kein Mock als zweites Produkt.",
+    "- [ ] AC2: Eine erlaubte Operation stimmt mit unabhängigen Sollwerten überein; Version-, Rechte-, Quellen- und Drilldown-Negative sind ausgeführt.",
+    "- [ ] AC3: Gemeinsame Veröffentlichung und Readback betreffen die tatsächlich geänderten Komponenten; getrennte Releases sind zulässig, wenn das Paar eindeutig reproduzierbar bleibt.",
+    "- [ ] AC4: Ein nicht erfülltes Registry-Profil bleibt HELD. KS#250-Zweitkontext und dessen Quellen-/Publikationsrechte werden nicht durch diese bekannte synthetische Probe ersetzt.",
+    "- [ ] AC5: Alle sechs unterstützten Intents des aktuellen externen Analysevertrags positiv am echten Paar prüfen; externe trusted mutation negativ; Upgrade-/Persistenzzustand nativ nachweisen. Nicht implementierte Intents transparent ausweisen statt mocken.",
+    "- [ ] AC6: Qualifizierte Paaridentität enthält Consumer-/Providercommit, Runtime-/Contractversionen und Belegdigest; keine Freigabe von main/latest oder beliebigen Versionskombinationen."
+  ],
+  "originalNegatives": [
+    "- passender Stub statt Provider",
+    "- anderer Build nach Test",
+    "- Handshake-PASS als Fach-PASS",
+    "- ein Kontext als unabhängig neuer Kontext etikettiert"
+  ],
+  "sourceBytePins": {
+    "src/pan525/exact-pair-qualification.mjs": "38a632a382f0f2fad882011a12d99f3f02f289da670843af2da3304993fa4f73",
+    "contracts/pan525/native-persistence-observation-v1.json": "24d451f947a3b725b62ff752ed03716e901b26abae82400829b903d5539c5fba",
+    "contracts/pan525/exact-pair-qualification-v1.json": "ec0bb349f07b9a8ed212d216fae29a4005aedf10afa799c3f57ef7234af50934",
+    "contracts/pan525/native-runtime-version-readback-v1.json": "e79aba27f2d6e585934f36ea99f902159c37118c1762a5194e0b435ed4722800",
+    "tests/pan525/exact-pair-qualification.test.mjs": "298373657e21bb56fd2821382785bc8d702fd424a46f4a1ee957fda3bf9793e3",
+    "scripts/read-pan525-qualified-pair-v1.mjs": "0972fe5381f3e4ed72b436666582739e5ebbfc1569d0bb1e3ad78e0ac1d9f977"
+  },
+  "focusedSourceExecution": {
+    "command": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "tests/pan525/exact-pair-qualification.test.mjs"
+    ],
+    "exitCode": 0,
+    "counts": {
+      "tests": 5,
+      "pass": 5,
+      "fail": 0,
+      "skipped": 0
+    },
+    "logSha256": "f14d679f16392f8754fb0a8047973761b9c9bcc6dc0bc7ddce2fa9f8d482e509",
+    "sourceIndependentSnapshotExit": 0
+  },
+  "nativePersistenceActuallyExecuted": true,
+  "nativeSchemaRevisionChangeClaimed": false,
+  "actualNativeReceiptSha256": "a01ac417aabe4bcd1376976ec2b13befb59f50c7ef8b72a93566c148cb03b0c8",
+  "nativeObservationSha256": "24d451f947a3b725b62ff752ed03716e901b26abae82400829b903d5539c5fba",
+  "nativeEvidenceReviewKind": "INDEPENDENT_RAW_LOG_INTEGRITY_AND_RETAINED_BUSINESS_ORACLE_NOT_SECOND_CONTAINER_RUN",
+  "nativeOracleNegativeKind": "EXPLICIT_MUTATIONS_OF_RETAINED_OBSERVATIONS_NOT_FRESH_NATIVE_PRODUCT_WRITES",
+  "sameDeliveredJ01SixIntentRunReused": true,
+  "sameActualPairReceiptSha256": "38d63f7e176afbb5998f4c96ba922e377e01ca874042b4053f45bc4d6ca94ecb",
+  "additionalActualSourceRightsDrilldownProbe": {
+    "outcome": "PASS_ACTUAL_SOURCE_RIGHTS_DRILLDOWN_DENIALS",
+    "observationSha256": "623cade0f8f3d1a16dd74976464efe815cea52626bcbe43c5e3fa8da0eb0cb0b",
+    "executedNegatives": 4
+  },
+  "ks250IndependentSecondContext": "HELD",
+  "sourceRightsGranted": false,
+  "providerRegistryMutated": false,
+  "executionAuthorityGranted": false,
+  "fullIntegrationAcceptanceClaimed": false,
+  "finalAcceptance": false,
+  "closureEligible": false,
+  "distributionClass": "SOURCE_EVIDENCE_ONLY_NOT_RUNNABLE_PRODUCT_PACKAGE"
+}

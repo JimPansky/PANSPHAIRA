@@ -1,0 +1,56 @@
+{
+  "schemaVersion": "pansphaira.pan525/native-persistence-observation/v1",
+  "tuple": {
+    "consumer": "0efa10b545cfa617e7b6e8c58fe5bc768e0158aa",
+    "provider": "92f47ef2d5dc74bd44fa3a71c7a296da23c9b928",
+    "nativeImage": "sha256:10e879d1ed447aa2b195c70790ef040adee67e32f43b6f4584c31191313fe32f",
+    "contractVersion": "2.0.0",
+    "scope": "OWNED_LOCAL_NATIVE_PERSISTENCE_NOT_SECOND_SOURCE"
+  },
+  "outcome": "ACTUAL_NATIVE_PERSISTENCE_AND_DB_UPGRADE_VERIFIED",
+  "productJobsUnchangedFromReleasedConsumer": true,
+  "producerJobSha256": "f254fa878ed4b75b814392945a52d1b1bbccd4c3ac53622451fb74574f213c2e",
+  "consumerJobSha256": "da1e991a4de3510499cb6f445e0395e2a31609dfd007b744853987f87cf1df03",
+  "oracleSha256": "4f55e65b7a18a67f07e8d8a12d5329f80e12b2c43f9a6a5ad6ac85c9d9741187",
+  "expectedFactsSha256": "2bb05e29a6fc7012d79051f94ff54e2bb1c92809a3eb2e950b2e4a1790e8c594",
+  "providerSourceArchiveSha256": "a893019fc0c660edf6f07c995eeb58afa19a8631b868cced94a90db5350d579c",
+  "providerNativeClosure": {
+    "services/superset/runtime/bootstrap.py": "67a1f0a6dbe29e7ef55588b4175631bb31623a773d55ca9bc3557dd3044c889e",
+    "services/superset/runtime/generation_store.py": "a9632671afbe6dea904d053cda4065daf01030d6ffb0b058c7c0c40b57bad493",
+    "services/superset/runtime/healthcheck.py": "0ffe6f25a6d879cfd19b4ae88f3c6fcee3cc7195a7657eeb1a9e0649ffbabc0b",
+    "services/superset/runtime/init.sh": "0ad757d1b257a81f0288a37f56b633802cdd95a030c67df5aea1c18c8a30aff3",
+    "services/superset/runtime/ks254_install.py": "2cd3ba7aa552019f22ec766c93569484250731634abdfff1f1500626ae17a18c",
+    "services/superset/runtime/materialize.py": "107b39bac2e6e756fb259fb496d5da002c37f03b01102bfdf40b0b4539365a09",
+    "services/superset/runtime/materializer_server.py": "b807692e11cac198c2168a991f80b2e91b1e503a6f5b8fd9e07f480e92ce4694",
+    "services/superset/runtime/start.sh": "b56db34742bb50203dff28fa90483b29007a1f711af19e6dd9d5d4eecf66404f",
+    "services/superset/runtime/superset_config.py": "1ca26e546707da60cda8aeb495f2b12cc3b4807998de76d6edd8242aa19721a4"
+  },
+  "nativeVersions": {
+    "superset": "6.1.0",
+    "metadataRevision": "4b2a8c9d3e1f"
+  },
+  "nativeInstallExecutions": 3,
+  "allThreeActualProvisioningStepExitsZero": true,
+  "actualDbUpgradeInvocation": true,
+  "schemaRevisionChangeClaimed": false,
+  "nativePanGenerationRetained": 1,
+  "businessOracleOutcomes": {
+    "initial": "PASS",
+    "afterNativeInstall": "PASS",
+    "afterRealNewWrites": "PASS",
+    "afterStoppedRestartAndReinstall": "PASS"
+  },
+  "existingDatasetAndDashboardRetained": true,
+  "actualProducerAndMetadataNewWritesRetained": true,
+  "actualNativeCommandReceiptDigests": [
+    "6a92f2719945d761208481e0e394e4f4e9f382786bd4f3d5786dec177aa94024",
+    "893c3cd52bfaca6946bbfff6878864c19810508072f9e3fc6958b2a7faf5f766",
+    "dd9f4bc27d44912f974a3e3259e9c3bbcf2dad34ee476b195dd787abf9fc7eb8"
+  ],
+  "registryPromotionPerformed": false,
+  "secondIndependentContextQualified": false,
+  "sourceRightsGranted": false,
+  "publicSyntheticExternalSixIntentRunNotRelabeledNative": true,
+  "sameActualJ01SixIntentPairReceiptSha256": "38d63f7e176afbb5998f4c96ba922e377e01ca874042b4053f45bc4d6ca94ecb",
+  "boundActualJobsDigest": "ed5871e243fb5bf0a5266292082a60670d2a4bddfafc0b2377e1affd3ae4da3c"
+}

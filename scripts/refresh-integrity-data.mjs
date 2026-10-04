@@ -1725,6 +1725,65 @@ pan520Node.inputs = pan520Inputs.map(([inputPath,role]) => ({path:inputPath,role
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan520:test")) repositoryIntegrityNode.ownedTests.push("npm run pan520:test");
 dag.graphVersion = 82;
 
+// PAN525 J03: one read-only PAN-owned qualification registry. Existing J01
+// observations remain immutable; actual native persistence is separate evidence.
+const pan525Inputs = [
+  [
+    "contracts/pan525/exact-pair-qualification-v1.json",
+    "CONTRACT"
+  ],
+  [
+    "contracts/pan525/native-persistence-observation-v1.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "contracts/pan525/native-runtime-version-readback-v1.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "src/pan525/exact-pair-qualification.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/read-pan525-qualified-pair-v1.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/pan525/exact-pair-qualification.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan525/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "docs/architecture/pan525-exact-qualified-pair-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan525-exact-qualified-pair-evidence-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan525Node = dag.nodes.find(({id}) => id === "pan525-exact-qualified-pair-v1");
+if (pan525Node === undefined) {
+  pan525Node = {
+    id: "pan525-exact-qualified-pair-v1", dependsOn: ["pan524-exact-bi-pair-v1"], inputs: [],
+    ownedTests: ["npm run pan525:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Exactly retained released J01 consumer/provider commits, contract/runtime versions and evidence digests; main/latest, unknown builds, caller proofs or roles deny. No other Git identity from equal compiled bytes.",
+      "Six actual synthetic HTTP intents and independent expected results are retained from the same delivered J01/J02 pair. Handshake/fixture PASS is not native functional qualification or independent second source.",
+      "Separate genuine native db upgrade invocation, dataset/dashboard and new business/metadata persistence across stopped restart/reinstallation; no schema-revision transition claimed. Fixed regular-file evidence read and hashed through O_NOFOLLOW descriptors.",
+      "Promotion only into one PAN-owned read-only local synthetic registry. KS250 independent second context remains HELD; no provider registry mutation, source/publication rights, execution grant or productive authority.",
+      "All six original criteria and four negatives retained. Source evidence only; focused reviews, canonical proof, exact hosted CI, protected merge, new release and anonymous source-archive readback are distinct gates, not a Main approval wait."
+    ]
+  };
+  dag.nodes.push(pan525Node);
+}
+pan525Node.inputs = pan525Inputs.map(([inputPath,role]) => ({path:inputPath,role,sha256:digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan525:test")) repositoryIntegrityNode.ownedTests.push("npm run pan525:test");
+dag.graphVersion = 83;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1773,6 +1832,7 @@ for (const [inputPath] of pan516Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan517Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan524Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan520Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan525Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

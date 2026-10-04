@@ -385,6 +385,16 @@ repository_only_files = {
     "tests/pan520/registration.test.mjs",
     "docs/architecture/pan520-native-projections-v1.md",
     "verification/pan520-native-projection-evidence-v1.json",
+    # PAN525 read-only local qualification: source archive only, no runnable promotion.
+    "contracts/pan525/exact-pair-qualification-v1.json",
+    "contracts/pan525/native-persistence-observation-v1.json",
+    "contracts/pan525/native-runtime-version-readback-v1.json",
+    "src/pan525/exact-pair-qualification.mjs",
+    "scripts/read-pan525-qualified-pair-v1.mjs",
+    "tests/pan525/exact-pair-qualification.test.mjs",
+    "tests/pan525/registration.test.mjs",
+    "docs/architecture/pan525-exact-qualified-pair-v1.md",
+    "verification/pan525-exact-qualified-pair-evidence-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real
