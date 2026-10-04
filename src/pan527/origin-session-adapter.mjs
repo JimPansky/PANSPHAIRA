@@ -2,6 +2,7 @@ import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypt
 import { constants, closeSync, fstatSync, lstatSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
 import { isAbsolute, join, resolve } from "node:path";
 import { createServer as createHttpsServer } from "node:https";
+import Ajv2020 from "ajv/dist/2020.js";
 import { buildPocGuidedDemoSetupPlanV1, expectedPocGuidedDemoTemplatesV1 } from "../../dist/packages/contracts/src/index.js";
 import { PocEarlyAdminCoordinatorV1, createPocEarlyAdminDashboardServerV1 } from "../../dist/packages/setup-coordinator/src/index.js";
 import { canonicalJson } from "../../dist/packages/contracts/src/canonical-json.js";
@@ -25,6 +26,18 @@ export function validateHostedOriginV1(value) {
 const audience = "pansphaira-hosted-origin-v1";
 const cookieName = "__Host-pan527-session";
 const hash = (value) => createHash("sha256").update(value).digest("hex");
+let routeBindingValidator;
+export function validateProtectedRouteBindingV1(value) {
+  exactData(value, ["schemaVersion", "componentId", "entrypointPath", "sourceCommit", "sourceTree", "entrypointSha256", "runtime", "instanceId", "tenantId", "generation"], "HOSTED_ROUTE_BINDING_DENIED");
+  exactData(value.runtime, ["name", "version"], "HOSTED_ROUTE_BINDING_DENIED");
+  if (!routeBindingValidator) {
+    const ajv = new Ajv2020({ strict: true, coerceTypes: false, removeAdditional: false, useDefaults: false });
+    ajv.addSchema(JSON.parse(readFileSync(new URL("../../contracts/runtime-portability/portable-runtime-v1.schema.json", import.meta.url), "utf8")));
+    routeBindingValidator = ajv.compile(JSON.parse(readFileSync(new URL("../../contracts/hosted-origin-session/protected-route-binding-v1.schema.json", import.meta.url), "utf8")));
+  }
+  if (!routeBindingValidator(value)) throw new Error("HOSTED_ROUTE_BINDING_DENIED");
+  const copy = JSON.parse(canonicalJson(value)); Object.freeze(copy.runtime); return Object.freeze(copy);
+}
 function exactData(value, keys, code) {
   if (!value || typeof value !== "object" || Object.getPrototypeOf(value) !== Object.prototype) throw new Error(code);
   const ds = Object.getOwnPropertyDescriptors(value);
@@ -73,11 +86,27 @@ export function createProtectedSessionAdapterV1(options) {
   const origin = validateHostedOriginV1(options.origin);
   const identity = validateRuntimeIdentityV1(options.identity);
   if (identity.componentId !== "pansphaira-local-demo") throw new Error("HOSTED_RUNTIME_BINDING_DENIED");
-  const root = privateRoot(options.stateRoot);
+  const binding = Object.freeze({ audience, origin, instanceId: identity.instanceId, tenantId: identity.tenantId, generation: identity.generation, identityDigest: runtimeIdentityDigestV1(identity) });
+  return createOwnerSessionStoreV1(origin, identity, privateRoot(options.stateRoot), binding, cookieName, false);
+}
+
+// Explicit protected-route process binding, NOT an added portable-runtime enum
+// or an agent alias. The KS owner binds its native product handler separately.
+// This profile exposes only authenticated CSRF-protected read-operation checks;
+// it cannot authorize a product mutation, arbitrary route or external source.
+export function createProtectedRouteSessionAdapterV1(options) {
+  if (!options || Object.getOwnPropertyDescriptor(options, "optIn")?.value !== true) throw new Error("HOSTED_OPT_IN_REQUIRED");
+  exactData(options, ["optIn", "origin", "routeBinding", "stateRoot"], "HOSTED_SESSION_OPTIONS_DENIED");
+  const origin = validateHostedOriginV1(options.origin);
+  const identity = validateProtectedRouteBindingV1(options.routeBinding);
+  const binding = Object.freeze({ audience: "kaleidosphere-protected-control-origin-v1", origin, componentId: identity.componentId, instanceId: identity.instanceId, tenantId: identity.tenantId, generation: identity.generation, protectedRouteDigest: hash(canonicalJson(identity)) });
+  return createOwnerSessionStoreV1(origin, identity, privateRoot(options.stateRoot), binding, "__Host-ks293-session", true);
+}
+
+function createOwnerSessionStoreV1(origin, identity, root, binding, cookieName, readOnlyRoute) {
   const keyPath = join(root, "session-auth.key"); const storePath = join(root, "sessions.json");
   try { const fd = openSync(keyPath, "wx", 0o600); try { writeFileSync(fd, randomBytes(32).toString("hex") + "\n"); } finally { closeSync(fd); } }
   catch (error) { if (error.code !== "EEXIST") throw error; }
-  const binding = Object.freeze({ audience, origin, instanceId: identity.instanceId, tenantId: identity.tenantId, generation: identity.generation, identityDigest: runtimeIdentityDigestV1(identity) });
   function key() {
     privateRoot(root); const value = privateBytes(keyPath).toString("utf8").trim();
     if (!/^[a-f0-9]{64}$/.test(value)) throw new Error("HOSTED_AUTH_UNAVAILABLE");
@@ -132,7 +161,7 @@ export function createProtectedSessionAdapterV1(options) {
       || !Number.isSafeInteger(row.expiresAtMs) || !Number.isSafeInteger(row.issuedAtMs)
       || row.issuedAtMs > Date.now() || row.expiresAtMs <= Date.now() || row.expiresAtMs > row.issuedAtMs + 1800000
       || !/^[a-f0-9]{64}$/.test(row.csrfDigest)) throw new Error("HOSTED_SESSION_DENIED");
-    return Object.freeze({ tenantId: identity.tenantId, subjectId: row.subjectId, role: row.role, instanceId: identity.instanceId, generation: identity.generation });
+    return Object.freeze({ tenantId: identity.tenantId, subjectId: row.subjectId, role: row.role, instanceId: identity.instanceId, generation: identity.generation, ...(readOnlyRoute ? { componentId: identity.componentId } : {}) });
   }
   function responseCookie(headers) {
     authenticate(headers);
@@ -142,7 +171,18 @@ export function createProtectedSessionAdapterV1(options) {
     if (remaining < 1) throw new Error("HOSTED_SESSION_DENIED");
     return pair + "; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=" + remaining;
   }
-  return Object.freeze({ origin, binding, issueOwnerSession, authenticate, responseCookie });
+  function authorizeCsrf(headers) {
+    const principal = authenticate(headers);
+    if (!readOnlyRoute && principal.role !== "reviewer") throw new Error("HOSTED_ROLE_DENIED");
+    if (headers.origin !== origin) throw new Error("HOSTED_CSRF_DENIED");
+    const csrf = headers["x-pan527-csrf"];
+    if (typeof csrf !== "string" || !/^[a-f0-9]{64}$/.test(csrf)) throw new Error("HOSTED_CSRF_DENIED");
+    const pair = headers.cookie.split(";").map((value) => value.trim()).find((value) => value.startsWith(cookieName + "="));
+    const row = load().sessions[hash(pair.slice(cookieName.length + 1))];
+    if (!row || !timingSafeEqual(Buffer.from(row.csrfDigest, "hex"), Buffer.from(hash(csrf), "hex"))) throw new Error("HOSTED_CSRF_DENIED");
+    return principal;
+  }
+  return Object.freeze({ origin, binding, issueOwnerSession, authenticate, responseCookie, ...(readOnlyRoute ? { authorizeReadOperation: authorizeCsrf } : { authorizeMutation: authorizeCsrf }) });
 }
 
 function reply(response, status, code) {
@@ -173,7 +213,7 @@ export function createOptionalHttpsProductIngressV1(options) {
   const server = createHttpsServer({ key, cert, minVersion: "TLSv1.3", maxHeaderSize: 8192 }, async (request, response) => {
     response.setHeader("cache-control", "no-store"); response.setHeader("x-content-type-options", "nosniff");
     response.setHeader("referrer-policy", "no-referrer"); response.setHeader("strict-transport-security", "max-age=86400");
-    response.setHeader("content-security-policy", "default-src 'none'; frame-ancestors 'none'; base-uri 'none'");
+    response.setHeader("content-security-policy", "default-src 'none'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'");
     try {
       const addr = server.address();
       if (!request.socket.encrypted || !addr || addr.address !== "127.0.0.1" || request.socket.remoteAddress !== "127.0.0.1"
@@ -185,17 +225,38 @@ export function createOptionalHttpsProductIngressV1(options) {
       }
       if ((request.headers.origin !== undefined && request.headers.origin !== origin)
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights))$/.exec(request.url ?? "");
-      if (!match || request.method !== "GET") return reply(response, 404, "HOSTED_ROUTE_DENIED");
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask))?$/.exec(request.url ?? "");
+      if (!match || !["GET", "POST"].includes(request.method)
+        || (request.method === "POST") !== (match[2] === "/api/ask")) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
+      if (!match[2]) {
+        response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
+        response.writeHead(303, { location: "/t/" + match[1] + "/api/status" }); response.end();
+        return;
+      }
+      if (request.method === "POST") {
+        product.sessions.authorizeMutation(request.headers);
+        if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+        const chunks = []; let bytes = 0;
+        for await (const chunk of request) { bytes += chunk.length; if (bytes > 4096) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+        let body;
+        try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); exactData(body, ["question"], "HOSTED_BODY_DENIED"); }
+        catch { return reply(response, 400, "HOSTED_BODY_DENIED"); }
+        if (typeof body.question !== "string" || body.question.length < 1 || Buffer.byteLength(body.question) > 2048) return reply(response, 400, "HOSTED_BODY_DENIED");
+        product.sessions.authorizeMutation(request.headers);
+        response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
+        const answer = product.coordinator.ask(body.question);
+        response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(answer) + "\n");
+        return;
+      }
       response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
       request.url = match[2];
       await product.handler(request, response);
     } catch (error) {
       if (response.headersSent) { response.destroy(); return; }
       const code = error instanceof Error ? error.message : "HOSTED_AUTH_UNAVAILABLE";
-      if (code === "HOSTED_HEADER_AUTHORITY_DENIED") reply(response, 403, code);
+      if (["HOSTED_HEADER_AUTHORITY_DENIED", "HOSTED_ROLE_DENIED", "HOSTED_CSRF_DENIED"].includes(code)) reply(response, 403, code);
       else if (code === "HOSTED_SESSION_DENIED") reply(response, 401, code);
       else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
     }
@@ -206,7 +267,7 @@ export function createOptionalHttpsProductIngressV1(options) {
     const sessions = createProtectedSessionAdapterV1({ optIn: true, origin, identity: spec.identity, stateRoot: spec.stateRoot });
     const coordinator = new PocEarlyAdminCoordinatorV1(plan, spec.productRoot, { resume: true });
     const nativeServer = createPocEarlyAdminDashboardServerV1(coordinator);
-    products.set(spec.identity.tenantId, { sessions, handler: nativeServer.listeners("request")[0] });
+    products.set(spec.identity.tenantId, { sessions, coordinator, handler: nativeServer.listeners("request")[0] });
   }
   server.maxHeadersCount = 32; server.requestTimeout = 5000; server.headersTimeout = 5000; server.keepAliveTimeout = 1000;
   server.on("upgrade", (_request, socket) => socket.end("HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 0\r\n\r\n"));

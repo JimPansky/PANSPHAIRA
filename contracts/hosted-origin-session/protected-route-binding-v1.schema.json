@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.pansphaira.invalid/hosted-origin-session/protected-route-binding/v1",
+  "title": "Protected route-process binding, not portable RuntimeIdentity or execution authority",
+  "$comment": "Explicit scoped control-route component delta for PAN527/KS293. Portable RuntimeIdentity components and effective rights remain unchanged. Reuses existing common field definitions; no duplicate KS session schema. The native consumer independently measures/binds its actual protected route.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "componentId",
+    "entrypointPath",
+    "sourceCommit",
+    "sourceTree",
+    "entrypointSha256",
+    "runtime",
+    "instanceId",
+    "tenantId",
+    "generation"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "pansphaira.hosted-origin-session/protected-route-binding/v1"
+    },
+    "componentId": {
+      "const": "kaleidosphere-bi-control"
+    },
+    "entrypointPath": {
+      "const": "services/bi-control/src/server.mjs"
+    },
+    "sourceCommit": {
+      "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/sourceCommit"
+    },
+    "sourceTree": {
+      "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/sourceTree"
+    },
+    "entrypointSha256": {
+      "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/configurationDigest"
+    },
+    "runtime": {
+      "allOf": [
+        {
+          "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/runtime"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "name": {
+              "const": "node"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^24\\.[0-9]+\\.[0-9]+$"
+            }
+          },
+          "required": [
+            "name",
+            "version"
+          ]
+        }
+      ]
+    },
+    "instanceId": {
+      "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/instanceId"
+    },
+    "tenantId": {
+      "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/tenantId"
+    },
+    "generation": {
+      "$ref": "https://schemas.pansphaira.invalid/portable-runtime/v1#/$defs/RuntimeIdentity/properties/generation"
+    }
+  }
+}
