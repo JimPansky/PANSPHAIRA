@@ -9,6 +9,7 @@ import {bestandslageBerechnenV1,bestandAenderungAnwendenV1} from '../../dist/pac
 import commonReference from '../../contracts/trade/common-trade-01-v1.json' with {type:'json'};
 import {PAN517_COMMAND_V1,validatePan517Command,advancePan517State,isRealTradeInstant,pan517EventEvidence} from '../pan517/fulfilment-state.mjs';
 import {readPan517DeliveryMilestones} from '../pan517/delivery-milestones.mjs';
+import {projectPan520Stock} from '../pan520/native-projection.mjs';
 export const PAN515_PROFILE_V1='pansphaira.pan515/common-trade/v1';
 const GUARDS=['pan515_binding','pan515_events','pan515_control'].flatMap(table=>['UPDATE','DELETE'].map(action=>({
   name:`${table}_${action.toLowerCase()}_immutable`,
@@ -221,8 +222,28 @@ export function executePan515TradeCommand({root,command,grant}){
     });
   }finally{db?.close();lease.release();}
 }
-export function readPan515TradeState({root,asOf=null}){
+export function readPan515TradeState({root,asOf=null,projection=null}){
   if(asOf!==null&&!isRealTradeInstant(asOf))fail('PAN515_CUTOFF_DATE_DENIED');
   const db=openNative(root,'target');
-  try{db.exec('BEGIN');const binding=store(db,root),latest=project(db,binding),state=asOf===null?latest:project(db,binding,asOf);return {binding,...state,...(state.fulfilment?{deliveryMilestones:readPan517DeliveryMilestones(state,binding,asOf)}:{}),writeMode:mode(db,binding).mode,asOf,latestRevision:latest.revision,coverage:'COMPLETE_OWNED_EVENT_LEDGER_ONLY',readOnly:true};}finally{db.close();}
+  try{db.exec('BEGIN');const binding=store(db,root),latest=project(db,binding),state=asOf===null?latest:project(db,binding,asOf);if(projection!==null)return projectPan520Stock({binding,state,asOf,request:projection,db,root});return {binding,...state,...(state.fulfilment?{deliveryMilestones:readPan517DeliveryMilestones(state,binding,asOf)}:{}),writeMode:mode(db,binding).mode,asOf,latestRevision:latest.revision,coverage:'COMPLETE_OWNED_EVENT_LEDGER_ONLY',readOnly:true};}finally{db.close();}
+}
+
+// P06 plan handles are issued only after the current native scope and exact
+// typed request pass. A plan is not permission and never bypasses use-time read.
+const pan520Plans=new WeakMap();
+function freezePan520Plan(value){if(value!==null&&typeof value==='object'){for(const v of Object.values(value))freezePan520Plan(v);Object.freeze(value);}return value;}
+export function capturePan520ProjectionPlan({root,owner,asOf=null,projection}){
+  if(owner!=='LOCAL_SYNTHETIC_OWNER')fail('PAN520_LOCAL_SYNTHETIC_OWNER_REQUIRED_DENIED');
+  const snapshot=readPan515TradeState({root,asOf,projection});
+  if(snapshot.schemaVersion!=='pansphaira.pan520/projection-snapshot/v1')fail('PAN520_TYPED_SOURCE_PROJECTION_REQUIRED_DENIED');
+  const request=JSON.parse(canonicalJson(projection)),core={schemaVersion:'pansphaira.pan520/projection-plan/v1',profile:snapshot.profile,grain:snapshot.grain,asOf,sourceBindingDigest:snapshot.snapshot.bindingDigest,scopeDigest:snapshot.rights.scopeDigest,targetEpoch:snapshot.rights.targetEpoch,requestDigest:digest(request),operationKey:snapshot.rights.operationKey,controlDigest:snapshot.rights.controlDigest,expiresAtMs:Date.now()+30000,proposalOnly:true,effectsProduced:false,portableAuthority:false};
+  const plan=freezePan520Plan({...core,planDigest:digest(core)}),handle=Object.freeze({});
+  pan520Plans.set(handle,{root,request,plan,planDigest:plan.planDigest,asOf,expiresAtMs:plan.expiresAtMs});return {plan,handle};
+}
+export function executePan520ProjectionRead({root,plan,handle}){
+  const held=pan520Plans.get(handle);
+  if(!held||held.root!==root||held.plan!==plan||plan.planDigest!==held.planDigest||Date.now()>=held.expiresAtMs)fail('PAN520_OPAQUE_CONTENT_BOUND_PLAN_REQUIRED_DENIED');
+  const snapshot=readPan515TradeState({root,asOf:held.asOf,projection:held.request});
+  if(snapshot.snapshot.bindingDigest!==plan.sourceBindingDigest||snapshot.rights.scopeDigest!==plan.scopeDigest||snapshot.rights.targetEpoch!==plan.targetEpoch||snapshot.rights.controlDigest!==plan.controlDigest)fail('PAN520_CURRENT_SOURCE_PLAN_BINDING_DRIFT_DENIED');
+  return snapshot;
 }

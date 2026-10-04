@@ -1694,7 +1694,36 @@ if (pan524Node === undefined) {
 }
 pan524Node.inputs = pan524Inputs.map(([inputPath,role]) => ({path:inputPath,role,sha256:digest(inputPath)}));
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan524:test")) repositoryIntegrityNode.ownedTests.push("npm run pan524:test");
-dag.graphVersion = 81;
+// PAN520 bounded typed native source projections; original owners and hard gates remain.
+const pan520Inputs = [
+  ["contracts/trade/pan520-projection-contract-v1.json", "CONTRACT"],
+  ["src/pan520/native-projection.mjs", "SOURCE"],
+  ["tests/pan520/native-projection.test.mjs", "VALIDATOR"],
+  ["tests/pan520/native-procurement-projection.test.mjs", "VALIDATOR"],
+  ["tests/pan520/registration.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan520-native-projections-v1.md", "DERIVED_EVIDENCE"],
+  ["verification/pan520-native-projection-evidence-v1.json", "DERIVED_EVIDENCE"],
+];
+let pan520Node = dag.nodes.find(({id}) => id === "pan520-native-projections-v1");
+if (pan520Node === undefined) {
+  pan520Node = {
+    id: "pan520-native-projections-v1", dependsOn: ["pan516-native-procurement-v1", "pan517-native-fulfilment-v1"], inputs: [],
+    ownedTests: ["npm run pan520:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Existing leading PAN472 SQLite/PAN473 source only; O2C/P2P/STOCK exact source/tenant/entity/order/line/article/warehouse/currency/unit grain, no universal ERP schema, new database or free SQL/credentials.",
+      "Same protected native target read transaction and original purchase reconstruction; aggregate receipts before one invoice grain and reuse the unchanged liability/ERV amount core, not a rematcher or fixture promoted to native billing.",
+      "Each source field is known or explicitly unavailable; missing consumption/valuation/native billing/business acceptance/FiBu/capacity/history facts never become implicit zero or inferred business event time.",
+      "Receipt and dispatch events retain their own assigned original promise kind/revision; later revisions cannot repair earlier punctuality and dispatch cannot stand in for customer receipt.",
+      "Opaque source plans are not portable authority; exact source binding and original durable stop/revoke controls are rechecked at use, cloned handles/caller role/SQL/credential/accessor metadata deny without effects.",
+      "Question dependency digests invalidate only relevant facts and promise/source revisions while the full snapshot binds actual lineage; existing direct order/read meanings remain unchanged.",
+      "Real PAN native producer output into real KS K03 or K04 remains required; early immutable contract/local PASS/handshake or matching stub does not certify paired/full scope, productive rights or final delivery."
+    ]
+  };
+  dag.nodes.push(pan520Node);
+}
+pan520Node.inputs = pan520Inputs.map(([inputPath,role]) => ({path:inputPath,role,sha256:digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan520:test")) repositoryIntegrityNode.ownedTests.push("npm run pan520:test");
+dag.graphVersion = 82;
 
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
@@ -1743,6 +1772,7 @@ for (const [inputPath] of pan515Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan516Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan517Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan524Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan520Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
