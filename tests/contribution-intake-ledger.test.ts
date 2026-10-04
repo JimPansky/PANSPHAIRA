@@ -802,7 +802,7 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     assert.deepEqual(matches[0], { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
   }
   assert.equal(integrity[0]!.ownedTests.filter((command) => command === "npm run docs:test").length, 1);
-  assert.equal(dag.nodes.length, 88);
+  assert.equal(dag.nodes.length, 89);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan516-native-procurement-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan515-native-trade-state-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan396-original-s3-sqs-lab-v1").length, 1);
