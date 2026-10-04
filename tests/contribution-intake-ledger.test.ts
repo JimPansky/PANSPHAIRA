@@ -767,7 +767,7 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     nodes: Array<{ id: string; inputs: Array<{ path: string; role: string; sha256: string }>; ownedTests: string[] }>;
   };
   // v82 adds PAN520 beside released PAN524; all prior owner bindings remain intact.
-  assert.equal(dag.graphVersion, 82);
+  assert.equal(dag.graphVersion, 83);
   const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
   assert.equal(life06.length, 1);
   const life06Inputs: ReadonlyArray<readonly [string, string]> = [

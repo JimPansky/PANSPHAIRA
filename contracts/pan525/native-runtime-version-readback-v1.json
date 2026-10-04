@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "pansphaira.pan525/native-runtime-version-readback/v1",
+  "nativeImage": "sha256:10e879d1ed447aa2b195c70790ef040adee67e32f43b6f4584c31191313fe32f",
+  "actualVersions": {
+    "node": "v24.19.0",
+    "python": "3.10.20",
+    "superset": "6.1.0"
+  },
+  "exitCode": 0,
+  "stdoutSha256": "36e4cdeaa27658608df950cdf6843703b3d5acf08f87efe6bc9163c5bd315672",
+  "probeKind": "SEPARATE_READ_ONLY_EXACT_IMAGE_PROBE_NOT_NEW_BUSINESS_RUN",
+  "containerAbsenceVerified": true
+}

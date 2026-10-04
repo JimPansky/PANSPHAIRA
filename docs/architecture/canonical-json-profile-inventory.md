@@ -99,6 +99,17 @@ and profile-version migration chain are unchanged. Only current census counts
 and derived integrity bindings advance. The table below records the earlier
 admitted census, not the current integration totals.
 
+## J03 local exact-pair integration refresh
+
+PAN525 adds one read-only J03 owner at graph v83 and an additive integrity
+generator migration V56. The unchanged mechanical scanner observes 858 source
+files and 2,296 unique checksum paths; declaration/import/re-export/similar-shape
+dimensions, the immutable 21-entry admitted-base fixture and every historical
+migration remain intact. The current generator digest advances only through that
+explicit migration. The runnable public manifest is unchanged. Only current
+scanner counts and actual changed-byte bindings advance; no canonical-profile
+equivalence claim or new source/execution authority is introduced.
+
 ## Fresh census vs historical hints
 
 Historical lexical counts (81 declarations / 80 files; 172 import sites /

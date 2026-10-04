@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "f564a75166489e49281cefa6d0ad230c004d4cea19280a1d7a6adb5f6a0ce94e"
+        "sha256": "8e51dfcaa5d2ada52e365ca6bb3966047f3a99ee0693502398ade3b03c6ad537"
       }
     ]
   },
@@ -531,6 +531,14 @@
       "fromSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
       "toSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
       "reason": "Advance graph to v82 with one additive native P06 projection owner beside released J01 graph81/V54. Preserve every historical migration, admitted byte obligation, existing native/source owner, legacy direct-read meaning, response/request safety boundary and mandatory hard gate. No KS selector rewrite, portable or productive authority, billing inference or completion claim."
+    },
+    {
+      "migrationId": "PAN525-EXACT-QUALIFIED-PAIR/INTEGRITY-GENERATOR/V56",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 56,
+      "fromSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
+      "toSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
+      "reason": "Advance graph to v83 with one bounded read-only J03 exact retained released-pair qualification owner. Preserve the same delivered six-intent run, separately evidenced native persistence, HELD KS250 second context, all prior migrations, immutable base obligations, old owners and mandatory gates. No provider registry mutation, source/publication or execution rights, latest/main admission, runnable distribution or issue-closure authority."
     }
   ],
   "scanScope": {
@@ -573,15 +581,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 854,
+    "filesScanned": 858,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 277,
     "importFiles": 276,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2287,
-    "ledgerUniquePaths": 2287
+    "ledgerEntries": 2296,
+    "ledgerUniquePaths": 2296
   },
   "profiles": [
     {
@@ -654,7 +662,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a"
+      "sha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -920,14 +928,19 @@
   ],
   "consumerFamilies": [
     {
-      "owner": "demo",
-      "importSites": 9,
-      "importFiles": 9
+      "owner": "analytics",
+      "importSites": 2,
+      "importFiles": 2
     },
     {
       "owner": "cks",
       "importSites": 4,
       "importFiles": 4
+    },
+    {
+      "owner": "cks-12",
+      "importSites": 1,
+      "importFiles": 1
     },
     {
       "owner": "competence-runtime",
@@ -938,6 +951,26 @@
       "owner": "contracts",
       "importSites": 141,
       "importFiles": 141
+    },
+    {
+      "owner": "cscl-03",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
+      "owner": "cscl-11",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
+      "owner": "cscl-13",
+      "importSites": 2,
+      "importFiles": 2
+    },
+    {
+      "owner": "demo",
+      "importSites": 9,
+      "importFiles": 9
     },
     {
       "owner": "dev-worker",
@@ -958,41 +991,6 @@
       "owner": "local-knowledge",
       "importSites": 1,
       "importFiles": 1
-    },
-    {
-      "owner": "usage-insights",
-      "importSites": 2,
-      "importFiles": 2
-    },
-    {
-      "owner": "scripts",
-      "importSites": 15,
-      "importFiles": 15
-    },
-    {
-      "owner": "analytics",
-      "importSites": 2,
-      "importFiles": 2
-    },
-    {
-      "owner": "cks-12",
-      "importSites": 1,
-      "importFiles": 1
-    },
-    {
-      "owner": "cscl-03",
-      "importSites": 1,
-      "importFiles": 1
-    },
-    {
-      "owner": "cscl-11",
-      "importSites": 1,
-      "importFiles": 1
-    },
-    {
-      "owner": "cscl-13",
-      "importSites": 2,
-      "importFiles": 2
     },
     {
       "owner": "pan442",
@@ -1065,9 +1063,19 @@
       "importFiles": 1
     },
     {
+      "owner": "scripts",
+      "importSites": 15,
+      "importFiles": 15
+    },
+    {
       "owner": "tests",
       "importSites": 63,
       "importFiles": 62
+    },
+    {
+      "owner": "usage-insights",
+      "importSites": 2,
+      "importFiles": 2
     },
     {
       "owner": "video-production-reference",
@@ -1355,7 +1363,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
+      "sha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
       "basis": "profile-version-migration"
     },
     {
