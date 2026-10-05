@@ -1,0 +1,14 @@
+import { spawnSync } from "node:child_process";
+// One authoritative closed suite; concurrent process barriers are inside tests.
+const files = ["tests/pan529/runtime-template.test.mjs", "tests/pan529/broker-equal-key.test.mjs", "tests/pan529/atomic-resource-budget.test.mjs", "tests/pan529/native-receipt-cache.test.mjs", "tests/pan529/native-controller.test.mjs", "tests/pan529/native-process-integration.test.mjs", "tests/pan529/registration.test.mjs", "tests/pan529/test-runner.test.mjs", "dist/tests/model-access-broker.test.js", "dist/tests/ccp-cost-budget.test.js"];
+try {
+  const args = process.argv.slice(2);
+  if (args.length === 1 && args[0] === "--list") process.stdout.write(JSON.stringify(files) + "\n");
+  else {
+    if (args.length) throw new Error("PAN529_TEST_ARGUMENT_DENIED");
+    if (process.platform !== "linux" || process.arch !== "x64") throw new Error("PAN529_TEST_REQUIRES_SUPPORTED_LINUX_X86_64");
+    const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", "--test-reporter=tap", ...files], { stdio: "inherit" });
+    if (result.error || result.signal || result.status === null) throw new Error("PAN529_TEST_PROCESS_INTERRUPTED");
+    process.exitCode = result.status;
+  }
+} catch (error) { process.stderr.write((error instanceof Error ? error.message : "PAN529_TEST_TOOLING_UNAVAILABLE") + "\n"); process.exitCode = 1; }

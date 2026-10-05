@@ -32,6 +32,36 @@ test("PAN529 native integer reservation persists once and reopens through shared
   } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
+test("PAN529 native first-open retries journal-mode lock contention before its full100 barrier", { timeout: 20_000 }, async () => {
+  const root = mkdtempSync(join(tmpdir(), "pan529-startup-lock-"));
+  const blocker = new DatabaseSync(join(root, "resource-budget.sqlite"));
+  blocker.exec("CREATE TABLE startup_guard (value INTEGER); INSERT INTO startup_guard VALUES(1); BEGIN;");
+  blocker.prepare("SELECT * FROM startup_guard").all();
+  const worker = new Worker(new URL("./reservation-worker.mjs", import.meta.url), { workerData: { options: budgetOptions(root), index: 0 } });
+  let release;
+  let lockHeld = true;
+  try {
+    const ready = new Promise((resolve, reject) => {
+      worker.once("message", resolve);
+      worker.once("error", reject);
+      worker.once("online", () => {
+        release = setTimeout(() => { blocker.exec("ROLLBACK"); lockHeld = false; }, 250);
+      });
+    });
+    assert.equal((await ready).type, "ready", "Native startup must survive an observed temporary journal-mode lock");
+    assert.equal(lockHeld, false, "Read lock was actually held across native initialization");
+    const independent = new DatabaseSync(join(root, "resource-budget.sqlite"), { readOnly: true });
+    assert.equal(independent.prepare("SELECT count(*) AS count FROM reservations").get().count, 0);
+    independent.close();
+  } finally {
+    clearTimeout(release);
+    await worker.terminate();
+    if (lockHeld) blocker.exec("ROLLBACK");
+    blocker.close();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("PAN529 actual100 barrier reservations cannot exceed either persisted integer limit", { timeout: 90_000 }, async () => {
   const root = mkdtempSync(join(tmpdir(), "pan529-race-"));
   const options = { ...budgetOptions(root), limits: { modelUnits: 40, runtimeUnits: 30 } };
@@ -45,7 +75,10 @@ test("PAN529 actual100 barrier reservations cannot exceed either persisted integ
       let onReady;
       let onResult;
       ready.push(new Promise((resolve, reject) => { onReady = resolve; worker.once("error", reject); }));
-      results.push(new Promise((resolve, reject) => { onResult = resolve; worker.once("error", reject); }));
+      const result = new Promise((resolve, reject) => { onResult = resolve; worker.once("error", reject); });
+      // Observe an early worker failure now; retain rejection for Promise.all.
+      result.catch(() => {});
+      results.push(result);
       worker.on("message", (message) => {
         if (message.type === "ready") onReady(message);
         if (message.type === "result") onResult(message);

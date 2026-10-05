@@ -1,5 +1,5 @@
 import { lstatSync, mkdirSync } from "node:fs";
-import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { isAbsolute, join } from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import { canonicalJson } from "../../dist/packages/contracts/src/canonical-json.js";
@@ -34,8 +34,32 @@ export function createResourceBudgetStoreV1(value) {
   try { const stat = lstatSync(file); if (!stat.isFile() || stat.isSymbolicLink()) ccpStrictDenyV1("RESOURCE_BUDGET_OWNED_FILE_REQUIRED"); }
   catch (error) { if (error.code !== "ENOENT") throw error; }
   const db = new DatabaseSync(file);
-  db.exec("PRAGMA busy_timeout=15000; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;");
-  db.exec(`CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY CHECK(id=1), binding TEXT NOT NULL, completion_key TEXT NOT NULL);
+  const startupDeadline = performance.now() + 15_000;
+  const startupWait = new Int32Array(new SharedArrayBuffer(4));
+  const initialize = (body) => {
+    for (;;) {
+      try { return body(); }
+      catch (error) {
+        // SQLite may skip its busy handler during WAL first-open contention.
+        // Retry only idempotent startup, never reservations or provider effects.
+        const remaining = startupDeadline - performance.now();
+        if (error.code !== "ERR_SQLITE_ERROR" || ![5, 6].includes(error.errcode & 0xff) || remaining <= 0) throw error;
+        Atomics.wait(startupWait, 0, 0, Math.min(10, remaining));
+      }
+    }
+  };
+  let completionKey;
+  const transaction = (body) => {
+    db.exec("BEGIN IMMEDIATE");
+    try { const result = body(); db.exec("COMMIT"); return result; }
+    catch (error) { db.exec("ROLLBACK"); throw error; }
+  };
+  try {
+    initialize(() => {
+      // A short native wait plus the one monotonic startup deadline bounds
+      // cold opens without enlarging any model or runtime budget.
+      db.exec("PRAGMA busy_timeout=50; PRAGMA journal_mode=WAL; PRAGMA synchronous=FULL;");
+      db.exec(`CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY CHECK(id=1), binding TEXT NOT NULL, completion_key TEXT NOT NULL);
     CREATE TABLE IF NOT EXISTS reservations (
       operation_id TEXT PRIMARY KEY, request_digest TEXT NOT NULL,
       model_units INTEGER NOT NULL CHECK(typeof(model_units)='integer' AND model_units>=0),
@@ -43,20 +67,18 @@ export function createResourceBudgetStoreV1(value) {
       state TEXT NOT NULL DEFAULT 'RESERVED' CHECK(state IN ('RESERVED','UNKNOWN_USAGE','SETTLED')),
       model_consumed INTEGER NOT NULL DEFAULT 0 CHECK(typeof(model_consumed)='integer' AND model_consumed BETWEEN 0 AND model_units),
       runtime_consumed INTEGER NOT NULL DEFAULT 0 CHECK(typeof(runtime_consumed)='integer' AND runtime_consumed BETWEEN 0 AND runtime_units),
-      completion TEXT
+      completion TEXT, result_json TEXT
     ) STRICT;`);
-  const transaction = (body) => {
-    db.exec("BEGIN IMMEDIATE");
-    try { const result = body(); db.exec("COMMIT"); return result; }
-    catch (error) { db.exec("ROLLBACK"); throw error; }
-  };
-  try {
-    transaction(() => {
+      transaction(() => {
       db.prepare("INSERT OR IGNORE INTO settings(id,binding,completion_key) VALUES(1,?,?)").run(binding, randomBytes(32).toString("hex"));
       if (db.prepare("SELECT binding FROM settings WHERE id=1").get().binding !== binding) ccpStrictDenyV1("RESOURCE_BUDGET_BINDING_DRIFT_DENIED");
+      // Owner-bound additive upgrade preserves every prior hold/settlement.
+        if (!db.prepare("PRAGMA table_info(reservations)").all().some((column) => column.name === "result_json")) db.exec("ALTER TABLE reservations ADD COLUMN result_json TEXT");
+      });
+      completionKey = db.prepare("SELECT completion_key FROM settings WHERE id=1").get().completion_key;
     });
+    db.exec("PRAGMA busy_timeout=15000");
   } catch (error) { db.close(); throw error; }
-  const completionKey = db.prepare("SELECT completion_key FROM settings WHERE id=1").get().completion_key;
   const read = (operationId) => {
     assertCcpStringV1(operationId, operationPattern, denied);
     const row = db.prepare("SELECT * FROM reservations WHERE operation_id=?").get(operationId);
@@ -111,13 +133,15 @@ export function createResourceBudgetStoreV1(value) {
     const payload = completionPayload(candidate);
     return Object.freeze({ ...payload, authenticator: authenticate(payload) });
   };
-  const settle = (candidate) => {
+  const settle = (candidate, observedResult = null) => {
     const receipt = closed(candidate, ["operationId", "requestDigest", "modelUnits", "runtimeUnits", "evidenceDigest", "authenticator"]);
     const { authenticator, ...payload } = receipt;
     const validated = completionPayload(payload);
     assertCcpDigestV1(authenticator, denied);
     if (!timingSafeEqual(Buffer.from(authenticator, "hex"), Buffer.from(authenticate(validated), "hex"))) ccpStrictDenyV1("RESOURCE_BUDGET_UNTRUSTED_COMPLETION_DENIED");
     const completion = canonicalJson({ ...validated, authenticator });
+    const resultJson = observedResult === null ? null : canonicalJson(observedResult);
+    if (resultJson !== null && createHash("sha256").update(resultJson).digest("hex") !== validated.evidenceDigest) ccpStrictDenyV1("RESOURCE_BUDGET_OBSERVED_RESULT_BINDING_DENIED");
     return transaction(() => {
       const prior = read(validated.operationId);
       if (prior === null || prior.request_digest !== validated.requestDigest || validated.modelUnits > prior.model_units || validated.runtimeUnits > prior.runtime_units) ccpStrictDenyV1("RESOURCE_BUDGET_COMPLETION_BINDING_DENIED");
@@ -126,7 +150,7 @@ export function createResourceBudgetStoreV1(value) {
         return prior;
       }
       if (prior.state !== "UNKNOWN_USAGE") ccpStrictDenyV1("RESOURCE_BUDGET_DISPATCH_REQUIRED_DENIED");
-      db.prepare("UPDATE reservations SET state='SETTLED',model_consumed=?,runtime_consumed=?,completion=? WHERE operation_id=? AND state='UNKNOWN_USAGE'").run(validated.modelUnits, validated.runtimeUnits, completion, validated.operationId);
+      db.prepare("UPDATE reservations SET state='SETTLED',model_consumed=?,runtime_consumed=?,completion=?,result_json=? WHERE operation_id=? AND state='UNKNOWN_USAGE'").run(validated.modelUnits, validated.runtimeUnits, completion, resultJson, validated.operationId);
       return read(validated.operationId);
     });
   };

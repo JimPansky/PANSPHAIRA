@@ -7,7 +7,7 @@ const load=p=>JSON.parse(readFileSync(p,'utf8'));
 const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
 const expected=['src/pan517/fulfilment-state.mjs','src/pan517/delivery-milestones.mjs','tests/pan517/native-fulfilment.test.mjs','tests/pan517/calendar-integrity.test.mjs','tests/pan517/registration.test.mjs','docs/architecture/pan517-native-fulfilment-v1.md','verification/pan517-native-fulfilment-evidence-v1.json'];
 test('P03 canonical registration owns only additive fulfilment bytes, retains the existing native entry and propagates the unchanged mandatory gates',()=>{
- const graph=load('verification/verification-dag-v2.json'),nodes=graph.nodes.filter(n=>n.id==='pan517-native-fulfilment-v1');assert.equal(nodes.length,1);assert.equal(graph.graphVersion,85);
+ const graph=load('verification/verification-dag-v2.json'),nodes=graph.nodes.filter(n=>n.id==='pan517-native-fulfilment-v1');assert.equal(nodes.length,1);assert.equal(graph.graphVersion,86);
  const node=nodes[0];assert.deepEqual(node.dependsOn,['pan515-native-trade-state-v1']);assert.deepEqual(node.ownedTests,['npm run pan517:test']);assert.equal(node.globalInvalidation,false);assert.equal(node.riskClass,'HIGH');assert.deepEqual(node.inputs.map(i=>i.path),expected);
  const observedInputDigests=Object.fromEntries(graph.nodes.flatMap(n=>n.inputs.map(i=>[i.path,i.sha256]))),builder=readFileSync('scripts/build-public-release.sh','utf8');
  const manifest=new Set(readFileSync('release/public-files.manifest','utf8').split('\n').filter(l=>l&&!l.startsWith('#')).map(l=>l.split('\t')[0]));

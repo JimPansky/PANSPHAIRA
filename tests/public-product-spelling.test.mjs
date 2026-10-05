@@ -27,7 +27,18 @@ function classifyImmutableOriginDevelopmentSelector(path, line, digest) {
     ? "exact-digest-immutable-origin-development-selector" : null;
 }
 
+function classifyImmutableRuntimeBudgetDevelopmentProfile(path, line, digest) {
+  return path === "contracts/runtime-budget/candidates/runtime-budget-development-v1.json"
+    && digest === "4f8ed30d2446639fa4f3b28589a8c9ef362ca8b1083f702fabcc40d22b887255"
+    && line.trim() === `"profile": "${legacyDisplay}_OWNER_NATIVE_STORE_ONLY",`
+    ? "exact-digest-immutable-runtime-budget-development-profile" : null;
+}
+
 function classify(path, line) {
+  const immutableBudgetClassification = classifyImmutableRuntimeBudgetDevelopmentProfile(path, line,
+    path === "contracts/runtime-budget/candidates/runtime-budget-development-v1.json"
+      ? createHash("sha256").update(read(path)).digest("hex") : null);
+  if (immutableBudgetClassification !== null) return immutableBudgetClassification;
   const immutableOriginClassification = classifyImmutableOriginDevelopmentSelector(path, line,
     path === "contracts/hosted-origin-session/candidates/origin-session-development-v1.json"
       || path === "contracts/hosted-origin-session/candidates/origin-session-development-v2.json"
@@ -247,6 +258,23 @@ test("immutable origin-development selectors have exact-path digest and exact-li
   }
   assert.equal(classifyImmutableOriginDevelopmentSelector("toString", `"sharedOwner": "${legacyDisplay}",`, "0".repeat(64)), null);
   assert.equal(classify("docs/architecture/pan527-hosted-origin-session-v1.md", `new ${legacyDisplay} display`), null);
+});
+
+test("immutable H05 native-store profile admission is exact-path digest and line only", () => {
+  const path = "contracts/runtime-budget/candidates/runtime-budget-development-v1.json";
+  const bytes = read(path);
+  const digest = createHash("sha256").update(bytes).digest("hex");
+  const line = bytes.split("\n").find((line) => line.includes('"profile"') && line.includes("_OWNER_NATIVE_STORE_ONLY"));
+  assert.ok(line);
+  assert.equal(classify(path, line), "exact-digest-immutable-runtime-budget-development-profile");
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile(path, line, digest), "exact-digest-immutable-runtime-budget-development-profile");
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile(path, line, "0".repeat(64)), null);
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile(path, line, createHash("sha256").update(bytes + "\n").digest("hex")), null);
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile(path, line.replace("STORE_ONLY", "EXECUTION_ALLOWED"), digest), null);
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile(path.replace("development-v1", "development-v2"), line, digest), null);
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile(path, `"unexpected": "${legacyDisplay}",`, digest), null);
+  assert.equal(classifyImmutableRuntimeBudgetDevelopmentProfile("toString", line, digest), null);
+  assert.equal(classify("docs/architecture/pan529-runtime-budget-v1.md", `new ${legacyDisplay} display`), null);
 });
 
 test("every retained all-caps token has an explicit KEEP classification", (t) => {
