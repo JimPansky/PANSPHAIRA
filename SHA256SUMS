@@ -2143,7 +2143,7 @@ c3f040829d7d01ee8205a67f8487d533c2f63de743dd167b83be5e394cdadff5  ./tests/pan528
 de8dc225804f2daa00e846079f586bb1aa06dd35736709fec6c6132e2b130e40  ./tests/pan528/native-process-restart.test.mjs
 0176f2767813c0dd4e9555bee17f3797b6cb57591942ddd06a72d85b98f95913  ./tests/pan528/native-restart-process.mjs
 cc7a08b600b953becdf02a1e1d36df2cfa2182a554d1e418736d5ee9e4630ee8  ./tests/pan528/owned-cleanup-boundary.test.mjs
-9f6e2c16a87a4bc2c68ccaed2e10fc9bc1683bcb691242b3a87b06cc9db92b6f  ./tests/pan528/owner-json-special-files.test.mjs
+8789fbb8e2e2d5d1ee3ed79521fb850e3006e39c167fe7e9eb5eefe5679301c3  ./tests/pan528/owner-json-special-files.test.mjs
 8b5e0dacab2847dc6644a2345ff1a1334bcf2bd2e127f0c13873ff7559d0859a  ./tests/pan528/registration.test.mjs
 9ad2eaf41837432dc17ee3b665f84d178b904433fbe35b44e42b5173579fb75c  ./tests/pan528/test-runner.test.mjs
 64622452db0e6bcc0b1f69a69ac4353de28fac4887a2743607b58bee81533b32  ./tests/pan528/wrong-business-value-browser.test.mjs
@@ -2412,5 +2412,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-e4ccc920d55fb0b838378dc8082c804683f699fc54d64c4768ce4842c98e8968  ./verification/verification-dag-v2.json
+6d23e31db5bef249519e96853f98c87b4c6280453ebfebc022680ad1831dae43  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

@@ -9479,7 +9479,7 @@
         {
           "path": "tests/pan528/owner-json-special-files.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "9f6e2c16a87a4bc2c68ccaed2e10fc9bc1683bcb691242b3a87b06cc9db92b6f"
+          "sha256": "8789fbb8e2e2d5d1ee3ed79521fb850e3006e39c167fe7e9eb5eefe5679301c3"
         },
         {
           "path": "tests/pan528/registration.test.mjs",

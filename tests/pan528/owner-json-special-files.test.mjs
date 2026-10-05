@@ -23,6 +23,11 @@ function fixture() {
     rmSync(parent, { recursive: true, force: false });
   } };
 }
+function assertNativeStartupStderr(actual) {
+  assert.ok(Number.isSafeInteger(actual.pid) && actual.pid > 0, "Bound the diagnostic to the actual child PID");
+  const expected = `(node:${actual.pid}) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use \`node --trace-warnings ...\` to show where the warning was created)\n`;
+  assert.equal(actual.stderr === "" || actual.stderr === expected, true, "Only the exact native SQLite runtime diagnostic is allowed; unexpected stderr still fails");
+}
 function invoke(options) {
   // Own process, five-second hard bound. A timeout is a failing assertion,
   // never accepted as denial or a tenant/sandbox security qualification.
@@ -52,12 +57,21 @@ for (const filename of ["invocation-owner.json", "journey.json"]) for (const kin
       const observed = JSON.parse(actual.stdout); assert.equal(observed.outcome, "REJECTED");
       if (kind === "invalid-regular-shape") assert.equal(observed.message, "GUIDED_COMMAND_DENIED");
       else assert.ok(["GUIDED_OWNED_RESOURCE_DENIED"].includes(observed.message) || ["ELOOP", "ENXIO", "EISDIR"].includes(observed.code), "Preserve exact native descriptor denial, not a generic success");
-      assert.equal(actual.stderr, ""); assert.deepEqual(readFileSync(backup), original, "Own ordinary file remains unchanged");
+      assertNativeStartupStderr(actual); assert.deepEqual(readFileSync(backup), original, "Own ordinary file remains unchanged");
     } finally { if (socket) await new Promise(resolve => socket.close(resolve)); if (directoryFd !== undefined) closeSync(directoryFd); f.cleanup(); }
   });
 }
 test("PAN528 ordinary valid private marker/journal startup still reopens the same IDLE native owner", () => {
   const f = fixture();
-  try { const actual = invoke(f.options); assert.equal(actual.error, undefined); assert.equal(actual.status, 0); assert.deepEqual(JSON.parse(actual.stdout), { outcome: "ACCEPTED" }); assert.equal(actual.stderr, ""); }
+  try { const actual = invoke(f.options); assert.equal(actual.error, undefined); assert.equal(actual.status, 0); assert.deepEqual(JSON.parse(actual.stdout), { outcome: "ACCEPTED" }); assertNativeStartupStderr(actual); }
   finally { f.cleanup(); }
+});
+
+test("PAN528 synthetic startup-observer grammar accepts only exact SQLite warning and actual PID, not arbitrary stderr", () => {
+  const pid = 12345;
+  const warning = `(node:${pid}) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use \`node --trace-warnings ...\` to show where the warning was created)\n`;
+  const check = stderr => assertNativeStartupStderr({ pid, stderr });
+  assert.doesNotThrow(() => check("")); assert.doesNotThrow(() => check(warning));
+  for (const stderr of ["unexpected error\n", warning + "fatal error\n", "fatal error\n" + warning, warning + warning, warning.replace("12345", "12346"), warning.replace("SQLite", "unrelated feature"), warning.slice(0, -1)]) assert.throws(() => check(stderr));
+  assert.throws(() => assertNativeStartupStderr({ pid: 0, stderr: "" }));
 });
