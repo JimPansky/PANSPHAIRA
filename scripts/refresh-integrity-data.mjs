@@ -2165,6 +2165,84 @@ pan521Node.inputs = pan521Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan521:test")) repositoryIntegrityNode.ownedTests.push("npm run pan521:test");
 dag.graphVersion = 87;
 
+// P08 deterministic authority-free material proposals; no finite-capacity/runtime promotion.
+const pan522Inputs = [
+  [
+    "src/pan522/material-plan.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan522/plan-input.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/run-pan522-material-plan.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/run-pan522-material-tests.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/fixtures/pan522/pan-material-reference-v1.json",
+    "FIXTURE"
+  ],
+  [
+    "tests/pan522/material-plan.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan522/material-plan-negatives.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan522/material-plan-cli.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan522/material-plan-native-no-effects.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan522/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan522/test-runner.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "docs/architecture/pan522-material-plan-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan522-material-plan-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan522Node = dag.nodes.find(({id}) => id === "pan522-material-plan-v1");
+if (pan522Node === undefined) {
+  pan522Node = {
+    id: "pan522-material-plan-v1",
+    dependsOn: ["pan515-native-trade-state-v1"],
+    inputs: [],
+    ownedTests: ["npm run pan522:test"],
+    riskClass: "HIGH",
+    globalInvalidation: false,
+    invariants: [
+      "Deterministic pure integer STK snapshot proposals reuse existing stock contract; finished-goods netting before lot/BOM explosion, explicit calendar/version/receipt safety assumptions and immutable input identity.",
+      "All parent needs precede chronological component netting; item/date aggregation retains each quantitative root, requirement, planned allocation and explicit safety/lot surplus, without duplicate proposal identity or invented demand provenance.",
+      "Closed data-only/proxy/accessor-free bounded grammar, derived integer and pegging limits, original six negatives and exact independent reference oracle; late or unknown receipts and capacity dates never imply secure supply or productive authority.",
+      "Actual native order/stock/history no-effects and copied-result grant denial; disabled view affects only new proposals and retains enabled native order transitions. No dispatch API, caller role, source access, productive rights or platform replacement.",
+      "Closed canonical launcher and source-only operator remain governed by unchanged hard gates; material need dates are not finite-capacity feasibility or delivery promises. Main development evidence is not a new waiting gate."
+    ]
+  };
+  dag.nodes.push(pan522Node);
+}
+pan522Node.inputs = pan522Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan522:test")) repositoryIntegrityNode.ownedTests.push("npm run pan522:test");
+dag.graphVersion = 88;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2218,6 +2296,7 @@ for (const [inputPath] of pan526Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan527Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan529Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan521Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan522Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

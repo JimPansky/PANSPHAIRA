@@ -8,7 +8,7 @@ const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
 const expected=['scripts/verify-pan524-exact-bi-pair-v1.mjs','tests/fixtures/pan524/published-j02-provider-v0181.json','tests/fixtures/pan524/published-plan-extraction-response-v1.json','tests/fixtures/pan524/published-preview-response-v1.json','tests/pan524/exact-bi-pair-profile.test.mjs','tests/pan524/delivery-surface.test.mjs','tests/pan524/registration.test.mjs','verification/pan524-exact-bi-pair-evidence-v1.json'];
 
 test('J01 exact current pair is additive canonically owned source evidence with unchanged original hard gates',()=>{
-  const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,87);
+  const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,88);
   const nodes=graph.nodes.filter(n=>n.id==='pan524-exact-bi-pair-v1');assert.equal(nodes.length,1);const node=nodes[0];
   assert.deepEqual(node.dependsOn,['external-bi-service-v2']);assert.deepEqual(node.ownedTests,['npm run pan524:test']);assert.equal(node.riskClass,'HIGH');assert.equal(node.globalInvalidation,false);assert.deepEqual(node.inputs.map(i=>i.path),expected);
   const inputDigests=Object.fromEntries(graph.nodes.flatMap(n=>n.inputs.map(i=>[i.path,i.sha256])));
