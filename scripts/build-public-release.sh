@@ -189,7 +189,7 @@ for line_number, raw in enumerate(manifest.read_text("utf-8").splitlines(), 1):
         raise SystemExit(f"PRIVILEGED_SOURCE_MODE:{line_number}")
     total_bytes += metadata.st_size
 
-if count != 1790:
+if count != 1791:
     raise SystemExit("MANIFEST_FILE_COUNT")
 if total_bytes > 100 * 1024 * 1024:
     raise SystemExit("MANIFEST_BYTE_LIMIT")
@@ -415,6 +415,25 @@ repository_only_files = {
     "docs/architecture/pan526-portable-local-runtime-v1.md",
     "verification/pan526-portable-runtime-evidence-v1.json",
     "verification/pan526-cold-start-resource-raw-v1.json",
+    # PAN529 controller/template remain source evidence only. The runtime store
+    # is explicitly packaged; shared broker export membership stays unchanged.
+    "src/pan529/runtime-template-contract.mjs",
+    "src/pan529/native-budget-controller.mjs",
+    "contracts/runtime-budget/candidates/runtime-budget-development-v1.json",
+    "scripts/run-pan529-runtime-budget-tests.mjs",
+    "docs/architecture/pan529-runtime-budget-v1.md",
+    "tests/pan529/atomic-resource-budget.test.mjs",
+    "tests/pan529/broker-equal-key.test.mjs",
+    "tests/pan529/reservation-worker.mjs",
+    "tests/pan529/runtime-template.test.mjs",
+    "tests/pan529/unknown-usage-process.mjs",
+    "tests/pan529/native-receipt-cache.test.mjs",
+    "tests/pan529/native-controller.test.mjs",
+    "tests/pan529/native-fixture.mjs",
+    "tests/pan529/native-process-integration.test.mjs",
+    "tests/pan529/native-provider-worker.mjs",
+    "tests/pan529/registration.test.mjs",
+    "tests/pan529/test-runner.test.mjs",
     # PAN527 optional origin/session source/evidence only, not a turnkey hosted payload.
     "contracts/hosted-origin-session/candidates/origin-session-development-v1.json",
     "contracts/hosted-origin-session/candidates/origin-session-development-v2.json",

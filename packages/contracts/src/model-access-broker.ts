@@ -482,12 +482,36 @@ export class ModelAccessBrokerV1 {
   readonly #policy: ModelAccessPolicyV1;
   readonly #receipts = new Map<string, { requestDigest: string; result: ModelBrokerResultV1 }>();
   readonly #reserved = new Map<string, number>();
+  readonly #inFlight = new Map<string, { requestDigest: string; result: Promise<ModelBrokerResultV1> }>();
 
   constructor(policy: ModelAccessPolicyV1) {
     this.#policy = structuredClone(policy);
   }
 
   async invoke(
+    value: unknown,
+    providerCall: (request: ProviderRequestV1, signal: AbortSignal) => Promise<ProviderResponseV1>,
+  ): Promise<ModelBrokerResultV1> {
+    const guarded = guardModelRequestV1(value, this.#policy);
+    if (guarded.outcome !== "ALLOW") return issueResult(value, guarded.outcome, guarded.issues);
+    const requestDigest = digest(guarded.request);
+    const operationId = guarded.request.operationId;
+    const pending = this.#inFlight.get(operationId);
+    if (pending !== undefined) {
+      if (pending.requestDigest !== requestDigest) return issueResult(value, "DENY", ["MODEL_REPLAY_CONFLICT_DENIED"]);
+      return { ...await pending.result, replay: "SAME_RECEIPT" };
+    }
+    // Register before provider dispatch, including synchronous re-entrance.
+    // This fence is process-local; persistent unknown-usage custody remains
+    // the responsibility of the native budget adapter, not this pure broker.
+    const bound = structuredClone(value);
+    const result = Promise.resolve().then(() => this.#invokeFirst(bound, providerCall));
+    this.#inFlight.set(operationId, { requestDigest, result });
+    try { return await result; }
+    finally { this.#inFlight.delete(operationId); }
+  }
+
+  async #invokeFirst(
     value: unknown,
     providerCall: (request: ProviderRequestV1, signal: AbortSignal) => Promise<ProviderResponseV1>,
   ): Promise<ModelBrokerResultV1> {

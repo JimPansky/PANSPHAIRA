@@ -20,8 +20,35 @@ const legacyPins = {
   'release/public-files.manifest': '8e97726e8ab3798c88458c6d6c3cbe9ad0d014dcf91ace2bcf0191d6e3541142',
 };
 
+// The historical manifest pin stays unchanged. PAN529 packages exactly one new
+// opt-in runtime library; this reviewed successor does not alter legacy behavior.
+const manifestSuccessor = Object.freeze({
+  path: 'release/public-files.manifest',
+  sha256: '6a05a364fc9e67d015e53e9ee1d5630bb8fc965c9981fbcff9307472a542b986',
+  additiveRow: 'demo/runtime/atomic-resource-budget.mjs\tdemo/runtime/atomic-resource-budget.mjs\t0644\n',
+});
+const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
+function assertReviewedManifestSuccessor(bytes) {
+  assert.equal(digest(bytes), manifestSuccessor.sha256, 'Only the reviewed manifest successor is admitted');
+  const text = bytes.toString('utf8');
+  assert.equal(text.split(manifestSuccessor.additiveRow).length, 2, 'Exactly one explicit runtime library row');
+  assert.equal(digest(text.replace(manifestSuccessor.additiveRow, '')), legacyPins[manifestSuccessor.path], 'Removing only that row reproduces the actual historical bytes');
+}
+
 test('AC4 legacy loopback selfhosting remains real HTTP without opting into hosted identity', async () => {
-  for (const [p, expected] of Object.entries(legacyPins)) assert.equal(createHash('sha256').update(readFileSync(p)).digest('hex'), expected, p);
+  for (const [p, expected] of Object.entries(legacyPins)) {
+    const bytes = readFileSync(p);
+    if (p === manifestSuccessor.path) assertReviewedManifestSuccessor(bytes);
+    else assert.equal(digest(bytes), expected, p);
+  }
+  const manifest = readFileSync(manifestSuccessor.path, 'utf8');
+  for (const mutation of [
+    manifest.replace(manifestSuccessor.additiveRow, ''),
+    manifest + manifestSuccessor.additiveRow,
+    manifest.replace(manifestSuccessor.additiveRow, manifestSuccessor.additiveRow.replace('atomic-resource-budget', 'neighbor-runtime-library')),
+    manifest + 'unexpected.mjs\tunexpected.mjs\t0644\n',
+    manifest.replace('demo/runtime/server.mjs', 'demo/runtime/tampered-server.mjs'),
+  ]) assert.throws(() => assertReviewedManifestSuccessor(Buffer.from(mutation)), /Only the reviewed manifest successor is admitted/);
   const root = mkdtempSync(join(tmpdir(), 'pan527-legacy-owned-'));
   const showcase = JSON.parse(readFileSync('examples/poc-release/showcase-v1.json', 'utf8'));
   const plan = buildPocGuidedDemoSetupPlanV1(showcase, expectedPocGuidedDemoTemplatesV1(), { templateId: 'quick-tour' });

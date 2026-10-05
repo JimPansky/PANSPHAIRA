@@ -2016,6 +2016,112 @@ pan527Node.inputs = pan527Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan527:test")) repositoryIntegrityNode.ownedTests.push("npm run pan527:test");
 dag.graphVersion = 85;
 
+// PAN529 H05: native bounded template/budget/broker owner; old owners and gates are retained.
+const pan529Inputs = [
+  [
+    "packages/contracts/src/model-access-broker.ts",
+    "SOURCE"
+  ],
+  [
+    "demo/runtime/atomic-resource-budget.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan529/runtime-template-contract.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan529/native-budget-controller.mjs",
+    "SOURCE"
+  ],
+  [
+    "contracts/runtime-budget/candidates/runtime-budget-development-v1.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "scripts/run-pan529-runtime-budget-tests.mjs",
+    "SOURCE"
+  ],
+  [
+    "docs/architecture/pan529-runtime-budget-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "tests/pan529/atomic-resource-budget.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/broker-equal-key.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/reservation-worker.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/runtime-template.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/unknown-usage-process.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/native-receipt-cache.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/native-controller.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/native-fixture.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/native-process-integration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/native-provider-worker.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan529/test-runner.test.mjs",
+    "VALIDATOR"
+  ]
+];
+let pan529Node = dag.nodes.find(({id}) => id === "pan529-runtime-budget-v1");
+if (pan529Node === undefined) {
+  pan529Node = {
+  "id": "pan529-runtime-budget-v1",
+  "dependsOn": [
+    "pan526-portable-runtime-v1"
+  ],
+  "inputs": [],
+  "ownedTests": [
+    "npm run pan529:test"
+  ],
+  "riskClass": "HIGH",
+  "globalInvalidation": false,
+  "invariants": [
+    "Closed server-owned known component/template/policy/network/right/resource bindings; readable pure plan before owner selection, no productive execution grant or new RuntimeIdentity enum/rights.",
+    "Existing shared ModelAccessBrokerV1 and CCP safe integer receipts; owner-private native SQLite immediate transactions, durable reservation/dispatch fence, actual100 independent controllers with actual synthetic HTTP and independent SQL holds/consumption.",
+    "Exact request-key replay and atomic authenticated result/settlement; observed owner-bound guarded synthetic usage is required, known no-dispatch is separate from uncertain callbacks, no process-restart or model-answer release.",
+    "Unknown fields/components/rights/commands/URLs/SQL and agent policy modifications/accessors fail closed before effects. Client API contains no store, activation or completion signer; model data remain untrusted without approval authority.",
+    "Immutable counterpart-consumed development v1 bytes and PAN-native ledger identity stay preserved. Existing KS295 implementation ownership, delivered526 capability and independent product delivery remain separate; no paid provider/business price/native image qualification/Main or reciprocal CLOSED gate."
+  ]
+};
+  dag.nodes.push(pan529Node);
+}
+pan529Node.inputs = pan529Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan529:test")) repositoryIntegrityNode.ownedTests.push("npm run pan529:test");
+dag.graphVersion = 86;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2067,6 +2173,7 @@ for (const [inputPath] of pan520Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan525Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan526Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan527Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan529Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

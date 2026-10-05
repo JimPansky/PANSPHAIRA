@@ -174,6 +174,7 @@ demo/readback.sh	demo/readback.sh	0755
 demo/runtime/admin-ai-poc.mjs	demo/runtime/admin-ai-poc.mjs	0644
 demo/runtime/admin-ai-policy.mjs	demo/runtime/admin-ai-policy.mjs	0644
 demo/runtime/approval-workbench.mjs	demo/runtime/approval-workbench.mjs	0644
+demo/runtime/atomic-resource-budget.mjs	demo/runtime/atomic-resource-budget.mjs	0644
 demo/runtime/authoritative-approval-snapshot.mjs	demo/runtime/authoritative-approval-snapshot.mjs	0644
 demo/runtime/enforcement-gate.mjs	demo/runtime/enforcement-gate.mjs	0644
 demo/runtime/paperless-ngx-zoo-adapter.mjs	demo/runtime/paperless-ngx-zoo-adapter.mjs	0644
