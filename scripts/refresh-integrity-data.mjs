@@ -1891,6 +1891,131 @@ pan526Node.inputs = pan526Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan526:test")) repositoryIntegrityNode.ownedTests.push("npm run pan526:test");
 dag.graphVersion = 84;
 
+// PAN527 optional hosted-origin/session source-only owner. Existing owners and gates stay unchanged.
+const pan527Inputs = [
+  [
+    "contracts/hosted-origin-session/candidates/origin-session-development-v1.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "contracts/hosted-origin-session/candidates/origin-session-development-v2.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "contracts/hosted-origin-session/candidates/origin-session-development-v3.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "contracts/hosted-origin-session/protected-route-binding-v1.schema.json",
+    "SCHEMA"
+  ],
+  [
+    "src/pan527/origin-session-adapter.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/run-pan527-origin-session-tests.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/pan527/bound-session-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/browser-native-network.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/control-route-binding.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/csrf-native-mutation.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/delayed-body-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/helpers.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/local-compatibility.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/native-https-ingress.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/origin-session.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/redirect-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/test-runner.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan527/websocket-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "docs/architecture/pan527-origin-session-development-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "docs/architecture/pan527-origin-session-development-v2.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "docs/architecture/pan527-origin-session-development-v3.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "docs/architecture/pan527-hosted-origin-session-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan527-origin-session-evidence-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan527Node = dag.nodes.find(({id}) => id === "pan527-origin-session-v1");
+if (pan527Node === undefined) {
+  pan527Node = {
+  "id": "pan527-origin-session-v1",
+  "dependsOn": [
+    "pan526-portable-runtime-v1"
+  ],
+  "inputs": [],
+  "ownedTests": [
+    "npm run pan527:test"
+  ],
+  "riskClass": "HIGH",
+  "globalInvalidation": false,
+  "invariants": [
+    "Explicit optional configured loopback TLS origin and closed existing per-tenant product routes; server-issued opaque private HMAC sessions, secure cookies, CSRF and exact audience/origin/tenant/instance/generation/identityDigest; no arbitrary proxy or caller role/forwarded authority.",
+    "Actual native event persistence and certificate-verifying Chromium network positives/denials; fixed authenticated relative303, denied upgrades/aliases, delayed expiry/auth loss and re-signed binding negatives leave native denial state unchanged. Browser network is not visual UI journey.",
+    "Distinct KS protected control route-binding/read-only profile reuses common definitions offline; portable RuntimeIdentity enum/schema and effective rights remain unchanged. Synthetic binding/store and observed counterpart source are not native KS runtime/pair qualification or productive permission.",
+    "Legacy installer/Compose/selfhosting/runnable manifest remain unchanged. Exact public development candidate, actual legacy hosted install/acceptance/provider readback/purge and bounded independent unchanged scopes remain separate from final canonical proof/required CI/SHA-bound merge/new release/anonymous qualification/closure. No external portal/customer input or reciprocal CLOSED/Main gate."
+  ]
+};
+  dag.nodes.push(pan527Node);
+}
+pan527Node.inputs = pan527Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan527:test")) repositoryIntegrityNode.ownedTests.push("npm run pan527:test");
+dag.graphVersion = 85;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -1941,6 +2066,7 @@ for (const [inputPath] of pan524Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan520Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan525Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan526Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan527Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

@@ -14,6 +14,8 @@ includes these direct dependencies and selected transitive components:
 | `require-from-string` | 2.0.2 | MIT |
 | `@types/node` | 24.10.1 | MIT |
 | `typescript` | 5.9.3 | Apache-2.0 |
+| `playwright` | 1.63.0 | Apache-2.0 |
+| `playwright-core` | 1.63.0 | Apache-2.0 |
 | `undici-types` | 7.16.0 | MIT |
 | `pg` | 8.16.3 | MIT |
 | `@types/pg` | 8.15.1 | MIT |

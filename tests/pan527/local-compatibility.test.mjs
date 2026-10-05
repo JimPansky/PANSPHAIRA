@@ -1,0 +1,56 @@
+import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { request as httpRequest } from 'node:http';
+import test from 'node:test';
+import { buildPocGuidedDemoSetupPlanV1, expectedPocGuidedDemoTemplatesV1 } from '../../dist/packages/contracts/src/index.js';
+import { PocEarlyAdminCoordinatorV1, createPocEarlyAdminDashboardServerV1 } from '../../dist/packages/setup-coordinator/src/index.js';
+import { createOptionalHttpsProductIngressV1, validateHostedOriginV1 } from '../../src/pan527/origin-session-adapter.mjs';
+
+// Pins from delivered fd157e60b4da3ca9f6c4c5ec185c73a28f3650bb, not a new Docker run.
+// Actual install/acceptance/readback/purge is separately consumed from hosted CI.
+const legacyPins = {
+  'demo/install.sh': '747a975556b3755404e98c7e60705906071a0a6c17dc42b6be2a90e407428984',
+  'demo/compose.yaml': '0777d35cbed997987ab2bd642c8fd71e7ab17be8437d6a894d653a693382a753',
+  'demo/readback.sh': '236dc0f85921126e7fdb400743a6fd8ecd9e8fb44d77dbd9d7ac57ec4f302371',
+  'demo/uninstall.sh': 'e72bf4f86af24b0017497dcaca63927c64aab9fa558b83970d1d2d8240b972bb',
+  'demo/runtime/server.mjs': '1f2434c8260ddec816138648a4a5115f8e5adf716130e89f6ca4b00b2e41489a',
+  'release/public-files.manifest': '8e97726e8ab3798c88458c6d6c3cbe9ad0d014dcf91ace2bcf0191d6e3541142',
+};
+
+test('AC4 legacy loopback selfhosting remains real HTTP without opting into hosted identity', async () => {
+  for (const [p, expected] of Object.entries(legacyPins)) assert.equal(createHash('sha256').update(readFileSync(p)).digest('hex'), expected, p);
+  const root = mkdtempSync(join(tmpdir(), 'pan527-legacy-owned-'));
+  const showcase = JSON.parse(readFileSync('examples/poc-release/showcase-v1.json', 'utf8'));
+  const plan = buildPocGuidedDemoSetupPlanV1(showcase, expectedPocGuidedDemoTemplatesV1(), { templateId: 'quick-tour' });
+  const coordinator = new PocEarlyAdminCoordinatorV1(plan, root, { resume: true });
+  const server = createPocEarlyAdminDashboardServerV1(coordinator);
+  try {
+    await new Promise((resolve, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', resolve); });
+    const base = 'http://127.0.0.1:' + server.address().port;
+    const initial = await fetch(base + '/api/status');
+    assert.equal(initial.status, 200); assert.equal(initial.headers.get('set-cookie'), null);
+    assert.equal((await initial.json()).authority.stage, 'STAGE_A_BOOTSTRAP_SUPERVISOR');
+    const page = await fetch(base); assert.equal(page.status, 200); assert.match(await page.text(), /PanSphaira local setup/);
+    const rights = await (await fetch(base + '/api/effective-rights')).json();
+    assert.equal(rights.claim, 'INFORMATIONAL_ONLY_NO_EXECUTABLE_AUTHORITY');
+    assert.equal(rights.informationalOnly, true);
+    assert.throws(() => validateHostedOriginV1(base), /HOSTED_ORIGIN_DENIED/);
+    assert.throws(() => createOptionalHttpsProductIngressV1({ optIn: false }), /HOSTED_OPT_IN/);
+    const events = join(root, 'artifacts/poc-guided-demo/playgrounds/quick-tour/dashboard-events.jsonl');
+    const before = readFileSync(events, 'utf8');
+    const reply = await fetch(base + '/api/ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ question: 'What is happening?' }) });
+    assert.equal(reply.status, 200); await reply.json();
+    const after = readFileSync(events, 'utf8'); assert.notEqual(after, before); assert.match(after.slice(before.length), /QUESTION_ANSWERED/);
+    // Node's fetch overrides a caller Host header; use the actual raw HTTP seam.
+    const foreignStatus = await new Promise((resolve, reject) => {
+      const request = httpRequest(base + '/api/status', { headers: { host: 'pan527-not-owned.invalid' } }, response => {
+        response.resume(); response.on('end', () => resolve(response.statusCode));
+      }); request.on('error', reject); request.end();
+    });
+    assert.equal(foreignStatus, 403); assert.equal(readFileSync(events, 'utf8'), after);
+    const restored = await fetch(base + '/api/status'); assert.equal(restored.status, 200); assert.equal(restored.headers.get('set-cookie'), null);
+  } finally { if (server.listening) await new Promise(resolve => server.close(resolve)); rmSync(root, { recursive: true, force: true }); }
+});

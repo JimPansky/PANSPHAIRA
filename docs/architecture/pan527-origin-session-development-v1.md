@@ -1,0 +1,13 @@
+# PAN527 / KS293 scoped origin-session development candidate v1
+
+This immutable development candidate exposes the PAN-owned common origin/session definitions early. It is not a registered, admitted profile, a full PAN527 qualification, a release, or a requirement to wait for either issue to be CLOSED.
+
+The selector is `contracts/hosted-origin-session/candidates/origin-session-development-v1.json`. It pins the source closure, existing runtime identity schema, locked dependencies, native coordinator and exact tests. Compile from the complete source archive with `npm ci --ignore-scripts` then `npm run build`; run the two listed test files. Compiled `dist` is generated, not distributed as new source evidence.
+
+Currently implemented: exact HTTPS-origin validation; explicitly opted-in owner-issued opaque server sessions bound to audience/origin/runtime-identity digest/tenant/instance/generation; private HMAC-protected persistent session state; rejection of caller role, tenant, authorization and forwarding headers; an optional loopback TLS1.3 ingress to closed existing per-tenant native read handlers. Three actual tests passed, including certificate-verified TLS requests and distinct native persisted core state. Identity values in these tests are synthetic shape fixtures, not container/image observations.
+
+This version's executable session component/audience is PAN-only (`pansphaira-local-demo` / `pansphaira-hosted-origin-v1`). It must not be relabelled as a KaleidoSphere adapter. The existing KS owner can consume the shared origin rules, option/binding model, selectors and negative obligations without copying a competing common contract. KS-specific audience/session and actual product integration need explicit successor scope and their own tests.
+
+Not yet qualified: browser product behavior, mutating CSRF-protected routes, complete expiry/redirect/WebSocket/auth-unavailable matrix, counterpart native pairing, registration, canonical fullproof, hosted CI, whole PAN527, frozen acceptance, merge, release or closure. No OIDC/external portal implementation or availability is asserted. Cookie/session/role/identity metadata are not execution authority. No customer data or productive rights are granted.
+
+Historical bounded independent TLS/source evidence applies only to unchanged source pins; it is not public availability, browser acceptance or full delivery approval. Future corrections receive a new immutable candidate/version rather than changing this version's selector in place. PAN527 remains the sole PAN WIP; repository implementation ownership remains unchanged. No additional implementer, Main preapproval or reciprocal CLOSED gate is introduced.

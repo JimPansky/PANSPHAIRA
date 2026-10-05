@@ -11,7 +11,7 @@ test('J03 exact local qualification has one additive owner and retains every har
   const graph = load('verification/verification-dag-v2.json');
   const nodes = graph.nodes.filter(n => n.id === 'pan525-exact-qualified-pair-v1');
   assert.equal(nodes.length, 1, 'J03 qualification must have its own registered owner');
-  assert.equal(graph.graphVersion, 84);
+  assert.equal(graph.graphVersion, 85);
   const node = nodes[0];
   assert.deepEqual(node.dependsOn, ['pan524-exact-bi-pair-v1']);
   assert.deepEqual(node.inputs.map(i => i.path), expected);
