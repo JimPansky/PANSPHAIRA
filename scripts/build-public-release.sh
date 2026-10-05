@@ -459,6 +459,23 @@ repository_only_files = {
     "docs/architecture/pan527-origin-session-development-v3.md",
     "docs/architecture/pan527-hosted-origin-session-v1.md",
     "verification/pan527-origin-session-evidence-v1.json",
+    # PAN521 bounded connected native stage: source only, no financial or default runtime activation.
+    "src/pan519/finance-handoff.mjs",
+    "src/pan519/contract-transport.mjs",
+    "src/pan521/connected-trade.mjs",
+    "src/pan521/local-journey.mjs",
+    "scripts/run-pan521-connected-trade.mjs",
+    "scripts/run-pan521-connected-native-tests.mjs",
+    "tests/pan519/native-fixture.mjs",
+    "tests/pan519/native-finance.test.mjs",
+    "tests/pan519/contract-transport.test.mjs",
+    "tests/pan519/finance-negatives.test.mjs",
+    "tests/pan521/connected-native-entry.test.mjs",
+    "tests/pan521/local-journey.test.mjs",
+    "tests/pan521/registration.test.mjs",
+    "tests/pan521/test-runner.test.mjs",
+    "docs/architecture/pan521-connected-native-stage-v1.md",
+    "verification/pan521-local-connected-native-stage-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real
