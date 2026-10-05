@@ -13,7 +13,27 @@ function read(path) {
   return readFileSync(new URL(path, ROOT), "utf8");
 }
 
+// These three published selectors were consumed at immutable hashes.
+// Preserve their historical provenance, not arbitrary current display text.
+function classifyImmutableOriginDevelopmentSelector(path, line, digest) {
+  const selectors = {
+    "contracts/hosted-origin-session/candidates/origin-session-development-v1.json": { sha256: "3a6d8eb1e9eb3e494bcc2ef15da0581d84b428f431b17b77bc27952c453ce200", line: `"sharedOwner": "${legacyDisplay} origin/session contract; counterpart keeps its existing product implementation owner",` },
+    "contracts/hosted-origin-session/candidates/origin-session-development-v2.json": { sha256: "e2cb349cc3cd962860fd8c27863bf7665131fef58a9a49deb240a34e0a34d605", line: `"sharedOwner": "${legacyDisplay} common origin/session contracts; existing KS owner retains native product implementation",` },
+    "contracts/hosted-origin-session/candidates/origin-session-development-v3.json": { sha256: "cd87f1a1a5942bea20ac19cc8b08d5e32861c1e2499b9895b9d759fb4ba7b20b", line: `"sharedOwner": "${legacyDisplay} common origin/session contracts; existing KS owner retains native product implementation",` },
+  };
+  if (!Object.hasOwn(selectors, path)) return null;
+  const wanted = selectors[path];
+  return digest === wanted.sha256 && line.trim() === wanted.line
+    ? "exact-digest-immutable-origin-development-selector" : null;
+}
+
 function classify(path, line) {
+  const immutableOriginClassification = classifyImmutableOriginDevelopmentSelector(path, line,
+    path === "contracts/hosted-origin-session/candidates/origin-session-development-v1.json"
+      || path === "contracts/hosted-origin-session/candidates/origin-session-development-v2.json"
+      || path === "contracts/hosted-origin-session/candidates/origin-session-development-v3.json"
+      ? createHash("sha256").update(read(path)).digest("hex") : null);
+  if (immutableOriginClassification !== null) return immutableOriginClassification;
   const providerReceiptPins = {
     "verification/paired-analytics-provider-evidence-v1/main/forward-paired-execution.json": "84f866d836a193cd97514407822fbdbc10711df62e2ab82f4abdfff8047924b3",
     "verification/paired-analytics-provider-evidence-v1/pr429-final/forward-paired-execution.json": "9907d6bf46ee087a5894417a622e1e57a0ad0c18d31a01ab6d15f1b6e5b1eca7",
@@ -207,6 +227,26 @@ test("PAN396 original criterion has only exact-digest exact-line provenance admi
   assert.equal(classify("verification/pan396-unadmitted-neighbor.json", line), null);
   assert.equal(classify("tests/pan396-unadmitted-neighbor.mjs", line), null);
   assert.equal(classify("docs/architecture/pan396-original-s3-sqs-lab-v1.md", `not ${legacyDisplay} runtime`), null);
+});
+
+test("immutable origin-development selectors have exact-path digest and exact-line provenance only", () => {
+  assert.equal(typeof classifyImmutableOriginDevelopmentSelector, "function");
+  const paths = [1, 2, 3].map((version) => `contracts/hosted-origin-session/candidates/origin-session-development-v${version}.json`);
+  for (const path of paths) {
+    const digest = createHash("sha256").update(read(path)).digest("hex");
+    const line = read(path).split("\n").find((value) => value.trim().startsWith('"sharedOwner": '));
+    assert.ok(line);
+    assert.equal(classifyImmutableOriginDevelopmentSelector(path, line, digest), "exact-digest-immutable-origin-development-selector");
+    assert.equal(classify(path, line), "exact-digest-immutable-origin-development-selector");
+    assert.equal(classifyImmutableOriginDevelopmentSelector(path, line, "0".repeat(64)), null);
+    const tamperedWholeFileDigest = createHash("sha256").update(read(path) + "\n").digest("hex");
+    assert.equal(classifyImmutableOriginDevelopmentSelector(path, line, tamperedWholeFileDigest), null);
+    assert.equal(classifyImmutableOriginDevelopmentSelector(path, line.replace("contract", "unadmitted contract"), digest), null);
+    assert.equal(classifyImmutableOriginDevelopmentSelector(path.replace("development-v", "unadmitted-v"), line, digest), null);
+    assert.equal(classifyImmutableOriginDevelopmentSelector(path, `"unexpected": "${legacyDisplay}",`, digest), null);
+  }
+  assert.equal(classifyImmutableOriginDevelopmentSelector("toString", `"sharedOwner": "${legacyDisplay}",`, "0".repeat(64)), null);
+  assert.equal(classify("docs/architecture/pan527-hosted-origin-session-v1.md", `new ${legacyDisplay} display`), null);
 });
 
 test("every retained all-caps token has an explicit KEEP classification", (t) => {

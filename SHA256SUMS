@@ -2097,7 +2097,7 @@ a96b67fdc8ba772c6cadc3e72c3792e85b33d6f8d21bf748a77231e46bee4b5f  ./tests/procur
 beb037277565ae40641138ea4009e146c0f10aa574cb1e1016e76f26a7d3c593  ./tests/procurement-434/rechnungsabgleich-path.test.mjs
 16c194ab294be01e0812af96a90a6d5dbc96dfb2c94416c74b77328e96ec26c6  ./tests/producer-analytics-manifest.test.ts
 dfe7338a6655c3a70f304f59c3a3e1e748ad62a8b78726eeb125db4e3f16332d  ./tests/protected-audit-timeline.test.ts
-2ba735350e760cb9d9f7f510ced34230b94ed7eae19d1368aef6e54bd17f8f69  ./tests/public-product-spelling.test.mjs
+7e79d037424b5fc9bcbfd284d72dd991bb60dc5905ede54a1b6b4e650a65f44b  ./tests/public-product-spelling.test.mjs
 33bbaa426b5d1a3c40c5aa38a54b34014277c9accc15c43c01bff2f9bb693597  ./tests/rechnungsabgleich-match-v1.test.ts
 117070e07d3f966d3248e81956ad270ce089dacf6453014a8a2879a596e6c23a  ./tests/rechnungsabgleich-v1.test.ts
 4f18fdf8142689dcb9bcf5457af96108f2d8463e863e36d8fce2e77bdee79f49  ./tests/release-governance.test.mjs
@@ -2335,5 +2335,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-e77b47e1ff48b83749fa5c56e51ee90f82be8de72a9f844a36ae275e7780bcc1  ./verification/verification-dag-v2.json
+104d7f4400e755eaff4b3a186a223d8202800ece958336e473cca418f2ddd7bf  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
