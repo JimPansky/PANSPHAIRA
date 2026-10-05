@@ -6,6 +6,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
+import { EventEmitter } from "node:events";
 import { createNativeBudgetControllerV1 } from "../../src/pan529/native-budget-controller.mjs";
 import { deliveredIdentity, planCommand, modelCommand } from "./native-fixture.mjs";
 
@@ -15,6 +16,12 @@ const deferred = () => {
   promise.catch(() => {});
   return { promise, resolve, reject };
 };
+function observeWorkerCompletion(item, ready, done) {
+  return new Promise((resolve) => item.child.once("close", (code, signal) => {
+    resolve({ code, signal });
+    if (!item.completed && !item.expectedKill) { const error = new Error(`Native worker exited before result: ${code}/${signal}: ${item.stderr}`); ready.reject(error); done.reject(error); }
+  }));
+}
 async function fixture(limits) {
   const stateRoot = mkdtempSync(join(tmpdir(), "pan529-native-process-"));
   const options = { optIn: true, stateRoot, identity: deliveredIdentity(), limits, syntheticProvider: async () => { throw new Error("Parent must not dispatch synthetic traffic"); } };
@@ -48,10 +55,7 @@ async function fixture(limits) {
       if (message.phase === "READY") ready.resolve(message);
       if (message.phase === "DONE") { item.completed = true; done.resolve(message); }
     });
-    item.exit = new Promise((resolve) => child.once("exit", (code, signal) => {
-      resolve({ code, signal });
-      if (!item.completed && !item.expectedKill) { const error = new Error(`Native worker exited before result: ${code}/${signal}: ${item.stderr}`); ready.reject(error); done.reject(error); }
-    }));
+    item.exit = observeWorkerCompletion(item, ready, done);
     child.send({ stateRoot, limits, providerPort: server.address().port, operationId });
     return item;
   };
@@ -63,6 +67,25 @@ async function fixture(limits) {
   };
   return { stateRoot, options, observations, pending, spawn, firstHttp, cleanup };
 }
+
+test("PAN529 synthetic observer ordering accepts DONE notification after exit but before channel close", async () => {
+  const child = new EventEmitter(); const ready = deferred(); const done = deferred();
+  const item = { child, completed: false, expectedKill: false, stderr: "" };
+  const finished = observeWorkerCompletion(item, ready, done);
+  child.emit("exit", 0, null);
+  item.completed = true; done.resolve({ phase: "DONE" });
+  child.emit("close", 0, null);
+  await assert.doesNotReject(done.promise);
+  assert.deepEqual(await finished, { code: 0, signal: null });
+});
+test("PAN529 synthetic observer ordering still denies channel closure without any completion", async () => {
+  const child = new EventEmitter(); const ready = deferred(); const done = deferred();
+  const item = { child, completed: false, expectedKill: false, stderr: "diagnostic-only" };
+  const finished = observeWorkerCompletion(item, ready, done);
+  child.emit("exit", 0, null); child.emit("close", 0, null);
+  await assert.rejects(done.promise, /Native worker exited before result: 0\/null/);
+  assert.deepEqual(await finished, { code: 0, signal: null });
+});
 
 test("PAN529 100 separate native controllers cannot overrun held budget before 10 actual HTTP completions", { timeout: 120_000 }, async (t) => {
   const f = await fixture({ modelUnits: 640, runtimeUnits: 11 });
