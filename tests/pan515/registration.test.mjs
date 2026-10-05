@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {assertHistoricalNativePin} from '../fixtures/pan523/historical-native-pins.mjs';
 import assert from 'node:assert/strict';
 import {readFileSync,mkdtempSync,rmSync,readdirSync} from 'node:fs';
 import {join} from 'node:path';
@@ -15,7 +16,7 @@ const expected=[
  'tests/pan515/registration.test.mjs','docs/architecture/pan515-native-trade-state-v1.md','verification/pan515-native-trade-evidence-v1.json',
 ];
 test('one bounded PAN515 owner binds every additive source/test byte and unchanged hard gates without claiming runnable-product or productive authority',()=>{
- const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,88);
+ const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,89);
  const nodes=graph.nodes.filter(n=>n.id==='pan515-native-trade-state-v1');assert.equal(nodes.length,1);const node=nodes[0];
  assert.deepEqual(node.dependsOn,['pan473-writer-scope-cutover-v1','pan435-436-sales-stock-journey-v1']);assert.deepEqual(node.ownedTests,['npm run pan515:test']);assert.equal(node.globalInvalidation,false);
  assert.deepEqual(node.inputs.map(r=>r.path),expected);assert.equal(node.inputs.length,new Set(node.inputs.map(r=>r.path)).size);
@@ -26,7 +27,7 @@ test('one bounded PAN515 owner binds every additive source/test byte and unchang
   assert.equal(row.sha256,sha(row.path));assert.equal(manifest.has(row.path),false,'source evidence only: '+row.path);assert(builder.includes(JSON.stringify(row.path)));
   assert.deepEqual(graph.nodes.filter(n=>n.inputs.some(i=>i.path===row.path)).map(n=>n.id),[node.id]);
   const impact=buildVerificationImpactPlanV2({graph,graphPath:'verification/verification-dag-v2.json',baseSha:'1'.repeat(40),headSha:'2'.repeat(40),changedPaths:[row.path],observedInputDigests});
-  assert.deepEqual(impact.selectedNodes,[node.id,'pan516-native-procurement-v1','pan517-native-fulfilment-v1','pan520-native-projections-v1','pan521-local-connected-native-v1','pan522-material-plan-v1']);assert.deepEqual(impact.selectedTests,['npm run pan515:test','npm run pan516:test','npm run pan517:test','npm run pan520:test','npm run pan521:test','npm run pan522:test']);assert.deepEqual(impact.hardGates,[...graph.hardGates].sort((a,b)=>a.localeCompare(b,'en')));
+  assert.deepEqual(impact.selectedNodes,[node.id,'pan516-native-procurement-v1','pan517-native-fulfilment-v1','pan520-native-projections-v1','pan521-local-connected-native-v1','pan522-material-plan-v1', 'pan523-native-production-v1']);assert.deepEqual(impact.selectedTests,['npm run pan515:test','npm run pan516:test','npm run pan517:test','npm run pan520:test','npm run pan521:test','npm run pan522:test', 'npm run pan523:test']);assert.deepEqual(impact.hardGates,[...graph.hardGates].sort((a,b)=>a.localeCompare(b,'en')));
  }
  const pkg=load('package.json');assert.equal(pkg.scripts['pan515:test'],'TMPDIR="${TMPDIR:-${RUNNER_TEMP:?PAN515_OWNED_SCRATCH_REQUIRED}}" node --test tests/pan515/*.test.mjs');assert.equal(pkg.scripts.posttest.split('npm run pan515:test').length,2);
  assert(pkg.scripts.posttest.endsWith('&& npm run pan360:test && npm run pan378:test && npm run erv-workflow:test'));
@@ -42,7 +43,7 @@ test('curated actual native COMMON facts retain six historical regression separa
   for(const lot of actual.lots)assert.ok(lot.reserved+lot.blocked<=lot.physical);
  }
  assert.deepEqual(r.actualNativeEvents.map(e=>e.effectId),['GR-01','GR-02','RS-01','SH-01','SH-02','RET-01']);assert.deepEqual(r.actualNativeEvents.filter(e=>e.reservationChange).map(e=>e.reservationChange.id),['RC-01','RC-02']);
- for(const [path,hash] of Object.entries(r.sourceBytePins))assert.equal(sha(path),hash,path+' actual execution source pin');
+ for(const [path,hash] of Object.entries(r.sourceBytePins))assertHistoricalNativePin(path,hash);
  assert.equal(r.actualCommandReadbacks.length,4);for(const cmd of r.actualCommandReadbacks)assert.equal(cmd.exitCode,0);
 });
 test('PAN515 canonical test entry binds owned CI RUNNER_TEMP without TMPDIR and preserves explicit scratch preference and fail-closed absence',()=>{

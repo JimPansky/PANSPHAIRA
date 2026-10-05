@@ -579,6 +579,14 @@
       "fromSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
       "toSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
       "reason": "Advance graph to v88 with one additive P08 deterministic material-planning owner. Preserve all previous immutable migration obligations, unchanged census scanner, original native fixtures/stores and hard gates, source-only builder classification and runnable manifest. Register actual original four criteria/six negatives, component chronology, all same-date root allocations, authority-free native rollback and closed operator/owned-scratch suite; no finite-capacity promise, new source/role/dispatch/runtime right, Main wait or premature original closure."
+    },
+    {
+      "migrationId": "PAN523-COUPLED-NATIVE-PRODUCTION/INTEGRITY-GENERATOR/V62",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 62,
+      "fromSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
+      "toSha256": "d50da163081e6e8f8018eded0ae89b238bd906382ebe94cfcb0b8cb3dcaf8a54",
+      "reason": "Advance graph to v89 with one additive P09 production owner using the existing native transaction and unchanged stock contract. Preserve every prior migration, old execution pin and source receipt, unchanged census scanner, native predecessor owners, runnable manifest and hard gates. Bind actual material/good/scrap, explicit operative costs, partial/retry, produced P03 dispatch, technical billing references, scoped retained disable and one exact native successor admission; no separate leading store, fiscal/archive/FiBu/financial-profit or finite-capacity qualification, new authority, Main wait or premature closure."
     }
   ],
   "scanScope": {
@@ -621,15 +629,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 922,
+    "filesScanned": 941,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 288,
-    "importFiles": 287,
+    "importSites": 289,
+    "importFiles": 288,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2386,
-    "ledgerUniquePaths": 2386
+    "ledgerEntries": 2409,
+    "ledgerUniquePaths": 2409
   },
   "profiles": [
     {
@@ -702,7 +710,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6"
+      "sha256": "d50da163081e6e8f8018eded0ae89b238bd906382ebe94cfcb0b8cb3dcaf8a54"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1103,6 +1111,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan523",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan526",
       "importSites": 2,
       "importFiles": 2
@@ -1433,7 +1446,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
+      "sha256": "d50da163081e6e8f8018eded0ae89b238bd906382ebe94cfcb0b8cb3dcaf8a54",
       "basis": "profile-version-migration"
     },
     {
