@@ -561,7 +561,7 @@ test("FND-XR-01 paired external-BI family is canonical, acceptance-mapped and pr
   ]) {
     assert.equal(publicPaths.has(publicPath), true, `public external-BI byte: ${publicPath}`);
   }
-  assert.equal(publicManifestPaths.length, 1790, "retain released scopes and add seven bounded PAN-EVO-05 tooling source/test/probe/guide files without runtime activation");
+  assert.equal(publicManifestPaths.length, 1791, "retain released scopes and explicitly package the PAN529 native store library without controller activation");
   assert.equal(publicPaths.size, publicManifestPaths.length, "public manifest paths remain unique");
   assert.equal(publicPaths.has(evidencePath), false, "pre-closure paired evidence remains repository-only");
 

@@ -6,6 +6,15 @@ installer, existing identity enums or effective rights. An owner's delivered
 local-demo identity is a binding input, not a new runtime or image qualification.
 Only the existing PanSphaira local-demo component is admitted by this controller.
 
+The runtime image packages the native store at
+`/opt/chimpmaera/demo/runtime/atomic-resource-budget.mjs`, preserving its
+`../../dist/packages/contracts/src` imports. The existing runtime TypeScript
+configuration compiles the shared contracts and the image copies that `dist`
+closure. The public payload explicitly includes the store source so its image
+can also build from the isolated release bundle. Packaging alone does not
+activate a controller, expose the owner signer or grant new runtime rights.
+Controller/template entry points remain opt-in source-evidence paths.
+
 ## Owner and client boundary
 
 `createNativeBudgetControllerV1` accepts a closed owner configuration: explicit

@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "6717f948b77e25602417b00b49ac7e57a664fb4f0a3f83753fa8de35f5aeba4d"
+          "sha256": "c48db3ca07197f2fdb153a2456db75ab13a5c724ddecb9dde0b0d51e7c7edfe9"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4991,7 +4991,7 @@
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4f18fdf8142689dcb9bcf5457af96108f2d8463e863e36d8fce2e77bdee79f49"
+          "sha256": "db115706d2fb06dda7f382863e0af039f2499f21fd7692eaa901fac7f21a7c73"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -6000,7 +6000,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "b9868405c546930d15bf6a41adc10a097689c4bc2d8988546d88869525906c42"
+          "sha256": "001cd9992bab3c74dd6f6000d97838b8f51c5d84318b0cef1931731ab0e7e856"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6265,7 +6265,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "8e97726e8ab3798c88458c6d6c3cbe9ad0d014dcf91ace2bcf0191d6e3541142"
+          "sha256": "6a05a364fc9e67d015e53e9ee1d5630bb8fc965c9981fbcff9307472a542b986"
         }
       ],
       "ownedTests": [
@@ -9085,7 +9085,7 @@
         {
           "path": "docs/architecture/pan529-runtime-budget-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "95ca3d8c8f6791939de6d9e96dc65825791cf8bddf357a8fa24accc1ac2667eb"
+          "sha256": "01922e4a2d4da33b9f36f2e0f20100690af316f61b4691bcc6c5fa4320c58e8e"
         },
         {
           "path": "tests/pan529/atomic-resource-budget.test.mjs",
@@ -9140,7 +9140,7 @@
         {
           "path": "tests/pan529/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4e7769a831ad7a5d60e0b9b4bb52037e01a0239bc2585fbc3e1f8eb20db4f3ea"
+          "sha256": "a9522aff4ae29acee3da2fff9b34f74df18378781d6ca33fde92dc24918842e5"
         },
         {
           "path": "tests/pan529/test-runner.test.mjs",

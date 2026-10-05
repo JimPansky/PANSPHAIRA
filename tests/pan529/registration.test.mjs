@@ -26,8 +26,10 @@ test("PAN529 native template and budget have one additive owner in authoritative
     assert.deepEqual(graph.nodes.filter((node) => node.inputs.some((item) => item.path === input.path)).map((node) => node.id), [owner.id]);
     if (input.path === "packages/contracts/src/model-access-broker.ts") {
       assert.equal(legacy.has(input.path), true, "Authorized equal-key fix preserves existing shared contract payload membership");
+    } else if (input.path === "demo/runtime/atomic-resource-budget.mjs") {
+      assert.equal(legacy.has(input.path), true, "Runtime COPY requires its exact explicit release payload source");
     } else {
-      assert.equal(legacy.has(input.path), false, "New opt-in native adapter stays outside the legacy runnable payload");
+      assert.equal(legacy.has(input.path), false, "Opt-in controller/template remain outside the legacy runnable payload");
       assert.ok(builder.includes(JSON.stringify(input.path)), input.path);
     }
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: "verification/verification-dag-v2.json", baseSha: "1".repeat(40), headSha: "2".repeat(40), changedPaths: [input.path], observedInputDigests });
@@ -41,4 +43,26 @@ test("PAN529 native template and budget have one additive owner in authoritative
   assert.equal(graph.nodes.find((node) => node.id === "repository-integrity").ownedTests.filter((command) => command === "npm run pan529:test").length, 1);
   assert.equal(digest("contracts/runtime-portability/portable-runtime-v1.schema.json"), "7c49eb32b45d4942f81828713babd45ef643a4d63b230e039445e6e9c2c6ebcb");
   assert.equal(digest("contracts/runtime-budget/candidates/runtime-budget-development-v1.json"), "4f8ed30d2446639fa4f3b28589a8c9ef362ca8b1083f702fabcc40d22b887255");
+});
+
+
+test("PAN529 runtime image preserves native store import and public build closure", () => {
+  const dockerfile = readFileSync("demo/chimpmaera.Dockerfile", "utf8");
+  const copies = [...dockerfile.matchAll(/^COPY (demo\/runtime\/[^\s]+)\s+(\.\/[^\s]+)$/gm)];
+  const native = copies.filter((copy) => copy[1] === "demo/runtime/atomic-resource-budget.mjs");
+  assert.equal(native.length, 1, "Native budget store must be copied exactly once into the runtime image");
+  assert.equal(native[0][2], "./demo/runtime/atomic-resource-budget.mjs", "Keep source-relative compiled contract imports valid");
+  const runtime = readFileSync("demo/runtime/atomic-resource-budget.mjs", "utf8");
+  const imports = [...runtime.matchAll(/from "(\.\.\/\.\.\/dist\/[^"]+)"/g)].map((match) => match[1]);
+  assert.deepEqual(imports.sort(), ["../../dist/packages/contracts/src/canonical-json.js", "../../dist/packages/contracts/src/ccp-cost-budget.js", "../../dist/packages/contracts/src/ccp-event-envelope.js"]);
+  const manifest = new Map(readFileSync("release/public-files.manifest", "utf8").split("\n").filter((line) => line && !line.startsWith("#")).map((line) => { const [source, destination, mode] = line.split("\t"); return [source, { destination, mode }]; }));
+  for (const source of ["demo/runtime/atomic-resource-budget.mjs", "demo/chimpmaera.Dockerfile", "demo/tsconfig.runtime.json", "packages/contracts/src/canonical-json.ts", "packages/contracts/src/ccp-cost-budget.ts", "packages/contracts/src/ccp-event-envelope.ts"]) {
+    assert.deepEqual(manifest.get(source), { destination: source, mode: "0644" }, source);
+  }
+  assert.match(dockerfile, /^COPY packages \.\/packages$/m);
+  assert.match(dockerfile, /^COPY demo\/tsconfig\.runtime\.json \.\/tsconfig\.json$/m);
+  assert.match(dockerfile, /^RUN npm exec -- tsc -p tsconfig\.json$/m);
+  assert.match(dockerfile, /^COPY --from=build \/src\/dist \.\/dist$/m);
+  assert.deepEqual(load("demo/tsconfig.runtime.json").include, ["packages/**/*.ts"]);
+  assert.equal(load("demo/manifests/supply-chain/artifact-lock-v1.json").runtimeClosure.requireEveryMjsCopied, true);
 });

@@ -191,6 +191,16 @@ test("mutable OCI, npm integrity, CI ref, runtime omission and release omission 
       /SUPPLY_CHAIN_RUNTIME_COPY_CLOSURE_DENIED/,
     ],
     [
+      "demo/chimpmaera.Dockerfile",
+      (source) => source.replace(/^COPY demo\/runtime\/atomic-resource-budget\.mjs.*\n/m, ""),
+      /SUPPLY_CHAIN_RUNTIME_COPY_CLOSURE_DENIED/,
+    ],
+    [
+      "demo/chimpmaera.Dockerfile",
+      (source) => `${source}COPY demo/runtime/not-a-runtime-module.mjs ./not-a-runtime-module.mjs\n`,
+      /SUPPLY_CHAIN_RUNTIME_COPY_CLOSURE_DENIED/,
+    ],
+    [
       "release/public-files.manifest",
       (source) => source.replace(
         /^demo\/runtime\/paperless-ngx-zoo-adapter\.mjs.*\n/m,
