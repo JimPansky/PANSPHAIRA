@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 86,
+  "graphVersion": 87,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1d53461b7429a42574c9f19b66d948c1d0aa0eede872e7085f035df7353044da"
+          "sha256": "3479879567f8d73ee4865e3c66ad3594172c1fda7e6ab545758377e86cf1bf01"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "ede65d0e4440639e763323d71daa9e982b5aef581e0234d1f5ff513b00d364a4"
+          "sha256": "a21d7ec649ec5f11a75ff0244f377751b7179d521e0d2c944eb1d8eb3698d569"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "ba19188c657146b306ef6d76231c43e48260d9154c9d5049dd5aaf94d8b7f784"
+          "sha256": "8f595aeeea911c6872a1a06f10e7d12688a44f70eecd4521e3f712e3f74b00c9"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "c48db3ca07197f2fdb153a2456db75ab13a5c724ddecb9dde0b0d51e7c7edfe9"
+          "sha256": "92eba88a44234e5e505f726f64127a5540808ebb4a3816e3304e4a9e333af4f4"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "37732b6b271934cd561a105d594aa71a939f2860f25e503ee6f674505395c1ea"
+          "sha256": "54dfa1c13f2d72dfddab794e3cca3d397dc89073f6ada971a2ada406998b07cf"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "c7b4fbf9145782e642a717c924ded5ba08ab53cc24a6f7034a3dbfd2dcd65111"
+          "sha256": "3e47f91e553a848bcf4b825dc228385049e38378cca9899ff68e7c4a2f1c7764"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5085,7 +5085,8 @@
         "npm run pan525:test",
         "npm run pan526:test",
         "npm run pan527:test",
-        "npm run pan529:test"
+        "npm run pan529:test",
+        "npm run pan521:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5640,7 +5641,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "17783dd56e133e1a230cb85f1e444d67b44bd9504be36e3070a8773b38e8cfef"
+          "sha256": "bb90b6738a3214e16fa45c324239fef50a0f57a7e5e44bb73e6d716c483cc0c0"
         },
         {
           "path": "package-lock.json",
@@ -6000,7 +6001,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "001cd9992bab3c74dd6f6000d97838b8f51c5d84318b0cef1931731ab0e7e856"
+          "sha256": "b189345f15344c770edce38395d334834696542025e3358006f29df5e7ed6176"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7942,7 +7943,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "6dfe6835e799d4969dde6324c247c89d496bc2f4c1a05933d3f66652e785f00d"
+          "sha256": "f4dc1f2e57f4efe6802e6f592e1fde67a2bc32cef6301bc877db12f38f266829"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8024,7 +8025,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "c90905b9cee2ee54f826491e3eda06e5c79cdef9c5327e4b08fe48ec7c9d7870"
+          "sha256": "97c6e04367af2babfdf83936632e6f6a81efb77d002d6df250351a9b6abfb50f"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8094,7 +8095,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "1dd027464028ba71e458cb2a77ac0efec61b0afe4dc90ca5f9dadebc4743d412"
+          "sha256": "5c7dcf2c3d70e4498afeb64821f0a7adb78814b5858b57ddcdfbef5012024e29"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8369,7 +8370,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "da9da9391bae8253c148db68b66147a46004d9bc7fc5d48a2d4ef329c4153d38"
+          "sha256": "acaf45a19a874f0f4af66d3b84009c57907c5d30a129975357da70b508ac64fc"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8460,7 +8461,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "3e83856e550db4c50c89e1a48e1d4247b2f0cf130fb505e1c158fbbcc10f058e"
+          "sha256": "7794f2f5a9445582c0a4dd93de2fdb37ca91ac406b74feee4318ad445592e23b"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8526,7 +8527,7 @@
         {
           "path": "tests/procurement-434/procurement-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "899605031be066e0812e3836c30ce2907912b0047b8eef8df3057c7c7204df2a"
+          "sha256": "fda4cfa0482cc9202f99dc347478d0a878fb16f0a40f69cd3ed14f72540624cf"
         },
         {
           "path": "docs/architecture/pan516-native-procurement-v1.md",
@@ -8582,7 +8583,7 @@
         {
           "path": "tests/pan517/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4fe679806c5e071e5e1479e5fc5cff8e17292be20c645cdf9b41faa366ac115d"
+          "sha256": "329e2824b024ab83220741cf9d09b3b5c81069bd0c0e36cfd1822715b2093086"
         },
         {
           "path": "docs/architecture/pan517-native-fulfilment-v1.md",
@@ -8648,7 +8649,7 @@
         {
           "path": "tests/pan524/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "efc0a9565bf156262a1553d5d3dd5b55bdc397b442337d316e7752f3ef7a6df6"
+          "sha256": "ba24aa296e74aea2013a91933fb49987ac52d63850ca3a7bc10f3c4c23e90c49"
         },
         {
           "path": "verification/pan524-exact-bi-pair-evidence-v1.json",
@@ -8699,7 +8700,7 @@
         {
           "path": "tests/pan520/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "e94ada8b98a6b1c7e788b35875aa7fa995cde675af11990fbf12b8d2108fdf11"
+          "sha256": "9c8594cd7d5b9468356b2e5f53d3520b804aa0a53eaea2758be42eeac280a7c6"
         },
         {
           "path": "docs/architecture/pan520-native-projections-v1.md",
@@ -8766,7 +8767,7 @@
         {
           "path": "tests/pan525/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "670e3ed22eca30a4ae7b2486733a25a0abbfddced41960bee40e9c9870e296d4"
+          "sha256": "637be68c7b368de186c9479bfe16c216a98c2804361f405aa0b7f33bbb22feca"
         },
         {
           "path": "docs/architecture/pan525-exact-qualified-pair-v1.md",
@@ -8861,7 +8862,7 @@
         {
           "path": "tests/pan526/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "89c0bc3bc0893c0d0ba2f0b863b21456a7babc8fdb4b24a2ffb2f737f281e9ca"
+          "sha256": "3fb5d79182b4e3bd860ee2b5131ffc624a5da576b380e0851d0c1dc00f1625f8"
         },
         {
           "path": "docs/architecture/pan526-runtime-identity-development-v1.md",
@@ -8996,7 +8997,7 @@
         {
           "path": "tests/pan527/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "792b70679a0a5e5f6194eef06d7bb54164b014e5e8e6b704e6b93273bd67edea"
+          "sha256": "59e89a1b1acd5bc1ed3c1accddb77d8e9e1cfaab2d69d422f9290a620c985678"
         },
         {
           "path": "tests/pan527/test-runner.test.mjs",
@@ -9140,7 +9141,7 @@
         {
           "path": "tests/pan529/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "a9522aff4ae29acee3da2fff9b34f74df18378781d6ca33fde92dc24918842e5"
+          "sha256": "f37ffff7f200f1bf7fea4316c1f416871d9623fe4c6302bd98165585d81d1787"
         },
         {
           "path": "tests/pan529/test-runner.test.mjs",
@@ -9159,6 +9160,110 @@
         "Exact request-key replay and atomic authenticated result/settlement; observed owner-bound guarded synthetic usage is required, known no-dispatch is separate from uncertain callbacks, no process-restart or model-answer release.",
         "Unknown fields/components/rights/commands/URLs/SQL and agent policy modifications/accessors fail closed before effects. Client API contains no store, activation or completion signer; model data remain untrusted without approval authority.",
         "Immutable counterpart-consumed development v1 bytes and PAN-native ledger identity stay preserved. Existing KS295 implementation ownership, delivered526 capability and independent product delivery remain separate; no paid provider/business price/native image qualification/Main or reciprocal CLOSED gate."
+      ]
+    },
+    {
+      "id": "pan521-local-connected-native-v1",
+      "dependsOn": [
+        "pan515-native-trade-state-v1",
+        "pan516-native-procurement-v1",
+        "pan517-native-fulfilment-v1",
+        "pan520-native-projections-v1"
+      ],
+      "inputs": [
+        {
+          "path": "src/pan519/finance-handoff.mjs",
+          "role": "SOURCE",
+          "sha256": "97df641a9d918d462ea96540d7d8edf05d98e7b19ea44d339bddd982e7af2711"
+        },
+        {
+          "path": "src/pan519/contract-transport.mjs",
+          "role": "SOURCE",
+          "sha256": "35cad57ebe2160be4111898ebfbec98cbf625892593c9164ddf2b83e05a84556"
+        },
+        {
+          "path": "src/pan521/connected-trade.mjs",
+          "role": "SOURCE",
+          "sha256": "3fd1bc4a7af25a5d9e9128eefb72eca3c227d9953dfadaf54811f9adfc2369b8"
+        },
+        {
+          "path": "src/pan521/local-journey.mjs",
+          "role": "SOURCE",
+          "sha256": "cab8dea759b5bee173c8128335d4b68c9accd9f5d13e9eff9accabb56c37695b"
+        },
+        {
+          "path": "scripts/run-pan521-connected-trade.mjs",
+          "role": "SOURCE",
+          "sha256": "b39a97125e4298f2586e38533e9ef063fa85dc8978f05f8aecdb99f9d7e2c568"
+        },
+        {
+          "path": "scripts/run-pan521-connected-native-tests.mjs",
+          "role": "SOURCE",
+          "sha256": "4afd59a46c16bf86de92a54c58075a4d17f116a4ac13516545304b2d4974828f"
+        },
+        {
+          "path": "tests/pan519/native-fixture.mjs",
+          "role": "FIXTURE",
+          "sha256": "b1424586fac041b1347e8c602fb44aa00bccc1058b16c7bfcd96b54c2490aae3"
+        },
+        {
+          "path": "tests/pan519/native-finance.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "4e6c3c1b9779600d0431a20665752c8141afdfeb9a7f08a0e7dda4c3857ce905"
+        },
+        {
+          "path": "tests/pan519/contract-transport.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "58daf7aac3d592e8596a44f82bb560a78f7aa5ec25d151490d189a0bc791f29e"
+        },
+        {
+          "path": "tests/pan519/finance-negatives.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "5c724d95a74576f8c898fc882eac2b1530607bb3ed28cc585bca12924be9030b"
+        },
+        {
+          "path": "tests/pan521/connected-native-entry.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "e75c676a30e646ee198fc5f504889695fc461a677d68e87608fe3ad4f6604da4"
+        },
+        {
+          "path": "tests/pan521/local-journey.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "b72c4462d777e4e382b9fd90e88cacdeeb1c44b97e87fe43fdafea280c5c7d14"
+        },
+        {
+          "path": "tests/pan521/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "9058b59bef3af105cfa4ebe31767f15b1ec21498e777be839aa021891f5a8d15"
+        },
+        {
+          "path": "tests/pan521/test-runner.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "5dbf7843a673433def2dbabb81078daa91004b02b7f3e6b414947c2930ef0aab"
+        },
+        {
+          "path": "docs/architecture/pan521-connected-native-stage-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "7654a644b11983e073785bb9fbf5bbaff2e76709868408992a77a27fe613859d"
+        },
+        {
+          "path": "verification/pan521-local-connected-native-stage-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "ded109e0114ad51f9da770f8e22a87c8be87683cfe2f37c99e253d7be99505c6"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan521:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "One existing protected disposable COMMON native root, code-owned local owner and canonical case/revision binding; no new main ledger or production/data-source rights. Separate standalone fixtures remain unchanged.",
+        "Actual approval/target purchase, receipts/reservation, P03 pick/pack/partial and remainder ISSUE, complaint/credit/quarantined return and bounded local AR handoff preserve immutable original effect and target identities across new transport attempts.",
+        "Native component nonreentrant leases, current grants and STOP/REVOKE stay authoritative. PURCHASE_TARGET is durable partial progress, not a cross-component transaction, full completion, in-transaction crash or ambiguous external POST qualification.",
+        "Same-root STOCK/P2P/O2C bind actual trade/purchase revisions. Released KS selectors and original cf199bbd reader identity remain unchanged; actual new native producer is separately bound and directly rejected as that historical reader.",
+        "Original AP deviation and unknown fiscal/archive/FiBu/payment/allocation remain open. No local reference/model/receipt or caller qualification flag creates booking, payment, source or issue-closure authority.",
+        "Closed operator read/action and closed canonical test entry preserve late-price/invoice basis, native movement history, negative flags and bounded rollback. Source-only stage delivery and original full P07 acceptance are separate; no Main approval wait or additional owner."
       ]
     }
   ]

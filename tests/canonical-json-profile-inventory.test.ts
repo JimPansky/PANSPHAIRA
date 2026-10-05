@@ -606,6 +606,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
   "toSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
   "reason": "Advance graph to v86 with one additive original H05 native template/budget owner. Preserve all historical migrations and sealed base obligations, old owners and hard gates, immutable published v1, existing shared broker export membership and unchanged legacy installer. Register actual100 native reservations/HTTP controllers, guarded synthetic usage and persisted result/unknown custody, not paid provider, pricing, new rights or image qualification, Main/CLOSED gate or whole-delivery inference."
 }),
+  Object.freeze({
+    "migrationId": "PAN521-LOCAL-CONNECTED-NATIVE/INTEGRITY-GENERATOR/V60",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 60,
+    "fromSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
+    "toSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
+    "reason": "Advance graph to v87 with exactly one additive P07 local native connected-journey owner. Preserve all original standalone business fixtures, unchanged historical cf199bbd reader/KS selectors, previous owners, classifications, sealed admitted obligations and mandatory gates. Register actual local actions/operator checkpoint/resume/correction and unqualified finance handoff, not fiscal/archive/FiBu/payment target qualification, runtime activation, Main/CLOSED wait or original issue acceptance."
+}),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -619,18 +627,18 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  */
 const EXPECTED_COUNTS = {
 
-  filesScanned: 898,
+  filesScanned: 912,
   declarationSites: 37,
   declarationFiles: 37,
-  importSites: 285,
-  importFiles: 284,
+  importSites: 287,
+  importFiles: 286,
 
   reexportSites: 7,
   similarShapeSites: 30,
   byteObligations: 21,
   pinnedProfileFiles: 13,
 } as const;
-const EXPECTED_LEDGER = { entries: 2357, uniquePaths: 2357, duplicatePaths: 0 } as const;
+const EXPECTED_LEDGER = { entries: 2373, uniquePaths: 2373, duplicatePaths: 0 } as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1413,7 +1421,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;

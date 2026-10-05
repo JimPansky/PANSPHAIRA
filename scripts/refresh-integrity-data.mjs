@@ -2122,6 +2122,49 @@ pan529Node.inputs = pan529Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan529:test")) repositoryIntegrityNode.ownedTests.push("npm run pan529:test");
 dag.graphVersion = 86;
 
+// P07 earlier local connected stage; external fiscal/archive/FiBu criteria stay open.
+const pan521Inputs = [
+  ["src/pan519/finance-handoff.mjs", "SOURCE"],
+  ["src/pan519/contract-transport.mjs", "SOURCE"],
+  ["src/pan521/connected-trade.mjs", "SOURCE"],
+  ["src/pan521/local-journey.mjs", "SOURCE"],
+  ["scripts/run-pan521-connected-trade.mjs", "SOURCE"],
+  ["scripts/run-pan521-connected-native-tests.mjs", "SOURCE"],
+  ["tests/pan519/native-fixture.mjs", "FIXTURE"],
+  ["tests/pan519/native-finance.test.mjs", "VALIDATOR"],
+  ["tests/pan519/contract-transport.test.mjs", "VALIDATOR"],
+  ["tests/pan519/finance-negatives.test.mjs", "VALIDATOR"],
+  ["tests/pan521/connected-native-entry.test.mjs", "VALIDATOR"],
+  ["tests/pan521/local-journey.test.mjs", "VALIDATOR"],
+  ["tests/pan521/registration.test.mjs", "VALIDATOR"],
+  ["tests/pan521/test-runner.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan521-connected-native-stage-v1.md", "DERIVED_EVIDENCE"],
+  ["verification/pan521-local-connected-native-stage-v1.json", "DERIVED_EVIDENCE"]
+];
+let pan521Node = dag.nodes.find(({id}) => id === "pan521-local-connected-native-v1");
+if (pan521Node === undefined) {
+  pan521Node = {
+    id: "pan521-local-connected-native-v1",
+    dependsOn: ["pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1"],
+    inputs: [],
+    ownedTests: ["npm run pan521:test"],
+    riskClass: "HIGH",
+    globalInvalidation: false,
+    invariants: [
+      "One existing protected disposable COMMON native root, code-owned local owner and canonical case/revision binding; no new main ledger or production/data-source rights. Separate standalone fixtures remain unchanged.",
+      "Actual approval/target purchase, receipts/reservation, P03 pick/pack/partial and remainder ISSUE, complaint/credit/quarantined return and bounded local AR handoff preserve immutable original effect and target identities across new transport attempts.",
+      "Native component nonreentrant leases, current grants and STOP/REVOKE stay authoritative. PURCHASE_TARGET is durable partial progress, not a cross-component transaction, full completion, in-transaction crash or ambiguous external POST qualification.",
+      "Same-root STOCK/P2P/O2C bind actual trade/purchase revisions. Released KS selectors and original cf199bbd reader identity remain unchanged; actual new native producer is separately bound and directly rejected as that historical reader.",
+      "Original AP deviation and unknown fiscal/archive/FiBu/payment/allocation remain open. No local reference/model/receipt or caller qualification flag creates booking, payment, source or issue-closure authority.",
+      "Closed operator read/action and closed canonical test entry preserve late-price/invoice basis, native movement history, negative flags and bounded rollback. Source-only stage delivery and original full P07 acceptance are separate; no Main approval wait or additional owner."
+    ]
+  };
+  dag.nodes.push(pan521Node);
+}
+pan521Node.inputs = pan521Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan521:test")) repositoryIntegrityNode.ownedTests.push("npm run pan521:test");
+dag.graphVersion = 87;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2174,6 +2217,7 @@ for (const [inputPath] of pan525Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan526Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan527Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan529Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan521Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
