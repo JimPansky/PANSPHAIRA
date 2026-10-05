@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 87,
+  "graphVersion": 88,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "3479879567f8d73ee4865e3c66ad3594172c1fda7e6ab545758377e86cf1bf01"
+          "sha256": "d64b9ae3822dc9f01c61223ff779660a9e24e6384ae3c68296a679a9c21e4bab"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "a21d7ec649ec5f11a75ff0244f377751b7179d521e0d2c944eb1d8eb3698d569"
+          "sha256": "364f2c2184cfe1bcccabe701542967461280302c4b690ff4fef869d608fcad1f"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "8f595aeeea911c6872a1a06f10e7d12688a44f70eecd4521e3f712e3f74b00c9"
+          "sha256": "8b9abc7bb926e2b0c2a3497c02b5d3243ec4fff446d229011ca1b0bcebf19ea9"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "92eba88a44234e5e505f726f64127a5540808ebb4a3816e3304e4a9e333af4f4"
+          "sha256": "826d230c4764f09e27211514422af194e7d34acb9c2c221baa721cb22ef71fb5"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "54dfa1c13f2d72dfddab794e3cca3d397dc89073f6ada971a2ada406998b07cf"
+          "sha256": "caae085b97e209c344ede6ed180c20cc4d420764d8a1f683b17925280062067a"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "3e47f91e553a848bcf4b825dc228385049e38378cca9899ff68e7c4a2f1c7764"
+          "sha256": "46460b667a3390f4792cddc341268999cdb8b90eccf26a9e6074493196ae9c7b"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5086,7 +5086,8 @@
         "npm run pan526:test",
         "npm run pan527:test",
         "npm run pan529:test",
-        "npm run pan521:test"
+        "npm run pan521:test",
+        "npm run pan522:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5641,7 +5642,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "61c6d67aee24ea98bb3f5231dc01bc335167d38867626f01143a63d7e9498b8a"
+          "sha256": "84e3d17ab4f7e81454253dee671063569359178aa439ac3b5e8738f3ef80eaf2"
         },
         {
           "path": "package-lock.json",
@@ -6001,7 +6002,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "b189345f15344c770edce38395d334834696542025e3358006f29df5e7ed6176"
+          "sha256": "de594b398ebb237f7d529b8d97489e08333ad2a0db156593cf22b164fbf4680f"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7943,7 +7944,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f4dc1f2e57f4efe6802e6f592e1fde67a2bc32cef6301bc877db12f38f266829"
+          "sha256": "d9a6182bd22a7969193a1fd14484967df4dd0f955186f60f409dcd141b540c7f"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8025,7 +8026,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "97c6e04367af2babfdf83936632e6f6a81efb77d002d6df250351a9b6abfb50f"
+          "sha256": "adc3065c2a9d66b419e80cd4a728408d1dbed21afa823cc193bcc007b94e90de"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8095,7 +8096,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "5c7dcf2c3d70e4498afeb64821f0a7adb78814b5858b57ddcdfbef5012024e29"
+          "sha256": "07b67cbb4d38ec8e5dabc72c63ea9829e6d890fd81f55350e1d1fde15ec8ace2"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8370,7 +8371,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "acaf45a19a874f0f4af66d3b84009c57907c5d30a129975357da70b508ac64fc"
+          "sha256": "4b572ad6c7ec75683be03dadc6c770e77a09c043971c736fc2ccc7cfd1dfefd4"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8461,7 +8462,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "7794f2f5a9445582c0a4dd93de2fdb37ca91ac406b74feee4318ad445592e23b"
+          "sha256": "fc532f253a9f2be93683e56a31c220ada834ca0025281fd9e297a4ee6141075f"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8527,7 +8528,7 @@
         {
           "path": "tests/procurement-434/procurement-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "fda4cfa0482cc9202f99dc347478d0a878fb16f0a40f69cd3ed14f72540624cf"
+          "sha256": "b4640e0c451029cc1478886ebe5b3d87802ac2a4509eb2794c1c5bec5bad8f48"
         },
         {
           "path": "docs/architecture/pan516-native-procurement-v1.md",
@@ -8583,7 +8584,7 @@
         {
           "path": "tests/pan517/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "329e2824b024ab83220741cf9d09b3b5c81069bd0c0e36cfd1822715b2093086"
+          "sha256": "d817d08a05cfe58b6532d9546108dcddfa85a4344b0206c51ea2df748c1060c0"
         },
         {
           "path": "docs/architecture/pan517-native-fulfilment-v1.md",
@@ -8649,7 +8650,7 @@
         {
           "path": "tests/pan524/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "ba24aa296e74aea2013a91933fb49987ac52d63850ca3a7bc10f3c4c23e90c49"
+          "sha256": "a47dc2fc00ded4696da3cf24126dd9dfc66a9ddf7eb41e6f5dca6074572eee01"
         },
         {
           "path": "verification/pan524-exact-bi-pair-evidence-v1.json",
@@ -8700,7 +8701,7 @@
         {
           "path": "tests/pan520/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "9c8594cd7d5b9468356b2e5f53d3520b804aa0a53eaea2758be42eeac280a7c6"
+          "sha256": "783dd1098f3ddb7b9b001e2774505bd9eaf4cf2470c4a307879831e85f66a6bd"
         },
         {
           "path": "docs/architecture/pan520-native-projections-v1.md",
@@ -8767,7 +8768,7 @@
         {
           "path": "tests/pan525/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "637be68c7b368de186c9479bfe16c216a98c2804361f405aa0b7f33bbb22feca"
+          "sha256": "24e5ffb8465856028d8aa98de2840238045f0a3e421894738d14122d221ae23c"
         },
         {
           "path": "docs/architecture/pan525-exact-qualified-pair-v1.md",
@@ -8862,7 +8863,7 @@
         {
           "path": "tests/pan526/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "3fb5d79182b4e3bd860ee2b5131ffc624a5da576b380e0851d0c1dc00f1625f8"
+          "sha256": "7293bd245e936eb7141c59bb6b81067b448c47fad75d523095a2a4fc6bd55da3"
         },
         {
           "path": "docs/architecture/pan526-runtime-identity-development-v1.md",
@@ -8997,7 +8998,7 @@
         {
           "path": "tests/pan527/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "59e89a1b1acd5bc1ed3c1accddb77d8e9e1cfaab2d69d422f9290a620c985678"
+          "sha256": "72272f9ace23cf37b1a0cb94ac5e2839c5068304ab6dca65cb6c125dde0fa17d"
         },
         {
           "path": "tests/pan527/test-runner.test.mjs",
@@ -9131,7 +9132,7 @@
         {
           "path": "tests/pan529/native-process-integration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "d873494947d1d4d91a95a7a24cb16aa8ca9cd068852669b9af2a0af2e1a25eaf"
+          "sha256": "a3ab97f79a344d1f8f291b3917895d617abcdb7ff7ea916240b921357ad94e91"
         },
         {
           "path": "tests/pan529/native-provider-worker.mjs",
@@ -9141,7 +9142,7 @@
         {
           "path": "tests/pan529/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f37ffff7f200f1bf7fea4316c1f416871d9623fe4c6302bd98165585d81d1787"
+          "sha256": "20943c4989a7ce5992e0d8a23a55c174ce987816ed6e8d01a8e5403972ac5abd"
         },
         {
           "path": "tests/pan529/test-runner.test.mjs",
@@ -9234,7 +9235,7 @@
         {
           "path": "tests/pan521/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "d35a65ca628a6374c1aacc8febb08e3aa4e3de014fd8b64c7e08d62c316e40c4"
+          "sha256": "ba43e7358e94162bf8c8eb0ff3676a3688ad289af59da0c8e735c3a0782ef072"
         },
         {
           "path": "tests/pan521/test-runner.test.mjs",
@@ -9264,6 +9265,91 @@
         "Same-root STOCK/P2P/O2C bind actual trade/purchase revisions. Released KS selectors and original cf199bbd reader identity remain unchanged; actual new native producer is separately bound and directly rejected as that historical reader.",
         "Original AP deviation and unknown fiscal/archive/FiBu/payment/allocation remain open. No local reference/model/receipt or caller qualification flag creates booking, payment, source or issue-closure authority.",
         "Closed operator read/action and closed canonical test entry preserve late-price/invoice basis, native movement history, negative flags and bounded rollback. Source-only stage delivery and original full P07 acceptance are separate; no Main approval wait or additional owner."
+      ]
+    },
+    {
+      "id": "pan522-material-plan-v1",
+      "dependsOn": [
+        "pan515-native-trade-state-v1"
+      ],
+      "inputs": [
+        {
+          "path": "src/pan522/material-plan.mjs",
+          "role": "SOURCE",
+          "sha256": "d96b26d1d256b647f33d6359f6185e1ed6799ce0909280fba76d4cf29ee9079d"
+        },
+        {
+          "path": "src/pan522/plan-input.mjs",
+          "role": "SOURCE",
+          "sha256": "4e222fb6a769bd2d9b8bdfdd2e95b769395de0e2b71219651c50e433069e08c8"
+        },
+        {
+          "path": "scripts/run-pan522-material-plan.mjs",
+          "role": "SOURCE",
+          "sha256": "6dd5f7c00b3dc411ba9668bc916989e69496a24564e0f081e304108f55d22182"
+        },
+        {
+          "path": "scripts/run-pan522-material-tests.mjs",
+          "role": "SOURCE",
+          "sha256": "4587a3b42eeb371d85b94f0802346e244830c00139747d3434ad2900fda7ab88"
+        },
+        {
+          "path": "tests/fixtures/pan522/pan-material-reference-v1.json",
+          "role": "FIXTURE",
+          "sha256": "57366096f3cf0f625f72e24f3947dcc9e2d6ef37789f4f55f987559747de2888"
+        },
+        {
+          "path": "tests/pan522/material-plan.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a2303aaa30f861ea79cc59323b99966da3038c92cfe1dcd27777654b96b40fb4"
+        },
+        {
+          "path": "tests/pan522/material-plan-negatives.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a20147227c6ed15da37232713864e3bbda2147803af323e8559f97987456e42e"
+        },
+        {
+          "path": "tests/pan522/material-plan-cli.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "06df40f44313e89514e2db17abf287c813eef25631f602a9cbaf4033d1833a48"
+        },
+        {
+          "path": "tests/pan522/material-plan-native-no-effects.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7daee8910d72ef8cd98226f3d49bcadc036bb06069d72f7c8eb613335dbef385"
+        },
+        {
+          "path": "tests/pan522/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "adb5eb4c0db4f63eeb8b192d842d3d4edd3378987799f8ae0226b78dd3868955"
+        },
+        {
+          "path": "tests/pan522/test-runner.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "9eab8da65dbd483202fc077946cc74587009b8a9561c54f965bc056815b275de"
+        },
+        {
+          "path": "docs/architecture/pan522-material-plan-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "2a4f267246f12ee9a1022d6c369dda0d730bca1560dea211803305f8a9e19011"
+        },
+        {
+          "path": "verification/pan522-material-plan-v1.json",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "65aee197e542c8dcbe699e9180d17e87792201c9cd1ae6c70e51122e660739b8"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan522:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Deterministic pure integer STK snapshot proposals reuse existing stock contract; finished-goods netting before lot/BOM explosion, explicit calendar/version/receipt safety assumptions and immutable input identity.",
+        "All parent needs precede chronological component netting; item/date aggregation retains each quantitative root, requirement, planned allocation and explicit safety/lot surplus, without duplicate proposal identity or invented demand provenance.",
+        "Closed data-only/proxy/accessor-free bounded grammar, derived integer and pegging limits, original six negatives and exact independent reference oracle; late or unknown receipts and capacity dates never imply secure supply or productive authority.",
+        "Actual native order/stock/history no-effects and copied-result grant denial; disabled view affects only new proposals and retains enabled native order transitions. No dispatch API, caller role, source access, productive rights or platform replacement.",
+        "Closed canonical launcher and source-only operator remain governed by unchanged hard gates; material need dates are not finite-capacity feasibility or delivery promises. Main development evidence is not a new waiting gate."
       ]
     }
   ]

@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "54dfa1c13f2d72dfddab794e3cca3d397dc89073f6ada971a2ada406998b07cf"
+        "sha256": "caae085b97e209c344ede6ed180c20cc4d420764d8a1f683b17925280062067a"
       }
     ]
   },
@@ -571,6 +571,14 @@
       "fromSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
       "toSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
       "reason": "Advance graph to v87 with exactly one additive P07 local native connected-journey owner. Preserve all original standalone business fixtures, unchanged historical cf199bbd reader/KS selectors, previous owners, classifications, sealed admitted obligations and mandatory gates. Register actual local actions/operator checkpoint/resume/correction and unqualified finance handoff, not fiscal/archive/FiBu/payment target qualification, runtime activation, Main/CLOSED wait or original issue acceptance."
+    },
+    {
+      "migrationId": "PAN522-DETERMINISTIC-MATERIAL-PLAN/INTEGRITY-GENERATOR/V61",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 61,
+      "fromSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
+      "toSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
+      "reason": "Advance graph to v88 with one additive P08 deterministic material-planning owner. Preserve all previous immutable migration obligations, unchanged census scanner, original native fixtures/stores and hard gates, source-only builder classification and runnable manifest. Register actual original four criteria/six negatives, component chronology, all same-date root allocations, authority-free native rollback and closed operator/owned-scratch suite; no finite-capacity promise, new source/role/dispatch/runtime right, Main wait or premature original closure."
     }
   ],
   "scanScope": {
@@ -613,15 +621,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 912,
+    "filesScanned": 922,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 287,
-    "importFiles": 286,
+    "importSites": 288,
+    "importFiles": 287,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2373,
-    "ledgerUniquePaths": 2373
+    "ledgerEntries": 2386,
+    "ledgerUniquePaths": 2386
   },
   "profiles": [
     {
@@ -694,7 +702,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff"
+      "sha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1090,6 +1098,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan522",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan526",
       "importSites": 2,
       "importFiles": 2
@@ -1420,7 +1433,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
+      "sha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
       "basis": "profile-version-migration"
     },
     {

@@ -476,6 +476,20 @@ repository_only_files = {
     "tests/pan521/test-runner.test.mjs",
     "docs/architecture/pan521-connected-native-stage-v1.md",
     "verification/pan521-local-connected-native-stage-v1.json",
+    # PAN522 deterministic pure material planning: source only, no dispatch/capacity promotion.
+    "src/pan522/material-plan.mjs",
+    "src/pan522/plan-input.mjs",
+    "scripts/run-pan522-material-plan.mjs",
+    "scripts/run-pan522-material-tests.mjs",
+    "tests/fixtures/pan522/pan-material-reference-v1.json",
+    "tests/pan522/material-plan.test.mjs",
+    "tests/pan522/material-plan-negatives.test.mjs",
+    "tests/pan522/material-plan-cli.test.mjs",
+    "tests/pan522/material-plan-native-no-effects.test.mjs",
+    "tests/pan522/registration.test.mjs",
+    "tests/pan522/test-runner.test.mjs",
+    "docs/architecture/pan522-material-plan-v1.md",
+    "verification/pan522-material-plan-v1.json",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

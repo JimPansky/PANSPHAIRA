@@ -7,7 +7,7 @@ const load=p=>JSON.parse(readFileSync(p,'utf8'));
 const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
 const expected=['contracts/trade/pan516-invoice-cases-v1.json','src/procurement-434/bestellung-lifecycle.mjs','src/procurement-434/bestellung-liability.mjs','src/procurement-434/bestellung-cli.mjs','src/procurement-434/rechnungsabgleich-path-cli.mjs','tests/procurement-434/procurement-lifecycle.test.mjs','tests/procurement-434/procurement-registration.test.mjs','docs/architecture/pan516-native-procurement-v1.md','verification/pan516-native-procurement-evidence-v1.json'];
 test('one bounded PAN516 node owns actual local purchase bytes and selects its exact test without changing hard gates or previous owners',()=>{
- const graph=load('verification/verification-dag-v2.json'),nodes=graph.nodes.filter(n=>n.id==='pan516-native-procurement-v1');assert.equal(nodes.length,1);assert.equal(graph.graphVersion,87);
+ const graph=load('verification/verification-dag-v2.json'),nodes=graph.nodes.filter(n=>n.id==='pan516-native-procurement-v1');assert.equal(nodes.length,1);assert.equal(graph.graphVersion,88);
  const node=nodes[0];assert.deepEqual(node.dependsOn,['pan515-native-trade-state-v1','ap-04-incoming-invoice-erv-relational-v2']);assert.deepEqual(node.ownedTests,['npm run pan516:test']);assert.equal(node.globalInvalidation,false);assert.equal(node.riskClass,'HIGH');assert.deepEqual(node.inputs.map(i=>i.path),expected);
  const observedInputDigests=Object.fromEntries(graph.nodes.flatMap(n=>n.inputs.map(i=>[i.path,i.sha256])));
  const manifest=new Set(readFileSync('release/public-files.manifest','utf8').split('\n').filter(l=>l&&!l.startsWith('#')).map(l=>l.split('\t')[0])),builder=readFileSync('scripts/build-public-release.sh','utf8');

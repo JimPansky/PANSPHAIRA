@@ -1,0 +1,118 @@
+{
+  "schema": "pansphaira.pan522/material-plan-input/v1",
+  "asOf": "2026-10-05",
+  "horizonEnd": "2026-10-31",
+  "calendars": [
+    {
+      "id": "CAL-PAN-WEEKDAYS",
+      "timezone": "UTC",
+      "weekdays": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "holidays": [],
+      "validFrom": "2026-01-01",
+      "validUntil": "2027-01-01"
+    }
+  ],
+  "items": [
+    {
+      "id": "KIT",
+      "stockArticleId": "SYN-ART-KIT",
+      "warehouseId": "LAGER-PAN",
+      "unit": "STK",
+      "supply": "MAKE",
+      "safetyStock": 0,
+      "lotMinimum": 1,
+      "lotMultiple": 1,
+      "leadWorkdays": 0,
+      "calendarId": "CAL-PAN-WEEKDAYS"
+    },
+    {
+      "id": "A",
+      "stockArticleId": "SYN-ART-COM-A",
+      "warehouseId": "LAGER-PAN",
+      "unit": "STK",
+      "supply": "BUY",
+      "safetyStock": 0,
+      "lotMinimum": 5,
+      "lotMultiple": 5,
+      "leadWorkdays": 3,
+      "calendarId": "CAL-PAN-WEEKDAYS"
+    },
+    {
+      "id": "B",
+      "stockArticleId": "SYN-ART-COM-B",
+      "warehouseId": "LAGER-PAN",
+      "unit": "STK",
+      "supply": "BUY",
+      "safetyStock": 0,
+      "lotMinimum": 10,
+      "lotMultiple": 10,
+      "leadWorkdays": 2,
+      "calendarId": "CAL-PAN-WEEKDAYS"
+    }
+  ],
+  "boms": [
+    {
+      "parentId": "KIT",
+      "version": "KIT-V1",
+      "validFrom": "2026-10-01",
+      "validUntil": "2026-11-01",
+      "components": [
+        {
+          "itemId": "A",
+          "unit": "STK",
+          "quantityPer": 2
+        },
+        {
+          "itemId": "B",
+          "unit": "STK",
+          "quantityPer": 3
+        }
+      ]
+    }
+  ],
+  "demands": [
+    {
+      "id": "DEMAND-PAN-01",
+      "itemId": "KIT",
+      "unit": "STK",
+      "quantity": 10,
+      "dueDate": "2026-10-12"
+    }
+  ],
+  "stock": [
+    {
+      "itemId": "KIT",
+      "unit": "STK",
+      "physical": 0,
+      "reserved": 0,
+      "blocked": 0,
+      "sourceRevision": "pan-stock-1",
+      "observedOn": "2026-10-05"
+    },
+    {
+      "itemId": "A",
+      "unit": "STK",
+      "physical": 5,
+      "reserved": 0,
+      "blocked": 0,
+      "sourceRevision": "pan-stock-1",
+      "observedOn": "2026-10-05"
+    },
+    {
+      "itemId": "B",
+      "unit": "STK",
+      "physical": 0,
+      "reserved": 0,
+      "blocked": 0,
+      "sourceRevision": "pan-stock-1",
+      "observedOn": "2026-10-05"
+    }
+  ],
+  "receipts": []
+}

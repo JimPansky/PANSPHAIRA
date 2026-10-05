@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "pansphaira.pan522/material-plan-boundary/v1",
+  "sourceClass": "SOURCE_EVIDENCE_ONLY",
+  "caseId": "PAN-MATERIAL-REFERENCE-10-KIT",
+  "commonTradeReferenceClaimed": false,
+  "executionAuthorized": false,
+  "capacityQualified": false,
+  "externalTargetQualified": false,
+  "nativeOrdersUnmodified": true,
+  "sameItemDateIdentity": "AGGREGATE_WITH_ALL_QUANTITATIVE_ALLOCATIONS",
+  "quantityMaximum": 1000000000,
+  "peggingRequirementMaximum": 4096,
+  "unit": "STK",
+  "timezone": "UTC",
+  "calendarLeadConvention": "STRICTLY_PRECEDING_WORKING_DATES",
+  "bomValidityConvention": "RELEASE_DATE_VALID_FROM_INCLUSIVE_UNTIL_EXCLUSIVE",
+  "receiptRule": "CONFIRMED_DUE_BY_NEED_CONSUMED_ONCE_PER_ID",
+  "rollback": "DISABLE_ONLY_NEW_MATERIAL_PROPOSAL_VIEW",
+  "sourceEntry": "src/pan522/material-plan.mjs",
+  "operatorEntry": "scripts/run-pan522-material-plan.mjs",
+  "canonicalTests": "npm run pan522:test",
+  "nonclaims": [
+    "No new stock, order or procurement store",
+    "No external source or confirmation qualification",
+    "No stock or purchase dispatch authority",
+    "No finite capacity or delivery promise",
+    "No new runtime identity, paid provider or productive rights"
+  ]
+}
