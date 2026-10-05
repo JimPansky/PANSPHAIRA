@@ -201,7 +201,7 @@
     "pan526:native:test": "node --test tests/pan526/local-runtime-native.test.mjs",
     "pan527:test": "node scripts/run-pan527-origin-session-tests.mjs",
     "pan529:test": "node scripts/run-pan529-runtime-budget-tests.mjs",
-    "pan521:test": "node scripts/run-pan521-connected-native-tests.mjs",
+    "pan521:test": "TMPDIR=\"${TMPDIR:-${RUNNER_TEMP:?PAN521_OWNED_SCRATCH_REQUIRED}}\" node scripts/run-pan521-connected-native-tests.mjs",
     "fnd-ps-fu-01:test:compiled": "node --test dist/tests/cks-12/readonly-kaleidosphere-bridge.test.js",
     "trust-compatibility-foundation-closure:test:compiled": "node --test dist/tests/trust-compatibility-foundation-closure.test.js",
     "external-video-service:test:compiled": "node --test dist/tests/external-video-service.test.js",

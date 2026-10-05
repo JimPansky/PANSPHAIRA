@@ -722,7 +722,7 @@ c06991184e1892993c1792f692927aff168061d40c60c3ba02eb6d43800d2202  ./examples/dai
 ea8d5f564acdae86b6ce054c7fc5dcb0dead50e85c74982d0644a9493879217b  ./examples/poc-release/showcase-v1.json
 01f41d094b67c04b73c86e0677f176b8aa75f5103a967ab9d6bacf5ac6be0fa5  ./examples/poc-setup-planner/catalog-v1.json
 d7460e0f8386a462077aab1ac33cc2857cf3c2ea926db55a30a83db0c75b07f6  ./package-lock.json
-bb90b6738a3214e16fa45c324239fef50a0f57a7e5e44bb73e6d716c483cc0c0  ./package.json
+61c6d67aee24ea98bb3f5231dc01bc335167d38867626f01143a63d7e9498b8a  ./package.json
 72b5f28175673cbc8328d9005a849b8409dadb58a8dce61153c049bd7a46a1c1  ./packages/cks/src/applicability-aware-retrieval-indexed.ts
 187c4a5f5f5c78afe92d737e84aa08061b1cad64ecfb6e14ee84ac6db4398c78  ./packages/cks/src/applicability-aware-retrieval.ts
 b2da58dde3e00766d6c54d52b877b4c32e812382f378d76058993a799563e5f2  ./packages/cks/src/shadow-experience-ablation.ts
@@ -2080,8 +2080,8 @@ b1424586fac041b1347e8c602fb44aa00bccc1058b16c7bfcd96b54c2490aae3  ./tests/pan519
 9c8594cd7d5b9468356b2e5f53d3520b804aa0a53eaea2758be42eeac280a7c6  ./tests/pan520/registration.test.mjs
 e75c676a30e646ee198fc5f504889695fc461a677d68e87608fe3ad4f6604da4  ./tests/pan521/connected-native-entry.test.mjs
 b72c4462d777e4e382b9fd90e88cacdeeb1c44b97e87fe43fdafea280c5c7d14  ./tests/pan521/local-journey.test.mjs
-9058b59bef3af105cfa4ebe31767f15b1ec21498e777be839aa021891f5a8d15  ./tests/pan521/registration.test.mjs
-5dbf7843a673433def2dbabb81078daa91004b02b7f3e6b414947c2930ef0aab  ./tests/pan521/test-runner.test.mjs
+d35a65ca628a6374c1aacc8febb08e3aa4e3de014fd8b64c7e08d62c316e40c4  ./tests/pan521/registration.test.mjs
+7a8bfed7e87d8de3d52423e4581cda9b917566b9d556ed82d3fe2cd0046e4840  ./tests/pan521/test-runner.test.mjs
 01c74f5f13278bfdf262d1c07a4c44c4726409ab28a4c4a8aac3bdec1968a5ec  ./tests/pan524/delivery-surface.test.mjs
 af891156d1b2dfec11aca7ebcea127d0c3e16d855ed2cb8f04b15680538f28b9  ./tests/pan524/exact-bi-pair-profile.test.mjs
 ba24aa296e74aea2013a91933fb49987ac52d63850ca3a7bc10f3c4c23e90c49  ./tests/pan524/registration.test.mjs
@@ -2369,5 +2369,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-4cd5834313eaf52e132b3787b34fcce5f44d1a685583f9c50106fe821aab5819  ./verification/verification-dag-v2.json
+9dc98cfdcc64bedaeea1be6877698fc29a67536dd631f911a8d95dccea552c78  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
