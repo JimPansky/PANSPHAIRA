@@ -15,7 +15,7 @@ const expected=[
  'tests/pan515/registration.test.mjs','docs/architecture/pan515-native-trade-state-v1.md','verification/pan515-native-trade-evidence-v1.json',
 ];
 test('one bounded PAN515 owner binds every additive source/test byte and unchanged hard gates without claiming runnable-product or productive authority',()=>{
- const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,88);
+ const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,89);
  const nodes=graph.nodes.filter(n=>n.id==='pan515-native-trade-state-v1');assert.equal(nodes.length,1);const node=nodes[0];
  assert.deepEqual(node.dependsOn,['pan473-writer-scope-cutover-v1','pan435-436-sales-stock-journey-v1']);assert.deepEqual(node.ownedTests,['npm run pan515:test']);assert.equal(node.globalInvalidation,false);
  assert.deepEqual(node.inputs.map(r=>r.path),expected);assert.equal(node.inputs.length,new Set(node.inputs.map(r=>r.path)).size);

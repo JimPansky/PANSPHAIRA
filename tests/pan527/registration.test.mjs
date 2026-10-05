@@ -10,7 +10,7 @@ test('optional origin/session surface has one additive source owner and real bro
   const graph = load('verification/verification-dag-v2.json');
   const owners = graph.nodes.filter(n => n.id === 'pan527-origin-session-v1');
   assert.equal(owners.length, 1, 'new optional executable surface must be registered, not merely published');
-  assert.equal(graph.graphVersion, 88);
+  assert.equal(graph.graphVersion, 89);
   const owner = owners[0];
   assert.deepEqual(owner.dependsOn, ['pan526-portable-runtime-v1']);
   assert.deepEqual(owner.ownedTests, ['npm run pan527:test']);
