@@ -27,6 +27,7 @@ const audience = "pansphaira-hosted-origin-v1";
 const cookieName = "__Host-pan527-session";
 const hash = (value) => createHash("sha256").update(value).digest("hex");
 let routeBindingValidator;
+const ownedProductIngresses = new WeakMap();
 export function validateProtectedRouteBindingV1(value) {
   exactData(value, ["schemaVersion", "componentId", "entrypointPath", "sourceCommit", "sourceTree", "entrypointSha256", "runtime", "instanceId", "tenantId", "generation"], "HOSTED_ROUTE_BINDING_DENIED");
   exactData(value.runtime, ["name", "version"], "HOSTED_ROUTE_BINDING_DENIED");
@@ -190,6 +191,28 @@ function reply(response, status, code) {
   response.end(JSON.stringify({ error: code }));
 }
 
+// Code-owner mounting only: same actual ingress, tenant store and mandatory
+// transport guards. No HTTP installer, caller role or second product ledger.
+export function mountProtectedGuidedDocumentV1(gateway, options) {
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "html", "script", "style", "journey"], "HOSTED_GUIDED_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product || product.guidedDocument
+    || options.identityDigest !== product.sessions.binding.identityDigest || options.origin !== product.sessions.origin
+    || [options.html, options.script, options.style].some(value => typeof value !== "string" || Buffer.byteLength(value) > 32768)
+    || typeof options.journey?.command !== "function" || typeof options.journey?.readback !== "function"
+    || canonicalJson(options.journey.readback().binding) !== canonicalJson({ tenantId: product.sessions.binding.tenantId, instanceId: product.sessions.binding.instanceId, generation: product.sessions.binding.generation })) throw new Error("HOSTED_GUIDED_OWNER_DENIED");
+  const document = Object.freeze({ html: options.html, script: options.script, style: options.style, journey: options.journey });
+  product.guidedDocument = document;
+  return Object.freeze({ close() { if (product.guidedDocument === document) delete product.guidedDocument; } });
+}
+
+export function protectedGuidedOwnerContextV1(gateway, options) {
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin"], "HOSTED_GUIDED_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product || product.sessions.origin !== options.origin || product.sessions.binding.identityDigest !== options.identityDigest) throw new Error("HOSTED_GUIDED_OWNER_DENIED");
+  return Object.freeze({ identity: product.identity, productRoot: product.productRoot });
+}
+
 // Closed existing native product handlers, not a general-purpose reverse proxy.
 // This optional local test ingress neither implements OIDC nor creates a portal.
 export function createOptionalHttpsProductIngressV1(options) {
@@ -225,11 +248,32 @@ export function createOptionalHttpsProductIngressV1(options) {
       }
       if ((request.headers.origin !== undefined && request.headers.origin !== origin)
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask))?$/.exec(request.url ?? "");
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?)?$/.exec(request.url ?? "");
       if (!match || !["GET", "POST"].includes(request.method)
-        || (request.method === "POST") !== (match[2] === "/api/ask")) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (request.method === "POST") !== ["/api/ask", "/guided/command"].includes(match[2])) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
+      if (match[2]?.startsWith("/guided")) {
+        if (!product.guidedDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
+        if (match[2] === "/guided/status" || match[2] === "/guided/command") {
+          let result;
+          if (request.method === "POST") {
+            product.sessions.authorizeMutation(request.headers);
+            if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            const chunks = []; let bytes = 0;
+            for await (const chunk of request) { bytes += chunk.length; if (bytes > 4096) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+            let body; try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); } catch { return reply(response, 400, "HOSTED_BODY_DENIED"); }
+            const principal = product.sessions.authorizeMutation(request.headers);
+            result = await product.guidedDocument.journey.command(body, principal);
+          } else result = product.guidedDocument.journey.readback();
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(result) + "\n"); return;
+        }
+        response.setHeader("content-security-policy", "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; object-src 'none'");
+        const key = match[2] === "/guided/app.js" ? "script" : match[2] === "/guided/style.css" ? "style" : "html";
+        const type = key === "script" ? "text/javascript" : key === "style" ? "text/css" : "text/html";
+        response.writeHead(200, { "content-type": type + "; charset=utf-8" }); response.end(product.guidedDocument[key]); return;
+      }
       if (!match[2]) {
         response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
         response.writeHead(303, { location: "/t/" + match[1] + "/api/status" }); response.end();
@@ -256,7 +300,9 @@ export function createOptionalHttpsProductIngressV1(options) {
     } catch (error) {
       if (response.headersSent) { response.destroy(); return; }
       const code = error instanceof Error ? error.message : "HOSTED_AUTH_UNAVAILABLE";
-      if (["HOSTED_HEADER_AUTHORITY_DENIED", "HOSTED_ROLE_DENIED", "HOSTED_CSRF_DENIED"].includes(code)) reply(response, 403, code);
+      if (["HOSTED_HEADER_AUTHORITY_DENIED", "HOSTED_ROLE_DENIED", "HOSTED_CSRF_DENIED", "GUIDED_BOUND_PRINCIPAL_DENIED"].includes(code)) reply(response, 403, code);
+      else if (code === "GUIDED_COMMAND_DENIED") reply(response, 400, code);
+      else if (["GUIDED_RETRY_CONFLICT_DENIED", "GUIDED_STARTER_NOT_IDLE_DENIED", "GUIDED_OUTCOME_UNKNOWN_RETAINED", "GUIDED_OWNER_CLOSED"].includes(code)) reply(response, 409, code);
       else if (code === "HOSTED_SESSION_DENIED") reply(response, 401, code);
       else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
     }
@@ -267,10 +313,11 @@ export function createOptionalHttpsProductIngressV1(options) {
     const sessions = createProtectedSessionAdapterV1({ optIn: true, origin, identity: spec.identity, stateRoot: spec.stateRoot });
     const coordinator = new PocEarlyAdminCoordinatorV1(plan, spec.productRoot, { resume: true });
     const nativeServer = createPocEarlyAdminDashboardServerV1(coordinator);
-    products.set(spec.identity.tenantId, { sessions, coordinator, handler: nativeServer.listeners("request")[0] });
+    products.set(spec.identity.tenantId, { sessions, coordinator, identity: spec.identity, productRoot: spec.productRoot, handler: nativeServer.listeners("request")[0] });
   }
   server.maxHeadersCount = 32; server.requestTimeout = 5000; server.headersTimeout = 5000; server.keepAliveTimeout = 1000;
   server.on("upgrade", (_request, socket) => socket.end("HTTP/1.1 403 Forbidden\r\nConnection: close\r\nContent-Length: 0\r\n\r\n"));
   for (const event of ["checkContinue", "checkExpectation"]) server.on(event, (_request, response) => reply(response, 417, "HOSTED_EXPECTATION_DENIED"));
-  return Object.freeze({ server, sessionAdapter(tenantId) { const product = products.get(tenantId); if (!product) throw new Error("HOSTED_TENANT_DENIED"); return product.sessions; } });
+  const gateway = Object.freeze({ server, sessionAdapter(tenantId) { const product = products.get(tenantId); if (!product) throw new Error("HOSTED_TENANT_DENIED"); return product.sessions; } });
+  ownedProductIngresses.set(gateway, products); return gateway;
 }

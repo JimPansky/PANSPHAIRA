@@ -2243,6 +2243,160 @@ pan522Node.inputs = pan522Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan522:test")) repositoryIntegrityNode.ownedTests.push("npm run pan522:test");
 dag.graphVersion = 88;
 
+
+// PAN-H03 optional existing-ingress native browser journey; no authority widening.
+const pan528Inputs = [
+  [
+    "src/pan528/app.js",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/guided-browser.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/guided-helper-broker.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/native-journey-controller.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/owned-leading-resources.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/runtime-observation.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/screen.html",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/starter-worker.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan528/style.css",
+    "SOURCE"
+  ],
+  [
+    "tests/pan528/browser-denials.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/browser-fixture.mjs",
+    "FIXTURE"
+  ],
+  [
+    "tests/pan528/guided-abort-browser.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/guided-abort-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/guided-browser-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/guided-helper-boundary.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/guided-helper-browser.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/guided-reset-browser.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/guided-reset-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/mobile-browser.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/native-business-starter.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/native-process-restart.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/native-restart-process.mjs",
+    "FIXTURE"
+  ],
+  [
+    "tests/pan528/owned-cleanup-boundary.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/owner-json-special-files.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/test-runner.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan528/wrong-business-value-browser.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "scripts/run-pan528-guided-browser-tests.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "docs/architecture/pan528-guided-browser-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan528-guided-browser-boundary-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan528Node = dag.nodes.find(({id}) => id === "pan528-guided-native-browser-v1");
+if (pan528Node === undefined) {
+  pan528Node = {
+  "id": "pan528-guided-native-browser-v1",
+  "dependsOn": [
+    "pan515-native-trade-state-v1",
+    "pan527-origin-session-v1",
+    "pan529-runtime-budget-v1"
+  ],
+  "inputs": [],
+  "ownedTests": [
+    "npm run pan528:test"
+  ],
+  "riskClass": "HIGH",
+  "globalInvalidation": false,
+  "invariants": [
+    "Optional code-owner integration mounts one actual protected HTTPS browser document on the existing tenant gateway; role/model data, free path/executable, shell/URL/upload and foreign reset never create rights.",
+    "Explicit native starter reserves the existing PAN529 budget, runs fixed real PAN515 receive10/reserve6 and independently reads leading SQLite available4; observed runtime/source-byte identity remains distinct from inherited transport claims.",
+    "Pure closed typed helper proposes only via the bounded broker and textContent, without native dispatch, budget reservation, credentials or approval; business action remains a separate explicit user choice.",
+    "Abort acknowledgment is not child completion; unknown effects survive actual different-process restart without redispatch/refund, and deny reset/cleanup. Bound completed own reset preserves consumed budget, other tenant and successor generations.",
+    "Exact owned nested/outer resource census and descriptor-anchored deletion retain unowned or changed resources before effects. Technical first accepted visible matched result is frozen separately; HTTP200/faulted producer success with actual5vs4 is FAILED and never first-value success.",
+    "Real certificate-verifying Chromium entry, native lifecycle, six original negatives and390px no-overflow observation are mandatory closed tests, not human/phone/full platform qualification. No KS journey, production, new source rights, paid provider or Main preapproval gate."
+  ]
+};
+  dag.nodes.push(pan528Node);
+}
+pan528Node.inputs = pan528Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan528:test")) repositoryIntegrityNode.ownedTests.push("npm run pan528:test");
+dag.graphVersion = 89;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2297,6 +2451,7 @@ for (const [inputPath] of pan527Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan529Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan521Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan522Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan528Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

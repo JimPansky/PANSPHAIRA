@@ -10,7 +10,7 @@ test('optional origin/session surface has one additive source owner and real bro
   const graph = load('verification/verification-dag-v2.json');
   const owners = graph.nodes.filter(n => n.id === 'pan527-origin-session-v1');
   assert.equal(owners.length, 1, 'new optional executable surface must be registered, not merely published');
-  assert.equal(graph.graphVersion, 88);
+  assert.equal(graph.graphVersion, 89);
   const owner = owners[0];
   assert.deepEqual(owner.dependsOn, ['pan526-portable-runtime-v1']);
   assert.deepEqual(owner.ownedTests, ['npm run pan527:test']);
@@ -27,8 +27,8 @@ test('optional origin/session surface has one additive source owner and real bro
     assert.equal(manifest.has(row.path), false, 'legacy runnable payload remains unchanged; new surface is source evidence');
     assert.ok(builder.includes(JSON.stringify(row.path)), row.path);
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: 'verification/verification-dag-v2.json', baseSha: '1'.repeat(40), headSha: '2'.repeat(40), changedPaths: [row.path], observedInputDigests });
-    assert.deepEqual(plan.selectedNodes, [owner.id]);
-    assert.deepEqual(plan.selectedTests, ['npm run pan527:test']);
+    assert.deepEqual(plan.selectedNodes, [owner.id, 'pan528-guided-native-browser-v1']);
+    assert.deepEqual(plan.selectedTests, ['npm run pan527:test', 'npm run pan528:test']);
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a,b) => a.localeCompare(b,'en')));
   }
   const pkg = load('package.json');

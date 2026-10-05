@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "pansphaira.guided-native/browser-boundary/v1",
+  "sourceClass": "SOURCE_EVIDENCE_ONLY",
+  "authorityProfile": "SAFE_GUIDED",
+  "optIn": "EXISTING_CODE_OWNER_ON_EXISTING_PAN527_HTTPS_INGRESS",
+  "nativeProcess": "FIXED_LOCAL_NODE_AND_EXISTING_PAN472_PAN473_PAN515_SQLITE",
+  "expectedBusinessValue": {"physical": 10, "reserved": 6, "blocked": 0, "available": 4, "shipped": 0, "returned": 0},
+  "runtimeUnitsPerStarter": 1,
+  "runtimeLimitUnits": 8,
+  "modelInvocation": "NOT_REQUESTED",
+  "helper": "PURE_CLOSED_TYPED_TEMPLATE_PLAN_WITH_SEPARATE_EXPLICIT_ACTION",
+  "childSignalAckIsCompletion": false,
+  "unknownEffectResetAuthorized": false,
+  "processRestartReleasesUnknownUsage": false,
+  "resetReplenishesConsumedBudget": false,
+  "cleanup": "EXACT_BOUND_OWNED_RESOURCE_CENSUS_AND_DESCRIPTOR_ANCHORED_EXPLICIT_DELETION",
+  "technicalFirstValue": "FIRST_ACCEPTED_VISIBLE_MATCHED_RESULT_FROZEN_IN_CURRENT_BROWSER_VIEW",
+  "sourceEntry": "src/pan528/guided-browser.mjs",
+  "canonicalTests": "npm run pan528:test",
+  "originalCriteria": ["AC1", "AC2", "AC3", "AC4", "AC5", "AC6"],
+  "originalNegatives": ["NON_ADMIN_ADMIN_ROUTE", "UNCHECKED_UPLOAD", "FREE_SHELL_URL", "FOREIGN_INSTANCE_RESET", "OUTCOME_UNKNOWN_RESET", "WRONG_BUSINESS_VALUE_DESPITE_UI_SUCCESS"],
+  "nonclaims": ["No productive posting or new source rights", "No new public host or turnkey runtime image", "No paid model invocation", "No KaleidoSphere journey or qualification", "No human or real-phone study", "No hostile same-UID security sandbox", "No full issue acceptance from bounded development evidence"]
+}
