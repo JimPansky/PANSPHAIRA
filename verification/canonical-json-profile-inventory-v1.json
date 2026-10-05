@@ -547,6 +547,14 @@
       "fromSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
       "toSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
       "reason": "Advance graph to v84 with one additive optional source-bound PAN-H01 portable local runtime owner. Preserve the early immutable shared contract, corrected Node-agent/platform binding, actual released native baseline, ten measured cold starts/40 raw phases, existing legacy installer/Compose/source owners and runnable payload, every previous immutable migration/byte obligation and hard gate. No receipt/caller-role authority, provider/host rights, remote effect route, paired acceptance, Main/CLOSED waiting gate or whole-release/closure claim."
+    },
+    {
+      "migrationId": "PAN527-ORIGIN-SESSION/INTEGRITY-GENERATOR/V58",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 58,
+      "fromSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
+      "toSha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66",
+      "reason": "Advance graph to v85 with one additive optional origin/protected-session source owner depending on the unchanged portable runtime. Preserve all historical migrations/byte obligations, RuntimeIdentity enum/effective rights, old owners, legacy installer/runnable payload and hard gates. Register actual certificate-verifying browser/native/legacy regressions with closed fail-on-missing-tooling runner; frozen public candidate and exact actual AC4 receipt stay bounded, no native KS or productive permission, reciprocal CLOSED/Main gate or full release/closure inference."
     }
   ],
   "scanScope": {
@@ -589,15 +597,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 867,
+    "filesScanned": 882,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 279,
-    "importFiles": 278,
+    "importSites": 281,
+    "importFiles": 280,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2315,
-    "ledgerUniquePaths": 2315
+    "ledgerEntries": 2339,
+    "ledgerUniquePaths": 2339
   },
   "profiles": [
     {
@@ -670,7 +678,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924"
+      "sha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1061,6 +1069,11 @@
       "importFiles": 2
     },
     {
+      "owner": "pan527",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "procurement-434",
       "importSites": 3,
       "importFiles": 3
@@ -1082,8 +1095,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 63,
-      "importFiles": 62
+      "importSites": 64,
+      "importFiles": 63
     },
     {
       "owner": "usage-insights",
@@ -1376,7 +1389,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
+      "sha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66",
       "basis": "profile-version-migration"
     },
     {

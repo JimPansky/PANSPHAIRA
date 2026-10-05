@@ -31,7 +31,7 @@ test('portable runtime owns its actual opt-in product bytes without replacing le
   const graph = load('verification/verification-dag-v2.json');
   const nodes = graph.nodes.filter((n) => n.id === 'pan526-portable-runtime-v1');
   assert.equal(nodes.length, 1, 'portable runtime needs one additive source owner');
-  assert.equal(graph.graphVersion, 84);
+  assert.equal(graph.graphVersion, 85);
   const node = nodes[0];
   assert.deepEqual(node.dependsOn, ['toolchain-central']);
   assert.deepEqual(node.inputs.map((i) => i.path), expected);
@@ -47,8 +47,8 @@ test('portable runtime owns its actual opt-in product bytes without replacing le
     assert.equal(manifest.has(row.path), false, 'unchanged legacy runnable payload is not replaced by optional source evidence');
     assert(builder.includes(JSON.stringify(row.path)), row.path);
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: 'verification/verification-dag-v2.json', baseSha: '1'.repeat(40), headSha: '2'.repeat(40), changedPaths: [row.path], observedInputDigests });
-    assert.deepEqual(plan.selectedNodes, [node.id]);
-    assert.deepEqual(plan.selectedTests, ['npm run pan526:test']);
+    assert.deepEqual(plan.selectedNodes, [node.id, "pan527-origin-session-v1"]);
+    assert.deepEqual(plan.selectedTests, ['npm run pan526:test', 'npm run pan527:test']);
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a,b) => a.localeCompare(b,'en')));
   }
   const pkg = load('package.json');

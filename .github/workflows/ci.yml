@@ -73,6 +73,24 @@ jobs:
           node_modules/@embedded-postgres/linux-x64/native/bin/initdb --version
           node_modules/@embedded-postgres/linux-x64/native/bin/postgres --version
 
+      - name: Prepare exact private PAN527 browser and NSS tooling
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: ${{ runner.temp }}/pan527-browsers
+          PAN527_NSS_URL: https://archive.ubuntu.com/ubuntu/pool/main/n/nss/libnss3-tools_3.98-1ubuntu0.2_amd64.deb
+          PAN527_NSS_SHA256: e5b42390b02c21851bc04e9557ec48539a913f9b09637220c4b1db0d1386b3fb
+        run: |
+          tooling="$RUNNER_TEMP/pan527-nss"
+          install -d -m 700 "$tooling"
+          curl --fail --location --silent --show-error \
+            --output "$tooling/nss.deb" "$PAN527_NSS_URL"
+          printf '%s  %s\n' "$PAN527_NSS_SHA256" "$tooling/nss.deb" \
+            | sha256sum --check -
+          dpkg-deb -x "$tooling/nss.deb" "$tooling/extracted"
+          test -x "$tooling/extracted/usr/bin/certutil"
+          node node_modules/playwright/cli.js install chromium
+          printf 'PLAYWRIGHT_BROWSERS_PATH=%s\n' "$PLAYWRIGHT_BROWSERS_PATH" >> "$GITHUB_ENV"
+          printf 'PAN527_CERTUTIL=%s\n' "$tooling/extracted/usr/bin/certutil" >> "$GITHUB_ENV"
+
       - name: Lint
         run: npm run lint
 

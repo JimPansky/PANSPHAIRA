@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "pansphaira.hosted-origin-session/development-evidence/v1",
+  "scope": "ACTUAL_BOUNDED_NATIVE_TLS_BROWSER_AND_LEGACY_REGRESSION_NOT_FINAL_RELEASE_ACCEPTANCE",
+  "originalIssue": 527,
+  "earlyImmutableCapability": {
+    "commit": "6a7752be07405bd03ccbc40c13a9936d1b8d0d2b",
+    "tree": "43f33d0c3c14aacc23f1497aae7a0f83f1cd7f30",
+    "contractPath": "contracts/hosted-origin-session/candidates/origin-session-development-v3.json",
+    "contractSha256": "cd87f1a1a5942bea20ac19cc8b08d5e32861c1e2499b9895b9d759fb4ba7b20b",
+    "sourceClosurePins": 180,
+    "completeArchiveRegularFiles": 2593,
+    "freshAnonymousInstallBuildTestFiles": 9,
+    "actualTestCounts": {
+      "pass": 10,
+      "fail": 0,
+      "skip": 0
+    },
+    "realCertificateVerifyingChromium": true,
+    "nativeKsQualification": false
+  },
+  "criteria": {
+    "AC1": {
+      "testPaths": [
+        "tests/pan527/native-https-ingress.test.mjs",
+        "tests/pan527/csrf-native-mutation.test.mjs",
+        "tests/pan527/browser-native-network.test.mjs",
+        "tests/pan527/redirect-native.test.mjs",
+        "tests/pan527/websocket-native.test.mjs"
+      ],
+      "scope": "Actual certificate-verified TLS/browser network, secure cookies/native question mutation/CSRF, fixed authenticated303, denied raw aliases/Upgrade; not visual UI journey"
+    },
+    "AC2": {
+      "testPaths": [
+        "tests/pan527/origin-session.test.mjs",
+        "tests/pan527/native-https-ingress.test.mjs",
+        "tests/pan527/csrf-native-mutation.test.mjs"
+      ],
+      "scope": "Protected opaque server store; role/tenant/forwarded-header spoof and cross-tenant operation/path denied with native state unchanged"
+    },
+    "AC3": {
+      "testPaths": [
+        "tests/pan527/bound-session-native.test.mjs",
+        "tests/pan527/delayed-body-native.test.mjs"
+      ],
+      "scope": "Re-signed wrong audience/instance/generation/tenant/origin/identityDigest401, bad MAC503, authkey loss503, delayed expiry401 and restored200; native denial events unchanged"
+    },
+    "AC4": {
+      "testPaths": [
+        "tests/pan527/local-compatibility.test.mjs"
+      ],
+      "actualLegacyHostedRun": {
+        "runId": 37241991499,
+        "runAttempt": 1,
+        "sourceCommit": "6a7752be07405bd03ccbc40c13a9936d1b8d0d2b",
+        "sourceTree": "43f33d0c3c14aacc23f1497aae7a0f83f1cd7f30",
+        "artifactId": 11317504291,
+        "artifactSha256": "dd70c1c20de0d3a41697dbdb4a6245ca4dff168ef98e3f5d71af04cfce0f2732",
+        "receiptDigest": "f7f71c6555b3f416e2f5339f9fb6c2baaf5ba587269e1f7f2ba12664d4269a54",
+        "installAcceptanceProviderReadback": "PASS",
+        "fiveHealthyServices": true,
+        "ownedResourcesAfter": {
+          "containers": 0,
+          "images": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "scope": "Actual old installer, provider mutation/readback and purge; independent receipt verification is not another native run. Real local HTTP/no hosted cookie/native question event and raw foreignHost403; no customer/external portal required"
+    }
+  },
+  "portableRuntimeSchemaUnchangedSha256": "7c49eb32b45d4942f81828713babd45ef643a4d63b230e039445e6e9c2c6ebcb",
+  "distinctProtectedControlBinding": {
+    "schemaPath": "contracts/hosted-origin-session/protected-route-binding-v1.schema.json",
+    "component": "kaleidosphere-bi-control",
+    "entrypoint": "services/bi-control/src/server.mjs",
+    "profile": "READ_OPERATION_AUTHENTICATION_NO_AUTHORIZE_MUTATION_NO_EXECUTION_GRANT",
+    "sameRuntimeEnumUnchanged": true,
+    "syntheticTestsNotNativeKs": true
+  },
+  "sourceBindings": {
+    "src/pan527/origin-session-adapter.mjs": "759a15d7d95e2129d95b14c70e744e5e9bc086abffd523b88f1879a405fed28e",
+    "contracts/hosted-origin-session/protected-route-binding-v1.schema.json": "b873bbb231bbcb2d0fe78feb51a78832690e75dce33293a4952a1249396433f6",
+    "demo/install.sh": "747a975556b3755404e98c7e60705906071a0a6c17dc42b6be2a90e407428984",
+    "demo/compose.yaml": "0777d35cbed997987ab2bd642c8fd71e7ab17be8437d6a894d653a693382a753",
+    "demo/readback.sh": "236dc0f85921126e7fdb400743a6fd8ecd9e8fb44d77dbd9d7ac57ec4f302371",
+    "demo/uninstall.sh": "e72bf4f86af24b0017497dcaca63927c64aab9fa558b83970d1d2d8240b972bb",
+    "demo/runtime/server.mjs": "1f2434c8260ddec816138648a4a5115f8e5adf716130e89f6ca4b00b2e41489a",
+    "release/public-files.manifest": "8e97726e8ab3798c88458c6d6c3cbe9ad0d014dcf91ace2bcf0191d6e3541142"
+  },
+  "reviewReuse": "Exact unchanged scoped implementation/public archives and affected runner/legacy HTTP evidence reused; new registration/integration and final canonical proof/CI/merge/release/anonymous closure remain separate. No Main or counterpart CLOSED wait."
+}
