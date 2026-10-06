@@ -11,7 +11,7 @@ test("PAN529 native template and budget have one additive owner in authoritative
   const owners = graph.nodes.filter((node) => node.id === "pan529-runtime-budget-v1");
   assert.equal(owners.length, 1, "Native H05 executable source must have its actual canonical owner");
   const owner = owners[0];
-  assert.equal(graph.graphVersion, 89);
+  assert.equal(graph.graphVersion, 90);
   assert.deepEqual(owner.dependsOn, ["pan526-portable-runtime-v1"]);
   assert.deepEqual(owner.ownedTests, ["npm run pan529:test"]);
   assert.equal(owner.riskClass, "HIGH"); assert.equal(owner.globalInvalidation, false);
@@ -33,8 +33,8 @@ test("PAN529 native template and budget have one additive owner in authoritative
       assert.ok(builder.includes(JSON.stringify(input.path)), input.path);
     }
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: "verification/verification-dag-v2.json", baseSha: "1".repeat(40), headSha: "2".repeat(40), changedPaths: [input.path], observedInputDigests });
-    assert.deepEqual(plan.selectedNodes, [owner.id]);
-    assert.deepEqual(plan.selectedTests, ["npm run pan529:test"]);
+    assert.deepEqual(plan.selectedNodes, ["pan528-guided-native-browser-v1", owner.id]);
+    assert.deepEqual(plan.selectedTests, ["npm run pan528:test", "npm run pan529:test"]);
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a, b) => a.localeCompare(b, "en")));
   }
   const pkg = load("package.json");
