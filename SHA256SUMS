@@ -393,7 +393,7 @@ f9ce6ea4837f86417286fa2faba97c7fcbd9f519aaabeb399b1dc3c5882e51a5  ./docs/archite
 3297a7a1aca11306752ad1e19bf95b6f650af0bf4921ba6257ab6ae417ff0bf6  ./docs/architecture/pan527-origin-session-development-v3.md
 8100386a0fca169c8eea4c77eee1b4e01c2c8126128e1d5f84e02b028e374aad  ./docs/architecture/pan528-guided-browser-v1.md
 01922e4a2d4da33b9f36f2e0f20100690af316f61b4691bcc6c5fa4320c58e8e  ./docs/architecture/pan529-runtime-budget-v1.md
-8a063efa8c75856da28a33c6c4581ed46f3a2e07cbef2a7fdea3bd548fe6266f  ./docs/architecture/pan537-proposal-diff-browser-v1.md
+a33ee0fb62647e545f42f154ae116c7ebca9423dde62bddaf807cdfef468c1ee  ./docs/architecture/pan537-proposal-diff-browser-v1.md
 cbf1ed6a03e936dd74b4cd66d9328a2318999212eb63c589934202a652b815c0  ./docs/architecture/rks-01-real-source-utility-result-v1.md
 8c5df07f13c5fb706d45ebac88e616244d2122548099b7c7fd107df8117924a8  ./docs/architecture/rks-01-source-governance-v1.md
 bdf3fbfa63b2f549fa827a5a81eaa3876a7c813b02368c7441c62f37bac2ffd2  ./docs/architecture/rks-02-core-small-vs-raw-result-v1.md
@@ -931,7 +931,7 @@ d62fd2dbaaa4931d2bd542abaa7ddd347160047bace0b35b418ae6fed9a1118c  ./packages/kno
 59d5359742855596c090566061fb9ad79c36ea05d4920da7f9215163458184f8  ./packages/local-knowledge/src/wikimedia-download-policy.ts
 9d5820976e7b4e6f17de12e0358bba16068889993ddb474c491897008b5382c8  ./packages/local-knowledge/src/wikimedia-optin-download.ts
 564527899752dc5e744773d8397d2ce1cae6ee49b355b48351ea994fb0707c57  ./packages/local-knowledge/src/wikimedia-pilot-evidence.ts
-698e5049487742800b492c5f3af953ab6493efae828b81d278c072302410d92b  ./packages/setup-coordinator/src/index.ts
+a149ea0869c8ea03170fa177c2b28ade6d45ab8c3c39c21cb8a8ccdaf95c691d  ./packages/setup-coordinator/src/index.ts
 cffdb4aef6035e65b23e9b8d52ef3a9e266bb9850ef1f5695f266c85631b239e  ./packages/usage-insights/src/cli.ts
 820a91361c34ca37962bd037552c7ac02f392936460f5fbd4d57c77ef145bdc5  ./packages/usage-insights/src/index.ts
 007241ade3d20c1227fe3dc202eb95706c79a0ea6e79bb2cce15e92e2b3f17b9  ./power-platform/readonly-canvas-workbench/connector-binding.json
@@ -2186,7 +2186,7 @@ bfd3f83905f6c06ecd74cbc321f59f99ab716d190aa40cacd8d5af7134f81425  ./tests/pan529
 21e15876c56f1bcd136b9283f5b6ac6fcd1a2cb404d0788c6d8893d5c0639797  ./tests/pan537/native-browser-fixture.mjs
 61ef7e9006603719e1c9eb971be3011b186f5e40b45aec950470aab729a262de  ./tests/pan537/registration.test.mjs
 c55d96998f5d604655041125c4ce91ee83024cb77ef313936038f712f34c0f86  ./tests/pan537/test-runner.test.mjs
-62d7f25859d53969fc9f377ad55cfbdcb741c86a081d8b09772d6d7905770ad7  ./tests/pan538/setup-overflow.test.mjs
+663b4fea870eb55074b718c415081a2331ce8313cfac49e7c37e7cb3ef7194c9  ./tests/pan538/setup-overflow.test.mjs
 1c9790aaaed92a9e9b04fea467b095cca7dee07e68cb6abc2332b93eb1a563d4  ./tests/plugin-knowledge-harvest.test.ts
 5651518a8d3931369e02b50f26364518128b6c2973d4771473f7dee109a55cac  ./tests/poc-early-admin-ai-setup.test.ts
 65c3b1dcc45b7eaedae4251b77a35ba97369e023611cde4b6e523ca3cae186ca  ./tests/poc-guided-demo-bootstrap.test.ts
@@ -2442,5 +2442,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-7c3dc3f8b461f94dcd374ac86e28224e775c51c30f6eb9c3b1e36bfd6af2e9b3  ./verification/verification-dag-v2.json
+8c3d6fc949576ad58a1e1b84c4b677ccd098cf116f60ef6dc12a4058138a7498  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

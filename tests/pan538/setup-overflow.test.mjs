@@ -59,7 +59,7 @@ test("PAN538 AC04 real390 CSS200percent layout zoom keeps setup controls bounded
     assert.equal(bounds.zoom, "2");
     assert.ok(!bounds.pageOverflow.includes("hidden") && !bounds.pageOverflow.includes("clip"), "page clipping must not pretend to fix zoom");
     assert.ok(bounds.question.width > 0 && bounds.question.height > 0 && bounds.ask.width > 0 && bounds.ask.height > 0);
-    assert.ok(bounds.document.scrollWidth <= bounds.document.clientWidth && bounds.body.right <= 390 && bounds.card.right <= 390 && bounds.question.left >= bounds.card.left && bounds.question.right <= bounds.card.right && bounds.ask.right <= bounds.card.right, "PAN538_ACTUAL390_CSS200_LAYOUT_AND_CONTROLS_MUST_FIT");
+    assert.ok(bounds.document.scrollWidth <= bounds.document.clientWidth && bounds.body.right <= 390 && bounds.card.right <= 390 && bounds.question.left >= bounds.card.left && bounds.question.right <= bounds.card.right && bounds.ask.right <= bounds.card.right, `PAN538_ACTUAL390_CSS200_LAYOUT_AND_CONTROLS_MUST_FIT:${JSON.stringify(bounds)}`);
     assert.deepEqual(f.errors, []);
   } finally { await f.page.evaluate(() => { document.documentElement.style.zoom = ""; }); }
 });
@@ -94,12 +94,46 @@ test("PAN538 AC04 long German question and action label stay usable in current D
       assert.equal(bounds.focusId, "question");
       assert.ok(!bounds.pageOverflow.includes("hidden") && !bounds.pageOverflow.includes("clip"));
       assert.ok(bounds.question.width > 0 && bounds.question.height > 0 && bounds.ask.width > 0 && bounds.ask.height > 0);
-      assert.ok(bounds.documentScrollWidth <= bounds.documentClientWidth && bounds.card.right <= mode.width && bounds.question.left >= bounds.card.left && bounds.question.right <= bounds.card.right && bounds.ask.left >= bounds.card.left && bounds.ask.right <= bounds.card.right, "PAN538_LONG_GERMAN_INPUT_AND_ACTION_LABEL_MUST_FIT");
+      assert.ok(bounds.documentScrollWidth <= bounds.documentClientWidth && bounds.card.right <= mode.width && bounds.question.left >= bounds.card.left && bounds.question.right <= bounds.card.right && bounds.ask.left >= bounds.card.left && bounds.ask.right <= bounds.card.right, `PAN538_LONG_GERMAN_INPUT_AND_ACTION_LABEL_MUST_FIT:${JSON.stringify(bounds)}`);
     }
     assert.deepEqual(f.errors, []);
   } finally { await f.page.evaluate(() => { document.documentElement.style.zoom = ""; }); }
 });
 
+
+// A real font-metric stress exposes heading/text overflow hidden by the local
+// system-ui fallback. Fonts are diagnostic content conditions, not an asserted
+// hosted font identity, localization feature or a physical/browser-chrome test.
+test("PAN538 AC04 real font metrics keep setup headings and controls within390 CSS200 bounds", { timeout: 60000 }, async () => {
+  try {
+    assert.equal((await f.page.goto(f.origin + "/", { waitUntil: "networkidle" })).status(), 200);
+    const observations = [];
+    for (const font of ["DejaVu Sans", "monospace"]) {
+      for (const mode of [{ width: 1280, height: 900, zoom: "1" }, { width: 390, height: 844, zoom: "1" }, { width: 390, height: 844, zoom: "2" }]) {
+        await f.page.setViewportSize({ width: mode.width, height: mode.height });
+        await f.page.evaluate(({ font, zoom }) => { document.documentElement.style.fontFamily = font; document.documentElement.style.zoom = zoom; }, { font, zoom: mode.zoom });
+        await f.page.locator("#question").focus();
+        await f.page.keyboard.press("Tab");
+        await f.page.locator("header").screenshot({ path: join(f.output, `font-${font.replaceAll(" ", "-")}-${mode.width}-css${mode.zoom}-header.png`) });
+        await f.page.locator("#question").scrollIntoViewIfNeeded();
+        const bounds = await f.page.evaluate(() => {
+          const box = e => { const r = e.getBoundingClientRect(); return { left: r.left, right: r.right, width: r.width, height: r.height, clientWidth: e.clientWidth, scrollWidth: e.scrollWidth }; };
+          const q = document.getElementById("question"), ask = document.getElementById("ask"), card = q.closest("section");
+          return { viewportWidth: innerWidth, font: getComputedStyle(document.documentElement).fontFamily, zoom: getComputedStyle(document.documentElement).zoom, document: box(document.documentElement), header: box(document.querySelector("header")), heading: box(document.querySelector("header h1")), card: box(card), question: box(q), ask: box(ask), focusId: document.activeElement.id, pageOverflow: [document.documentElement, document.body].map(e => getComputedStyle(e).overflowX) };
+        });
+        observations.push({ font, mode, bounds });
+        writeFileSync(join(f.output, "actual-native-font-metric-setup-layout-bounds.json"), JSON.stringify({ observations, noHttpStubs: true, actualNativePage: true, fontStressNotExactHostedFontReplay: true }, null, 2) + "\n", { mode: 0o600 });
+        await f.page.screenshot({ path: join(f.output, `font-${font.replaceAll(" ", "-")}-${mode.width}-css${mode.zoom}.png`) });
+        assert.equal(bounds.viewportWidth, mode.width);
+        assert.equal(bounds.focusId, "ask");
+        assert.ok(!bounds.pageOverflow.includes("hidden") && !bounds.pageOverflow.includes("clip"));
+        assert.ok(bounds.question.width > 0 && bounds.question.height > 0 && bounds.ask.width > 0 && bounds.ask.height > 0);
+        assert.ok(bounds.document.scrollWidth <= bounds.document.clientWidth && bounds.heading.scrollWidth <= bounds.heading.clientWidth && bounds.header.scrollWidth <= bounds.header.clientWidth && bounds.card.right <= mode.width && bounds.question.left >= bounds.card.left && bounds.question.right <= bounds.card.right && bounds.ask.left >= bounds.card.left && bounds.ask.right <= bounds.card.right, `PAN538_FONT_METRIC_HEADING_AND_PAGE_OVERFLOW_DENIED:${JSON.stringify(bounds)}`);
+      }
+    }
+    assert.deepEqual(f.errors, []);
+  } finally { await f.page.evaluate(() => { document.documentElement.style.fontFamily = ""; document.documentElement.style.zoom = ""; }); }
+});
 
 // Forward a real owned native request and defer only its response delivery.
 // Pending-layout evidence is not a mocked reply or an invented loading spinner.

@@ -54,8 +54,14 @@ proposal/effect tests and every pretest/hard gate remain mandatory.
 The existing question and Ask use bounded border-box sizing with their
 unchanged horizontal margins. Ask wraps long label words rather than clipping
 them. The existing grid minimum is limited by available container width.
-Neither root nor body hides horizontal overflow. All non-style request,
-authorization, coordinator and backend source bytes retain their prior logic.
+Neither root nor body hides horizontal overflow. Header/card text inherits
+word wrapping so wider system-font metrics cannot expand heading or paragraph
+content beyond those bounds. Real DejaVu Sans and monospace font-content stress
+checks also bind heading/header scroll bounds and keyboard-reachable controls;
+this is not an asserted replay of a hosted runner font identity. Original
+layout predicates retain their exact comparisons and report actual numeric
+bounds on failure. All non-style request, authorization, coordinator and
+backend source bytes retain their prior logic.
 
 The actual existing installer/native browser verifies document/card/control
 bounds and positive reachable dimensions at desktop1280 and390, long synthetic

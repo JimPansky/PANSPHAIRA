@@ -9673,7 +9673,7 @@
         {
           "path": "packages/setup-coordinator/src/index.ts",
           "role": "SOURCE",
-          "sha256": "698e5049487742800b492c5f3af953ab6493efae828b81d278c072302410d92b"
+          "sha256": "a149ea0869c8ea03170fa177c2b28ade6d45ab8c3c39c21cb8a8ccdaf95c691d"
         },
         {
           "path": "tests/pan537/native-browser-fixture.mjs",
@@ -9703,12 +9703,12 @@
         {
           "path": "docs/architecture/pan537-proposal-diff-browser-v1.md",
           "role": "SOURCE",
-          "sha256": "8a063efa8c75856da28a33c6c4581ed46f3a2e07cbef2a7fdea3bd548fe6266f"
+          "sha256": "a33ee0fb62647e545f42f154ae116c7ebca9423dde62bddaf807cdfef468c1ee"
         },
         {
           "path": "tests/pan538/setup-overflow.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "62d7f25859d53969fc9f377ad55cfbdcb741c86a081d8b09772d6d7905770ad7"
+          "sha256": "663b4fea870eb55074b718c415081a2331ce8313cfac49e7c37e7cb3ef7194c9"
         }
       ],
       "ownedTests": [

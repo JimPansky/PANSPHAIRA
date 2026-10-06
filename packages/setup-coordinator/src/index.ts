@@ -511,7 +511,7 @@ const DASHBOARD_HTML = `<!doctype html>
   <style>
     :root{color-scheme:dark;font:14px system-ui;background:#101418;color:#e8eef2}
     body{max-width:980px;margin:auto;padding:20px}
-    header,.card{background:#182028;border:1px solid #32414d;border-radius:10px;padding:14px;margin:10px 0}
+    header,.card{background:#182028;border:1px solid #32414d;border-radius:10px;padding:14px;margin:10px 0;overflow-wrap:anywhere}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:10px}
     progress{width:100%} button,input{padding:8px;margin:4px;background:#22303b;color:inherit;border:1px solid #536675;border-radius:6px}
     #question,#ask{box-sizing:border-box;max-width:calc(100% - 8px)}
