@@ -545,6 +545,13 @@ repository_only_files = {
     "docs/architecture/pan523-native-production-v1.md",
     "verification/pan523-native-production-v1.json",
     "verification/pan523-historical-native-source-admission-v1.json",
+    "tests/pan537/native-browser-fixture.mjs",
+    "tests/pan537/browser-proposal-diff.test.mjs",
+    "tests/pan537/registration.test.mjs",
+    "tests/pan537/test-runner.test.mjs",
+    "scripts/run-pan537-proposal-diff-browser-tests.mjs",
+    "docs/architecture/pan537-proposal-diff-browser-v1.md",
+    "tests/pan538/setup-overflow.test.mjs",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

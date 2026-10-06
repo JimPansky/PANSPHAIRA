@@ -636,6 +636,20 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
   "fromSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
   "toSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
   "reason": "Advance actual delivered graph89 to90 with the retained bounded P09 native production owner beside delivered PAN528 guided native browser. Preserve both capabilities, every old source owner and full descendant-owner/test set, immutable prior migration/base obligations, unchanged census scanner, all original native receipts and hard gates, existing runnable manifest and source-only builder. No separate leading store, physical/fiscal/archive/FiBu/financial-profit or finite-capacity qualification, new authority, Main approval wait or premature closure; prior native29 and released browser43 evidence are not relabelled or added."
+}), Object.freeze({
+  "migrationId": "PAN537-EXISTING-PROPOSAL-BROWSER/INTEGRITY-GENERATOR/V64",
+  "path": "scripts/refresh-integrity-data.mjs",
+  "profileVersion": 64,
+  "fromSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
+  "toSha256": "8486140dd9afebae4382a58233e7baeff04467bfd033cd389df830fce9e490b3",
+  "reason": "Advance graph90 to91 with one bounded owner for the existing legacy proposal browser correction and mandatory actual Chromium/native regression. Registered proposal supplies the exact visible and transmitted Diff/digest, readable before/after facts precede approval, missing/tampered/stale/reject/authentication/no-executable-rights cases retain unchanged backend denial, and controlled real response-delivery loss stays unknown without blind retry. Preserve all prior owners, dependencies, own test lists, hard gates, immutable migration/base obligations, unchanged census scanner and legacy payload membership. This is a fork-local development successor, not a composite with held immutable541, public delivery, independent human/phone/whole-setup acceptance, new backend/provider/productive rights or publication clearance."
+}), Object.freeze({
+  "migrationId": "PAN538-EXISTING-SETUP390-BOUNDS/INTEGRITY-GENERATOR/V65",
+  "path": "scripts/refresh-integrity-data.mjs",
+  "profileVersion": 65,
+  "fromSha256": "8486140dd9afebae4382a58233e7baeff04467bfd033cd389df830fce9e490b3",
+  "toSha256": "fc3191a44001d241a4e7b5bc00d6502d616970e0c6c8be2a82720abfe4840d12",
+  "reason": "Advance graph91 to92 by adding the mandatory actual setup390 layout regression to the existing proposal/dashboard component owner and closed browser runner, with no duplicate source owner or generic framework. Preserve every prior migration and immutable base obligation, unchanged mechanical scanner, all old source owners and hard gates, legacy payload membership, request/authentication/backend bytes and original negative cases. Actual desktop390, German synthetic content, CSS-layout200percent, keyboard, real pending-response delivery, native403 denial and authenticated synthetic setup are bounded product evidence, not German localization, physical/browser-chrome acceptance, productive/new provider rights or exact-head canonical/CI/release/closure qualification. Clean authorized14232 lineage only; historical provider objects are not claimed erased."
 }),
 ]);
 
@@ -649,7 +663,7 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  * sites) are historical hints only — the fresh mechanical scan supersedes them.
  */
 const EXPECTED_COUNTS = {
-  "filesScanned": 967,
+  "filesScanned": 973,
   "declarationSites": 37,
   "declarationFiles": 37,
   "importSites": 294,
@@ -659,7 +673,7 @@ const EXPECTED_COUNTS = {
   "byteObligations": 21,
   "pinnedProfileFiles": 13
 } as const;
-const EXPECTED_LEDGER = {"entries": 2439, "uniquePaths": 2439, "duplicatePaths": 0} as const;
+const EXPECTED_LEDGER = {"entries": 2446, "uniquePaths": 2446, "duplicatePaths": 0} as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1442,7 +1456,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;

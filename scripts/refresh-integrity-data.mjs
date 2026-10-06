@@ -2513,6 +2513,69 @@ pan523Node.inputs = pan523Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan523:test")) repositoryIntegrityNode.ownedTests.push("npm run pan523:test");
 dag.graphVersion = 90;
 
+// PAN537 bounded correction of the existing legacy browser approval path.
+// Backend/provider inputs are unchanged; this adds no replacement authority.
+const pan537Inputs = [
+  [
+    "packages/setup-coordinator/src/index.ts",
+    "SOURCE"
+  ],
+  [
+    "tests/pan537/native-browser-fixture.mjs",
+    "FIXTURE"
+  ],
+  [
+    "tests/pan537/browser-proposal-diff.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan537/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan537/test-runner.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "scripts/run-pan537-proposal-diff-browser-tests.mjs",
+    "SOURCE"
+  ],
+  [
+    "docs/architecture/pan537-proposal-diff-browser-v1.md",
+    "SOURCE"
+  ],
+  [
+    "tests/pan538/setup-overflow.test.mjs",
+    "VALIDATOR"
+  ]
+];
+let pan537Node = dag.nodes.find(({id}) => id === "pan537-proposal-diff-browser-v1");
+if (pan537Node === undefined) {
+  pan537Node = {
+  "id": "pan537-proposal-diff-browser-v1",
+  "dependsOn": [],
+  "inputs": [],
+  "ownedTests": [
+    "npm run pan537:test"
+  ],
+  "riskClass": "HIGH",
+  "globalInvalidation": false,
+  "invariants": [
+    "Bounded correction of the existing legacy synthetic setup browser, not a new generic shell or backend; no productive effects, provider rights or caller-role grants.",
+    "Registered proposal owns the exact displayed and transmitted business Diff and digest; decision, signed authority and native effect receipt remain distinct.",
+    "Human-readable Field/Before/After facts and UTC dates precede approval; raw exact proposal and digest are retained without mutation or re-digesting.",
+    "Real browser owner decision, effect request, native receipt and fresh persisted target readback are mandatory; missing/tampered/stale/rejected/unauthenticated/unauthorised cases retain backend denial.",
+    "Unclassified outcomes are conservatively unknown with no current blind retry; real response-loss observation forwards the native backend operation and interrupts browser delivery, never substitutes a provider or fabricates a receipt.",
+    "Fixed supported native suite has no filtering or skip flags, uses owned hosted scratch and verifies all owned resource cleanup; desktop/390px source/state-bound visual selfcheck is not physical-device/human or whole-setup qualification.",
+    "Legacy manifest membership, every predecessor owner and hard gate remain unchanged; all new regression/runner/documentation paths are source-only."
+  ]
+};
+  dag.nodes.push(pan537Node);
+}
+pan537Node.inputs = pan537Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan537:test")) repositoryIntegrityNode.ownedTests.push("npm run pan537:test");
+dag.graphVersion = 92;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2569,6 +2632,7 @@ for (const [inputPath] of pan521Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan522Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan528Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
