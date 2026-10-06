@@ -2574,7 +2574,141 @@ if (pan537Node === undefined) {
 }
 pan537Node.inputs = pan537Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan537:test")) repositoryIntegrityNode.ownedTests.push("npm run pan537:test");
-dag.graphVersion = 92;
+// PUI-01 shared optional browser workspace: one additive owner over existing native readers.
+const pan541Inputs = [
+  ["docs/architecture/browser-shell-plugin-v1.md", "SOURCE"],
+  [
+    "packages/browser-shell/src/context-owner-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-shell/src/deep-link-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-shell/src/registry-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/api-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/app.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/plugin-diagnostics-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/plugin-erv-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/plugin-setup-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/workspace.css",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/workspace.html",
+    "SOURCE"
+  ],
+  [
+    "packages/contracts/src/browser-erv-read-v1.ts",
+    "CONTRACT"
+  ],
+  [
+    "packages/contracts/src/browser-shell-plugin-v1.ts",
+    "CONTRACT"
+  ],
+  [
+    "scripts/build-pan541-browser.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/run-pan541-shared-browser-shell-tests.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "src/pan541/native-erv-read-adapter.mjs",
+    "SOURCE"
+  ],
+  [
+    "src/pan541/workspace-browser.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/pan541/browser-context-safety.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/browser-plugin-fault.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/browser-workspace.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/context-native.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/deep-link.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/descriptor-types.ts",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/descriptor.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/native-erv-read.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/registry.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/test-runner.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan541/workspace-native.test.mjs",
+    "VALIDATOR"
+  ]
+];
+let pan541Node = dag.nodes.find(({ id }) => id === "pan541-shared-browser-shell-v1");
+if (pan541Node === undefined) {
+  pan541Node = {
+    id: "pan541-shared-browser-shell-v1",
+    dependsOn: ["pan516-native-procurement-v1", "pan527-origin-session-v1"],
+    inputs: [], ownedTests: ["npm run pan541:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Closed typed descriptors bind only code-owned trusted in-process factories and six shell slots; no arbitrary code loading, sandbox claim or backend rights from browser metadata.",
+      "Existing native Setup and leading SQLite ERV readers share one protected browser shell; selected-object panels and registered deep links retain tenant, session and revision identity without a shadow ledger or writer.",
+      "Shell-owned epochs retire old reads, render results and listeners; native rights, tenant, expiry and revision checks remain authoritative, and delayed retired JSON reads never overwrite replacement session cookies.",
+      "Disabled, incompatible, missing dependency and renderer failures remain visible while other module navigation and own persisted session logout stay available; diagnostic modules require owner-process opt-in.",
+      "Actual certificate-verifying browser/native positive and negative cases, technical desktop/390px/CSS-zoom checks and fixed mandatory suite remain distinct from human/device, paired consumer and canonical/CI/release/closure qualification."
+    ]
+  };
+  dag.nodes.push(pan541Node);
+}
+pan541Node.inputs = pan541Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan541:test")) repositoryIntegrityNode.ownedTests.push("npm run pan541:test");
+dag.graphVersion = 93;
 
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
@@ -2633,6 +2767,7 @@ for (const [inputPath] of pan522Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan528Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

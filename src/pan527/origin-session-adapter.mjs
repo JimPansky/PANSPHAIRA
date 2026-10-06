@@ -28,6 +28,7 @@ const cookieName = "__Host-pan527-session";
 const hash = (value) => createHash("sha256").update(value).digest("hex");
 let routeBindingValidator;
 const ownedProductIngresses = new WeakMap();
+const ownedSessionRevocations = new WeakMap();
 export function validateProtectedRouteBindingV1(value) {
   exactData(value, ["schemaVersion", "componentId", "entrypointPath", "sourceCommit", "sourceTree", "entrypointSha256", "runtime", "instanceId", "tenantId", "generation"], "HOSTED_ROUTE_BINDING_DENIED");
   exactData(value.runtime, ["name", "version"], "HOSTED_ROUTE_BINDING_DENIED");
@@ -183,7 +184,19 @@ function createOwnerSessionStoreV1(origin, identity, root, binding, cookieName, 
     if (!row || !timingSafeEqual(Buffer.from(row.csrfDigest, "hex"), Buffer.from(hash(csrf), "hex"))) throw new Error("HOSTED_CSRF_DENIED");
     return principal;
   }
-  return Object.freeze({ origin, binding, issueOwnerSession, authenticate, responseCookie, ...(readOnlyRoute ? { authorizeReadOperation: authorizeCsrf } : { authorizeMutation: authorizeCsrf }) });
+  function logoutAuthenticatedSession(headers) {
+    authenticate(headers);
+    if (headers.origin !== origin) throw new Error("HOSTED_CSRF_DENIED");
+    const pair = headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
+    privateRoot(root); const lockPath = join(root, "session-write.lock"); const fd = openSync(lockPath, "wx", 0o600);
+    try {
+      authenticate(headers);
+      const payload = load(); delete payload.sessions[hash(pair.slice(cookieName.length + 1))];
+      atomicPrivate(storePath, envelope(payload));
+    } finally { closeSync(fd); unlinkSync(lockPath); }
+  }
+  const adapter = Object.freeze({ origin, binding, issueOwnerSession, authenticate, responseCookie, ...(readOnlyRoute ? { authorizeReadOperation: authorizeCsrf } : { authorizeMutation: authorizeCsrf }) });
+  ownedSessionRevocations.set(adapter, logoutAuthenticatedSession); return adapter;
 }
 
 function reply(response, status, code) {
@@ -211,6 +224,20 @@ export function protectedGuidedOwnerContextV1(gateway, options) {
   const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
   if (options.optIn !== true || !product || product.sessions.origin !== options.origin || product.sessions.binding.identityDigest !== options.identityDigest) throw new Error("HOSTED_GUIDED_OWNER_DENIED");
   return Object.freeze({ identity: product.identity, productRoot: product.productRoot });
+}
+
+// Optional shared browser document on the same protected ingress. These assets
+// and the bounded reader are process-owner code, never HTTP plugin installation.
+export function mountProtectedWorkspaceDocumentV1(gateway, options) {
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "html", "script", "style", "readErv"], "HOSTED_WORKSPACE_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product || product.workspaceDocument
+    || options.identityDigest !== product.sessions.binding.identityDigest || options.origin !== product.sessions.origin
+    || [options.html, options.script, options.style].some(x => typeof x !== "string" || Buffer.byteLength(x) > 131072)
+    || typeof options.readErv !== "function") throw new Error("HOSTED_WORKSPACE_OWNER_DENIED");
+  const document = Object.freeze({ html: options.html, script: options.script, style: options.style, readErv: options.readErv });
+  product.workspaceDocument = document;
+  return Object.freeze({ close() { if (product.workspaceDocument === document) delete product.workspaceDocument; } });
 }
 
 // Closed existing native product handlers, not a general-purpose reverse proxy.
@@ -248,11 +275,45 @@ export function createOptionalHttpsProductIngressV1(options) {
       }
       if ((request.headers.origin !== undefined && request.headers.origin !== origin)
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?)?$/.exec(request.url ?? "");
+      const rawPath = (request.url ?? "").split("?")[0];
+      if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (request.method === "POST") !== ["/api/ask", "/guided/command"].includes(match[2])) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout"].includes(match[2])) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
+      if (match[2]?.startsWith("/workspace")) {
+        if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if ((request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") || request.headers["transfer-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+        if (match[2] === "/workspace/logout") {
+          ownedSessionRevocations.get(product.sessions)(request.headers);
+          response.setHeader("set-cookie", cookieName + "=; Path=/; Secure; HttpOnly; SameSite=Strict; Max-Age=0");
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify({ outcome: "LOGGED_OUT" }) + "\n"); return;
+        }
+        // JSON reads do not re-emit a session cookie: a delayed retired read
+        // must not overwrite a replacement session's HttpOnly cookie.
+        if (match[2] === "/workspace/context") {
+          const pair = request.headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
+          const context = { schemaVersion: "pansphaira.browser-context/v1", tenantId: product.sessions.binding.tenantId, sessionId: "session:" + hash(pair), objectId: null, revision: 1 };
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(context) + "\n"); return;
+        }
+        if (match[2] === "/workspace/erv") {
+          const params = new URL(request.url, origin).searchParams;
+          if ([...params.keys()].some(k => !["objectId", "revision"].includes(k)) || params.getAll("objectId").length > 1 || params.getAll("revision").length > 1) return reply(response, 400, "HOSTED_WORKSPACE_QUERY_DENIED");
+          const revision = params.get("revision");
+          if (revision !== null && !/^[1-9][0-9]{0,8}$/.test(revision)) return reply(response, 400, "HOSTED_WORKSPACE_QUERY_DENIED");
+          const principal = product.sessions.authenticate(request.headers);
+          const result = await product.workspaceDocument.readErv({ objectId: params.get("objectId") ?? "AP-PAN516-MATCHED-01", expectedRevision: revision === null ? null : Number(revision) }, principal);
+          product.sessions.authenticate(request.headers);
+          if (!result || result.schemaVersion !== "pansphaira.browser-erv-read/v1" || result.tenantId !== principal.tenantId || result.readOnly !== true || result.bookingAuthorityGranted !== false || result.paymentOrderAuthorized !== false) return reply(response, 503, "HOSTED_WORKSPACE_READBACK_DENIED");
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(result) + "\n"); return;
+        }
+        response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
+        response.setHeader("content-security-policy", "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; object-src 'none'");
+        const key = match[2] === "/workspace/app.js" ? "script" : match[2] === "/workspace/style.css" ? "style" : "html";
+        const type = key === "script" ? "text/javascript" : key === "style" ? "text/css" : "text/html";
+        response.writeHead(200, { "content-type": type + "; charset=utf-8" }); response.end(product.workspaceDocument[key]); return;
+      }
       if (match[2]?.startsWith("/guided")) {
         if (!product.guidedDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
         response.setHeader("set-cookie", product.sessions.responseCookie(request.headers));
@@ -304,6 +365,8 @@ export function createOptionalHttpsProductIngressV1(options) {
       else if (code === "GUIDED_COMMAND_DENIED") reply(response, 400, code);
       else if (["GUIDED_RETRY_CONFLICT_DENIED", "GUIDED_STARTER_NOT_IDLE_DENIED", "GUIDED_OUTCOME_UNKNOWN_RETAINED", "GUIDED_OWNER_CLOSED"].includes(code)) reply(response, 409, code);
       else if (code === "HOSTED_SESSION_DENIED") reply(response, 401, code);
+      else if (code === "ERV_OBJECT_REVISION_STALE") reply(response, 409, code);
+      else if (["ERV_TENANT_BINDING_DENIED", "ERV_OBJECT_BINDING_DENIED"].includes(code)) reply(response, 403, code);
       else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
     }
   });
