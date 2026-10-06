@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "caae085b97e209c344ede6ed180c20cc4d420764d8a1f683b17925280062067a"
+        "sha256": "0e3ceb4f15dbfb58c3a366c38076fbb200bf1e2ffd0a8d9a46aed74491244a71"
       }
     ]
   },
@@ -587,6 +587,14 @@
       "fromSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
       "toSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
       "reason": "Advance graph to v89 with one additive optional PAN-H03 actual native browser owner. Preserve every historical migration, original semantic/byte obligation, old source owner, unchanged census scanner and mandatory gates. Register actual certificate-verifying browser/native lifecycle, pure typed helper and six original negatives; preserve legacy runnable payload and budget/unknown-effect custody. No productive/model/source rights, KS journey, human/phone study, Main approval wait or premature delivery claim."
+    },
+    {
+      "migrationId": "PAN523-RECOVERED-WITH-DELIVERED528/INTEGRITY-GENERATOR/V63",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 63,
+      "fromSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
+      "toSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
+      "reason": "Advance actual delivered graph89 to90 with the retained bounded P09 native production owner beside delivered PAN528 guided native browser. Preserve both capabilities, every old source owner and full descendant-owner/test set, immutable prior migration/base obligations, unchanged census scanner, all original native receipts and hard gates, existing runnable manifest and source-only builder. No separate leading store, physical/fiscal/archive/FiBu/financial-profit or finite-capacity qualification, new authority, Main approval wait or premature closure; prior native29 and released browser43 evidence are not relabelled or added."
     }
   ],
   "scanScope": {
@@ -629,15 +637,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 948,
+    "filesScanned": 967,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 293,
-    "importFiles": 292,
+    "importSites": 294,
+    "importFiles": 293,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2416,
-    "ledgerUniquePaths": 2416
+    "ledgerEntries": 2439,
+    "ledgerUniquePaths": 2439
   },
   "profiles": [
     {
@@ -710,7 +718,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923"
+      "sha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1111,6 +1119,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan523",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan526",
       "importSites": 2,
       "importFiles": 2
@@ -1446,7 +1459,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
+      "sha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
       "basis": "profile-version-migration"
     },
     {

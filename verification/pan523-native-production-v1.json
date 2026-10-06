@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "pansphaira.pan523/native-production-boundary/v1",
+  "sourceClass": "SOURCE_EVIDENCE_ONLY",
+  "leadingStore": "PAN472_TARGET_SQLITE",
+  "separateDatabaseIntroduced": false,
+  "productiveExecutionAuthorized": false,
+  "financialValuationQualified": false,
+  "fiscalInvoiceArchiveQualified": false,
+  "externalFiBuQualified": false,
+  "capacityQualified": false,
+  "scope": "LOCAL_SYNTHETIC_DISPOSABLE",
+  "originalCriteria": [
+    "AC1_MATERIAL_GOOD_SCRAP_NATIVE_STOCK_AND_STABLE_ORDER",
+    "AC2_DECLARED_VERSION_QUANTITIES_TIMES_RATES_NO_DEFAULT",
+    "AC3_PARTIAL_RETRY_AND_COMPONENT_FINISHED_COUPLING",
+    "AC4_ACTUAL_P03_DISPATCH_OPERATIVE_INVOICE_REFERENCE_NOT_FINANCIAL_PROFIT"
+  ],
+  "originalNegatives": [
+    "NEGATIVE_MATERIAL_QUANTITY",
+    "EXTRA_REPORT_NEW_EFFECT_ID",
+    "UNKNOWN_RESOURCE_RATE",
+    "BOM_REVISION_CHANGED_AFTER_START",
+    "SCRAP_REPRESENTED_AS_GOOD_QUANTITY"
+  ],
+  "fallback": "DISABLE_NEW_REPORTS_RETAIN_CONFIRMED_MOVEMENTS_AND_OTHER_ORIGINAL_TRANSITIONS",
+  "commonSourceScope": "UNCHANGED_NATIVE_COMMON_SALES_ORDER_AND_P03_SUBSET_SEPARATE_SYNTHETIC_MANUFACTURING_PROVENANCE_NOT_WHOLE_COMMON_PURCHASE_OR_KIT_ALIAS",
+  "invoiceReferenceScope": "EXPLICIT_NATIVE_TECHNICAL_REFERENCE_BOUND_TO_ACTUAL_PRODUCED_DISPATCH_NOT_FISCAL_INVOICE_CREATION_OR_REFERENCE_ONLY_BILLING_FALLBACK",
+  "localGolden": {
+    "valuationVersion": "synthetic-standard-v1",
+    "orderQuantity": 6,
+    "processedQuantity": 6,
+    "goodQuantity": 5,
+    "scrapQuantity": 1,
+    "plannedMinor": 486,
+    "actualMinor": 489,
+    "varianceMinor": 3
+  },
+  "finalAcceptance": false,
+  "closureEligible": false
+}

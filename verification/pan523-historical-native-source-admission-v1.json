@@ -1,0 +1,10 @@
+{
+  "schemaVersion": "pansphaira.pan523/historical-native-pin-admission/v1",
+  "historicalCommit": "54d4a597536a52b110bab7d23b5b32cfd060244e",
+  "path": "src/pan515/trade-state.mjs",
+  "historicalSha256": "2683948f11df1978e7d4d02ce3fd60d430f55a7f7cd4bc7aa6d7d0041e576ddd",
+  "currentSha256": "dd5d004b5d4be2068223f1629313f352620018e1d97f5e3def18f87b65e9cbbf",
+  "historicalArtifact": "tests/fixtures/pan523/retained-pan515-trade-state-54d4a597.txt",
+  "scope": "ONE_NATIVE_SOURCE_SUCCESSOR_ONLY_OLD_EXECUTION_NOT_RELABELLED",
+  "currentExecutionClaimedForOldReceipt": false
+}

@@ -2397,6 +2397,122 @@ pan528Node.inputs = pan528Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan528:test")) repositoryIntegrityNode.ownedTests.push("npm run pan528:test");
 dag.graphVersion = 89;
 
+// P09 existing native transaction with explicit material/good/scrap/cost and technical billing provenance.
+const pan523Inputs = [
+  [
+    "src/pan523/production-state.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/run-pan523-production.mjs",
+    "SOURCE"
+  ],
+  [
+    "scripts/run-pan523-production-tests.mjs",
+    "SOURCE"
+  ],
+  [
+    "tests/fixtures/pan523/native-production-fixture.mjs",
+    "FIXTURE"
+  ],
+  [
+    "tests/fixtures/pan523/produced-dispatch-fixture.mjs",
+    "FIXTURE"
+  ],
+  [
+    "tests/fixtures/pan523/historical-native-pins.mjs",
+    "FIXTURE"
+  ],
+  [
+    "tests/fixtures/pan523/retained-pan515-trade-state-54d4a597.txt",
+    "FIXTURE"
+  ],
+  [
+    "tests/pan523/native-production-boundaries.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-cli.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-cost.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-fulfilment.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-history.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-invoice.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-negatives.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-revision.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production-rollback.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/native-production.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/historical-native-pins.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan523/test-runner.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "docs/architecture/pan523-native-production-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan523-native-production-v1.json",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "verification/pan523-historical-native-source-admission-v1.json",
+    "DERIVED_EVIDENCE"
+  ]
+];
+let pan523Node = dag.nodes.find(({id}) => id === "pan523-native-production-v1");
+if (pan523Node === undefined) {
+  pan523Node = {
+    id: "pan523-native-production-v1",
+    dependsOn: ["pan515-native-trade-state-v1", "pan517-native-fulfilment-v1", "pan522-material-plan-v1"],
+    inputs: [], ownedTests: ["npm run pan523:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Existing owned native order/epoch and opaque content-bound authority; declared stock/BOM/valuation, real stable revision and no caller role or productive source grant.",
+      "Confirmed exact material issue and good-only finished receipt share the existing leading SQLite transaction, stock invariants, immutable coupled history and business effect identity distinct from transport retry.",
+      "Declared valuation, safe integer quantities/minutes/rates and explicit partial/final operative comparison; no missing-fact defaults, capacity qualification, balance-sheet valuation or financial-profit claim.",
+      "Actual produced-lot P03 dispatch binds persisted explicit technical invoice references, not fiscal invoice creation or reference-only billing fallback; incomplete billing contribution stays null and new-effect document replay is denied.",
+      "Scoped disable retains confirmed movements and other original transitions; historical exact predecessor execution pins stay original under a closed one-file current-source admission, never relabelled as a new run.",
+      "Original four criteria/five negatives, native SQL failure rollback, revision and corrupted-coupling denials, owned scratch and closed operator/suite remain under every unchanged canonical/CI/release gate."
+    ]
+  };
+  dag.nodes.push(pan523Node);
+}
+pan523Node.inputs = pan523Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan523:test")) repositoryIntegrityNode.ownedTests.push("npm run pan523:test");
+dag.graphVersion = 90;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2452,6 +2568,7 @@ for (const [inputPath] of pan529Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan521Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan522Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan528Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const relative of [
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",

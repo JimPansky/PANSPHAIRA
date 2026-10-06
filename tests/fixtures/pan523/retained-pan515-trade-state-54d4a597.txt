@@ -1,7 +1,6 @@
 // P01 additive native leading trade ledger in the already-qualified draft target.
 // Local synthetic code-owner seam only: no caller role, production or network authority.
 import {join} from 'node:path';
-import {createRequire} from 'node:module';
 import {acquireLocalJournalOwner} from '../../demo/runtime/local-journal-owner.mjs';
 import {diagnosePan473WriterScope} from '../pan473/independent-scope-diagnosis.mjs';
 import {scopeProfile,openNative,openScope,readMeta,guardsMatch,TARGET_GUARDS,transaction,canonicalJson,digest,fail,exact} from '../pan473/scope-profile.mjs';
@@ -75,36 +74,11 @@ export function initializePan515TradeState({root,owner,caseId='PAN515-LEGACY-DRA
     return {outcome:'INITIALIZED',binding};
   });}finally{db.close();lease.release();}
 }
-// Lazy optional production source preserves every previously qualified legacy
-// distribution consumer without these new source-only P09 files.
-const nativeRequire=createRequire(import.meta.url);
-const pan523=()=>nativeRequire('../pan523/production-state.mjs');
-const productionReport=c=>c?.schemaVersion==='pansphaira.pan523/production-report/v1';
-const productionInvoice=c=>c?.schemaVersion==='pansphaira.pan523/operative-invoice-reference/v1';
-const productionCommand=c=>productionReport(c)||productionInvoice(c);
-export function initializePan523ProductionState({root,owner,configuration}){
-  if(owner!=='LOCAL_SYNTHETIC_OWNER')fail('PAN523_LOCAL_SYNTHETIC_OWNER_REQUIRED_DENIED');
-  const d=diagnosePan473WriterScope({root});if(d.outcome!=='ACTIVE'||!d.complete)fail('PAN515_CURRENT_NATIVE_OWNER_REQUIRED_DENIED');
-  const lease=acquireLocalJournalOwner(join(root,'pan453-owned-v2'));let db;
-  try{db=openNative(root,'target',false);return transaction(db,()=>{const native=store(db,root);writable(db,native);return pan523().initializeProductionLedger({db,native,source:current(root,db),configuration});});}finally{db?.close();lease.release();}
-}
-export function deactivatePan523ProductionReports({root,owner,reason}){
-  if(owner!=='LOCAL_SYNTHETIC_OWNER'||typeof reason!=='string'||!reason.length||reason.length>120||/[\x00-\x1f]/.test(reason))fail('PAN523_LOCAL_SYNTHETIC_OWNER_AND_REASON_REQUIRED_DENIED');
-  const d=diagnosePan473WriterScope({root});if(d.outcome!=='ACTIVE'||!d.complete)fail('PAN515_CURRENT_NATIVE_OWNER_REQUIRED_DENIED');
-  const lease=acquireLocalJournalOwner(join(root,'pan453-owned-v2'));let db;
-  try{db=openNative(root,'target',false);return transaction(db,()=>{const native=store(db,root),source=current(root,db),leading=project(db,native,null,root),production=pan523().readProductionLedger({db,native,source,production:leading.production??null});return pan523().disableProductionReports({db,binding:production.binding,reason});});}finally{db?.close();lease.release();}
-}
-export function readPan523ProductionState({root}){
-  const db=openNative(root,'target');
-  try{db.exec('BEGIN');const native=store(db,root);const leading=project(db,native,null,root);return pan523().readProductionLedger({db,native,source:current(root,db),production:leading.production??null});}finally{db.close();}
-}
 const COMMAND_KEYS=['schemaVersion','effectId','transportId','expectedRevision','orderId','lineId','articleId','warehouseId','unit','kind','quantity','referenceId','effectiveAt','reason'];
 const grants=new WeakMap();
 const token=v=>typeof v==='string'&&/^(?:synthetic:[a-z0-9-]{3,64}|[A-Z]{2,8}-[0-9]{2})$/.test(v);
 function semantic(c){const {transportId,...content}=c;return content;}
 function validate(c,b){
-  if(productionReport(c)){pan523().validateProductionCommand(c,b);return;}
-  if(productionInvoice(c)){pan523().validateProductionInvoice(c,b);return;}
   if(c?.schemaVersion===PAN517_COMMAND_V1){validatePan517Command(c,b);return;}
   const extras=c?.kind==='RECEIPT'&&b.caseId==='COMMON-TRADE-01'?['sourceLineId']:c?.kind==='SHIP'?['reservationEventId']:c?.kind==='RETURN'?['disposition','creditRef']:[];
   if(!exact(c,[...COMMAND_KEYS,...extras])||c.schemaVersion!=='pansphaira.pan515/trade-command/v1'||!token(c.effectId)||!token(c.transportId)||!Number.isSafeInteger(c.expectedRevision)||c.expectedRevision<0||!Number.isSafeInteger(c.quantity)||c.quantity<(c.kind==='COUNT_ADJUSTMENT'?0:1)||c.quantity>1000000||typeof c.reason!=='string'||c.reason.length<1||c.reason.length>120||/[\x00-\x1f]/.test(c.reason))fail('PAN515_COMMAND_SHAPE_DENIED');
@@ -123,15 +97,13 @@ function empty(b){
   if(init.outcome!=='LAGE')fail('PAN515_STOCK_BASE_DENIED');
   return {revision:0,quantities:{physical:0,reserved:0,blocked:0,available:0,shipped:0,returned:0},lots:[],reservations:[],shipments:[],events:[],stock:init.lage,appliedStockIds:[]};
 }
-function advance(before,c,b,productionBinding=null){
+function advance(before,c,b){
   validate(c,b);
   if(before.fulfilment&&c.schemaVersion!==PAN517_COMMAND_V1&&['SHIP','RETURN'].includes(c.kind))fail('PAN517_LEGACY_SHIP_RETURN_BYPASS_DENIED');
   if(before.events.some(e=>e.reservationChange?.id===c.effectId))fail('PAN515_RESERVATION_CHANGE_ID_REUSED_DENIED');
   if(c.expectedRevision!==before.revision)fail('PAN515_STALE_REVISION_DENIED');
   if(before.events.length&&Date.parse(c.effectiveAt)<Date.parse(before.events.at(-1).effectiveAt))fail('PAN515_BACKDATED_OVERWRITE_DENIED');
   const next=c.schemaVersion===PAN517_COMMAND_V1?advancePan517State(before,c,b):JSON.parse(canonicalJson(before));
-  if(c.schemaVersion==='pansphaira.pan523/production-report/v1'){if(!productionBinding)fail('PAN523_BINDING_REQUIRED_DENIED');next.production=pan523().advanceProductionReport(before.production??pan523().initialProductionState(productionBinding),c,productionBinding,b);}
-  if(productionInvoice(c)){if(!productionBinding)fail('PAN523_BINDING_REQUIRED_DENIED');next.production=pan523().advanceProductionInvoice(before.production??pan523().initialProductionState(productionBinding),c,productionBinding,b,before);}
   const move=(art,quantity,part=0)=>{
     if(!quantity)return;
     const date=new Date(c.effectiveAt).toISOString().replace('.000Z','Z');
@@ -140,11 +112,7 @@ function advance(before,c,b,productionBinding=null){
     if(moved.outcome!=='GEAENDERT')fail('PAN515_RELEASED_STOCK_CONTRACT_DENIED:'+moved.code);
     next.stock=moved.lage.lage;next.appliedStockIds=moved.lage.appliedAenderungsIds;
   };
-  if(c.schemaVersion==='pansphaira.pan523/production-report/v1'){
-    if(c.goodQuantity){next.lots.push({id:c.effectId,received:c.goodQuantity,physical:c.goodQuantity,reserved:0,blocked:0});move('EINKUNFT',c.goodQuantity);}
-  }else if(productionInvoice(c)){
-    // Billing references have no inventory effect.
-  }else if(c.kind==='RECEIPT'){
+  if(c.kind==='RECEIPT'){
     next.lots.push({id:c.effectId,received:c.quantity,physical:c.quantity,reserved:0,blocked:0});move('EINKUNFT',c.quantity);
   }else if(c.kind==='RESERVE'){
     if(c.quantity>before.quantities.available)fail('PAN515_RESERVATION_EXCEEDS_USABLE_STOCK_DENIED');
@@ -190,25 +158,21 @@ function advance(before,c,b,productionBinding=null){
   return next;
 }
 function core(before,next,c,b,recordedAtMs){
-  return {schemaVersion:'pansphaira.pan515/trade-event/v1',bindingDigest:digest(b),effectId:c.effectId,movementId:c.effectId,stockEvidenceId:'pan515:'+digest({bindingDigest:digest(b),sourceEventId:c.effectId}).slice(0,40),commandDigest:digest(semantic(c)),firstTransportId:c.transportId,orderId:b.orderId,lineId:b.lineId,articleId:b.articleId,warehouseId:b.warehouseId,unit:b.unit,kind:c.kind,quantity:c.quantity,referenceId:c.referenceId,sourceLineId:c.sourceLineId??null,disposition:c.disposition??null,creditRef:c.creditRef??null,reservationChange:['SHIP','ISSUE'].includes(c.kind)?{id:c.reservationEventId,delta:-c.quantity,causeShipment:c.effectId,orderId:b.orderId,lineId:b.lineId}:null,effectiveAt:c.effectiveAt,reason:c.reason,movementDelta:next.quantities.physical-before.quantities.physical,correctionOf:c.kind==='CORRECT_RECEIPT'?before.events.find(e=>e.effectId===c.referenceId)?.eventDigest??null:null,beforeRevision:before.revision,revision:next.revision,beforeQuantities:before.quantities,afterQuantities:next.quantities,previousEventDigest:before.events.at(-1)?.eventDigest??null,recordedAtMs,...(c.schemaVersion===PAN517_COMMAND_V1?{fulfilmentEvidence:pan517EventEvidence(next,c)}:{}),...(productionReport(c)?{productionEvidence:pan523().productionEventEvidence(next.production)}:{}),...(productionInvoice(c)?{productionInvoiceEvidence:pan523().productionInvoiceEvidence(next.production)}:{})};
+  return {schemaVersion:'pansphaira.pan515/trade-event/v1',bindingDigest:digest(b),effectId:c.effectId,movementId:c.effectId,stockEvidenceId:'pan515:'+digest({bindingDigest:digest(b),sourceEventId:c.effectId}).slice(0,40),commandDigest:digest(semantic(c)),firstTransportId:c.transportId,orderId:b.orderId,lineId:b.lineId,articleId:b.articleId,warehouseId:b.warehouseId,unit:b.unit,kind:c.kind,quantity:c.quantity,referenceId:c.referenceId,sourceLineId:c.sourceLineId??null,disposition:c.disposition??null,creditRef:c.creditRef??null,reservationChange:['SHIP','ISSUE'].includes(c.kind)?{id:c.reservationEventId,delta:-c.quantity,causeShipment:c.effectId,orderId:b.orderId,lineId:b.lineId}:null,effectiveAt:c.effectiveAt,reason:c.reason,movementDelta:next.quantities.physical-before.quantities.physical,correctionOf:c.kind==='CORRECT_RECEIPT'?before.events.find(e=>e.effectId===c.referenceId)?.eventDigest??null:null,beforeRevision:before.revision,revision:next.revision,beforeQuantities:before.quantities,afterQuantities:next.quantities,previousEventDigest:before.events.at(-1)?.eventDigest??null,recordedAtMs,...(c.schemaVersion===PAN517_COMMAND_V1?{fulfilmentEvidence:pan517EventEvidence(next,c)}:{})};
 }
-function project(db,b,asOf=null,root=null){
+function project(db,b,asOf=null){
   const rows=db.prepare('SELECT revision,effect_key,command,event FROM pan515_events ORDER BY revision LIMIT 129').all();
   if(rows.length>128)fail('PAN515_HISTORY_BOUND_DENIED');
   let state=empty(b);
   for(const row of rows){
     const c=JSON.parse(row.command),event=JSON.parse(row.event);
     if(asOf!==null&&Date.parse(c.effectiveAt)>Date.parse(asOf))break;
-    const productionBinding=productionCommand(c)?pan523().readProductionBinding({db,native:b,source:current(root,db)}):null;
-    const next=advance(state,c,b,productionBinding);
+    const next=advance(state,c,b);
     if(row.revision!==next.revision||row.effect_key!==c.effectId||!Number.isSafeInteger(event.recordedAtMs)||event.recordedAtMs<0)fail('PAN515_NATIVE_HISTORY_BINDING_DENIED');
     const expected=core(state,next,c,b,event.recordedAtMs);
     if(canonicalJson(event)!==canonicalJson({...expected,eventDigest:digest(expected)}))fail('PAN515_NATIVE_EVENT_READBACK_DENIED');
-    if(c.schemaVersion==='pansphaira.pan523/production-report/v1')next.production.events.at(-1).tradeEventDigest=event.eventDigest;
-    if(productionInvoice(c))next.production.invoices.at(-1).tradeEventDigest=event.eventDigest;
     next.events.push(event);state=next;
   }
-  if(asOf===null&&state.production)pan523().readProductionLedger({db,native:b,source:current(root,db),production:state.production});
   return state;
 }
 function mode(db,b){
@@ -248,17 +212,12 @@ export function executePan515TradeCommand({root,command,grant}){
     db=openNative(root,'target',false);
     return transaction(db,()=>{
       const b=store(db,root);if(digest(b)!==g.bindingDigest)fail('PAN515_NATIVE_BINDING_DRIFT_DENIED');writable(db,b);validate(command,b);controls(root,b,command.effectId);
-      const before=project(db,b,null,root),old=db.prepare('SELECT command,event FROM pan515_events WHERE effect_key=?').get(command.effectId);
+      const before=project(db,b),old=db.prepare('SELECT command,event FROM pan515_events WHERE effect_key=?').get(command.effectId);
       if(old){if(digest(semantic(JSON.parse(old.command)))!==g.commandDigest)fail('PAN515_EFFECT_CONTENT_CONFLICT_DENIED');return {outcome:'RECONCILED_NO_DUPLICATE',receipt:JSON.parse(old.event)};}
       if(before.revision>=128)fail('PAN515_HISTORY_BOUND_DENIED');
-      const productionBinding=productionCommand(command)?pan523().readProductionBinding({db,native:b,source:current(root,db)}):null;
-      if(productionReport(command))pan523().assertProductionReportWritable({db,binding:productionBinding});
-      const next=advance(before,command,b,productionBinding),eventCore=core(before,next,command,b,Date.now()),receipt={...eventCore,eventDigest:digest(eventCore)};
+      const next=advance(before,command,b),eventCore=core(before,next,command,b,Date.now()),receipt={...eventCore,eventDigest:digest(eventCore)};
       db.prepare('INSERT INTO pan515_events VALUES(?,?,?,?)').run(receipt.revision,command.effectId,canonicalJson(command),canonicalJson(receipt));
-      if(command.schemaVersion==='pansphaira.pan523/production-report/v1')pan523().appendProductionEvent({db,command,production:next.production,tradeEventDigest:receipt.eventDigest});
-      if(productionInvoice(command))pan523().appendProductionInvoice({db,command,production:next.production,tradeEventDigest:receipt.eventDigest});
-      const observed=project(db,b,null,root);
-      if(productionCommand(command))pan523().readProductionLedger({db,native:b,source:current(root,db),production:observed.production});if(observed.revision!==receipt.revision||canonicalJson(observed.quantities)!==canonicalJson(next.quantities))fail('PAN515_NATIVE_EVENT_READBACK_DENIED');
+      const observed=project(db,b);if(observed.revision!==receipt.revision||canonicalJson(observed.quantities)!==canonicalJson(next.quantities))fail('PAN515_NATIVE_EVENT_READBACK_DENIED');
       return {outcome:'COMMITTED',receipt};
     });
   }finally{db?.close();lease.release();}
@@ -266,7 +225,7 @@ export function executePan515TradeCommand({root,command,grant}){
 export function readPan515TradeState({root,asOf=null,projection=null}){
   if(asOf!==null&&!isRealTradeInstant(asOf))fail('PAN515_CUTOFF_DATE_DENIED');
   const db=openNative(root,'target');
-  try{db.exec('BEGIN');const binding=store(db,root),latest=project(db,binding,null,root),state=asOf===null?latest:project(db,binding,asOf,root);if(projection!==null)return projectPan520Stock({binding,state,asOf,request:projection,db,root});return {binding,...state,...(state.fulfilment?{deliveryMilestones:readPan517DeliveryMilestones(state,binding,asOf)}:{}),writeMode:mode(db,binding).mode,asOf,latestRevision:latest.revision,coverage:'COMPLETE_OWNED_EVENT_LEDGER_ONLY',readOnly:true};}finally{db.close();}
+  try{db.exec('BEGIN');const binding=store(db,root),latest=project(db,binding),state=asOf===null?latest:project(db,binding,asOf);if(projection!==null)return projectPan520Stock({binding,state,asOf,request:projection,db,root});return {binding,...state,...(state.fulfilment?{deliveryMilestones:readPan517DeliveryMilestones(state,binding,asOf)}:{}),writeMode:mode(db,binding).mode,asOf,latestRevision:latest.revision,coverage:'COMPLETE_OWNED_EVENT_LEDGER_ONLY',readOnly:true};}finally{db.close();}
 }
 
 // P06 plan handles are issued only after the current native scope and exact
