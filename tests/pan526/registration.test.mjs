@@ -31,7 +31,7 @@ test('portable runtime owns its actual opt-in product bytes without replacing le
   const graph = load('verification/verification-dag-v2.json');
   const nodes = graph.nodes.filter((n) => n.id === 'pan526-portable-runtime-v1');
   assert.equal(nodes.length, 1, 'portable runtime needs one additive source owner');
-  assert.equal(graph.graphVersion, 90);
+  assert.equal(graph.graphVersion, 92);
   const node = nodes[0];
   assert.deepEqual(node.dependsOn, ['toolchain-central']);
   assert.deepEqual(node.inputs.map((i) => i.path), expected);

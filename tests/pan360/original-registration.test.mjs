@@ -4,7 +4,7 @@ import test from 'node:test';
 import {buildVerificationImpactPlanV2} from '../../dist/packages/contracts/src/index.js';
 const load=p=>JSON.parse(readFileSync(p,'utf8'));
 test('PAN360 one bounded canonical owner preserves historical modules, mandatory hard gates and SOURCE_EVIDENCE_ONLY classification',()=>{
- const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,90);
+ const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,92);
  const nodes=graph.nodes.filter(n=>n.id==='pan360-original-erv-execution-v1');assert.equal(nodes.length,1);const node=nodes[0];
  assert.equal(node.globalInvalidation,false);assert.deepEqual(node.ownedTests,['npm run pan360:test']);
  assert.deepEqual(node.dependsOn,['ap-02-incoming-invoice-intake-v1','ap-04-incoming-invoice-erv-relational-v2','ap-05-incoming-invoice-receipt-manifest-v1']);

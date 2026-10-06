@@ -235,3 +235,37 @@ this document, inventory JSON, census test, immutable base-obligation fixture,
 regenerated; no utility consolidation or product-runtime behavior change is
 made; and no credential/remote/provider/service/CI/harness/DSH_HOME/spill
 change, push, merge, or release occurs.
+## PAN537 bounded legacy-browser successor (profile64)
+
+The existing proposal browser correction adds one bounded source owner at
+graph91, a closed mandatory native browser regression and readable before/after
+preview. Profile64 preserves all admitted migration rows, source classes, base
+obligations, old node semantics and hard gates. The existing dashboard stays
+in the legacy payload; new tests, runner and documentation are source-only.
+The unchanged scanner observes972 source files and2445 unique checksum paths;
+its original declarations, imports and similar-shape non-equivalence remain
+unchanged. This is a local development fork, not a composition or publication
+of the held immutable PAN541 capability, a human/device/whole-setup acceptance
+claim, productive authorization or release/closure qualification.
+
+
+## PAN538 existing setup-bounds registration (profile65)
+
+Profile65 advances graph91 to92 by extending the same existing dashboard
+component owner and closed browser path with the fixed setup390 regression.
+No source owner, predecessor test, hard gate or runnable manifest membership
+is removed or duplicated. Every historical profile migration and immutable
+admitted byte obligation stays intact; only the explicit current generator
+digest and measured census anchors advance. The unchanged scanner observes
+973 source files,2446 unique checksum paths,37 declaration sites/files,
+294 import sites/293 import files,7 reexports and30 similar-shape sites.
+All21 byte obligations and13 pinned-profile files retain their original
+admission rules and non-equivalence stance.
+
+The layout regression uses the genuine existing installer/native browser,
+desktop and390 bounds, German synthetic content, CSS-layout200% stress,
+keyboard, held delivery of a real reply, native403 denial and authenticated
+bounded synthetic setup/readback. It is not a localization, browser-chrome
+or physical-device certification, new productive/provider authority or an
+exact-head canonical/CI/release/closure verdict. Original source/review and
+public delivery gates remain mandatory on the authorized clean14232 lineage.

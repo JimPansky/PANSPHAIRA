@@ -9,7 +9,7 @@ const required=["src/pan522/material-plan.mjs", "src/pan522/plan-input.mjs", "sc
 test('P08 pure material planning has one additive canonical owner and preserves every hard gate and native authority boundary',()=>{
  const graph=load('verification/verification-dag-v2.json'),owners=graph.nodes.filter(node=>node.id==='pan522-material-plan-v1');
  assert.equal(owners.length,1,'PAN522_MATERIAL_CANONICAL_OWNER_NOT_IMPLEMENTED');
- assert.equal(graph.graphVersion,90);assert.equal(graph.nodes.length,96);
+ assert.equal(graph.graphVersion,92);assert.equal(graph.nodes.length,97);
  const owner=owners[0];assert.deepEqual(owner.dependsOn,['pan515-native-trade-state-v1']);assert.deepEqual(owner.ownedTests,['npm run pan522:test']);assert.equal(owner.riskClass,'HIGH');assert.equal(owner.globalInvalidation,false);assert.deepEqual(owner.inputs.map(row=>row.path),required);
  assert.deepEqual(graph.hardGates,['npm run lint','npm run release-governance:verify','npm run supply-chain:verify','sha256sum -c SHA256SUMS','./scripts/build-public-release.sh --output <isolated-absolute-path>']);
  const observedInputDigests=Object.fromEntries(graph.nodes.flatMap(node=>node.inputs.map(row=>[row.path,row.sha256]))),legacy=new Set(readFileSync('release/public-files.manifest','utf8').split('\n').filter(line=>line&&!line.startsWith('#')).map(line=>line.split('\t')[0])),builder=readFileSync('scripts/build-public-release.sh','utf8');
