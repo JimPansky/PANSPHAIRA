@@ -1,4 +1,6 @@
 import { spawnSync } from "node:child_process";
+import { mkdtempSync } from "node:fs";
+import { join } from "node:path";
 
 // Complete fixed original-scope suite; missing browser/native tooling fails.
 // No caller-selected files, skip flags or context-based test suppression.
@@ -23,6 +25,12 @@ try {
     if (process.platform !== "linux" || process.arch !== "x64") throw new Error("PAN541_TEST_REQUIRES_SUPPORTED_LINUX_X86_64");
     const env = { ...process.env, TMPDIR: process.env.TMPDIR || process.env.RUNNER_TEMP };
     if (!env.TMPDIR) throw new Error("PAN541_OWNED_SCRATCH_REQUIRED");
+    // Hosted canonical proof does not inherit a caller's evidence path.
+    // Retain every real screenshot in a unique invocation-owned directory.
+    if (!env.PAN541_BROWSER_EVIDENCE) {
+      env.PAN541_BROWSER_EVIDENCE = mkdtempSync(join(env.TMPDIR, "pan541-browser-evidence-"));
+      process.stdout.write("PAN541_BROWSER_EVIDENCE_DIR=" + env.PAN541_BROWSER_EVIDENCE + "\n");
+    }
     env.PAN527_BROWSER_MODULE = env.PAN527_BROWSER_MODULE || import.meta.resolve("playwright");
     env.PAN527_CERTUTIL = env.PAN527_CERTUTIL || "certutil";
     const build = spawnSync(process.execPath, ["scripts/build-pan541-browser.mjs"], { env, stdio: "inherit" });

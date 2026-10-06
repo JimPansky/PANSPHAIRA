@@ -1169,7 +1169,7 @@ a160445a9086f8718874112700e9eded2d099dd41cebbb5264fe71c8d81d9e80  ./scripts/run-
 5957ee24eb989d41430c652c680eee3f7b36286bf9e1ecb2600dd41d6ffdc1d7  ./scripts/run-pan528-guided-browser-tests.mjs
 b410d3f269d67dc291c5a07a6db06b913094d22d03f445c06332a241365d5a49  ./scripts/run-pan529-runtime-budget-tests.mjs
 e6fd6fa4b6ff742b5601595f0bcde722752d04e7b4fca98b3b500fe51fbfab02  ./scripts/run-pan537-proposal-diff-browser-tests.mjs
-c711642ce0ef2e891c92c6fa213c924897b9a34f3162a81b476d6a7be5e743cd  ./scripts/run-pan541-shared-browser-shell-tests.mjs
+5e6d8738fc4ff579d69b5c00af35134479f46963fbf3fc6deb26d79c573a54c1  ./scripts/run-pan541-shared-browser-shell-tests.mjs
 b29eae867a1b5010f274100b15703cb3409112778e4ea63847e89ac81d14a6fd  ./scripts/run-retained-pair-upgrade.mjs
 86c450d1456f91f87a715212c59bd8d46a178d89caa909a84134bb85d3199014  ./scripts/run-rks-01-comparative-pilot.mjs
 aebb3c8880dbc6321c923e198afad39c27b9329aa3edf1fb7655eb9553b6d563  ./scripts/run-rks-02-core-pilot.mjs
@@ -2471,5 +2471,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-82f1c266879f6d22975ce9c79c70aa3322266c6f76891944550fa8dfaf08509f  ./verification/verification-dag-v2.json
+5f8a926ab3bfff6c4ce6366fe52ff77c06ff6c5321c4c033a8918ecde3b0dcca  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
