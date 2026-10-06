@@ -5,7 +5,7 @@ import { buildVerificationImpactPlanV2 } from '../../dist/packages/contracts/src
 const load = p => JSON.parse(readFileSync(p, 'utf8'));
 test('one bounded ERV evidence owner and mandatory actual replay preserve original owners, source-only classification and every hard gate', () => {
   const graph = load('verification/verification-dag-v2.json');
-  assert.equal(graph.graphVersion, 92);
+  assert.equal(graph.graphVersion, 93);
   const nodes = graph.nodes.filter(n => n.id === 'erv-workflow-native-evidence-v1');
   assert.equal(nodes.length, 1); const node = nodes[0];
   assert.equal(node.globalInvalidation, false);

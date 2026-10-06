@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 92,
+  "graphVersion": 93,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -688,7 +688,7 @@
         {
           "path": "tests/contribution-intake-ledger.test.ts",
           "role": "VALIDATOR",
-          "sha256": "04a73cf42181f1895483f49364f9945dc91d0ce3e56a583d4e88cff363f20caa"
+          "sha256": "67e5d0fe08ce6731c6a58e140c0fa6090162dd447999a0d16f530f7626444ba6"
         },
         {
           "path": "docs/development/ccp-m1-intake-ledger-slice-pdca.md",
@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "4e02f24c6e98490a663519586e652c6b742df8e762bb378e1706fd2c37aabff2"
+          "sha256": "c950271f76aaf23d0faf1dee620e7947697b5835a9fbcb1cbfb0d6c77c919b6f"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -4004,7 +4004,7 @@
         {
           "path": "tools/video-production-reference/tests/slice.test.mjs",
           "role": "SECURITY",
-          "sha256": "51a55ffcb4cf8317f3335e7e07af8e70979a6e182dee74a8e2ef34def11eb232"
+          "sha256": "69ced8068f0c197fbedcc3d5b5b8fdd379ed1915b12669f6be94dc5cc52ee82f"
         }
       ],
       "ownedTests": [
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "b6e164d596c788e36a0201e6c8e3078b01a5dd3f709a9d37135206b99cd0ce10"
+          "sha256": "82029e44e75c7226b8f75dbd77dc0ebdb2b87b3389a235adafb4a7e61e5cdb56"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "6d97e00490b25bbf4d964828a88515465b1d733d41f86646ac856f01550f219b"
+          "sha256": "c73b7a417f878e8c739740dcf0bf442a4abe0f3e8cc8de6128d5cbcdd30bf693"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5001,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "508afdece2391270554cfb1de35aabd854c3147863c82aa2d64ac58ba59f97a5"
+          "sha256": "9de4c5d526a1ac2029e301149ea9512be85dcfb3fd913e2cec17128daa90a428"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5090,7 +5090,8 @@
         "npm run pan522:test",
         "npm run pan528:test",
         "npm run pan523:test",
-        "npm run pan537:test"
+        "npm run pan537:test",
+        "npm run pan541:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5645,7 +5646,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "3ff0f7edbebd67ba4cc349a0e670a51a6b4633b282ee56c8c4b07f15442fb827"
+          "sha256": "e93f633cbac433e25ca7272642d6017513cca66812d2415b0994ec893f25e688"
         },
         {
           "path": "package-lock.json",
@@ -6005,7 +6006,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "7d708024737d7517d61f76b7dd59a9f4b3139edb28cf3f52c5587f6715052252"
+          "sha256": "c4a029574bef77e9b7c0b56d11787a1bb1e9e089469e0c38707a5b2460dc9593"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -7947,7 +7948,7 @@
         {
           "path": "tests/pan360/original-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "480a9606ac05d83bf18ad4b5a9699c63cd81166b8b4bc477658eeeab9615b26c"
+          "sha256": "7dbe1b65bcbf747c80b177c842487ebabb9637966af35a9e7bafc496c1149e02"
         },
         {
           "path": "tests/fixtures/pan360/original-erv-profile-v1.json",
@@ -8029,7 +8030,7 @@
         {
           "path": "tests/pan378/spent-pilot-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "03ef35aab5af093de6a310828538a67737b8abd9ab85449b63d1101bf1014b34"
+          "sha256": "61a9fb859c14fcf58010a8542a7a5b48f4de8465f85d747cd31909386934fe62"
         },
         {
           "path": "tests/fixtures/pan378/spent-evaluation-v3/packet-manifest.json",
@@ -8099,7 +8100,7 @@
         {
           "path": "tests/erv-workflow-evidence/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "22ec3c152cd1366184b160e74fa892849926d684aaef6245fe53964de6cbcb1c"
+          "sha256": "1fcba12260bd99bd6e711ed8ac3e4bb53a55df730d80207f4f86080843a2a5d4"
         },
         {
           "path": "evidence/erv-workflow/released-kernel-bindings-v1.json",
@@ -8374,7 +8375,7 @@
         {
           "path": "tests/pan396/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "13a0e5d2fd83a553f9eddf439b63e9f26d65fec0ca6be03540b7a4099958b8c5"
+          "sha256": "7244ebb0bb0dc3e3b5bb4c27ded092b259f959075f5aeac6b302a23ffb9291e9"
         },
         {
           "path": "tests/fixtures/pan396/floci-pin-v1.json",
@@ -8465,7 +8466,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "3291784d3799fc3de2b1a3b52d591f41bff129e4f65aeaf3e5b0a5032aee96f6"
+          "sha256": "6ec3f933ee4f9bc3957a4fbb80296c77b35ee21053c17325976b99d3d1995d87"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8531,7 +8532,7 @@
         {
           "path": "tests/procurement-434/procurement-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "5bd19c28d3fb10abfaa58eaa7701c7dff3c9fe9144338e9296ec794bf9b38573"
+          "sha256": "08d884fb4c9b951116e61a376823389849543f9ee29a39a83ede111e27a9d5a0"
         },
         {
           "path": "docs/architecture/pan516-native-procurement-v1.md",
@@ -8587,7 +8588,7 @@
         {
           "path": "tests/pan517/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "abf3f07cde7b667151b77e0087ef894f1f8ec829290b08af97f9528e6123ac80"
+          "sha256": "3301cdeffb1be93c6df7aaf2e04f568db5058c4d7540cbad065894823c72ecb0"
         },
         {
           "path": "docs/architecture/pan517-native-fulfilment-v1.md",
@@ -8653,7 +8654,7 @@
         {
           "path": "tests/pan524/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "805d81cc2e12ff8d1b272d32d27691984e79471c03b049981a1f03dd7151f0ea"
+          "sha256": "25ba1a6c812539137e4fe3ef1059af25af5a374789e1960ace94283d050bb7e6"
         },
         {
           "path": "verification/pan524-exact-bi-pair-evidence-v1.json",
@@ -8704,7 +8705,7 @@
         {
           "path": "tests/pan520/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "12bda6a9ce1ff3df9dc7adf360ed319d5383357b4471027cbd47e4c7ee340ea3"
+          "sha256": "08e4a50943eced42fddab626e61d986bca7ae1bbd8e231a7a8c5f9872ba05027"
         },
         {
           "path": "docs/architecture/pan520-native-projections-v1.md",
@@ -8771,7 +8772,7 @@
         {
           "path": "tests/pan525/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "96cebd08bfd573bd7a6939a34606700c30abf8387b5c013b31f786cd89c2e87d"
+          "sha256": "057c5f1fcfd50105dff83f2737adc2ff68e1eb11e65b6d746a8a166219b03e97"
         },
         {
           "path": "docs/architecture/pan525-exact-qualified-pair-v1.md",
@@ -8866,7 +8867,7 @@
         {
           "path": "tests/pan526/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "6ca66523b9258208edb74dd1f7fd7b1be784387a56f1c7d8154519956168c752"
+          "sha256": "12e75f4c2f64342047eac72dfc62fb1c14a426763aa4187dedecb7f728e550e7"
         },
         {
           "path": "docs/architecture/pan526-runtime-identity-development-v1.md",
@@ -8941,7 +8942,7 @@
         {
           "path": "src/pan527/origin-session-adapter.mjs",
           "role": "SOURCE",
-          "sha256": "ba62ec2f6b80694ce6002e8e3d023e36be8c51bb96612a85e4971edbd1e07d6c"
+          "sha256": "8139d36fb4df2346d30c38f5bd53a70dc7935e8e70a8217a7015d9a3f7d50a65"
         },
         {
           "path": "scripts/run-pan527-origin-session-tests.mjs",
@@ -9001,7 +9002,7 @@
         {
           "path": "tests/pan527/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "97db640b0af8ccec92d8ae80eb011c93222c215242471dac980c5ae2261e4364"
+          "sha256": "21d4696ee7c5816039ceb93faf9ea73f7c74b0576af0006701aad17da7561b3d"
         },
         {
           "path": "tests/pan527/test-runner.test.mjs",
@@ -9145,7 +9146,7 @@
         {
           "path": "tests/pan529/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "113a0d9221aae64a3b767be92e95f0eac6d7f8f9087e364281f0d081c753e01d"
+          "sha256": "5f6bcf6ed80d93eccb6e781c372e0b1243b76ae23759a930082a8be018bdf8e1"
         },
         {
           "path": "tests/pan529/test-runner.test.mjs",
@@ -9238,7 +9239,7 @@
         {
           "path": "tests/pan521/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "938c4db55547f365f5e970b52d2b43498ff400e30ef3381d432f00d8e6409d74"
+          "sha256": "368b9fce707f32d41867dc3b417a6c22196b982c09d388fb11f3e2339cd232e2"
         },
         {
           "path": "tests/pan521/test-runner.test.mjs",
@@ -9324,7 +9325,7 @@
         {
           "path": "tests/pan522/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "64949d1623ab474263674408360f60788ef5842756a99851d26b34c8c12a8310"
+          "sha256": "06c63c955bb6d8ecfe65c049ae578251a9845781f87b5a08d4e040d826695d7f"
         },
         {
           "path": "tests/pan522/test-runner.test.mjs",
@@ -9486,7 +9487,7 @@
         {
           "path": "tests/pan528/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "eb0c2165da34d7cc53bc7be4950274e5e575fe4fd56c1fd8463d618315d72b7b"
+          "sha256": "79cda905b18de6a5ef9291b22ae03f0d787a40f6bef00a6f22255e77772cad61"
         },
         {
           "path": "tests/pan528/test-runner.test.mjs",
@@ -9629,7 +9630,7 @@
         {
           "path": "tests/pan523/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "1053baa2a2ce2e04c4ab0452551593ed3594ffc605c2e6f962ff873a81094802"
+          "sha256": "c7660d4139e0ba282f2a9a29ee37b23d4276e071f8745a48415a11bc1da1bdbe"
         },
         {
           "path": "tests/pan523/test-runner.test.mjs",
@@ -9688,7 +9689,7 @@
         {
           "path": "tests/pan537/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "61ef7e9006603719e1c9eb971be3011b186f5e40b45aec950470aab729a262de"
+          "sha256": "7147c10b620e1b61360cfd905f378f108037059ff0dbad78e0811f99ab356f12"
         },
         {
           "path": "tests/pan537/test-runner.test.mjs",
@@ -9724,6 +9725,172 @@
         "Unclassified outcomes are conservatively unknown with no current blind retry; real response-loss observation forwards the native backend operation and interrupts browser delivery, never substitutes a provider or fabricates a receipt.",
         "Fixed supported native suite has no filtering or skip flags, uses owned hosted scratch and verifies all owned resource cleanup; desktop/390px source/state-bound visual selfcheck is not physical-device/human or whole-setup qualification.",
         "Legacy manifest membership, every predecessor owner and hard gate remain unchanged; all new regression/runner/documentation paths are source-only."
+      ]
+    },
+    {
+      "id": "pan541-shared-browser-shell-v1",
+      "dependsOn": [
+        "pan516-native-procurement-v1",
+        "pan527-origin-session-v1"
+      ],
+      "inputs": [
+        {
+          "path": "docs/architecture/browser-shell-plugin-v1.md",
+          "role": "SOURCE",
+          "sha256": "d9fd55f9cda9c00735a5facf7f78fb89c00461a3050c12fa9bdff5d1ed380a2f"
+        },
+        {
+          "path": "packages/browser-shell/src/context-owner-v1.ts",
+          "role": "SOURCE",
+          "sha256": "fa49b2c57510cf5041686b4aea73b1c73bd0215bf5c371f992b205d3d64b043b"
+        },
+        {
+          "path": "packages/browser-shell/src/deep-link-v1.ts",
+          "role": "SOURCE",
+          "sha256": "7bc562f2fa8bfb773272d486af7ee5f178094af7ee600b641ca89df5e9a2a16b"
+        },
+        {
+          "path": "packages/browser-shell/src/registry-v1.ts",
+          "role": "SOURCE",
+          "sha256": "d38bfac66906e07da947d7cc6dd9bd5ad381a3e95ff891c8d973dbfe1aac28be"
+        },
+        {
+          "path": "packages/browser-workspace/src/api-v1.ts",
+          "role": "SOURCE",
+          "sha256": "5c801df98d0b4e9fba23085d4a606a88c8943ab53f7fc62424aa7ff3965714bb"
+        },
+        {
+          "path": "packages/browser-workspace/src/app.ts",
+          "role": "SOURCE",
+          "sha256": "05edf0349c58f9674d8b79b4bde302b0a1071b0b02123fd6eebc10bb1f4c457f"
+        },
+        {
+          "path": "packages/browser-workspace/src/plugin-diagnostics-v1.ts",
+          "role": "SOURCE",
+          "sha256": "1a61eb232abd50611238dd60ff744f2101b4177f94da571e6c9277367c45a0c8"
+        },
+        {
+          "path": "packages/browser-workspace/src/plugin-erv-v1.ts",
+          "role": "SOURCE",
+          "sha256": "69c20c970ec3d7baa83ceac6d54caf45a40af0149c5208eb7cee6714ecc9407e"
+        },
+        {
+          "path": "packages/browser-workspace/src/plugin-setup-v1.ts",
+          "role": "SOURCE",
+          "sha256": "5c5a5499cb1209bae8974deddccdff8b81a435140dbb6bb18de0762a2c99204a"
+        },
+        {
+          "path": "packages/browser-workspace/src/workspace.css",
+          "role": "SOURCE",
+          "sha256": "1e3221c3466a2c4e4641a2c15bf5c9e78264132b80be8dd294d4141d5130beec"
+        },
+        {
+          "path": "packages/browser-workspace/src/workspace.html",
+          "role": "SOURCE",
+          "sha256": "c361120c26c79e51c47704ff1c5987a623b4f758274100f51550fe8c75f2de9d"
+        },
+        {
+          "path": "packages/contracts/src/browser-erv-read-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "076e6f89e77ed86ecf3e7a9169e25ada0d37a1900bc4ecd734955b3dc69ca659"
+        },
+        {
+          "path": "packages/contracts/src/browser-shell-plugin-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "75f992328d8057634c0939acf7828b8f010a6ccbb19b926d604c93cbbb4e16b6"
+        },
+        {
+          "path": "scripts/build-pan541-browser.mjs",
+          "role": "SOURCE",
+          "sha256": "69c088d3fe7d318427a446a16d4336796f2e25820cde06213e0d010ecc8e9604"
+        },
+        {
+          "path": "scripts/run-pan541-shared-browser-shell-tests.mjs",
+          "role": "VALIDATOR",
+          "sha256": "5e6d8738fc4ff579d69b5c00af35134479f46963fbf3fc6deb26d79c573a54c1"
+        },
+        {
+          "path": "src/pan541/native-erv-read-adapter.mjs",
+          "role": "SOURCE",
+          "sha256": "00bdc809a922665ae11aeac2bfaa4ffab5d8fd8dec549fbc217974563bca794d"
+        },
+        {
+          "path": "src/pan541/workspace-browser.mjs",
+          "role": "SOURCE",
+          "sha256": "ff06b7f7fd4f667b7211d79e3afccb83e8fb8fb9cca30d177d5e51a93a99f96b"
+        },
+        {
+          "path": "tests/pan541/browser-context-safety.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7c5a1a067e38bd593ab2368bfb6e75c626261cca878befbcd2ee362b55c5bd7b"
+        },
+        {
+          "path": "tests/pan541/browser-plugin-fault.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "99a56a2357378b5d0ce8bdd44d147bdbbab08e570add98f857831b95c28c9059"
+        },
+        {
+          "path": "tests/pan541/browser-workspace.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "8e157ca2ccbfcaaf6e51212f4408427425f88c57ae3b3e5576a5e22c7654642d"
+        },
+        {
+          "path": "tests/pan541/context-native.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a3333bb424e52758950119de138edf6cec3cb2c941e70a915ef62f4fd1cc56a1"
+        },
+        {
+          "path": "tests/pan541/deep-link.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a95f3bde5dabce26036d99092b8306f7029413ce81930ba796809e33fb35931e"
+        },
+        {
+          "path": "tests/pan541/descriptor-types.ts",
+          "role": "VALIDATOR",
+          "sha256": "ae137dead74b01648addf2bcb5878aac43969522e922901003965f14b8bb0dbf"
+        },
+        {
+          "path": "tests/pan541/descriptor.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "493824d04500002fdbbfa0fea8f6d468e1bd1c0b83e279fd9b0fe80470a994d6"
+        },
+        {
+          "path": "tests/pan541/native-erv-read.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "914f29142d884a34b6c0887fb3b09efe5a787d3bb233c705d0456072cf58040d"
+        },
+        {
+          "path": "tests/pan541/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "4e3353ebbad681f470fbbe4150637e79ed7c92e1fd6d2f57b7684aec8f67a166"
+        },
+        {
+          "path": "tests/pan541/registry.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "fe7d88b6f96645c3e1a91b885126eb8863be905d8342e8b5822c929446e42c01"
+        },
+        {
+          "path": "tests/pan541/test-runner.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "4e55d2f425ee41fdcb8573ecb60a8fb3f2a17c23234feaad6d4a008d83b4e78d"
+        },
+        {
+          "path": "tests/pan541/workspace-native.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "2edfb2acd6137471d41faedbcf5db55cd49e1bb0860a7efa146e4122df01e692"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan541:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Closed typed descriptors bind only code-owned trusted in-process factories and six shell slots; no arbitrary code loading, sandbox claim or backend rights from browser metadata.",
+        "Existing native Setup and leading SQLite ERV readers share one protected browser shell; selected-object panels and registered deep links retain tenant, session and revision identity without a shadow ledger or writer.",
+        "Shell-owned epochs retire old reads, render results and listeners; native rights, tenant, expiry and revision checks remain authoritative, and delayed retired JSON reads never overwrite replacement session cookies.",
+        "Disabled, incompatible, missing dependency and renderer failures remain visible while other module navigation and own persisted session logout stay available; diagnostic modules require owner-process opt-in.",
+        "Actual certificate-verifying browser/native positive and negative cases, technical desktop/390px/CSS-zoom checks and fixed mandatory suite remain distinct from human/device, paired consumer and canonical/CI/release/closure qualification."
       ]
     }
   ]
