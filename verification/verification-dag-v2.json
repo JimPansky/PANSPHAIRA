@@ -9822,7 +9822,7 @@
         {
           "path": "tests/pan541/browser-context-safety.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "c06e582e86ccb995413dcc717d3c07d7a847d522e23e705ce16f950eb2087baf"
+          "sha256": "7c5a1a067e38bd593ab2368bfb6e75c626261cca878befbcd2ee362b55c5bd7b"
         },
         {
           "path": "tests/pan541/browser-plugin-fault.test.mjs",

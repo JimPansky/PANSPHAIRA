@@ -136,8 +136,13 @@ test("UIDOD-03/04/05 actual native revision conflict and expiry deny without fac
     let capturedDeadline;
     try { await Promise.race([expiryGate.captured.promise, new Promise((_, reject) => { capturedDeadline = setTimeout(() => reject(new Error("ACTUAL_NATIVE_EXPIRY_GATE_NOT_CAPTURED")), 5000); })]); } finally { clearTimeout(capturedDeadline); }
     let expiryStatus; const deadline = Date.now() + 6000;
-    do { expiryStatus = (await request527(tls, "/t/tenant-a/api/status", { cookie: short.cookieHeader })).status; if (expiryStatus === 200) await new Promise(r => setTimeout(r, 25)); } while (expiryStatus === 200 && Date.now() < deadline);
-    assert.equal(expiryStatus, 401); expiryGate.release.resolve(); await page.locator('[data-backend="erv"][data-outcome="DENIED"]').waitFor();
+    // The status route can deny cookie renewal during its final subsecond
+    // while the session itself is still valid. Observe the actual protected
+    // workspace binding's expiry before releasing the genuine held read.
+    do { expiryStatus = (await request527(tls, "/t/tenant-a/workspace/context", { cookie: short.cookieHeader })).status; if (expiryStatus === 200) await new Promise(r => setTimeout(r, 25)); } while (expiryStatus === 200 && Date.now() < deadline);
+    assert.equal(expiryStatus, 401);
+    assert.equal((await request527(tls, "/t/tenant-a/api/status", { cookie: short.cookieHeader })).status, 401);
+    expiryGate.release.resolve(); await page.locator('[data-backend="erv"][data-outcome="DENIED"]').waitFor();
     assert.doesNotMatch(await page.locator("main").innerText(), /600,00|AP-PAN516-MATCHED-01/); assert.equal(await page.locator('[id="shell.actions"] button').count(), 0);
     await page.screenshot({ path: join(process.env.PAN541_BROWSER_EVIDENCE, "390-native-session-expired-denied.png"), fullPage: true });
     assert.equal(rows(), before); assert.deepEqual(errors, []); console.log("PAN541 actual native revision409 and expiry401; no stale/expired facts or actions; leading history unchanged; actual CSS zoom (not OS/browser chrome zoom) " + JSON.stringify(zoom));
