@@ -15,6 +15,31 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+// Fixed syscall layout and flags from Linux v7.0 Landlock UAPI. A distribution's
+// older build header does not describe the running kernel. These declarations
+// repair compilation only: ABI8 and both actual TSYNC syscalls stay mandatory.
+struct pan576_landlock_ruleset_attr {
+    uint64_t handled_access_fs;
+    uint64_t handled_access_net;
+    uint64_t scoped;
+};
+#define PAN576_LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET (1ULL << 0)
+#define PAN576_LANDLOCK_SCOPE_SIGNAL (1ULL << 1)
+#define PAN576_LANDLOCK_RESTRICT_SELF_TSYNC (1U << 3)
+_Static_assert(sizeof(struct pan576_landlock_ruleset_attr) == 24, "PAN576_UAPI_RULESET_SIZE_DENIED");
+_Static_assert(offsetof(struct pan576_landlock_ruleset_attr, scoped) == 16, "PAN576_UAPI_SCOPE_OFFSET_DENIED");
+#ifdef LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET
+_Static_assert(LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET == PAN576_LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET,
+    "PAN576_UAPI_SOCKET_SCOPE_IDENTITY_DENIED");
+#endif
+#ifdef LANDLOCK_SCOPE_SIGNAL
+_Static_assert(LANDLOCK_SCOPE_SIGNAL == PAN576_LANDLOCK_SCOPE_SIGNAL, "PAN576_UAPI_SIGNAL_SCOPE_IDENTITY_DENIED");
+#endif
+#ifdef LANDLOCK_RESTRICT_SELF_TSYNC
+_Static_assert(LANDLOCK_RESTRICT_SELF_TSYNC == PAN576_LANDLOCK_RESTRICT_SELF_TSYNC,
+    "PAN576_UAPI_TSYNC_IDENTITY_DENIED");
+#endif
+
 static int add_path(int ruleset, const char *path, uint64_t access) {
     int fd = open(path, O_PATH | O_CLOEXEC);
     if (fd < 0) return -1;
@@ -70,10 +95,10 @@ static napi_value seal(napi_env env, napi_callback_info info) {
         napi_throw_error(env, "PAN576_KERNEL_PROFILE_UNAVAILABLE", "Landlock ABI8 and thread synchronization required");
         return NULL;
     }
-    struct landlock_ruleset_attr policy = {
+    struct pan576_landlock_ruleset_attr policy = {
         .handled_access_fs=(1ULL<<16)-1,
         .handled_access_net=LANDLOCK_ACCESS_NET_BIND_TCP|LANDLOCK_ACCESS_NET_CONNECT_TCP,
-        .scoped=LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET|LANDLOCK_SCOPE_SIGNAL,
+        .scoped=PAN576_LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET|PAN576_LANDLOCK_SCOPE_SIGNAL,
     };
     int ruleset = (int)syscall(__NR_landlock_create_ruleset, &policy, sizeof(policy), 0);
     const uint64_t read = LANDLOCK_ACCESS_FS_READ_FILE|LANDLOCK_ACCESS_FS_READ_DIR;
@@ -87,7 +112,7 @@ static napi_value seal(napi_env env, napi_callback_info info) {
             if (add_path(ruleset, readonly[i], read)) failed = 1;
         if (add_path(ruleset, "/scratch", write) || add_path(ruleset, "/output", write)) failed = 1;
         if (!failed && prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) failed = 1;
-        if (!failed && syscall(__NR_landlock_restrict_self, ruleset, LANDLOCK_RESTRICT_SELF_TSYNC)) failed = 1;
+        if (!failed && syscall(__NR_landlock_restrict_self, ruleset, PAN576_LANDLOCK_RESTRICT_SELF_TSYNC)) failed = 1;
         close(ruleset);
     }
     if (failed || seal_syscalls() != 0) {

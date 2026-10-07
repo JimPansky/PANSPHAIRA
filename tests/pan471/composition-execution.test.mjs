@@ -491,3 +491,39 @@ test('the actual native compiler binds the active supported Node distribution he
     assert.equal(report.ownContainerRemovedAndAbsent,true);
   } finally {process.env.PATH=originalPATH;executor.controller.close();rmSync(own,{recursive:true,force:true});}
 });
+
+
+test('the actual finite kernel guard compiles with an ABI4 build-header surface while enforcing ABI8 and TSYNC on the real running kernel', async () => {
+  const {mkdtempSync,mkdirSync,writeFileSync,rmSync}=await import('node:fs');
+  const {join,delimiter}=await import('node:path');const {spawnSync}=await import('node:child_process');
+  const parent=process.env.TMPDIR??process.env.RUNNER_TEMP;assert.ok(parent,'owned scratch required');
+  const own=mkdtempSync(join(parent,'pan576-owned-legacy-uapi-'));
+  const compiler=spawnSync('which',['gcc'],{encoding:'utf8',timeout:10000}).stdout.trim();assert.ok(compiler);
+  const originalPATH=process.env.PATH;
+  // Minimal ABI4 compile-only surface: not an old-kernel or hosted-run replay.
+  // Values/field layout are independently pinned to Linux v6.8 UAPI; runtime
+  // ABI8, thread synchronization and every original native denial stay required.
+  mkdirSync(join(own,'linux'),{mode:0o700});
+  writeFileSync(join(own,'linux/landlock.h'),"#ifndef _UAPI_LINUX_LANDLOCK_H\n#define _UAPI_LINUX_LANDLOCK_H\n#include <linux/types.h>\nstruct landlock_ruleset_attr { __u64 handled_access_fs; __u64 handled_access_net; };\nstruct landlock_path_beneath_attr { __u64 allowed_access; __s32 parent_fd; } __attribute__((packed));\nenum landlock_rule_type { LANDLOCK_RULE_PATH_BENEATH = 1 };\n#define LANDLOCK_CREATE_RULESET_VERSION (1U << 0)\n#define LANDLOCK_ACCESS_FS_WRITE_FILE (1ULL << 1)\n#define LANDLOCK_ACCESS_FS_READ_FILE (1ULL << 2)\n#define LANDLOCK_ACCESS_FS_READ_DIR (1ULL << 3)\n#define LANDLOCK_ACCESS_FS_REMOVE_DIR (1ULL << 4)\n#define LANDLOCK_ACCESS_FS_REMOVE_FILE (1ULL << 5)\n#define LANDLOCK_ACCESS_FS_MAKE_DIR (1ULL << 7)\n#define LANDLOCK_ACCESS_FS_MAKE_REG (1ULL << 8)\n#define LANDLOCK_ACCESS_FS_MAKE_SYM (1ULL << 12)\n#define LANDLOCK_ACCESS_FS_REFER (1ULL << 13)\n#define LANDLOCK_ACCESS_FS_TRUNCATE (1ULL << 14)\n#define LANDLOCK_ACCESS_NET_BIND_TCP (1ULL << 0)\n#define LANDLOCK_ACCESS_NET_CONNECT_TCP (1ULL << 1)\n#endif\n",{mode:0o600});
+  writeFileSync(join(own,'gcc'),`#!/usr/bin/env python3
+import os,sys
+os.execv(${JSON.stringify(compiler)},[${JSON.stringify(compiler)},'-I',${JSON.stringify(own)}]+sys.argv[1:])
+`,{mode:0o700});
+  try {
+    process.env.PATH=own+delimiter+originalPATH;
+    const api=await import(entry.href);
+    const report=await api.probePan471CompositionIsolation();
+    assert.equal(report.observed.landlockABI,8);
+    assert.equal(report.observed.protectedRead,'EACCES');
+    assert.equal(report.observed.asyncProtectedRead,'EACCES');
+    assert.equal(report.observed.symlinkEscape,'EACCES');
+    assert.equal(report.observed.childProcess,'EPERM');
+    assert.equal(report.observed.networkSocket,'EPERM');
+    assert.equal(report.observed.permittedContextRead,true);
+    assert.equal(report.observed.permittedScratchWrite,true);
+    assert.equal(report.observed.permittedOutputWrite,true);
+    assert.equal(report.ownContainerRemovedAndAbsent,true);
+    assert.equal(report.ownStagingRemoved,true);
+    console.log('PAN576_ACTUAL_STALE_BUILD_UAPI_WITH_UNCHANGED_KERNEL8_DENIALS '+JSON.stringify(report));
+  } finally {process.env.PATH=originalPATH;rmSync(own,{recursive:true,force:true});}
+});
