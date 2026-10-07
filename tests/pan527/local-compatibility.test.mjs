@@ -28,6 +28,17 @@ const manifestSuccessor = Object.freeze({
   additiveRow: 'demo/runtime/atomic-resource-budget.mjs\tdemo/runtime/atomic-resource-budget.mjs\t0644\n',
 });
 const digest = (bytes) => createHash('sha256').update(bytes).digest('hex');
+// PAN572 repairs destructive argument dispatch and validates ownership before
+// teardown. Keep the historical pin, all other legacy bytes and actual HTTP
+// assertions unchanged; this exact self-checked safety delta has separate new
+// owned native stop/purge/control evidence, not a replay of the old installer.
+const uninstallSafetySuccessor = Object.freeze({
+  path: 'demo/uninstall.sh',
+  sha256: '4a17a4a0539d8dbc4f550ccf80e1029eaedab0642401cff09e8550bd41d7f0a6',
+});
+function assertReviewedUninstallSafetySuccessor(bytes) {
+  assert.equal(digest(bytes), uninstallSafetySuccessor.sha256, 'Only the exact checked uninstall safety successor is admitted');
+}
 function assertReviewedManifestSuccessor(bytes) {
   assert.equal(digest(bytes), manifestSuccessor.sha256, 'Only the reviewed manifest successor is admitted');
   const text = bytes.toString('utf8');
@@ -39,8 +50,15 @@ test('AC4 legacy loopback selfhosting remains real HTTP without opting into host
   for (const [p, expected] of Object.entries(legacyPins)) {
     const bytes = readFileSync(p);
     if (p === manifestSuccessor.path) assertReviewedManifestSuccessor(bytes);
+    else if (p === uninstallSafetySuccessor.path) assertReviewedUninstallSafetySuccessor(bytes);
     else assert.equal(digest(bytes), expected, p);
   }
+  const uninstallBytes = readFileSync(uninstallSafetySuccessor.path);
+  for (const mutation of [
+    Buffer.concat([uninstallBytes, Buffer.from('\n')]),
+    Buffer.from(uninstallBytes.toString('utf8').replace('down_args+=(--volumes)', 'down_args=(down --remove-orphans --volumes)')),
+    Buffer.from(uninstallBytes.toString('utf8').replace('com.docker.compose.project', 'com.docker.compose.neighbor')),
+  ]) assert.throws(() => assertReviewedUninstallSafetySuccessor(mutation), /Only the exact checked uninstall safety successor is admitted/);
   const manifest = readFileSync(manifestSuccessor.path, 'utf8');
   for (const mutation of [
     manifest.replace(manifestSuccessor.additiveRow, ''),
