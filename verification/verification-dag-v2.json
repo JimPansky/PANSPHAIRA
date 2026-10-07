@@ -4791,7 +4791,7 @@
         {
           "path": "docs/architecture/pan576-isolated-composition-execution-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "15345fdefe62cbbb357bfadf3f96d11ab710e4c8e17c5383b6d3bf031bc4098e"
+          "sha256": "2094d7907b4390b5e44c3314e79e77af3c07fd43767efdd94100edfcec03e4b1"
         },
         {
           "path": "docs/DEMO-CURRENT-HEAD-E2E.md",
@@ -5748,7 +5748,7 @@
         {
           "path": ".github/workflows/ci.yml",
           "role": "ENVIRONMENT",
-          "sha256": "01ab0d84b0503fbf5161ea9c3eab260f08537ab3e6be749eab887769593a347a"
+          "sha256": "36ead7027c887bccc4ff9cf82a0ed327f1c75c94b2289e7e5e81d1833fb442f6"
         }
       ],
       "ownedTests": [

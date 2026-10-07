@@ -19,7 +19,9 @@ concurrency:
 jobs:
   validate:
     name: Build, test and verify
-    runs-on: ubuntu-latest
+    # PAN576 requires real Landlock ABI8/TSYNC; do not downgrade or skip it.
+    # This existing x64 hosted image has Linux7; latest still selects 24.04.
+    runs-on: ubuntu-26.04
     timeout-minutes: 30
 
     steps:
@@ -175,5 +177,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          # The released validator predates this already GA standard x64 label.
+          # Its documented label-data slot is not a self-hosted job selection.
+          # Admit only this exact published label; unknown neighbors still deny.
+          printf '%s\n' 'self-hosted-runner:' '  labels:' '    - ubuntu-26.04' \
+            > "${RUNNER_TEMP}/actionlint-v1.7.12/known-standard-runner.yaml"
           "${RUNNER_TEMP}/actionlint-v1.7.12/actionlint" \
+            -config-file "${RUNNER_TEMP}/actionlint-v1.7.12/known-standard-runner.yaml" \
             -shellcheck= -pyflakes= .github/workflows/*.yml

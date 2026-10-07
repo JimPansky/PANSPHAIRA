@@ -4,7 +4,7 @@ be11d10c855ee8c64ac199042dbe0aa3b86954c992a047e74faad0d56b185cf5  ./.github/ISSU
 b26d1df4ca91d7d4265db817d2fd528f76b595e5c6a7d2fe6b28401fa1a7df6a  ./.github/ISSUE_TEMPLATE/delivery-contract.yml
 bc9b83b752e2d2196cf1a3b0aba43e12ab7f3485cfbdc96d2c072f92b59356a4  ./.github/ISSUE_TEMPLATE/feature-request.yml
 2376a43579a9c039f01df6fd0b5bcc058070b96f4f49e756b80f8005c5ebd9f3  ./.github/PULL_REQUEST_TEMPLATE.md
-01ab0d84b0503fbf5161ea9c3eab260f08537ab3e6be749eab887769593a347a  ./.github/workflows/ci.yml
+36ead7027c887bccc4ff9cf82a0ed327f1c75c94b2289e7e5e81d1833fb442f6  ./.github/workflows/ci.yml
 3cb93d13f4a3ed8f4666fbd68d033aa5446d473ddd35a39b12fad8e57e29b00a  ./.github/workflows/daily-poc-candidate.yml
 58b7743dc986a6f4c9faf661ab9a774446f02bf3d215315578d041af0ca477e4  ./.github/workflows/demo-current-head-e2e.yml
 9d4ce3ce2b2ceeb992b6f31ebfd9e7e0fbcd8ff5b4e9b40c1888c11c71be55cf  ./.github/workflows/docs-pages.yml
@@ -403,7 +403,7 @@ f9ce6ea4837f86417286fa2faba97c7fcbd9f519aaabeb399b1dc3c5882e51a5  ./docs/archite
 01922e4a2d4da33b9f36f2e0f20100690af316f61b4691bcc6c5fa4320c58e8e  ./docs/architecture/pan529-runtime-budget-v1.md
 a33ee0fb62647e545f42f154ae116c7ebca9423dde62bddaf807cdfef468c1ee  ./docs/architecture/pan537-proposal-diff-browser-v1.md
 3f519738478dab98c00fbfbe1cfe3cb6756b4835a7bf4a8856b68248ef13f2e2  ./docs/architecture/pan574-composition-bindings-v1.md
-15345fdefe62cbbb357bfadf3f96d11ab710e4c8e17c5383b6d3bf031bc4098e  ./docs/architecture/pan576-isolated-composition-execution-v1.md
+2094d7907b4390b5e44c3314e79e77af3c07fd43767efdd94100edfcec03e4b1  ./docs/architecture/pan576-isolated-composition-execution-v1.md
 cbf1ed6a03e936dd74b4cd66d9328a2318999212eb63c589934202a652b815c0  ./docs/architecture/rks-01-real-source-utility-result-v1.md
 8c5df07f13c5fb706d45ebac88e616244d2122548099b7c7fd107df8117924a8  ./docs/architecture/rks-01-source-governance-v1.md
 bdf3fbfa63b2f549fa827a5a81eaa3876a7c813b02368c7441c62f37bac2ffd2  ./docs/architecture/rks-02-core-small-vs-raw-result-v1.md
@@ -2264,7 +2264,7 @@ a89c8dbc6a2a9d288c0ed1a81461692c3229f5d2e9748e58c1be33ea24ba8568  ./tests/sales-
 b8c70273fd4992a13e46b671603b19f75e3876e5a1e07f6e7f92045830f872dd  ./tests/skill-admission.test.ts
 b4cb7c2f3b2570316979405def59070160fb3df38ca0a9fce7a5a5dd7ad2ce28  ./tests/skill-bundle.test.ts
 c8af7f838bc55e306651ae8407e0fabce3f1c9c7ea284d9f91695266318a0fcf  ./tests/status-truth-profile.test.ts
-be0f3cb72c4c9d133a41e34ef3456a12b7a4b53d18198da761a3133788f334e7  ./tests/supply-chain-verifier.test.mjs
+0641c16bf1a5ac75a981ac5a5af13f7ae42212015a7c3beba469191b53bc63d6  ./tests/supply-chain-verifier.test.mjs
 b8cf73a89ca40426a56ce9dbb6c938f12a4d6917d7592c9233719163ab9c64de  ./tests/trust-compatibility-foundation-closure.test.ts
 b3f43cff22245094bd576a572a88b0709808dcee53b256066b33002a0e853da6  ./tests/update-apply-journal.test.ts
 b60165c6b39347c3e1a9888ad550214436c522726323001f4b285e1a263f5560  ./tests/update-apply-postcondition.test.ts
@@ -2489,5 +2489,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-bd93c13016bb3264a0a12553184829a047ea823b5babb1d556bd2f9537eb779d  ./verification/verification-dag-v2.json
+433455180bd330fb9b051b95b3c987ec247b4125d3e554296f5cf3f937563506  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
