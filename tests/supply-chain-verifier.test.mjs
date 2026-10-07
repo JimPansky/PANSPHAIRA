@@ -300,3 +300,22 @@ test("canonical lifecycle builds once and compiled variants preserve standalone 
     assert.ok(scripts[name].startsWith("node --test "));
   }
 });
+
+
+test('PAN576 Core selects the fixed existing linux7 x64 hosted runner while preserving the complete original proof and workflow gates', async () => {
+  const workflow=await readFile(path.join(root,'.github/workflows/ci.yml'),'utf8');
+  const core=workflow.match(/^  validate:\n([\s\S]*?)(?=^  workflow-lint:)/m)?.[1];assert.ok(core);
+  assert.match(core,/^    runs-on: ubuntu-26\.04$/m);
+  assert.match(core,/^    timeout-minutes: 30$/m);
+  assert.match(core,/^          node-version: 24\.14\.1$/m);
+  assert.equal((core.match(/^        run: npm run proof:secure-default$/gm)??[]).length,1);
+  assert.equal((core.match(/^        run: npm (?:test|run test)$/gm)??[]).length,0);
+  assert.match(core,/run: docker pull --platform linux\/amd64 node@sha256:3638d9a6fe4030bd716be989438248074489337ba3275657f93595428be4fc03/);
+  assert.match(core,/run: git diff --exit-code/);
+  assert.match(core,/name: Verify release-tree checksums/);assert.match(core,/name: Verify fail-closed release governance/);
+  assert.match(core,/name: Verify supply-chain declarations/);
+  assert.match(workflow,/^  workflow-lint:\n    name: Validate all workflows with pinned actionlint\n    runs-on: ubuntu-latest/m);
+  assert.ok(workflow.includes("printf '%s\\n' 'self-hosted-runner:' '  labels:' '    - ubuntu-26.04'"));
+  assert.match(workflow,/-config-file \"\$\{RUNNER_TEMP\}\/actionlint-v1\.7\.12\/known-standard-runner\.yaml\"/);
+  assert.doesNotMatch(core,/continue-on-error|seccomp=unconfined|skip.*(?:test|proof)|PAN576_SKIP/i);
+});

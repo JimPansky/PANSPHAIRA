@@ -4789,6 +4789,11 @@
           "sha256": "3f519738478dab98c00fbfbe1cfe3cb6756b4835a7bf4a8856b68248ef13f2e2"
         },
         {
+          "path": "docs/architecture/pan576-isolated-composition-execution-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "2094d7907b4390b5e44c3314e79e77af3c07fd43767efdd94100edfcec03e4b1"
+        },
+        {
           "path": "docs/DEMO-CURRENT-HEAD-E2E.md",
           "role": "DERIVED_EVIDENCE",
           "sha256": "e1d1c42aa6639ab2733111cfa3c43f50bb656b49d176e2827bd5239e95ec339e"
@@ -4901,7 +4906,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "9a5c9b42d1cdecbd9d450791c2bcaa23a9ffeeba8ae7044998f67185d34d11be"
+          "sha256": "e85cbb4b7020e7acaf0b6aca300fe87d318ba0b2975f3be3ee4f43788bd9d1d2"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4912,6 +4917,16 @@
           "path": "scripts/paired-analytics-execution.mjs",
           "role": "VALIDATOR",
           "sha256": "0cd16675e6f5af09f5c8165344cd64d2daff57dbd79f15514cf9899137132f90"
+        },
+        {
+          "path": "scripts/pan576-isolated-worker.mjs",
+          "role": "SECURITY",
+          "sha256": "42943baab75c3610c346927dec2814b3fcdec7a0d52dc5f953bde26eda25458b"
+        },
+        {
+          "path": "scripts/pan576-kernel-guard.c",
+          "role": "SECURITY",
+          "sha256": "2d29fa72201c9c00e3c241436cdb789d2084cff00384a4c8336d1664dd7b7a0f"
         },
         {
           "path": "scripts/run-paired-analytics-parity.mjs",
@@ -4944,9 +4959,14 @@
           "sha256": "587ea1b1d295cf83a5ac5797e987eeeea29e26eceac97aaa5542366b51419c92"
         },
         {
+          "path": "src/pan471/composition-execution.mjs",
+          "role": "SECURITY",
+          "sha256": "a5db27da0747fae1badb9a035ca8b4e380f8ebc8f0ab4ed8fc54fd5fe49f863a"
+        },
+        {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "fc416ee226f7018eaaea8d7885e5790580f1437cdc4f629dab3d33ace0a24544"
+          "sha256": "d354582f69ce669b779f41ebe013e17c3a6bfc7540166f61b7a854f79c4232c7"
         },
         {
           "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
@@ -5044,6 +5064,11 @@
           "sha256": "c939c682ba09b0e4f8d2469de9392b5265154139e7155921fc43af5d06ada62c"
         },
         {
+          "path": "tests/pan471/composition-execution.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "2332f00e6d1c326fbcd09ffe874284f679130c579db8bedcd92ebb3820192364"
+        },
+        {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
           "sha256": "65569fe9864452f641b33145d16aa653d277b86f7ae6b9cddede51f0f017a4f9"
@@ -5061,7 +5086,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "30e377d2172953cabea1057eea17952f38520be50d64e9971297082808db0c12"
+          "sha256": "8cb32423ad5cf476d1bb162a7866b9015d92fb433cafcd1befc3787fd66d53b9"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5152,7 +5177,8 @@
         "npm run pan523:test",
         "npm run pan537:test",
         "npm run pan541:test",
-        "npm run pan574:test"
+        "npm run pan574:test",
+        "npm run pan576:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5707,7 +5733,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "04e24675fb9efe26f003d3e6786dfa810f79f601e719b78dc9343514f0d83acd"
+          "sha256": "9c35e22797add493f654cceb94cbf81b8a33cedf367d08f77412f558f6a18810"
         },
         {
           "path": "package-lock.json",
@@ -5722,7 +5748,7 @@
         {
           "path": ".github/workflows/ci.yml",
           "role": "ENVIRONMENT",
-          "sha256": "01ab0d84b0503fbf5161ea9c3eab260f08537ab3e6be749eab887769593a347a"
+          "sha256": "36ead7027c887bccc4ff9cf82a0ed327f1c75c94b2289e7e5e81d1833fb442f6"
         }
       ],
       "ownedTests": [
@@ -6067,7 +6093,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "655a75a6a6718ea5c266abcdb3066d4cb3be633ac90133a88c7308136b1ca551"
+          "sha256": "c36b136131fa844051b57271a19c0d49030203fdf7d02e0587c2369e0614245e"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",

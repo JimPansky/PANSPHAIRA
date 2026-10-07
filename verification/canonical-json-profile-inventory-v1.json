@@ -635,6 +635,14 @@
       "fromSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
       "toSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
       "reason": "Keep graph93 and all98 existing owners, original PAN471 read-only inventory, unchanged mechanical scanner, historical migrations and immutable byte obligations, every existing native kernel and hard gate. Register only the additive two-native-binding closed D1 export, independent public examples, preimplementation original D0/S byte declarations, authority-separated handoff and actual native regression under the existing integration owner. Source-only files do not extend the legacy runnable payload, grant execution/procurement/provider/source rights or assert model composition, novel connection, independent target oracle, persistence, canonical/CI/release or premature closure. D1 improvements and complete executable transitive pins never rewrite original D0 or selected original S."
+    },
+    {
+      "migrationId": "PAN576-SEPARATED-NATIVE-EXECUTION/INTEGRITY-GENERATOR/V69",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 69,
+      "fromSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
+      "toSha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b",
+      "reason": "Keep graph93 and all98 existing owners, every historical migration, immutable byte obligation, unchanged mechanical scanner, original PAN471 inventory and PAN574 D0/S and native tool contracts. Register only five source-only finite untrusted-workload members and the mandatory actual native regression on the existing integration owner. Bind actual artifact/build/runtime identity, kernel TSYNC crossings, native tools/oracle/signing state outside the guest, actual compensation, fresh input, foreign-resource retention and crash/timeout/abort/control-loss recovery without general shell/network, new model/provider/global authority, universal sandbox, model novelty or crash-durable Exactly-once claims. Development native evidence remains distinct from frozen source, canonical/hosted CI, protected merge, anonymous release archive/event and original closure."
     }
   ],
   "scanScope": {
@@ -677,15 +685,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1003,
+    "filesScanned": 1006,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 296,
-    "importFiles": 295,
+    "importSites": 297,
+    "importFiles": 296,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2488,
-    "ledgerUniquePaths": 2488
+    "ledgerEntries": 2493,
+    "ledgerUniquePaths": 2493
   },
   "profiles": [
     {
@@ -758,7 +766,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9"
+      "sha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1125,8 +1133,8 @@
     },
     {
       "owner": "pan471",
-      "importSites": 1,
-      "importFiles": 1
+      "importSites": 2,
+      "importFiles": 2
     },
     {
       "owner": "pan472",
@@ -1504,7 +1512,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
+      "sha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b",
       "basis": "profile-version-migration"
     },
     {
