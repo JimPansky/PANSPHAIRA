@@ -40,6 +40,12 @@ function assertReviewedUninstallSafetySuccessor(bytes) {
   assert.equal(digest(bytes), uninstallSafetySuccessor.sha256, 'Only the exact checked uninstall safety successor is admitted');
 }
 function assertReviewedManifestSuccessor(bytes) {
+  // PAN582 adds only the source-bound README raster, not runtime behavior.
+  // Removing that exact row must restore the independently pinned predecessor.
+  assert.equal(digest(bytes), 'c664a7f6024dea5350faad5a75558bce3b259536967126177838fb46de4dcf91', 'Only the reviewed manifest successor is admitted');
+  const imageRow = 'docs/diagrams/concept-loop.png\tdocs/diagrams/concept-loop.png\t0644\n';
+  assert.equal(bytes.toString('utf8').split(imageRow).length, 2);
+  bytes = Buffer.from(bytes.toString('utf8').replace(imageRow, ''));
   assert.equal(digest(bytes), manifestSuccessor.sha256, 'Only the reviewed manifest successor is admitted');
   const text = bytes.toString('utf8');
   assert.equal(text.split(manifestSuccessor.additiveRow).length, 2, 'Exactly one explicit runtime library row');
