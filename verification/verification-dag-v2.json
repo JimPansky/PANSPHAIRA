@@ -4886,7 +4886,7 @@
         {
           "path": "README.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f"
+          "sha256": "1fcfc47ccd089ddf3ef8e1d3083637fa92f2aa8ad756cf42e8f318c9bcfb8a00"
         },
         {
           "path": "release/governance.json",
@@ -4901,7 +4901,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "013651d6ac7127971a27f2b6c563928e038ea5628550a130b1c89fe6ee618437"
+          "sha256": "9a5c9b42d1cdecbd9d450791c2bcaa23a9ffeeba8ae7044998f67185d34d11be"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4926,7 +4926,7 @@
         {
           "path": "scripts/verify-release-governance.mjs",
           "role": "SECURITY",
-          "sha256": "d470cb419b880fa5719de4ef644c805c970142111d3e6023f3729a5819c5da6f"
+          "sha256": "1b479c55c78100314dbe8488b950ae4b153e7cf4ea5d6cca5996546a3920e7e1"
         },
         {
           "path": "scripts/verify-supply-chain.mjs",
@@ -4946,7 +4946,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1c0aec48fb8335f0749f2ee4b435b0ee3985cf138b63d27683f218a66b3d97fd"
+          "sha256": "fc416ee226f7018eaaea8d7885e5790580f1437cdc4f629dab3d33ace0a24544"
         },
         {
           "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
@@ -4961,7 +4961,7 @@
         {
           "path": "tests/docs-site.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "66038463f5ea7be551128b30ff5756c079a2116f4ce3ea6b55ad196ab7f56878"
+          "sha256": "0adb7c13c96c20dc4c30589c10bd4952c8b6a7ebc038599a4e3de8e239e4345d"
         },
         {
           "path": "tests/fixtures/canonical-json-profile-base-obligations-v1.json",
@@ -5046,12 +5046,12 @@
         {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4432981e35c7a491f7e5bb93323a0dce0120ede1f7a14a29c77fca3b96e8f171"
+          "sha256": "65569fe9864452f641b33145d16aa653d277b86f7ae6b9cddede51f0f017a4f9"
         },
         {
           "path": "tests/release-governance.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "db115706d2fb06dda7f382863e0af039f2499f21fd7692eaa901fac7f21a7c73"
+          "sha256": "2c09dbd462f49c60887be25d06838306dc7a7024051f9379310fbd6e5dcfc299"
         },
         {
           "path": "tests/trust-compatibility-foundation-closure.test.ts",
@@ -5061,7 +5061,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "c861cbfc712af21ef132629290e335452b6dd02ccf28af9e8669260bd3de1df1"
+          "sha256": "30e377d2172953cabea1057eea17952f38520be50d64e9971297082808db0c12"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -6067,7 +6067,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "b18d1593fe929b11f3d4acd1508e71b7ea8a003b80c670572cb7900ed8e0451d"
+          "sha256": "655a75a6a6718ea5c266abcdb3066d4cb3be633ac90133a88c7308136b1ca551"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -6332,7 +6332,7 @@
         {
           "path": "release/public-files.manifest",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "6a05a364fc9e67d015e53e9ee1d5630bb8fc965c9981fbcff9307472a542b986"
+          "sha256": "c664a7f6024dea5350faad5a75558bce3b259536967126177838fb46de4dcf91"
         }
       ],
       "ownedTests": [
@@ -9043,7 +9043,7 @@
         {
           "path": "tests/pan527/local-compatibility.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "379e30c3e3bb9ef13dd87ac8424a2f12ba3ede36690cc0c1c7e170748d306285"
+          "sha256": "fabe64b9d9b1e21595388a7c546480a5cd3eaa08d82e181625a1ca26fdbdac59"
         },
         {
           "path": "tests/pan527/native-https-ingress.test.mjs",

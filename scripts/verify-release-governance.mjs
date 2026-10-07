@@ -633,7 +633,7 @@ export function validateRepository(root = process.cwd()) {
   // Exact DOC-README-03 R1 presentation profile. This byte-bound exception
   // replaces only legacy entry-page wording; it grants no release/runtime
   // authority and does not bypass privacy, evidence, asset or readback gates.
-  const approvedReadmeR1 = sha256(readme) === "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f";
+  const approvedReadmeR1 = sha256(readme) === "1fcfc47ccd089ddf3ef8e1d3083637fa92f2aa8ad756cf42e8f318c9bcfb8a00";
   let quickstart = "";
   try { quickstart = read(root, "docs/QUICKSTART.md"); } catch { issues.push("PUBLIC_QUICKSTART_MISSING:docs/QUICKSTART.md"); }
   const releaseSection = section(readme, "Releases") || section(readme, "Releases and evidence");
