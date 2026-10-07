@@ -12,6 +12,20 @@ import {createPan471CompositionSession, discoverPan471CompositionBindings} from 
 
 const ROOT = new URL('../../', import.meta.url).pathname;
 const IMAGE = 'node@' + IMAGE_ID;
+// Exact Linux/amd64 child/config digests of that unchanged primary OCI index.
+// Docker image-store representations are distinct; no alternate image is admitted.
+const IMAGE_PLATFORM_ID='sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848';
+const IMAGE_CONFIG_ID='sha256:9da0264deb61958d09c073001c1bd3a110ae3874be3375e92e0c0f16683986dd';
+export function describePan471PinnedRuntimeImage(untrustedImage) {
+  let image;
+  try {image=dataCopy(untrustedImage);} catch {throw new Error('PAN576_RUNTIME_IDENTITY_DENIED');}
+  if(!image||!Object.hasOwn(image,'Id')||![IMAGE_ID,IMAGE_PLATFORM_ID,IMAGE_CONFIG_ID].includes(image.Id)
+    ||image.Os!=='linux'||image.Architecture!=='amd64'||!Array.isArray(image.RepoDigests)
+    ||!image.RepoDigests.includes(IMAGE)||Object.hasOwn(image,'activationAuthority'))
+    throw new Error('PAN576_RUNTIME_IDENTITY_DENIED');
+  return Object.freeze({imageId:image.Id,indexDigest:IMAGE_ID,platformDigest:IMAGE_PLATFORM_ID,
+    configDigest:IMAGE_CONFIG_ID,activationAuthority:false});
+}
 const UID=process.getuid(),GID=process.getgid(),USER=UID+':'+GID;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 function nodeIncludeDirectory() {
@@ -31,7 +45,7 @@ function runtimeEnvelope(container,image,invocation,ownedPaths,program) {
   const expectedTmpfs=`rw,noexec,nosuid,nodev,size=1048576,uid=${UID},gid=${GID},mode=0700`;
   const mountsClosed=mounts.length===expectedMounts.size&&new Set(mounts.map(row=>row.Destination)).size===expectedMounts.size
     &&mounts.every(row=>row.Type==='bind'&&!row.RW&&row.Source===expectedMounts.get(row.Destination)&&row.Propagation==='rprivate');
-  if(UID===0||container.Config.Labels['io.pansphaira.pan576.invocation']!==invocation||container.Image!==IMAGE_ID
+  if(UID===0||container.Config.Labels['io.pansphaira.pan576.invocation']!==invocation||container.Image!==image.Id
     ||container.Config.User!==USER||host.NetworkMode!=='none'||host.PidMode!==''||host.IpcMode!=='private'
     ||host.Privileged||!host.ReadonlyRootfs||host.PidsLimit!==32||host.Memory!==268435456
     ||host.MemorySwap!==268435456||host.NanoCpus!==1000000000
@@ -97,7 +111,7 @@ export async function probePan471CompositionIsolation() {
     if(build.error || build.status!==0) throw new Error('PAN576_KERNEL_PROFILE_BUILD_DENIED: '+build.stderr);
     compiledSha=sha(readFileSync(join(stage,'guard.node')));
     const image=JSON.parse(control(['image','inspect',IMAGE,'--format','{{json .}}']));
-    if(image.Id!==IMAGE_ID || image.Os!=='linux' || image.Architecture!=='amd64') throw new Error('PAN576_RUNTIME_IDENTITY_DENIED');
+    describePan471PinnedRuntimeImage(image);
     id=control(['create','--name',invocation,'--pull','never','--network','none','--read-only',
       '--cap-drop','ALL','--security-opt','no-new-privileges','--user',USER,'--ipc','private','--memory','268435456',
       '--memory-swap','268435456','--cpus','1','--pids-limit','32','--label','io.pansphaira.pan576.invocation='+invocation,
@@ -107,7 +121,7 @@ export async function probePan471CompositionIsolation() {
       '--mount','type=bind,src='+artifact+',dst=/artifact,readonly',
       '--mount','type=bind,src='+guarded+',dst=/guarded,readonly',IMAGE,'node','/stage/probe.mjs']);
     const container=JSON.parse(control(['container','inspect',id,'--format','{{json .}}']));
-    if(container.Config.Labels['io.pansphaira.pan576.invocation']!==invocation || container.Image!==IMAGE_ID) throw new Error('PAN576_OWN_RESOURCE_IDENTITY_DENIED');
+    if(container.Config.Labels['io.pansphaira.pan576.invocation']!==invocation || container.Image!==image.Id) throw new Error('PAN576_OWN_RESOURCE_IDENTITY_DENIED');
     actualContainer=runtimeEnvelope(container,image,invocation,{stage,artifact,guarded},'/stage/probe.mjs');
     execution=await runBoundedProcessV1('docker',['start','-a',id],{timeoutMs:15000,maxOutputBytes:65536});
     if(execution.timedOut || execution.exitCode!==0) throw new Error('PAN576_KERNEL_CROSSINGS_DENIED: '+execution.stderr);
@@ -176,6 +190,7 @@ function compiledBuildFiles(directory,files=[]) {
   return files.sort();
 }
 function freezeBuild(stage) {
+  const runtime=describePan471PinnedRuntimeImage(JSON.parse(control(['image','inspect',IMAGE,'--format','{{json .}}'])));
   const guard=join(stage,'guard.node');
   const flags=['-shared','-fPIC','-O2','-Wall','-Wextra','-Werror','-I'+nodeIncludeDirectory()];
   const build=spawnSync('gcc',[...flags,join(ROOT,'scripts/pan576-kernel-guard.c'),'-o',guard],{encoding:'utf8',timeout:30000});
@@ -195,7 +210,9 @@ function freezeBuild(stage) {
   return {guardBytes:readFileSync(guard),binding:{schemaVersion:'pansphaira.pan471/composition-build/v1',
     moduleContracts:bindings,files,compiler:compiler.stdout.split('\n')[0],compilerFlags:flags,
     compiledKernelGuardSha256:sha(readFileSync(guard)),hostNode:process.version,
-    runtimeImageId:IMAGE_ID,guestNode:'v24.19.0',guestUser:USER,platform:'linux/amd64',requiredLandlockABI:8,
+    runtimeImageId:runtime.imageId,runtimeIndexDigest:runtime.indexDigest,
+    runtimePlatformDigest:runtime.platformDigest,runtimeConfigDigest:runtime.configDigest,
+    guestNode:'v24.19.0',guestUser:USER,platform:'linux/amd64',requiredLandlockABI:8,
     callerHashIsAuthority:false,activationAuthority:false}};
 }
 
@@ -313,7 +330,8 @@ export function createPan471CompositionExecutor() {
       writeFileSync(join(artifact,'input.json'),canonicalJson(input),{mode:0o600});
       writeFileSync(join(guarded,'protected.txt'),'NON_AUTHORITY_SYNTHETIC_KEY_OR_ORACLE_CANARY',{mode:0o600});
       const image=JSON.parse(control(['image','inspect',IMAGE,'--format','{{json .}}']));
-      if(image.Id!==IMAGE_ID||image.Os!=='linux'||image.Architecture!=='amd64')throw new Error('PAN576_RUNTIME_IDENTITY_DENIED');
+      const runtime=describePan471PinnedRuntimeImage(image);
+      if(runtime.imageId!==held.build.binding.runtimeImageId)throw new Error('PAN576_RUNTIME_IDENTITY_DENIED');
       id=control(['create','-i','--name',invocation,'--pull','never','--network','none','--read-only','--cap-drop','ALL',
         '--security-opt','no-new-privileges','--user',USER,'--ipc','private','--memory','268435456','--memory-swap','268435456',
         '--cpus','1','--pids-limit','32','--label','io.pansphaira.pan576.invocation='+invocation,
@@ -322,7 +340,7 @@ export function createPan471CompositionExecutor() {
         '--mount','type=bind,src='+stage+',dst=/stage,readonly','--mount','type=bind,src='+artifact+',dst=/artifact,readonly',
         '--mount','type=bind,src='+guarded+',dst=/guarded,readonly',IMAGE,'node','/stage/worker.mjs']);
       const observed=JSON.parse(control(['container','inspect',id,'--format','{{json .}}']));
-      if(observed.Config.Labels['io.pansphaira.pan576.invocation']!==invocation||observed.Image!==IMAGE_ID)
+      if(observed.Config.Labels['io.pansphaira.pan576.invocation']!==invocation||observed.Image!==held.build.binding.runtimeImageId)
         throw new Error('PAN576_OWN_RESOURCE_IDENTITY_DENIED');
       actualContainer=runtimeEnvelope(observed,image,invocation,{stage,artifact,guarded},'/stage/worker.mjs');
       execution=await streamNativeWorkload(id,input,invoke,stop=>{activeWorkload.abort=stop;});

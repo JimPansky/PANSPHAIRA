@@ -403,7 +403,7 @@ f9ce6ea4837f86417286fa2faba97c7fcbd9f519aaabeb399b1dc3c5882e51a5  ./docs/archite
 01922e4a2d4da33b9f36f2e0f20100690af316f61b4691bcc6c5fa4320c58e8e  ./docs/architecture/pan529-runtime-budget-v1.md
 a33ee0fb62647e545f42f154ae116c7ebca9423dde62bddaf807cdfef468c1ee  ./docs/architecture/pan537-proposal-diff-browser-v1.md
 3f519738478dab98c00fbfbe1cfe3cb6756b4835a7bf4a8856b68248ef13f2e2  ./docs/architecture/pan574-composition-bindings-v1.md
-5fcef183901a27a28823e5de6f446e11417c330eb7c55413abcc70b6a72108c5  ./docs/architecture/pan576-isolated-composition-execution-v1.md
+15345fdefe62cbbb357bfadf3f96d11ab710e4c8e17c5383b6d3bf031bc4098e  ./docs/architecture/pan576-isolated-composition-execution-v1.md
 cbf1ed6a03e936dd74b4cd66d9328a2318999212eb63c589934202a652b815c0  ./docs/architecture/rks-01-real-source-utility-result-v1.md
 8c5df07f13c5fb706d45ebac88e616244d2122548099b7c7fd107df8117924a8  ./docs/architecture/rks-01-source-governance-v1.md
 bdf3fbfa63b2f549fa827a5a81eaa3876a7c813b02368c7441c62f37bac2ffd2  ./docs/architecture/rks-02-core-small-vs-raw-result-v1.md
@@ -1298,7 +1298,7 @@ a95aff6354bd879b484feea6759c6608bab2daaeaf0350fbe8c16919075e34ee  ./src/pan470/h
 f8ac41de748d5f1c72277abe23c01091d8b1a9fce6ef4207702a93b00582749a  ./src/pan470/producer-handoff-v2.mjs
 7eeab48ef9a74f498e6e4fdc83095745a467f595120688691400f602f2cc975f  ./src/pan471/capability-inventory.mjs
 587ea1b1d295cf83a5ac5797e987eeeea29e26eceac97aaa5542366b51419c92  ./src/pan471/composition-bindings.mjs
-a9b529662a7cf39687155517530bfdb7051c358815166e1db04d6adf629f45da  ./src/pan471/composition-execution.mjs
+a5db27da0747fae1badb9a035ca8b4e380f8ebc8f0ab4ed8fc54fd5fe49f863a  ./src/pan471/composition-execution.mjs
 82a4a5473f69f489462f0b9a77233af36e31e2c4ae219578c6e5bb55e25aa2ce  ./src/pan472/draft-profile.mjs
 e980ced4e12556797e5b980e5c2f6e84bd9bc031e0e52b1d1df30347424ae8e5  ./src/pan472/independent-draft-reconciliation.mjs
 6b9970f49c7b3173a6f183d806e1231fa079c405ed4285ba0c47ae1043b67232  ./src/pan472/persistent-draft-transfer.mjs
@@ -2119,7 +2119,7 @@ e9c6c76171c117e96d0bc6260126e9d0d02975073513cebe80ec671c6e148b98  ./tests/pan467
 b1bb3c66d8d2e9a29e4191f629ab1e9a7b72450db0f9847a01f0ee0d870dcdb3  ./tests/pan470/producer-handoff-v2.test.mjs
 c0c01042f5027e6b7c301646c87b7e2b69194b60225395f03b66005116b2bce8  ./tests/pan471/capability-inventory.test.mjs
 c939c682ba09b0e4f8d2469de9392b5265154139e7155921fc43af5d06ada62c  ./tests/pan471/composition-bindings.test.mjs
-2005d3dfda3c816390568a249fe4fbc6b98eb22728e91722c5734b8765a481c9  ./tests/pan471/composition-execution.test.mjs
+2332f00e6d1c326fbcd09ffe874284f679130c579db8bedcd92ebb3820192364  ./tests/pan471/composition-execution.test.mjs
 e86511008d57e5b89ecf2b43dc1db979e44ceb7faf775951a2d6dc92f550f0fc  ./tests/pan472/persistent-draft-transfer.test.mjs
 d0e22789d44fcebe14874a5053fbcfa8f60ec2872942885f6f24efdac654240b  ./tests/pan473/native-process-cutover.test.mjs
 d8fd10b3101636052502731b080ac86199055959f8c9cf52db6498593bcccfe6  ./tests/pan473/writer-scope-cutover.test.mjs
@@ -2489,5 +2489,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-7ccdb9f2b68ba563eeda5668641d61c2092353dd0861a2b88a77e92a887c4e18  ./verification/verification-dag-v2.json
+bd93c13016bb3264a0a12553184829a047ea823b5babb1d556bd2f9537eb779d  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

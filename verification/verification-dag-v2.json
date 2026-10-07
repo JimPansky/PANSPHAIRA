@@ -4791,7 +4791,7 @@
         {
           "path": "docs/architecture/pan576-isolated-composition-execution-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "5fcef183901a27a28823e5de6f446e11417c330eb7c55413abcc70b6a72108c5"
+          "sha256": "15345fdefe62cbbb357bfadf3f96d11ab710e4c8e17c5383b6d3bf031bc4098e"
         },
         {
           "path": "docs/DEMO-CURRENT-HEAD-E2E.md",
@@ -4961,7 +4961,7 @@
         {
           "path": "src/pan471/composition-execution.mjs",
           "role": "SECURITY",
-          "sha256": "a9b529662a7cf39687155517530bfdb7051c358815166e1db04d6adf629f45da"
+          "sha256": "a5db27da0747fae1badb9a035ca8b4e380f8ebc8f0ab4ed8fc54fd5fe49f863a"
         },
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
@@ -5066,7 +5066,7 @@
         {
           "path": "tests/pan471/composition-execution.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "2005d3dfda3c816390568a249fe4fbc6b98eb22728e91722c5734b8765a481c9"
+          "sha256": "2332f00e6d1c326fbcd09ffe874284f679130c579db8bedcd92ebb3820192364"
         },
         {
           "path": "tests/public-product-spelling.test.mjs",

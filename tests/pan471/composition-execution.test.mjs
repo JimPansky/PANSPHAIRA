@@ -527,3 +527,33 @@ os.execv(${JSON.stringify(compiler)},[${JSON.stringify(compiler)},'-I',${JSON.st
     console.log('PAN576_ACTUAL_STALE_BUILD_UAPI_WITH_UNCHANGED_KERNEL8_DENIALS '+JSON.stringify(report));
   } finally {process.env.PATH=originalPATH;rmSync(own,{recursive:true,force:true});}
 });
+
+
+test('the fixed runtime identity reader separates the exact OCI index platform and config pins and denies neighboring images without granting authority', async () => {
+  const {spawnSync}=await import('node:child_process');const api=await import(entry.href);
+  const index='sha256:3638d9a6fe4030bd716be989438248074489337ba3275657f93595428be4fc03',platform='sha256:65932751ed4073ed02f5c04e494e4b2572a891b7dbea0568a863dc80341bf848',config='sha256:9da0264deb61958d09c073001c1bd3a110ae3874be3375e92e0c0f16683986dd';
+  const reference='node@'+index;
+  const inspect=spawnSync('docker',['image','inspect',reference,'--format','{{json .}}'],{encoding:'utf8',timeout:10000});
+  assert.equal(inspect.status,0);const actual=JSON.parse(inspect.stdout);
+  const observed=api.describePan471PinnedRuntimeImage(actual);
+  assert.equal(observed.imageId,actual.Id);assert.equal(observed.indexDigest,index);
+  assert.equal(observed.platformDigest,platform);assert.equal(observed.configDigest,config);
+  // Pure identity-reader grammar over actual inspection bytes, not a second
+  // Docker provider response, hosted engine replay, kernel proof or authority.
+  for(const id of [index,platform,config]) {
+    const representation=structuredClone(actual);representation.Id=id;
+    assert.equal(api.describePan471PinnedRuntimeImage(representation).imageId,id);
+  }
+  for(const mutate of [value=>value.Id='sha256:'+'a'.repeat(64),value=>value.RepoDigests=['node@sha256:'+'b'.repeat(64)],
+    value=>value.Architecture='arm64',value=>value.Os='windows',value=>delete value.Id,
+    value=>value.RepoDigests=null,value=>value.activationAuthority=true]) {
+    const neighboring=structuredClone(actual);mutate(neighboring);
+    assert.throws(()=>api.describePan471PinnedRuntimeImage(neighboring),/PAN576_RUNTIME_IDENTITY_DENIED/);
+  }
+  const getter=structuredClone(actual);let accessed=false;
+  Object.defineProperty(getter,'Id',{enumerable:true,get(){accessed=true;return index;}});
+  assert.throws(()=>api.describePan471PinnedRuntimeImage(getter),/PAN576_RUNTIME_IDENTITY_DENIED/);assert.equal(accessed,false);
+  assert.throws(()=>api.describePan471PinnedRuntimeImage(Object.create(actual)),/PAN576_RUNTIME_IDENTITY_DENIED/);
+  assert.equal(observed.activationAuthority,false);
+  console.log('PAN576_PINNED_OCI_IDENTITY_READER_GRAMMAR_NOT_NEW_NATIVE_CASE '+JSON.stringify(observed));
+});
