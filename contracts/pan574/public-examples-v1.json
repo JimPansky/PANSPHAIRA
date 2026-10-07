@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "pansphaira.pan574/public-examples/v1",
+  "contractRevision": "D1_NOT_RETROACTIVE_D0",
+  "sourceClass": "SOURCE_EVIDENCE_ONLY",
+  "examples": [
+    {
+      "capabilityId": "pan522.material.plan",
+      "operation": "PLAN",
+      "unit": "STK",
+      "input": {
+        "schema": "pansphaira.pan522/material-plan-input/v1",
+        "asOf": "2026-10-07",
+        "horizonEnd": "2026-10-31",
+        "calendars": [{"id": "CAL574", "timezone": "UTC", "weekdays": [1,2,3,4,5], "holidays": [], "validFrom": "2026-01-01", "validUntil": "2027-01-01"}],
+        "items": [{"id": "ITEM574", "stockArticleId": "SYN-ART-574", "warehouseId": "LAGER-574", "unit": "STK", "supply": "BUY", "safetyStock": 0, "lotMinimum": 0, "lotMultiple": 1, "leadWorkdays": 2, "calendarId": "CAL574"}],
+        "boms": [],
+        "demands": [{"id": "DEMAND574", "itemId": "ITEM574", "unit": "STK", "quantity": 17, "dueDate": "2026-10-14"}],
+        "stock": [{"itemId": "ITEM574", "unit": "STK", "physical": 4, "reserved": 0, "blocked": 0, "sourceRevision": "snapshot-574", "observedOn": "2026-10-07"}],
+        "receipts": []
+      }
+    },
+    {
+      "capabilityId": "erp.order.create",
+      "operation": "CREATE_READBACK_COMPENSATING_DELETE",
+      "unit": "EACH",
+      "input": {"requestId": "request:erp-cell-pan574-public", "sku": "SYN-PAN574", "quantity": 13}
+    }
+  ],
+  "nonclaims": ["These are two independent example inputs, not a generated connection or reference solution.", "No implicit unit or identity mapping, model run, productive order or durable cell storage."]
+}

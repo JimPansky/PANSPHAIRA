@@ -1,0 +1,6 @@
+## Authority, capacity and rollback
+
+`MATERIAL_PROPOSALS_ONLY` is data, not a grant. executionAuthorized and
+capacityQualified are always false. A material release/need date is not a
+finite-capacity result, feasible production schedule or delivery promise;
+no automatic capacity, order, stock or purchase transition exists here.

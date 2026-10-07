@@ -4714,6 +4714,41 @@
           "sha256": "99adfbe7705c95e9789c6be7579f69fb77d31089319906365da52b4ec8cdfd4d"
         },
         {
+          "path": "contracts/pan574/original-context-v1/D0/erp-profile-original.schema.json",
+          "role": "CONTRACT",
+          "sha256": "60efae2adbfa365e0a07fffa6d199ace406e073684ec5d01dc1b57464ae97e5a"
+        },
+        {
+          "path": "contracts/pan574/original-context-v1/D0/inventory-boundary-original.txt",
+          "role": "CONTRACT",
+          "sha256": "c014e85b44519385dc2879d466b9b8a9e0bad9494fa5657f12cb77207ecff873"
+        },
+        {
+          "path": "contracts/pan574/original-context-v1/D0/manifest.json",
+          "role": "CONTRACT",
+          "sha256": "0816e0f2601149d88bb386522680653ad4f74ec65a9c17456b36add6723d48e3"
+        },
+        {
+          "path": "contracts/pan574/original-context-v1/D0/material-authority-original.txt",
+          "role": "CONTRACT",
+          "sha256": "1a306e90c76f28e085e6848f144a831cb474bb69f59d64ab62c7406eb316a5fc"
+        },
+        {
+          "path": "contracts/pan574/original-context-v1/D0/material-input-original.txt",
+          "role": "CONTRACT",
+          "sha256": "d62b36c42cb7be3c5ba7dc9b3be15a65c8aebd80322e933cfec53dee730f1b49"
+        },
+        {
+          "path": "contracts/pan574/original-context-v1/S/manifest.json",
+          "role": "CONTRACT",
+          "sha256": "b9ea14b9526e7737a705e5cdb1259912e298398756edb1ac6e19c974a1fbd219"
+        },
+        {
+          "path": "contracts/pan574/public-examples-v1.json",
+          "role": "FIXTURE",
+          "sha256": "b25886320996663b75c6bc2cb1f7c946a715b266abaa2bb42f0242f104631dfa"
+        },
+        {
           "path": "CONTRIBUTING.md",
           "role": "DERIVED_EVIDENCE",
           "sha256": "4e9748812c042ce23446ce220f97c6771d165bf032d4231ed5f2f0a967c58b2b"
@@ -4747,6 +4782,11 @@
           "path": "docs/architecture/canonical-json-profile-inventory.md",
           "role": "DERIVED_EVIDENCE",
           "sha256": "eef06f792af45aad9df8486cc888c851b5b9f1a9fde26f75a42e7df95e9c64b6"
+        },
+        {
+          "path": "docs/architecture/pan574-composition-bindings-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "3f519738478dab98c00fbfbe1cfe3cb6756b4835a7bf4a8856b68248ef13f2e2"
         },
         {
           "path": "docs/DEMO-CURRENT-HEAD-E2E.md",
@@ -4861,7 +4901,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "ddde1cc0c775cc1f314a5400e0c1d04d1fadb639f4646acbc4e5453c2c7bb8e3"
+          "sha256": "013651d6ac7127971a27f2b6c563928e038ea5628550a130b1c89fe6ee618437"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4879,6 +4919,11 @@
           "sha256": "9e1754efb13d8ede94be53296c674c9b8e06d72f91a17becbd15fe040f644ce7"
         },
         {
+          "path": "scripts/run-pan574-composition-contracts.mjs",
+          "role": "SOURCE",
+          "sha256": "46caacc6d04f84e32cbabbc08348a3226fa8a67ef22066711a2cee7a528087f2"
+        },
+        {
           "path": "scripts/verify-release-governance.mjs",
           "role": "SECURITY",
           "sha256": "d470cb419b880fa5719de4ef644c805c970142111d3e6023f3729a5819c5da6f"
@@ -4894,9 +4939,14 @@
           "sha256": "352a243176465a3e1b970208fdf98fb9c1f1dd27afd60f5edd590c2fccb93de7"
         },
         {
+          "path": "src/pan471/composition-bindings.mjs",
+          "role": "SECURITY",
+          "sha256": "587ea1b1d295cf83a5ac5797e987eeeea29e26eceac97aaa5542366b51419c92"
+        },
+        {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "a7a47be3b82a0754e60396b4ecbe41cea00ecf9e793a403d3671241311be71db"
+          "sha256": "1c0aec48fb8335f0749f2ee4b435b0ee3985cf138b63d27683f218a66b3d97fd"
         },
         {
           "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
@@ -4989,6 +5039,11 @@
           "sha256": "3ad09ab6653bc3c2f261b46421a64d42018f19c6873641c790fde33d4adcc538"
         },
         {
+          "path": "tests/pan471/composition-bindings.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "c939c682ba09b0e4f8d2469de9392b5265154139e7155921fc43af5d06ada62c"
+        },
+        {
           "path": "tests/public-product-spelling.test.mjs",
           "role": "VALIDATOR",
           "sha256": "4432981e35c7a491f7e5bb93323a0dce0120ede1f7a14a29c77fca3b96e8f171"
@@ -5006,7 +5061,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "ff9e27ee467f7af52e688ce3b5acbb6efcd027bd0b298d34b635ff58569b9b7b"
+          "sha256": "c861cbfc712af21ef132629290e335452b6dd02ccf28af9e8669260bd3de1df1"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5096,7 +5151,8 @@
         "npm run pan528:test",
         "npm run pan523:test",
         "npm run pan537:test",
-        "npm run pan541:test"
+        "npm run pan541:test",
+        "npm run pan574:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5651,7 +5707,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "e3ed92febc6c7f514eb2a4a938cbbe2ac48413c7386caed8e86ede3f3ba2bbbc"
+          "sha256": "04e24675fb9efe26f003d3e6786dfa810f79f601e719b78dc9343514f0d83acd"
         },
         {
           "path": "package-lock.json",
@@ -6011,7 +6067,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "c4a029574bef77e9b7c0b56d11787a1bb1e9e089469e0c38707a5b2460dc9593"
+          "sha256": "b18d1593fe929b11f3d4acd1508e71b7ea8a003b80c670572cb7900ed8e0451d"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",

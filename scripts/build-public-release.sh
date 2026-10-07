@@ -196,6 +196,18 @@ if total_bytes > 100 * 1024 * 1024:
 
 expected = set(destinations)
 repository_only_files = {
+    # PAN574 original contexts, independent examples and native export are source-only.
+    "src/pan471/composition-bindings.mjs",
+    "scripts/run-pan574-composition-contracts.mjs",
+    "tests/pan471/composition-bindings.test.mjs",
+    "docs/architecture/pan574-composition-bindings-v1.md",
+    "contracts/pan574/public-examples-v1.json",
+    "contracts/pan574/original-context-v1/D0/manifest.json",
+    "contracts/pan574/original-context-v1/D0/material-input-original.txt",
+    "contracts/pan574/original-context-v1/D0/material-authority-original.txt",
+    "contracts/pan574/original-context-v1/D0/erp-profile-original.schema.json",
+    "contracts/pan574/original-context-v1/D0/inventory-boundary-original.txt",
+    "contracts/pan574/original-context-v1/S/manifest.json",
     # PAN572 uninstall regression is repository source, not a runnable payload entry.
     "tests/demo-current-head-e2e-uninstall.test.mjs",
     "HANDOFF.md",
