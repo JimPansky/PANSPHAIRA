@@ -541,7 +541,7 @@ test("public release builder binds its exact file count to the manifest", () => 
   ];
   assert.equal(mig02Paths.length, 7);
   for (const path of mig02Paths) assert.equal(manifest.split("\n").filter(line => line === `${path}\t${path}\t0644`).length, 1, path);
-  assert.equal(count, 1791);
+  assert.equal(count, 1792);
   assert.doesNotMatch(builder, /if count\s*(?:>|>=|<|<=)\s*\d+/);
 });
 
@@ -589,7 +589,7 @@ test("XRA-PS-02 independent adjudicator/proof closure is publicly registered and
   const binding = builder.match(/^if count != (\d+):$/m);
   assert.ok(binding, "PUBLIC_MANIFEST_EXACT_COUNT_BINDING_MISSING");
   assert.equal(Number(binding[1]), publicCount, "builder count binding derives the actual manifest count");
-  assert.equal(publicCount, 1791, "Retain released scopes and explicitly package the PAN529 native store library; no controller activation or rights change");
+  assert.equal(publicCount, 1792, "Retain released scopes and explicitly package the PAN529 native store library; no controller activation or rights change");
   // Every closure byte is registered in the root SHA256SUMS with its exact
   // current digest, including the native adjudicator test.
   const sums = readFileSync(join(ROOT, "SHA256SUMS"), "utf8").split("\n");
@@ -643,7 +643,7 @@ test("README presents governed adaptability and evidence-driven improvement with
 
 
   // R1 is a byte-fixed, benefit-led entry route, not another generic rewrite.
-  assert.equal(createHash("sha256").update(readme).digest("hex"), "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f");
+  assert.equal(createHash("sha256").update(readme).digest("hex"), "1fcfc47ccd089ddf3ef8e1d3083637fa92f2aa8ad756cf42e8f318c9bcfb8a00");
   assert.match(readme, /^# PanSphaira$/m);
   assert.match(readme, /Enterprise software that adapts to the way your business works/);
   assert.match(readme, /srcset="assets\/brand\/pansphaira-icon-negative\.svg"/);

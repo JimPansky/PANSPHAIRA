@@ -220,7 +220,7 @@ test("public release surfaces preserve source/latest/runnable identity boundarie
     assert.match(surface, /v0\.2\.0-poc\.20260825\.1/);
   }
   assert.doesNotMatch(readme, /2026_09_02_v7|v0\.2\.0-poc\.20260825\.1/);
-  assert.equal(createHash("sha256").update(readme).digest("hex"), "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f");
+  assert.equal(createHash("sha256").update(readme).digest("hex"), "1fcfc47ccd089ddf3ef8e1d3083637fa92f2aa8ad756cf42e8f318c9bcfb8a00");
   assert.match(readme, /Source, runnable packaging and execution evidence are different identities/);
   assert.match(readme, /Latest label is not itself a promise of an installable archive/);
   assert.match(hub, /source, runnable artifacts and execution evidence must not be conflated/);

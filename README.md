@@ -60,17 +60,10 @@ Two systems may express the same order operation using different fields, permiss
 
 The project calls this approach **Adaptive Knowledge Engineering**: connect what a process needs with reusable knowledge and software, then keep the adaptation and its results inspectable.
 
-<!-- diagram-source: docs/diagrams/concept-loop.mmd; keep the block generated from that source. -->
-```mermaid
-flowchart TD
-  accTitle: From requirements to qualified reuse
-  accDescr: Conceptual path from requirements and knowledge through a process blueprint and reusable components to controlled execution and evidence. Reviewed evidence informs a later candidate; it does not grant permission.
-  A["Requirements and knowledge"] --> B["Process blueprint"]
-  B --> C["Components and adaptations"]
-  C --> D["Controlled execution"]
-  D --> E["Results and evidence"]
-  E -->|"Review before reuse"| A
-```
+<!-- diagram-source: docs/diagrams/concept-loop.mmd; raster preview from the committed SVG for clients without Mermaid support. -->
+![From requirements to qualified reuse: requirements, process blueprint, components, controlled execution, results and review before reuse.](docs/diagrams/concept-loop.png)
+
+[Editable diagram source](docs/diagrams/concept-loop.mmd) · [Vector version](docs/diagrams/concept-loop.svg)
 
 *Conceptual model, not a generally automated pipeline. Reviewed results inform the next candidate; they do not grant permission to activate it.*
 

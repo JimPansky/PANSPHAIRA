@@ -182,8 +182,16 @@ test("R1 reading routes retain public coverage and source-bound accessible diagr
   const governance = JSON.parse(source("release/governance.json"));
   const manifest = source("release/public-files.manifest");
   const readme = source("README.md");
-  assert.equal(createHash("sha256").update(readme).digest("hex"), "fcb6619af13ffd9ec8e5f17ed7c4f105d50f7e9d21962d1bf1cd079e97c45c3f");
-  assert.equal(readme.match(/```mermaid\n([\s\S]*?)\n```/)[1].trim(), source("docs/diagrams/concept-loop.mmd").trim());
+  assert.equal(createHash("sha256").update(readme).digest("hex"), "1fcfc47ccd089ddf3ef8e1d3083637fa92f2aa8ad756cf42e8f318c9bcfb8a00");
+  assert.doesNotMatch(readme, /```mermaid/);
+  assert.match(readme, /!\[From requirements to qualified reuse[^\]]*\]\(docs\/diagrams\/concept-loop\.png\)/);
+  assert.match(readme, /\[Editable diagram source\]\(docs\/diagrams\/concept-loop\.mmd\)/);
+  assert.match(readme, /\[Vector version\]\(docs\/diagrams\/concept-loop\.svg\)/);
+  const png = readFileSync(join(process.cwd(), "docs/diagrams/concept-loop.png"));
+  assert.deepEqual([...png.subarray(0, 8)], [137, 80, 78, 71, 13, 10, 26, 10]);
+  assert.equal(png.readUInt32BE(16), 768);
+  assert.equal(png.readUInt32BE(20), 926);
+  assert.ok(manifest.includes("docs/diagrams/concept-loop.png\tdocs/diagrams/concept-loop.png\t0644"));
   for (const alias of ["adapt-incoming-invoice-processing-to-the-controls-the-situation-needs", "let-ai-agents-ask-better-bi-questions-with-kaleidosphere", "keep-the-business-capability-stable-while-provider-details-change", "adaptive-knowledge-engineering", "proof-today", "evidence-and-scope", "releases"]) {
     assert.ok(readme.includes(`<a id="${alias}"></a>`), `Compatibility anchor missing: ${alias}`);
   }
