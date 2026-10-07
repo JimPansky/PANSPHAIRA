@@ -4946,7 +4946,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "1c0aec48fb8335f0749f2ee4b435b0ee3985cf138b63d27683f218a66b3d97fd"
+          "sha256": "fc416ee226f7018eaaea8d7885e5790580f1437cdc4f629dab3d33ace0a24544"
         },
         {
           "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
@@ -5061,7 +5061,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "c861cbfc712af21ef132629290e335452b6dd02ccf28af9e8669260bd3de1df1"
+          "sha256": "30e377d2172953cabea1057eea17952f38520be50d64e9971297082808db0c12"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -6067,7 +6067,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "b18d1593fe929b11f3d4acd1508e71b7ea8a003b80c670572cb7900ed8e0451d"
+          "sha256": "655a75a6a6718ea5c266abcdb3066d4cb3be633ac90133a88c7308136b1ca551"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
