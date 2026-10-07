@@ -247,6 +247,19 @@ export function mountProtectedWorkspaceDocumentV1(gateway, options) {
   return Object.freeze({ close() { if (product.workspaceDocument === document) delete product.workspaceDocument; } });
 }
 
+// Versioned additive owner contract. Personal drafts use the authenticated
+// session plus same-origin/context proof, never the governed execution writer.
+export function mountProtectedWorkspaceConfigurationV1(gateway, options) {
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "adapterVersion", "read", "save"], "HOSTED_CONFIGURATION_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product || product.workspaceConfiguration
+    || options.identityDigest !== product.sessions.binding.identityDigest || options.origin !== product.sessions.origin
+    || options.adapterVersion !== "pan441-pan529/v1" || typeof options.read !== "function" || typeof options.save !== "function") throw new Error("HOSTED_CONFIGURATION_OWNER_DENIED");
+  const attachment = Object.freeze({ read: options.read, save: options.save });
+  product.workspaceConfiguration = attachment;
+  return Object.freeze({ close() { if (product.workspaceConfiguration === attachment) delete product.workspaceConfiguration; } });
+}
+
 // Closed existing native product handlers, not a general-purpose reverse proxy.
 // This optional local test ingress neither implements OIDC nor creates a portal.
 export function createOptionalHttpsProductIngressV1(options) {
@@ -284,13 +297,37 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile|\/configuration)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (match[2] !== "/workspace/profile" && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (!["/workspace/profile", "/workspace/configuration"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if (match[2] === "/workspace/configuration") {
+          if (!product.workspaceConfiguration) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+          const authenticateDraftWrite = () => {
+            const principal = product.sessions.authenticate(request.headers);
+            const pair = request.headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
+            if (request.headers.origin !== origin || request.headers["x-pan563-context"] !== "session:" + hash(pair)) throw new Error("HOSTED_CSRF_DENIED");
+            return principal;
+          };
+          let result;
+          if (request.method === "POST") {
+            authenticateDraftWrite();
+            if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            const chunks = []; let bytes = 0;
+            for await (const chunk of request) { bytes += chunk.length; if (bytes > 8192) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+            let body; try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); } catch { return reply(response, 400, "HOSTED_BODY_DENIED"); }
+            result = product.workspaceConfiguration.save(body, authenticateDraftWrite());
+          } else {
+            if ((request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") || request.headers["transfer-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            result = product.workspaceConfiguration.read(product.sessions.authenticate(request.headers));
+          }
+          product.sessions.authenticate(request.headers);
+          if (result?.schemaVersion !== "pansphaira.agent-configuration/readback/v1" || result.activationAuthorized !== false) return reply(response, 503, "HOSTED_CONFIGURATION_READBACK_DENIED");
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(result) + "\n"); return;
+        }
         if (match[2] === "/workspace/profile") {
           const adapter = product.workspaceDocument.profilesV1;
           if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
@@ -396,6 +433,10 @@ export function createOptionalHttpsProductIngressV1(options) {
       if (response.headersSent) { response.destroy(); return; }
       const code = error instanceof Error ? error.message : "HOSTED_AUTH_UNAVAILABLE";
       if (["HOSTED_HEADER_AUTHORITY_DENIED", "HOSTED_ROLE_DENIED", "HOSTED_CSRF_DENIED", "GUIDED_BOUND_PRINCIPAL_DENIED"].includes(code)) reply(response, 403, code);
+      else if (code === "CONFIGURATION_REVISION_CONFLICT") reply(response, 409, code);
+      else if (code === "CONFIGURATION_OWNERSHIP_DENIED") reply(response, 403, code);
+      else if (code.startsWith("CONFIGURATION_") && !["CONFIGURATION_STORE_CLOSED", "CONFIGURATION_POLICY_CHANGED_REJECT_REQUIRES_RECONFIRMATION"].includes(code)) reply(response, 400, code);
+      else if (code === "CONFIGURATION_POLICY_CHANGED_REJECT_REQUIRES_RECONFIRMATION") reply(response, 409, code);
       else if (code === "GUIDED_COMMAND_DENIED") reply(response, 400, code);
       else if (["GUIDED_RETRY_CONFLICT_DENIED", "GUIDED_STARTER_NOT_IDLE_DENIED", "GUIDED_OUTCOME_UNKNOWN_RETAINED", "GUIDED_OWNER_CLOSED"].includes(code)) reply(response, 409, code);
       else if (code === "HOSTED_SESSION_DENIED") reply(response, 401, code);

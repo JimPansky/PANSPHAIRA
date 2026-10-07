@@ -691,6 +691,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
   "toSha256": "362e839d515656338f527e4a94256aed8861936860fd778cfd611b892c9fc6d9",
   "reason": "Serially integrate only the already frozen optional tenant/user-owned browser presentation source and its additive focused test/inventory bindings onto exact delivered Main090. Preserve graph93/all98 nodes, all historical migrations, every immutable obligation, unchanged mechanical scanner, full security-input fallback, every old test owner and mandatory native PAN576/runtime contracts. This metadata successor is not original UI acceptance, a model/provider/production right, a canonical/CI/release PASS or closure; actual visual PAN543-VISUAL-01 remains a same-owner source correction."
 }),
+  Object.freeze({
+  "migrationId": "PAN563-BOUNDED-CONFIGURATION-DRAFT/INTEGRITY-GENERATOR/V71",
+  "path": "scripts/refresh-integrity-data.mjs",
+  "profileVersion": 71,
+  "fromSha256": "362e839d515656338f527e4a94256aed8861936860fd778cfd611b892c9fc6d9",
+  "toSha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458",
+  "reason": "Serially register the same-owner frozen A2 optional durable configuration draft on delivered Main3ddb with graph94 and one bounded existing-profile/budget/shell-dependent owner. Preserve all98 prior owner semantics, roles, edges and own tests, all hard gates, immutable base and every historical migration, unchanged mechanical census and legacy runnable payload. Exact source-only member additions and fixed native/browser negative suite bindings are not model/provider/apply rights, human/device acceptance, whole canonical or hosted CI PASS, release/archive/event acceptance or original closure."
+}),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -703,17 +711,17 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  * sites) are historical hints only — the fresh mechanical scan supersedes them.
  */
 const EXPECTED_COUNTS = {
-  "filesScanned": 1017,
+  "filesScanned": 1037,
   "declarationSites": 37,
   "declarationFiles": 37,
-  "importSites": 297,
-  "importFiles": 296,
+  "importSites": 300,
+  "importFiles": 299,
   "reexportSites": 7,
   "similarShapeSites": 30,
   "byteObligations": 21,
   "pinnedProfileFiles": 13
 } as const;
-const EXPECTED_LEDGER = {"entries": 2505, "uniquePaths": 2505, "duplicatePaths": 0} as const;
+const EXPECTED_LEDGER = {"entries": 2528, "uniquePaths": 2528, "duplicatePaths": 0} as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1496,7 +1504,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;

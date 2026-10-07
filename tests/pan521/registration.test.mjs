@@ -9,7 +9,7 @@ const required=['src/pan519/finance-handoff.mjs','src/pan519/contract-transport.
 test('P07 local connected native stage has one additive canonical owner without implying complete fiscal/FiBu qualification',()=>{
  const graph=load('verification/verification-dag-v2.json'),owners=graph.nodes.filter(node=>node.id==='pan521-local-connected-native-v1');
  assert.equal(owners.length,1,'Actual connected native source and operator path have no canonical lifecycle owner');
- assert.equal(graph.graphVersion,93);assert.equal(graph.nodes.length,98);
+ assert.equal(graph.graphVersion,94);assert.equal(graph.nodes.length,99);
  const owner=owners[0];assert.deepEqual(owner.dependsOn,['pan515-native-trade-state-v1','pan516-native-procurement-v1','pan517-native-fulfilment-v1','pan520-native-projections-v1']);assert.deepEqual(owner.ownedTests,['npm run pan521:test']);assert.equal(owner.riskClass,'HIGH');assert.equal(owner.globalInvalidation,false);assert.deepEqual(owner.inputs.map(row=>row.path),required);
  assert.deepEqual(graph.hardGates,['npm run lint','npm run release-governance:verify','npm run supply-chain:verify','sha256sum -c SHA256SUMS','./scripts/build-public-release.sh --output <isolated-absolute-path>']);
  const observedInputDigests=Object.fromEntries(graph.nodes.flatMap(node=>node.inputs.map(row=>[row.path,row.sha256]))),legacy=new Set(readFileSync('release/public-files.manifest','utf8').split('\n').filter(line=>line&&!line.startsWith('#')).map(line=>line.split('\t')[0])),builder=readFileSync('scripts/build-public-release.sh','utf8');

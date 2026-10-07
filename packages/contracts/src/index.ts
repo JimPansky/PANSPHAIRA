@@ -1,4 +1,5 @@
 export { canonicalJson } from "./canonical-json.js";
+export * from "./agent-configuration-draft-v1.js";
 export * from "./asf-activation.js";
 export * from "./asf-analysis.js";
 export * from "./asf-assignment.js";
