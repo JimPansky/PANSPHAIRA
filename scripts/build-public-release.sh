@@ -208,6 +208,12 @@ repository_only_files = {
     "contracts/pan574/original-context-v1/D0/erp-profile-original.schema.json",
     "contracts/pan574/original-context-v1/D0/inventory-boundary-original.txt",
     "contracts/pan574/original-context-v1/S/manifest.json",
+    # PAN576 finite separated workload is source-only, not a legacy runnable entry.
+    "scripts/pan576-kernel-guard.c",
+    "scripts/pan576-isolated-worker.mjs",
+    "src/pan471/composition-execution.mjs",
+    "tests/pan471/composition-execution.test.mjs",
+    "docs/architecture/pan576-isolated-composition-execution-v1.md",
     # PAN572 uninstall regression is repository source, not a runnable payload entry.
     "tests/demo-current-head-e2e-uninstall.test.mjs",
     "HANDOFF.md",

@@ -2734,6 +2734,22 @@ for (const [inputPath, role] of pan574Inputs) {
 }
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan574:test")) repositoryIntegrityNode.ownedTests.push("npm run pan574:test");
 
+// PAN576 is a finite separated workload extension of the retained PAN454
+// image and PAN574 native bindings, not a new registry or agent platform.
+const pan576Inputs = [
+  ["scripts/pan576-kernel-guard.c", "SECURITY"],
+  ["scripts/pan576-isolated-worker.mjs", "SECURITY"],
+  ["src/pan471/composition-execution.mjs", "SECURITY"],
+  ["tests/pan471/composition-execution.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan576-isolated-composition-execution-v1.md", "DERIVED_EVIDENCE"],
+];
+for (const [inputPath, role] of pan576Inputs) {
+  const matches = repositoryIntegrityNode.inputs.filter(({path: candidate}) => candidate === inputPath);
+  if (matches.length > 1 || (matches.length === 1 && matches[0].role !== role)) throw new Error(`PAN576_INTEGRITY_OWNERSHIP_DENIED:${inputPath}`);
+  if (matches.length === 0) repositoryIntegrityNode.inputs.push({path: inputPath, role, sha256: digest(inputPath)});
+}
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan576:test")) repositoryIntegrityNode.ownedTests.push("npm run pan576:test");
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2793,6 +2809,7 @@ for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [
   "tests/demo-current-head-e2e-uninstall.test.mjs",
   "scripts/run-forward-paired-analytics.mjs",
