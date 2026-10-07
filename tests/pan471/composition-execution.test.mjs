@@ -9,7 +9,7 @@ test('the finite composition workload has measured kernel file process and netwo
   const report = await probePan471CompositionIsolation();
   console.log('PAN576_ACTUAL_KERNEL_REPORT ' + JSON.stringify(report));
   assert.equal(report.outcome, 'BOUNDED_KERNEL_CROSSINGS_OBSERVED');
-  assert.equal(report.observed.uid, 1000);
+  assert.equal(report.observed.uid, process.getuid());
   assert.equal(report.observed.permittedContextRead, true);
   assert.equal(report.observed.permittedScratchWrite, true);
   assert.equal(report.observed.permittedOutputWrite, true);
@@ -298,6 +298,11 @@ test('owned workload cleanup preserves an independently identified other-invocat
 });
 
 test('effective native workload runtime identity binds non-root owner mapping private namespaces and closed image-only environment', async () => {
+  const {readFileSync}=await import('node:fs');
+  const testSource=readFileSync(new URL(import.meta.url),'utf8');
+  const kernelObserver=testSource.slice(0,testSource.indexOf('\nfunction materialInput()'));
+  assert.ok(kernelObserver.includes('assert.equal(report.observed.uid, process.getuid());'),
+    'The kernel observer must compare the actual owner mapping, not a fixed uid that has not been observed on the hosted executor.');
   const api=await import(entry.href);const executor=api.createPan471CompositionExecutor();
   try {
     const handle=executor.controller.freeze({schemaVersion:'pansphaira.pan471/composition-submission/v1',version:'1.0.0',entrypoint:'run(ctx,input)',code:PREPARED_TEST_ARTIFACT});
@@ -457,4 +462,32 @@ sys.stdout.buffer.write(result.stdout);sys.stderr.buffer.write(result.stderr);sy
         assert.equal(spawnSync(dockerPath,['container','rm','--force',id],{encoding:'utf8',timeout:10000}).status,0);}}
     executor.controller.close();rmSync(own,{recursive:true,force:true});
   }
+});
+
+test('the actual native compiler binds the active supported Node distribution headers rather than an assumed system install and retains the native counterpart', async () => {
+  const {mkdtempSync,writeFileSync,readFileSync,rmSync,existsSync}=await import('node:fs');
+  const {join,dirname,delimiter}=await import('node:path');const {spawnSync}=await import('node:child_process');
+  const parent=process.env.TMPDIR??process.env.RUNNER_TEMP;assert.ok(parent,'owned scratch required');
+  const own=mkdtempSync(join(parent,'pan576-owned-node-headers-'));
+  const include=join(dirname(dirname(process.execPath)),'include/node');
+  assert.ok(existsSync(join(include,'node_api.h')),'the exact supported Node distribution must contain its needed native headers');
+  const compiler=spawnSync('which',['gcc'],{encoding:'utf8',timeout:10000}).stdout.trim();assert.ok(compiler);
+  const trace=join(own,'actual-compiler-arguments.jsonl'),originalPATH=process.env.PATH;
+  writeFileSync(join(own,'gcc'),`#!/usr/bin/env python3\nimport os,sys,json\nwith open(${JSON.stringify(trace)},'a') as out: out.write(json.dumps(sys.argv[1:])+'\\n')\nos.execv(${JSON.stringify(compiler)},[${JSON.stringify(compiler)}]+sys.argv[1:])\n`,{mode:0o700});
+  const api=await import(entry.href);const executor=api.createPan471CompositionExecutor();
+  try {
+    process.env.PATH=own+delimiter+originalPATH;
+    const handle=executor.controller.freeze({schemaVersion:'pansphaira.pan471/composition-submission/v1',version:'1.0.0',entrypoint:'run(ctx,input)',code:PREPARED_TEST_ARTIFACT});
+    const actual=readFileSync(trace,'utf8').trim().split('\n').map(line=>JSON.parse(line));
+    const needed=actual.filter(args=>args.some(arg=>arg.endsWith('/scripts/pan576-kernel-guard.c')));
+    assert.equal(needed.length,2,'actual compiler build and transitive dependency enumeration are both observed');
+    assert.ok(needed.every(args=>args.includes('-I'+include)&&!args.includes('-I/usr/include/node')),
+      'The active supported Node headers must bind both real compilation and complete native dependency discovery; hosted Node does not imply /usr/include/node.');
+    const report=await executor.tools.run(handle,{material:materialInput(),requestId:'request:erp-cell-pan576-node-headers',sku:'SYN-PAN576'});
+    assert.equal(report.outcome,'NATIVE_COMPOSITION_ARTIFACT_READ_BACK');
+    assert.equal(executor.controller.verify(report).outcome,'VERIFIED_NATIVE_TARGET');
+    assert.equal(report.actualContainer.user,process.getuid()+':'+process.getgid());
+    assert.equal(report.nativeCellReceipt.effectCount,1);assert.equal(report.nativeCellReceipt.rollbackCount,1);
+    assert.equal(report.ownContainerRemovedAndAbsent,true);
+  } finally {process.env.PATH=originalPATH;executor.controller.close();rmSync(own,{recursive:true,force:true});}
 });

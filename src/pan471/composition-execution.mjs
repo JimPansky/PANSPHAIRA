@@ -3,7 +3,7 @@
 import {spawn, spawnSync} from 'node:child_process';
 import {createHash, createHmac, randomBytes, randomUUID, timingSafeEqual} from 'node:crypto';
 import {mkdtempSync, mkdirSync, writeFileSync, readFileSync, lstatSync, rmSync, readdirSync, existsSync} from 'node:fs';
-import {join} from 'node:path';
+import {join, dirname} from 'node:path';
 import {types} from 'node:util';
 import {IMAGE_ID} from '../pan454/journey-profile.mjs';
 import {runBoundedProcessV1} from '../../scripts/extension-dynamic-process-lifecycle.mjs';
@@ -14,6 +14,14 @@ const ROOT = new URL('../../', import.meta.url).pathname;
 const IMAGE = 'node@' + IMAGE_ID;
 const UID=process.getuid(),GID=process.getgid(),USER=UID+':'+GID;
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+function nodeIncludeDirectory() {
+  const include=join(dirname(dirname(process.execPath)),'include/node');
+  try {
+    const header=lstatSync(join(include,'node_api.h'));
+    if(!header.isFile()||header.isSymbolicLink())throw new Error();
+  } catch {throw new Error('PAN576_ACTIVE_NODE_HEADERS_REQUIRED');}
+  return include;
+}
 function runtimeEnvelope(container,image,invocation,ownedPaths,program) {
   const env=container.Config.Env??[],imageEnv=image.Config.Env??[];
   const names=env.map(row=>row.split('=',1)[0]).sort();
@@ -84,7 +92,7 @@ export async function probePan471CompositionIsolation() {
     writeFileSync(join(stage,'probe.mjs'),PROBE,{mode:0o600});
     writeFileSync(join(artifact,'input.json'),JSON.stringify({value:7}),{mode:0o600});
     writeFileSync(join(guarded,'protected.txt'),'NON_AUTHORITY_SYNTHETIC_CANARY',{mode:0o600});
-    const build=spawnSync('gcc',['-shared','-fPIC','-O2','-Wall','-Wextra','-Werror','-I/usr/include/node',
+    const build=spawnSync('gcc',['-shared','-fPIC','-O2','-Wall','-Wextra','-Werror','-I'+nodeIncludeDirectory(),
       join(ROOT,'scripts/pan576-kernel-guard.c'),'-o',join(stage,'guard.node')],{encoding:'utf8',timeout:30000});
     if(build.error || build.status!==0) throw new Error('PAN576_KERNEL_PROFILE_BUILD_DENIED: '+build.stderr);
     compiledSha=sha(readFileSync(join(stage,'guard.node')));
@@ -169,10 +177,10 @@ function compiledBuildFiles(directory,files=[]) {
 }
 function freezeBuild(stage) {
   const guard=join(stage,'guard.node');
-  const flags=['-shared','-fPIC','-O2','-Wall','-Wextra','-Werror','-I/usr/include/node'];
+  const flags=['-shared','-fPIC','-O2','-Wall','-Wextra','-Werror','-I'+nodeIncludeDirectory()];
   const build=spawnSync('gcc',[...flags,join(ROOT,'scripts/pan576-kernel-guard.c'),'-o',guard],{encoding:'utf8',timeout:30000});
   if(build.error||build.status!==0)throw new Error('PAN576_KERNEL_PROFILE_BUILD_DENIED');
-  const dependencies=spawnSync('gcc',['-M','-I/usr/include/node',join(ROOT,'scripts/pan576-kernel-guard.c')],{encoding:'utf8',timeout:10000});
+  const dependencies=spawnSync('gcc',['-M','-I'+nodeIncludeDirectory(),join(ROOT,'scripts/pan576-kernel-guard.c')],{encoding:'utf8',timeout:10000});
   if(dependencies.error||dependencies.status!==0)throw new Error('PAN576_BUILD_DEPENDENCY_DENIED');
   const paths=dependencies.stdout.replace(/\\\n/g,' ').split(':').slice(1).join(':').trim().split(/\s+/);
   const bindings=discoverPan471CompositionBindings().bindings;
