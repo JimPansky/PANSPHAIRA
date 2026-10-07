@@ -737,7 +737,7 @@ c06991184e1892993c1792f692927aff168061d40c60c3ba02eb6d43800d2202  ./examples/dai
 0c35e63c364fb0f5b18653f0d256aa1e25835a79bae8e616d448bdbf3488e411  ./examples/module-contribution/modules.json
 ea8d5f564acdae86b6ce054c7fc5dcb0dead50e85c74982d0644a9493879217b  ./examples/poc-release/showcase-v1.json
 01f41d094b67c04b73c86e0677f176b8aa75f5103a967ab9d6bacf5ac6be0fa5  ./examples/poc-setup-planner/catalog-v1.json
-d7460e0f8386a462077aab1ac33cc2857cf3c2ea926db55a30a83db0c75b07f6  ./package-lock.json
+a3cc62b6d7f82385f1b90879242a9dcd7f971702156d2d46e16e2c374d351516  ./package-lock.json
 78c06e7c61f8029384b6cbc875dc713c1ee0680f6570292e2d7d64922950267e  ./package.json
 fa49b2c57510cf5041686b4aea73b1c73bd0215bf5c371f992b205d3d64b043b  ./packages/browser-shell/src/context-owner-v1.ts
 7bc562f2fa8bfb773272d486af7ee5f178094af7ee600b641ca89df5e9a2a16b  ./packages/browser-shell/src/deep-link-v1.ts
@@ -2501,5 +2501,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-b2e94687edfb984e23f5a6e3e9882e9316b3f010fe4a75f393d0d34c45bd6cbb  ./verification/verification-dag-v2.json
+1680068839595aa6176d6d7bd05e82d21465948dce95a2eb69f3b480f8cfe030  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

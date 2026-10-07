@@ -5739,7 +5739,7 @@
         {
           "path": "package-lock.json",
           "role": "TOOLCHAIN",
-          "sha256": "d7460e0f8386a462077aab1ac33cc2857cf3c2ea926db55a30a83db0c75b07f6"
+          "sha256": "a3cc62b6d7f82385f1b90879242a9dcd7f971702156d2d46e16e2c374d351516"
         },
         {
           "path": "tsconfig.json",
