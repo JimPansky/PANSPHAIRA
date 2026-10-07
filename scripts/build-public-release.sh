@@ -602,6 +602,20 @@ repository_only_files = {
     "tests/pan541/registry.test.mjs",
     "tests/pan541/test-runner.test.mjs",
     "tests/pan541/workspace-native.test.mjs",
+    # PAN543 optional personal presentation: source evidence only. The existing
+    # legacy runnable payload/manifest is intentionally not widened.
+    "docs/architecture/browser-profile-v1.md",
+    "packages/browser-workspace/src/profile-editor-v1.ts",
+    "packages/contracts/src/browser-profile-v1.ts",
+    "scripts/run-pan543-browser-profile-tests.mjs",
+    "scripts/refresh-pan543-integrity.mjs",
+    "src/pan543/profile-store.mjs",
+    "tests/pan543/backend-fixture.mjs",
+    "tests/pan543/browser.test.mjs",
+    "tests/pan543/profile-types.ts",
+    "tests/pan543/profile.test.mjs",
+    "tests/pan543/registration.test.mjs",
+    "tests/pan543/transport.test.mjs",
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

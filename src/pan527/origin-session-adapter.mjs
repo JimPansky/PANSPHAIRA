@@ -6,6 +6,7 @@ import Ajv2020 from "ajv/dist/2020.js";
 import { buildPocGuidedDemoSetupPlanV1, expectedPocGuidedDemoTemplatesV1 } from "../../dist/packages/contracts/src/index.js";
 import { PocEarlyAdminCoordinatorV1, createPocEarlyAdminDashboardServerV1 } from "../../dist/packages/setup-coordinator/src/index.js";
 import { canonicalJson } from "../../dist/packages/contracts/src/canonical-json.js";
+import { validateBrowserProfileReadV1, validateBrowserProfileWriteV1 } from "../../dist/packages/contracts/src/browser-profile-v1.js";
 import { runtimeIdentityDigestV1, validateRuntimeIdentityV1 } from "../pan526/runtime-contract.mjs";
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
@@ -229,13 +230,19 @@ export function protectedGuidedOwnerContextV1(gateway, options) {
 // Optional shared browser document on the same protected ingress. These assets
 // and the bounded reader are process-owner code, never HTTP plugin installation.
 export function mountProtectedWorkspaceDocumentV1(gateway, options) {
-  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "html", "script", "style", "readErv"], "HOSTED_WORKSPACE_OWNER_DENIED");
+  const keys = ["optIn", "tenantId", "identityDigest", "origin", "html", "script", "style", "readErv"];
+  const profile = Object.getOwnPropertyDescriptor(options ?? {}, "profilesV1")?.value;
+  exactData(options, profile === undefined ? keys : [...keys, "profilesV1"], "HOSTED_WORKSPACE_OWNER_DENIED");
+  if (profile !== undefined) {
+    exactData(profile, ["schemaVersion", "read", "write"], "HOSTED_WORKSPACE_OWNER_DENIED");
+    if (profile.schemaVersion !== "pansphaira.workspace-profile-adapter/v1" || typeof profile.read !== "function" || typeof profile.write !== "function") throw new Error("HOSTED_WORKSPACE_OWNER_DENIED");
+  }
   const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
   if (options.optIn !== true || !product || product.workspaceDocument
     || options.identityDigest !== product.sessions.binding.identityDigest || options.origin !== product.sessions.origin
     || [options.html, options.script, options.style].some(x => typeof x !== "string" || Buffer.byteLength(x) > 131072)
     || typeof options.readErv !== "function") throw new Error("HOSTED_WORKSPACE_OWNER_DENIED");
-  const document = Object.freeze({ html: options.html, script: options.script, style: options.style, readErv: options.readErv });
+  const document = Object.freeze({ html: options.html, script: options.script, style: options.style, readErv: options.readErv, profilesV1: profile });
   product.workspaceDocument = document;
   return Object.freeze({ close() { if (product.workspaceDocument === document) delete product.workspaceDocument; } });
 }
@@ -277,13 +284,40 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout"].includes(match[2])) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (match[2] !== "/workspace/profile" && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if (match[2] === "/workspace/profile") {
+          const adapter = product.workspaceDocument.profilesV1;
+          if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+          let result;
+          const sessionPair = request.headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
+          const expectedSession = request.headers["x-pan543-session"];
+          if ((request.method === "POST" || expectedSession !== undefined) && expectedSession !== "session:" + hash(sessionPair)) return reply(response, 401, "HOSTED_SESSION_DENIED");
+          if (request.method === "POST") {
+            // Personal presentation is not reviewer-only business mutation.
+            // Strict origin + JSON/no encoding is the existing own-session guard.
+            if (request.headers.origin !== origin) return reply(response, 403, "HOSTED_CSRF_DENIED");
+            if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            const chunks = []; let bytes = 0;
+            for await (const chunk of request) { bytes += chunk.length; if (bytes > 8192) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+            let command;
+            try { command = validateBrowserProfileWriteV1(JSON.parse(Buffer.concat(chunks).toString("utf8"))); } catch { return reply(response, 400, "PROFILE_SCHEMA_DENIED"); }
+            const principal = product.sessions.authenticate(request.headers);
+            result = adapter.write(command, principal);
+          } else {
+            if ((request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") || request.headers["transfer-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            result = adapter.read(product.sessions.authenticate(request.headers));
+          }
+          // Contract is synchronous: identity is checked immediately before CAS.
+          product.sessions.authenticate(request.headers);
+          const target = validateBrowserProfileReadV1(result);
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(target) + "\n"); return;
+        }
         if ((request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") || request.headers["transfer-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
         if (match[2] === "/workspace/logout") {
           ownedSessionRevocations.get(product.sessions)(request.headers);
@@ -365,6 +399,8 @@ export function createOptionalHttpsProductIngressV1(options) {
       else if (code === "GUIDED_COMMAND_DENIED") reply(response, 400, code);
       else if (["GUIDED_RETRY_CONFLICT_DENIED", "GUIDED_STARTER_NOT_IDLE_DENIED", "GUIDED_OUTCOME_UNKNOWN_RETAINED", "GUIDED_OWNER_CLOSED"].includes(code)) reply(response, 409, code);
       else if (code === "HOSTED_SESSION_DENIED") reply(response, 401, code);
+      else if (["PROFILE_SCHEMA_DENIED", "PROFILE_CONTRIBUTION_DENIED"].includes(code)) reply(response, 400, code);
+      else if (code === "PROFILE_REVISION_CONFLICT") reply(response, 409, code);
       else if (code === "ERV_OBJECT_REVISION_STALE") reply(response, 409, code);
       else if (["ERV_TENANT_BINDING_DENIED", "ERV_OBJECT_BINDING_DENIED"].includes(code)) reply(response, 403, code);
       else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
