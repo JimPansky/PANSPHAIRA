@@ -196,6 +196,8 @@ if total_bytes > 100 * 1024 * 1024:
 
 expected = set(destinations)
 repository_only_files = {
+    # PAN572 uninstall regression is repository source, not a runnable payload entry.
+    "tests/demo-current-head-e2e-uninstall.test.mjs",
     "HANDOFF.md",
     "TASKS.md",
     ".github/FUNDING.yml",

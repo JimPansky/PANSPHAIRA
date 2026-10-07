@@ -269,3 +269,25 @@ bounded synthetic setup/readback. It is not a localization, browser-chrome
 or physical-device certification, new productive/provider authority or an
 exact-head canonical/CI/release/closure verdict. Original source/review and
 public delivery gates remain mandatory on the authorized clean14232 lineage.
+
+## PAN572 closed uninstall safety registration (profile67)
+
+Profile67 keeps graph93 and its98 existing owners and hard gates. The new
+uninstall regression belongs to the existing repository-integrity owner and
+is present in the direct canonical test command, the checksum ledger and one
+exact source-only builder classification. The legacy runnable manifest retains
+its membership; an adjacent unknown regression file is still denied.
+
+The unchanged mechanical scanner observes1000 source files and2476 unique
+checksum paths,37 declaration sites/files,294 import sites/293 import files,
+7 reexports and30 similar-shape sites. All21 byte obligations,13 pinned-profile
+files, original base obligations, historical migrations and non-equivalence
+classifications retain their admission rules. Only observed current bindings
+and the explicit new generator migration advance.
+
+The uninstall safety successor has a separate exact byte pin; the historical
+uninstall pin and other legacy install/runtime/manifest pins stay unchanged.
+Recorded Fake-Docker interactions and new exclusively owned no-network native
+stop/data-retention/purge with a live independent control are separate evidence.
+Neither proves a fresh full installer, ERP/model outcome, hostile same-user
+sandbox, independent person review or canonical/CI/release/closure completion.

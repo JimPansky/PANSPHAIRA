@@ -85,15 +85,38 @@ built image. Ordinary interactive installs leave it unset.
 
 ## Cleanup
 
-Remove only installer-owned resources:
+The uninstall parser accepts no option, `--purge`, `--help` or `-h` only.
+Help exits zero without Docker or file effects. Unknown or extra arguments exit
+two before any Docker call or file mutation, even when configuration exists.
+
+Stop the configured installation while retaining its volumes and local state:
+
+```sh
+./demo/uninstall.sh
+```
+
+Only explicit `--purge` selects data removal. It requires one configured Compose
+project, its matching bounded run-owner marker, the observed installer image
+ownership and exact run label, and matching project labels on existing declared
+volumes. All checks happen before teardown; the configured project is passed
+explicitly so an ambient `COMPOSE_PROJECT_NAME` cannot redirect the operation.
+Linked state or configuration is rejected.
 
 ```sh
 ./demo/uninstall.sh --purge
 ```
 
-`--purge` removes the locally built demo image only after verifying its
-installer ownership label and, when set, its exact E2E run-owner label. Do not
-replace this command with Docker pruning or broad filesystem deletion.
+Missing or contradictory ownership refuses purge without removing data. Ordinary
+interactive installs without the bounded run marker can be stopped, but this
+safety-qualified purge path does not infer their destructive ownership. Do not
+invent a marker, relabel resources, use Docker pruning, or broadly delete files
+to force cleanup. Retain the stopped state for an owning operator's qualified
+resource disposition.
+
+The focused native safety probe uses only newly created synthetic resources,
+no-network containers and an independently read live control. It demonstrates
+stop/data retention and exact-owned purge, not a fresh full installer, ERP result,
+model execution or hostile same-user sandbox.
 
 `READY_VERIFIED` applies only to the selected local run. It is not a
 publication, production, support, performance or security-certification

@@ -141,6 +141,37 @@ test("ERV source-only classifier is exact, absent from payload, and denies adjac
   }
 });
 
+test("PAN572 uninstall safety regression is exact source-only and adjacent unknown tests stay denied", async () => {
+  const file = "tests/demo-current-head-e2e-uninstall.test.mjs";
+  const builder = await readFile(path.join(root, "scripts/build-public-release.sh"), "utf8");
+  const fileBlock = builder.match(/^repository_only_files = \{([\s\S]*?)^\}/m)[1];
+  const exact = [...fileBlock.matchAll(/^\s+"([^"]+)",$/gm)].map((match) => match[1]);
+  assert.equal(exact.filter((entry) => entry === file).length, 1,
+    "The new safety regression needs one exact source-only classification.");
+  const manifest = await readFile(path.join(root, "release/public-files.manifest"), "utf8");
+  assert.ok(!manifest.split("\n").some((line) => line.split("\t")[0] === file));
+  const target = await fixture();
+  const staging = await mkdtemp(path.join(tmpdir(), "cm-pan572-source-classification-"));
+  try {
+    await mkdir(path.join(target, "tests"), { recursive: true });
+    await copyFile(path.join(root, file), path.join(target, file));
+    const output = path.join(staging, "cm-product-increment-rc-20261007-pan572-classification");
+    await execFile("bash", [path.join(target, "scripts/build-public-release.sh"), "--output", output]);
+    await assert.rejects(readFile(path.join(output, file)), /ENOENT/);
+    const neighbor = "tests/demo-current-head-e2e-uninstall-neighbor.test.mjs";
+    await writeFile(path.join(target, neighbor), "{}\n");
+    await assert.rejects(execFile("bash", [path.join(target, "scripts/build-public-release.sh"), "--output",
+      path.join(staging, "cm-product-increment-rc-20261007-pan572-neighbor")]), (error) => {
+      assert.equal(error.code, 1);
+      assert.ok(error.stderr.includes(`UNMANIFESTED_SOURCE_FILE:${neighbor}`));
+      return true;
+    });
+  } finally {
+    await rm(target, { recursive: true, force: true });
+    await rm(staging, { recursive: true, force: true });
+  }
+});
+
 test("mutable OCI, npm integrity, CI ref, runtime omission and release omission deny", async () => {
   const cases = [
     [

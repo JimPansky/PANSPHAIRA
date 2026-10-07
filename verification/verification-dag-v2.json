@@ -4731,12 +4731,12 @@
         {
           "path": "demo/README.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "f688c9dad8aeac99afc6321a62e4a5452a7ded6e469080e9023c365383bebeb0"
+          "sha256": "6abcdce4ac4a33366d5575e56af89f51296191c148e91d9d08ea347aa613218c"
         },
         {
           "path": "demo/uninstall.sh",
           "role": "SECURITY",
-          "sha256": "e72bf4f86af24b0017497dcaca63927c64aab9fa558b83970d1d2d8240b972bb"
+          "sha256": "4a17a4a0539d8dbc4f550ccf80e1029eaedab0642401cff09e8550bd41d7f0a6"
         },
         {
           "path": "docs/.vitepress/config.mts",
@@ -4746,7 +4746,7 @@
         {
           "path": "docs/architecture/canonical-json-profile-inventory.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "4640b39e92a7ee74fd9c5fcca07988ca2d74a42c9c9c60c7ce35522fdc4a7e45"
+          "sha256": "eef06f792af45aad9df8486cc888c851b5b9f1a9fde26f75a42e7df95e9c64b6"
         },
         {
           "path": "docs/DEMO-CURRENT-HEAD-E2E.md",
@@ -4861,7 +4861,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "82029e44e75c7226b8f75dbd77dc0ebdb2b87b3389a235adafb4a7e61e5cdb56"
+          "sha256": "ddde1cc0c775cc1f314a5400e0c1d04d1fadb639f4646acbc4e5453c2c7bb8e3"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4896,7 +4896,12 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "c73b7a417f878e8c739740dcf0bf442a4abe0f3e8cc8de6128d5cbcdd30bf693"
+          "sha256": "a7a47be3b82a0754e60396b4ecbe41cea00ecf9e793a403d3671241311be71db"
+        },
+        {
+          "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "861162270aa583677cdef5ebef83c70dc20d2b7bf1e19a4045899ae0ae198ecc"
         },
         {
           "path": "tests/demo-current-head-e2e.test.mjs",
@@ -5001,7 +5006,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "9de4c5d526a1ac2029e301149ea9512be85dcfb3fd913e2cec17128daa90a428"
+          "sha256": "ff9e27ee467f7af52e688ce3b5acbb6efcd027bd0b298d34b635ff58569b9b7b"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5646,7 +5651,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "e93f633cbac433e25ca7272642d6017513cca66812d2415b0994ec893f25e688"
+          "sha256": "e3ed92febc6c7f514eb2a4a938cbbe2ac48413c7386caed8e86ede3f3ba2bbbc"
         },
         {
           "path": "package-lock.json",
@@ -8982,7 +8987,7 @@
         {
           "path": "tests/pan527/local-compatibility.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "ac604499d590c0846cf214bf7c6fa16d7b7f3484385a25e21ff1ea862e6e0bb8"
+          "sha256": "379e30c3e3bb9ef13dd87ac8424a2f12ba3ede36690cc0c1c7e170748d306285"
         },
         {
           "path": "tests/pan527/native-https-ingress.test.mjs",

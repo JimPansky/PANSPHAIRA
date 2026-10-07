@@ -619,6 +619,14 @@
       "fromSha256": "fc3191a44001d241a4e7b5bc00d6502d616970e0c6c8be2a82720abfe4840d12",
       "toSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
       "reason": "Advance current graph92 to93 with exactly one additive PUI-01 shared typed browser shell owner reconstructed from retained reviewed development work on current protected2e3. Preserve current PAN537/PAN538 source correction, every prior public migration, immutable base obligations, all old owner semantics and hard gates, closed unchanged mechanical scanner and legacy runnable payload membership. Existing PAN516/PAN527 native TLS/SQLite readers remain the shell dependencies; closed code-owned factories and six typed slots do not load arbitrary code or grant backend authority. Actual standalone browser/tenant/session/read-only native tests and technical image review are distinct from historical private development proof, default-addresspool-held complete installer, frozen exact-head canonical, hosted CI, protected merge, release/archive and Original closure. No new worker/provider/global repair or old unsafe ancestry publication."
+    },
+    {
+      "migrationId": "PAN572-CLOSED-UNINSTALL-OWNERSHIP/INTEGRITY-GENERATOR/V67",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 67,
+      "fromSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
+      "toSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
+      "reason": "Keep currentgraph93 and all98 existing owners, unchanged scanner, historical migrations and byteobligations, all existing source-owner dependencies and hardgates. Register the focused closed uninstall parser/ownership regressions in the existing repository-integrity owner and actual canonical test entry; no competing module or new harness. Preserve historical526/527/528 evidence pins and allow only the exact actually executed new local safety source through a separate explicit byte-bound self-checked compatibility successor. New exclusively own no-network Docker stop/data-retention/purge/control/cleanup probes are distinct from fake interactions, old installer evidence, fullinstaller/ERP/model acceptance, exacthead canonical, CI, publication and closure. Missing or contradictory run/project/image/volume or linked-state custody remains denied without new rights or global repair."
     }
   ],
   "scanScope": {
@@ -661,15 +669,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 999,
+    "filesScanned": 1000,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 294,
     "importFiles": 293,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2475,
-    "ledgerUniquePaths": 2475
+    "ledgerEntries": 2476,
+    "ledgerUniquePaths": 2476
   },
   "profiles": [
     {
@@ -742,7 +750,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87"
+      "sha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1483,7 +1491,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
+      "sha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
       "basis": "profile-version-migration"
     },
     {

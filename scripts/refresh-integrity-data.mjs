@@ -312,6 +312,7 @@ const currentHeadDockerE2EInputs = [
   ["release/governance.json", "CONTRACT"],
   ["scripts/demo-current-head-e2e.mjs", "SECURITY"],
   ["tests/demo-current-head-e2e.test.mjs", "VALIDATOR"],
+  ["tests/demo-current-head-e2e-uninstall.test.mjs", "VALIDATOR"],
   ["tests/release-governance.test.mjs", "VALIDATOR"],
   ["verification/demo-current-head-e2e/contract-v1.json", "CONTRACT"],
 ];
@@ -2769,6 +2770,7 @@ for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
 for (const relative of [
+  "tests/demo-current-head-e2e-uninstall.test.mjs",
   "scripts/run-forward-paired-analytics.mjs",
   "tests/fixtures/cks-analytics/consumer-forward-current-v1.json",
   "tests/fixtures/cks-analytics/native-forward-current-candidate-v1.json",
