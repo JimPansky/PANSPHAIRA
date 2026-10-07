@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "60ffdbd284b837445f28059180ca03bcdd0d7f1ff7681e3f87dace15516382e9"
+        "sha256": "1c0aec48fb8335f0749f2ee4b435b0ee3985cf138b63d27683f218a66b3d97fd"
       }
     ]
   },
@@ -627,6 +627,14 @@
       "fromSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
       "toSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
       "reason": "Keep currentgraph93 and all98 existing owners, unchanged scanner, historical migrations and byteobligations, all existing source-owner dependencies and hardgates. Register the focused closed uninstall parser/ownership regressions in the existing repository-integrity owner and actual canonical test entry; no competing module or new harness. Preserve historical526/527/528 evidence pins and allow only the exact actually executed new local safety source through a separate explicit byte-bound self-checked compatibility successor. New exclusively own no-network Docker stop/data-retention/purge/control/cleanup probes are distinct from fake interactions, old installer evidence, fullinstaller/ERP/model acceptance, exacthead canonical, CI, publication and closure. Missing or contradictory run/project/image/volume or linked-state custody remains denied without new rights or global repair."
+    },
+    {
+      "migrationId": "PAN574-BOUNDED-NATIVE-COMPOSITION/INTEGRITY-GENERATOR/V68",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 68,
+      "fromSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
+      "toSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
+      "reason": "Keep graph93 and all98 existing owners, original PAN471 read-only inventory, unchanged mechanical scanner, historical migrations and immutable byte obligations, every existing native kernel and hard gate. Register only the additive two-native-binding closed D1 export, independent public examples, preimplementation original D0/S byte declarations, authority-separated handoff and actual native regression under the existing integration owner. Source-only files do not extend the legacy runnable payload, grant execution/procurement/provider/source rights or assert model composition, novel connection, independent target oracle, persistence, canonical/CI/release or premature closure. D1 improvements and complete executable transitive pins never rewrite original D0 or selected original S."
     }
   ],
   "scanScope": {
@@ -669,15 +677,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1000,
+    "filesScanned": 1003,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 294,
-    "importFiles": 293,
+    "importSites": 296,
+    "importFiles": 295,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2476,
-    "ledgerUniquePaths": 2476
+    "ledgerEntries": 2487,
+    "ledgerUniquePaths": 2487
   },
   "profiles": [
     {
@@ -750,7 +758,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207"
+      "sha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1116,6 +1124,11 @@
       "importFiles": 3
     },
     {
+      "owner": "pan471",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan472",
       "importSites": 1,
       "importFiles": 1
@@ -1197,8 +1210,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 65,
-      "importFiles": 64
+      "importSites": 66,
+      "importFiles": 65
     },
     {
       "owner": "usage-insights",
@@ -1491,7 +1504,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
+      "sha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
       "basis": "profile-version-migration"
     },
     {

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "pansphaira.pan574/original-D0-manifest/v1",
+  "arm": "D0",
+  "sourceCommit": "02bfb49e1854d6dbf7be7cc5ea2e7812355d3943",
+  "sourceTree": "51ed5ef21763607f26c9dc7f84b9bbc4e4eaf52c",
+  "members": [
+    {
+      "sourceCommit": "02bfb49e1854d6dbf7be7cc5ea2e7812355d3943",
+      "sourcePath": "docs/architecture/pan522-material-plan-v1.md",
+      "sourceBytesSha256": "2a4f267246f12ee9a1022d6c369dda0d730bca1560dea211803305f8a9e19011",
+      "firstLine": 25,
+      "lastLine": 42,
+      "sha256": "d62b36c42cb7be3c5ba7dc9b3be15a65c8aebd80322e933cfec53dee730f1b49",
+      "bytes": 1116,
+      "name": "material-input-original.txt"
+    },
+    {
+      "sourceCommit": "02bfb49e1854d6dbf7be7cc5ea2e7812355d3943",
+      "sourcePath": "docs/architecture/pan522-material-plan-v1.md",
+      "sourceBytesSha256": "2a4f267246f12ee9a1022d6c369dda0d730bca1560dea211803305f8a9e19011",
+      "firstLine": 81,
+      "lastLine": 86,
+      "sha256": "1a306e90c76f28e085e6848f144a831cb474bb69f59d64ab62c7406eb316a5fc",
+      "bytes": 329,
+      "name": "material-authority-original.txt"
+    },
+    {
+      "sourceCommit": "02bfb49e1854d6dbf7be7cc5ea2e7812355d3943",
+      "sourcePath": "schemas/contracts/erp-order-capability-cell-profile-v1.schema.json",
+      "sourceBytesSha256": "60efae2adbfa365e0a07fffa6d199ace406e073684ec5d01dc1b57464ae97e5a",
+      "firstLine": null,
+      "lastLine": null,
+      "sha256": "60efae2adbfa365e0a07fffa6d199ace406e073684ec5d01dc1b57464ae97e5a",
+      "bytes": 3404,
+      "name": "erp-profile-original.schema.json"
+    },
+    {
+      "sourceCommit": "02bfb49e1854d6dbf7be7cc5ea2e7812355d3943",
+      "sourcePath": "schemas/contracts/pan471-capability-inventory-v1.schema.json",
+      "sourceBytesSha256": "bf7a84ed6dc7237a34fadd5a0e0acdc5f1aea78069deba17903803a25bc789e4",
+      "firstLine": 5,
+      "lastLine": 5,
+      "sha256": "c014e85b44519385dc2879d466b9b8a9e0bad9494fa5657f12cb77207ecff873",
+      "bytes": 730,
+      "name": "inventory-boundary-original.txt"
+    }
+  ],
+  "containsImplementation": false,
+  "containsReferenceSolution": false,
+  "containsExpectedResults": false,
+  "improvedContractsBelongTo": "D1_NOT_RETROACTIVE_D0"
+}

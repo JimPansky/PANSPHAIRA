@@ -1,0 +1,52 @@
+{
+  "schemaVersion": "pansphaira.pan574/original-S-manifest/v1",
+  "arm": "S",
+  "sourceCommit": "02bfb49e1854d6dbf7be7cc5ea2e7812355d3943",
+  "sourceTree": "51ed5ef21763607f26c9dc7f84b9bbc4e4eaf52c",
+  "originalD0ManifestSha256": "0816e0f2601149d88bb386522680653ad4f74ec65a9c17456b36add6723d48e3",
+  "relevantSources": [
+    {
+      "sourcePath": "src/pan522/material-plan.mjs",
+      "sha256": "d96b26d1d256b647f33d6359f6185e1ed6799ce0909280fba76d4cf29ee9079d",
+      "bytes": 10717
+    },
+    {
+      "sourcePath": "src/pan522/plan-input.mjs",
+      "sha256": "4e222fb6a769bd2d9b8bdfdd2e95b769395de0e2b71219651c50e433069e08c8",
+      "bytes": 6642
+    },
+    {
+      "sourcePath": "packages/contracts/src/bestand-nachschub-v1.ts",
+      "sha256": "ac42f06a963731ed8f5a9da83fe3de319794d1ee8d2dd7a92c3af5bc1ca8b7bf",
+      "bytes": 44350
+    },
+    {
+      "sourcePath": "packages/contracts/src/erp-order-capability-cell.ts",
+      "sha256": "a13750c0abeaae4fe9f2ce9580021d22f86eb9550f19ad7e104119a7603f2ea1",
+      "bytes": 21163
+    },
+    {
+      "sourcePath": "packages/contracts/src/capability-catalogue.ts",
+      "sha256": "e2d6acca17d7eb938124c31282f6e6aefd9f7e9b65117722a452170967ec835e",
+      "bytes": 41643
+    },
+    {
+      "sourcePath": "packages/contracts/src/canonical-json.ts",
+      "sha256": "666513ba9a89c0eae0daa0e0159a262eb4e0aa105971a151a19bac1a9b6c4826",
+      "bytes": 937
+    },
+    {
+      "sourcePath": "src/pan471/capability-inventory.mjs",
+      "sha256": "7eeab48ef9a74f498e6e4fdc83095745a467f595120688691400f602f2cc975f",
+      "bytes": 23265
+    },
+    {
+      "sourcePath": "packages/contracts/src/pan433-domain-mapping-v1.ts",
+      "sha256": "e94898b9e55e235663ca052a6eba0d2ff6c7104cc6bb9b42bcb31459f3b99cfb",
+      "bytes": 21947
+    }
+  ],
+  "referenceSolutionsIncluded": false,
+  "expectedResultsIncluded": false,
+  "scope": "RELEVANT_ORIGINAL_SOURCES_NOT_A_NEW_COMPOSITION_OR_COMPLETE_REPOSITORY_SOURCE_CLOSURE"
+}

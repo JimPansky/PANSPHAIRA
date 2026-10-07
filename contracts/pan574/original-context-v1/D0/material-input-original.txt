@@ -1,0 +1,18 @@
+## Closed snapshot contract
+
+`pansphaira.pan522/material-plan-input/v1` contains asOf, horizonEnd,
+calendars, items, effective BOM versions, distinct demands, explicit stock
+and dated receipts. Unknown keys, getters, proxies, non-plain records and
+non-data values are rejected before planner reads. Input is not mutated.
+A canonical SHA256 inputDigest binds the exact supplied snapshot, including
+array order; sorted proposal semantics do not fabricate another input's
+provenance. stockContractDigest binds the actual existing stock evaluation.
+
+The current scope is integer STK quantities, UTC day dates in 2000–2099,
+a horizon no longer than 366 days, at most 64 items, at most 128 rows per
+input family, positive lot multiples and non-negative lot minima/safety
+floors. All input and derived quantities are bounded to 1000000000.
+Total root and derived pegging requirements are bounded to 4096. Overflow
+or a larger expansion fails closed rather than truncating allocations.
+Every item has one explicit dated stock row and calendar. Native stock
+position aliases remain rejected by the existing stock contract.

@@ -667,6 +667,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
   "toSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
   "reason": "Keep currentgraph93 and all98 existing owners, unchanged scanner, historical migrations and byteobligations, all existing source-owner dependencies and hardgates. Register the focused closed uninstall parser/ownership regressions in the existing repository-integrity owner and actual canonical test entry; no competing module or new harness. Preserve historical526/527/528 evidence pins and allow only the exact actually executed new local safety source through a separate explicit byte-bound self-checked compatibility successor. New exclusively own no-network Docker stop/data-retention/purge/control/cleanup probes are distinct from fake interactions, old installer evidence, fullinstaller/ERP/model acceptance, exacthead canonical, CI, publication and closure. Missing or contradictory run/project/image/volume or linked-state custody remains denied without new rights or global repair."
 }),
+  Object.freeze({
+  "migrationId": "PAN574-BOUNDED-NATIVE-COMPOSITION/INTEGRITY-GENERATOR/V68",
+  "path": "scripts/refresh-integrity-data.mjs",
+  "profileVersion": 68,
+  "fromSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
+  "toSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
+  "reason": "Keep graph93 and all98 existing owners, original PAN471 read-only inventory, unchanged mechanical scanner, historical migrations and immutable byte obligations, every existing native kernel and hard gate. Register only the additive two-native-binding closed D1 export, independent public examples, preimplementation original D0/S byte declarations, authority-separated handoff and actual native regression under the existing integration owner. Source-only files do not extend the legacy runnable payload, grant execution/procurement/provider/source rights or assert model composition, novel connection, independent target oracle, persistence, canonical/CI/release or premature closure. D1 improvements and complete executable transitive pins never rewrite original D0 or selected original S."
+}),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -679,17 +687,17 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  * sites) are historical hints only — the fresh mechanical scan supersedes them.
  */
 const EXPECTED_COUNTS = {
-  "filesScanned": 1000,
+  "filesScanned": 1003,
   "declarationSites": 37,
   "declarationFiles": 37,
-  "importSites": 294,
-  "importFiles": 293,
+  "importSites": 296,
+  "importFiles": 295,
   "reexportSites": 7,
   "similarShapeSites": 30,
   "byteObligations": 21,
   "pinnedProfileFiles": 13
 } as const;
-const EXPECTED_LEDGER = {"entries": 2476, "uniquePaths": 2476, "duplicatePaths": 0} as const;
+const EXPECTED_LEDGER = {"entries": 2487, "uniquePaths": 2487, "duplicatePaths": 0} as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1472,7 +1480,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;

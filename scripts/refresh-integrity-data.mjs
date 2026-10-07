@@ -2711,6 +2711,29 @@ pan541Node.inputs = pan541Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan541:test")) repositoryIntegrityNode.ownedTests.push("npm run pan541:test");
 dag.graphVersion = 93;
 
+// PAN574 is an additive two-export seam, not a new native kernel or registry.
+// Keep PAN471's read-only inventory owner and every bounded owner unchanged;
+// register this closed source-only seam on the existing integration owner.
+const pan574Inputs = [
+  ["src/pan471/composition-bindings.mjs", "SECURITY"],
+  ["scripts/run-pan574-composition-contracts.mjs", "SOURCE"],
+  ["tests/pan471/composition-bindings.test.mjs", "VALIDATOR"],
+  ["docs/architecture/pan574-composition-bindings-v1.md", "DERIVED_EVIDENCE"],
+  ["contracts/pan574/public-examples-v1.json", "FIXTURE"],
+  ["contracts/pan574/original-context-v1/D0/manifest.json", "CONTRACT"],
+  ["contracts/pan574/original-context-v1/D0/material-input-original.txt", "CONTRACT"],
+  ["contracts/pan574/original-context-v1/D0/material-authority-original.txt", "CONTRACT"],
+  ["contracts/pan574/original-context-v1/D0/erp-profile-original.schema.json", "CONTRACT"],
+  ["contracts/pan574/original-context-v1/D0/inventory-boundary-original.txt", "CONTRACT"],
+  ["contracts/pan574/original-context-v1/S/manifest.json", "CONTRACT"],
+];
+for (const [inputPath, role] of pan574Inputs) {
+  const matches = repositoryIntegrityNode.inputs.filter(({path: candidate}) => candidate === inputPath);
+  if (matches.length > 1 || (matches.length === 1 && matches[0].role !== role)) throw new Error(`PAN574_INTEGRITY_OWNERSHIP_DENIED:${inputPath}`);
+  if (matches.length === 0) repositoryIntegrityNode.inputs.push({path: inputPath, role, sha256: digest(inputPath)});
+}
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan574:test")) repositoryIntegrityNode.ownedTests.push("npm run pan574:test");
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2769,6 +2792,7 @@ for (const [inputPath] of pan528Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const relative of [
   "tests/demo-current-head-e2e-uninstall.test.mjs",
   "scripts/run-forward-paired-analytics.mjs",

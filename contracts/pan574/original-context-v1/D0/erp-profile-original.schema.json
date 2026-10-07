@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pansphaira.invalid/schemas/contracts/erp-order-capability-cell-profile-v1.schema.json",
+  "title": "CAP-CELL-ERP-01 local synthetic provider profile v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "profileId", "profileVersion", "catalogueBinding", "semantics", "provider", "runtime", "claimBoundary", "profileDigest"],
+  "properties": {
+    "schemaVersion": { "const": "cm.capability-cell/erp-order-profile/v1" },
+    "profileId": { "enum": ["erp-order:synthetic-ledger-a", "erp-order:synthetic-commerce-b"] },
+    "profileVersion": { "const": "1.0.0" },
+    "catalogueBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["actionId", "actionVersion", "actionDigest"],
+      "properties": {
+        "actionId": { "const": "erp.order.create" },
+        "actionVersion": { "const": "1.0.0" },
+        "actionDigest": { "$ref": "#/$defs/digest" }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["semanticId", "quantityMeaning", "unit", "effectLifecycle", "readback"],
+      "properties": {
+        "semanticId": { "const": "ERP_ORDER_CREATE_DISCRETE_UNITS_V1" },
+        "quantityMeaning": { "const": "DISCRETE_UNITS" },
+        "unit": { "const": "EACH" },
+        "effectLifecycle": { "const": "CREATE_READBACK_COMPENSATING_DELETE" },
+        "readback": { "const": "AUTHORITATIVE_LOCAL_PROVIDER_STATE" }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "bindingId", "requestSchema", "responseSchema", "mapping", "effectiveRights"],
+      "properties": {
+        "kind": { "enum": ["SYNTHETIC_LEDGER_A", "SYNTHETIC_COMMERCE_B"] },
+        "bindingId": { "type": "string", "pattern": "^binding:synthetic-[a-z-]+-v1$" },
+        "requestSchema": { "type": "object" },
+        "responseSchema": { "type": "object" },
+        "mapping": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["skuPath", "quantityPath", "requestIdPath", "orderIdPath"],
+          "properties": {
+            "skuPath": { "type": "string", "minLength": 1 },
+            "quantityPath": { "type": "string", "minLength": 1 },
+            "requestIdPath": { "type": "string", "minLength": 1 },
+            "orderIdPath": { "type": "string", "minLength": 1 }
+          }
+        },
+        "effectiveRights": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z][a-z.-]+$" }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network", "storage", "activationAuthority", "externalCalls"],
+      "properties": {
+        "network": { "const": "DISABLED" },
+        "storage": { "const": "SYNTHETIC_MEMORY_ONLY" },
+        "activationAuthority": { "const": false },
+        "externalCalls": { "const": false }
+      }
+    },
+    "claimBoundary": { "const": "ADAPTED_LOCAL_SYNTHETIC_TWO_BINDINGS_NETLESS_NO_LIVE_ERP_NO_MIGRATION_NO_ARBITRARY_ACCOUNTING_EQUIVALENCE_NO_L4" },
+    "profileDigest": { "$ref": "#/$defs/digest" }
+  },
+  "$defs": {
+    "digest": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}
