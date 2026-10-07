@@ -6,645 +6,653 @@
   "baseRef": "origin/main",
   "generatedFrom": "fresh mechanical scan on admitted Main (see tests/canonical-json-profile-inventory.test.ts)",
   "integrationOwnership": {
-    "ownerNode": "repository-integrity",
-    "artifactInputs": [
-      {
-        "path": "docs/architecture/canonical-json-profile-inventory.md",
-        "role": "DERIVED_EVIDENCE"
-      },
-      {
-        "path": "tests/fixtures/canonical-json-profile-base-obligations-v1.json",
-        "role": "FIXTURE"
-      },
-      {
-        "path": "verification/canonical-json-profile-inventory-v1.json",
-        "role": "CONTRACT"
-      },
-      {
-        "path": "tests/canonical-json-profile-inventory.test.ts",
-        "role": "VALIDATOR",
-        "sha256": "1c0aec48fb8335f0749f2ee4b435b0ee3985cf138b63d27683f218a66b3d97fd"
-      }
-    ]
-  },
-  "profileVersionMigrations": [
+  "ownerNode": "repository-integrity",
+  "artifactInputs": [
     {
-      "migrationId": "PORTFOLIO-PS335-INTEGRATE/FND-PS-02-INTEGRITY-GENERATOR/V2",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 2,
-      "fromSha256": "6bffef78ac4be77ec5ab8c6a043e653d292b1b97d451dcf2db5bfad0979154a8",
-      "toSha256": "b19ee3ecb425a4404142b0a5e9edef48c8f22285a57504458c2c5ebd386fa12a",
-      "reason": "Advance verification DAG generation to graph v41 and canonically own the FND-PS-02 focused input family; the immutable v1 digest remains in the admitted-base fixture."
+      "path": "docs/architecture/canonical-json-profile-inventory.md",
+      "role": "DERIVED_EVIDENCE"
     },
     {
-      "migrationId": "PORTFOLIO-PS337-INTEGRATE/FND-XR-01-INTEGRITY-GENERATOR/V3",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 3,
-      "fromSha256": "b19ee3ecb425a4404142b0a5e9edef48c8f22285a57504458c2c5ebd386fa12a",
-      "toSha256": "cd13f5b07971b60c7440fc3ac102eb26f412b980798c56fb30e23ac947ad002f",
-      "reason": "Retain the reviewed graph v40 compatibility contract while canonically binding the FND-XR-01 paired-compatibility evidence and its repository-only pre-closure classification; the admitted v1 and reviewed v2 digests remain immutable."
+      "path": "tests/fixtures/canonical-json-profile-base-obligations-v1.json",
+      "role": "FIXTURE"
     },
     {
-      "migrationId": "AP-01-INTEGRATE/INCOMING-INVOICE-INTEGRITY-GENERATOR/V4",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 4,
-      "fromSha256": "cd13f5b07971b60c7440fc3ac102eb26f412b980798c56fb30e23ac947ad002f",
-      "toSha256": "11805df03d04b7c862645f25304b0c81a252535c7f48bdf72df81e9f72b8a216",
-      "reason": "Advance the Verification DAG to graph v41 and canonically own the AP-01 local-synthetic incoming-invoice Blueprint family."
+      "path": "verification/canonical-json-profile-inventory-v1.json",
+      "role": "CONTRACT"
     },
     {
-      "migrationId": "AP-02-INTEGRATE/INCOMING-INVOICE-INTAKE-INTEGRITY-GENERATOR/V5",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 5,
-      "fromSha256": "11805df03d04b7c862645f25304b0c81a252535c7f48bdf72df81e9f72b8a216",
-      "toSha256": "1bb497ec42c16f2865502234404302af10da4a75f1fe293fc03bfa9dede195a2",
-      "reason": "Advance the Verification DAG to graph v42 and canonically own the AP-02 frozen local-synthetic incoming-invoice intake family."
-    },
-    {
-      "migrationId": "AP-03-INTEGRATE/INCOMING-INVOICE-EXTRACTION-INTEGRITY-GENERATOR/V6",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 6,
-      "fromSha256": "1bb497ec42c16f2865502234404302af10da4a75f1fe293fc03bfa9dede195a2",
-      "toSha256": "fab476df3904cb066dc9912afb28dc0d15965e0f2bf6fe71117f817981e70c69",
-      "reason": "Advance the Verification DAG to graph v43 and canonically own the AP-03 frozen local-synthetic extraction benchmark family."
-    },
-    {
-      "migrationId": "PORTFOLIO-PS333-INTEGRATE/E-FND-1-CUMULATIVE-CLOSURE/V7",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 7,
-      "fromSha256": "fab476df3904cb066dc9912afb28dc0d15965e0f2bf6fe71117f817981e70c69",
-      "toSha256": "fc0c76558346b3d6487b577a5283569f282fa5b3385b1f79de8efcae8d61ffa2",
-      "reason": "Retain the current-Main graph v43 compatibility contract while canonically binding the repository-only E-FND-1 cumulative closure inputs to the existing repository-integrity owner after all seven child terminal chains; admitted v1 and reviewed v2-v6 digests remain immutable."
-    },
-    {
-      "migrationId": "AUDIT-CORRECTION-376/REL-TRUTH-01-INTEGRITY-GENERATOR/V8",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 8,
-      "fromSha256": "fc0c76558346b3d6487b577a5283569f282fa5b3385b1f79de8efcae8d61ffa2",
-      "toSha256": "ed305fbf67bc649682876730e71c2b795d18fade41ddb3c5f1d67f1072ba189b",
-      "reason": "Advance the Verification DAG to graph v44 while reconciling REL-TRUTH-01 release-governance authority and its canonical integrity dependants; admitted v1 and reviewed v2-v7 digests remain immutable."
-    },
-    {
-      "migrationId": "AUDIT-CORRECTION-377/CURRENT-HEAD-DOCKER-E2E-INTEGRITY-GENERATOR/V9",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 9,
-      "fromSha256": "ed305fbf67bc649682876730e71c2b795d18fade41ddb3c5f1d67f1072ba189b",
-      "toSha256": "440b64c5769aef5bb2f90670802aebb08201b13c86de20889488b965cfeb4d54",
-      "reason": "Advance the Verification DAG to graph v45 and canonically own the bounded current-head Docker E2E contract, focused fail-closed proof and repository-only implementation record; admitted v1 and reviewed v2-v8 digests remain immutable."
-    },
-    {
-      "migrationId": "PS365-AP05-RECEIPT-MANIFEST-01/INTEGRITY-GENERATOR/V10",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 10,
-      "fromSha256": "440b64c5769aef5bb2f90670802aebb08201b13c86de20889488b965cfeb4d54",
-      "toSha256": "2a0f330f67410cb4cab426e9d57e69c7205743a5675521b3f842229c1fd81314",
-      "reason": "Advance the Verification DAG to graph v46 and canonically bind the AP-05 receipt manifest integrity chain; admitted v1 and reviewed v2-v9 digests remain immutable."
-    },
-    {
-      "migrationId": "PS364-AP04-ERV-RELATIONAL-V2/INTEGRITY-GENERATOR/V11",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 11,
-      "fromSha256": "2a0f330f67410cb4cab426e9d57e69c7205743a5675521b3f842229c1fd81314",
-      "toSha256": "11a5f5657e40951d323538bb2fc51d970a31843d0a2c5681126785b3074cbed0",
-      "reason": "Advance the Verification DAG to graph v47 and canonically own the AP-04 relational hardening v2 family (versioned relational matching, deterministic duplicate-kind denial and distinct evidence dimensions) while the historical v1 pack remains byte-identical; admitted v1 and reviewed v2-v10 digests remain immutable."
-    },
-    {
-      "migrationId": "CSCL-12-PILOT-RECONCILIATION/INTEGRITY-GENERATOR/V12",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 12,
-      "fromSha256": "11a5f5657e40951d323538bb2fc51d970a31843d0a2c5681126785b3074cbed0",
-      "toSha256": "c37787b6c0bb6b80df381c811c05310faafa229b4267cd2094574943ce6e0af4",
-      "reason": "Advance the Verification DAG to graph v48 and canonically own the CSCL-11 iDempiere serial holdout gate family registered as the reconciled pilot node; admitted v1 and reviewed v2-v11 digests remain immutable."
-    },
-    {
-      "migrationId": "P0-PS391-AUD-01/OWNER-AUTHORITY-USE-TIME-REVALIDATION/V2",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 2,
-      "fromSha256": "14a2f4f8b47ce045321576f0b485da8e5370910f14949d1b548359066ef1bad5",
-      "toSha256": "ccbbf73fe52c4453c13ff08e083527021f6af3a436898151688024c2e0dbd036",
-      "reason": "Bind the owner-authority use-time revalidation implementation to the immutable admitted-base digest; the admitted v1 digest remains immutable."
-    },
-    {
-      "migrationId": "P0-PS392-AUD-02/UNIFIED-MUTATION-RESERVATION-UNCERTAIN-RECOVERY/V3",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 3,
-      "fromSha256": "ccbbf73fe52c4453c13ff08e083527021f6af3a436898151688024c2e0dbd036",
-      "toSha256": "ba1a3a78527a0b5027e6d8d595149f29a8e48d27bb88004249cb6122977112df",
-      "reason": "Bind the unified mutation reservation, operation deadline and uncertain-outcome recovery implementation to the reviewed P0-PS392 source digest; admitted v1 and reviewed P0-PS391 v2 bytes remain immutable."
-    },
-    {
-      "migrationId": "P0-PS392-AUD-02/AUTHORITY-BOUND-UNCERTAIN-RECOVERY/V4",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 4,
-      "fromSha256": "ba1a3a78527a0b5027e6d8d595149f29a8e48d27bb88004249cb6122977112df",
-      "toSha256": "7ad2dc71454daf4465a7bcda01341deefd03c31cc84d45c08ed77437fee8fa0c",
-      "reason": "Bind ambiguous reconciliation to the originally reserved authority decision or owner lease and preserve operation-key conflict precedence; admitted v1 and reviewed v2-v3 bytes remain immutable."
-    },
-    {
-      "migrationId": "P0-PS393-AUD-03/AMBIGUOUS-PERSISTENCE-CONVERGENCE/V5",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 5,
-      "fromSha256": "7ad2dc71454daf4465a7bcda01341deefd03c31cc84d45c08ed77437fee8fa0c",
-      "toSha256": "7bef8ac531309c14e1bb768e87b7bcff18b1a9bf72a044d0f979bdbb7d8ad576",
-      "reason": "Converge in-memory and durable operation state on a final-persist failure after an ambiguous adapter outcome: roll the transient effect record and reservation back to the recoverable ambiguous/reconcile state, persist that convergence before rethrowing, so a restart reconciles to the same receipt instead of a phantom applied state; admitted v1 and reviewed v2-v4 gate bytes remain immutable."
-    },
-    {
-      "migrationId": "P0-PS393-AUD-03/FINAL-PERSIST-REGRESSION-FOLLOWTHROUGH/V6",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 6,
-      "fromSha256": "7bef8ac531309c14e1bb768e87b7bcff18b1a9bf72a044d0f979bdbb7d8ad576",
-      "toSha256": "d64714242f7517f15f4bc985534a82569adfca7fabaa2207e6f937ec67b5b64b",
-      "reason": "Correct the inaccurate final-persist convergence comments at both demo mutation-gate persistence sites (the reconciliation site's execute() catch does not re-run markAmbiguous because reserved remains false, and a persistent initial/recovery persist failure lets live AMBIGUOUS coexist with retained durable EXECUTING until storage recovers) and bind the new bounded canonical regression tests for both final-persist sites (real EISDIR at the store temp-file boundary, exact failed-gate retry, fresh Node child restart, persistent storage failure, and unavailable reconciliation); admitted v1 and reviewed v2-v5 gate bytes remain immutable."
-    },
-    {
-      "migrationId": "PAN-EVO-02-OWNED-SYNTHETIC-JOURNAL/GATE-PROFILE/V7",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 7,
-      "fromSha256": "d64714242f7517f15f4bc985534a82569adfca7fabaa2207e6f937ec67b5b64b",
-      "toSha256": "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20",
-      "reason": "Bind the bounded v2 synthetic journal-owner refusal and durable reconciliation changes while preserving the immutable reviewed v1-v6 gate source digests; no host enforcement claim."
-    },
-    {
-      "migrationId": "PAN-EVO-02-LEGACY-SNAPSHOT-PRESERVATION/GATE-PROFILE/V8",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 8,
-      "fromSha256": "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20",
-      "toSha256": "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
-      "reason": "Keep the v2 ambiguous-snapshot recovery and journal flush/sync scoped to the reserved synthetic namespace; legacy direct owner recovery retains pre-existing stale-snapshot denial and persistence semantics. Reviewed v1-v7 digests remain immutable."
-    },
-    {
-      "migrationId": "XRA-PS-02-NATIVE-WIRE-INTEGRATE/INTEGRITY-GENERATOR/V13",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 13,
-      "fromSha256": "c37787b6c0bb6b80df381c811c05310faafa229b4267cd2094574943ce6e0af4",
-      "toSha256": "c45eef7d08a69273146d264bb68c15a9f984767e51e8e11097e8106997216640",
-      "reason": "Advance the Verification DAG to graph v49 and canonically bind the XRA-PS-02 native wire/head integration family (native paired adjudication receipt and loopback real-HTTP capture fixtures) to the existing CKS-12 closed-loop owner; admitted v1 and reviewed v2-v12 digests remain immutable."
-    },
-    {
-      "migrationId": "XRA-PS-02-NATIVE-ROOT-QS-EXECUTION/INTEGRITY-GENERATOR/V14",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 14,
-      "fromSha256": "c45eef7d08a69273146d264bb68c15a9f984767e51e8e11097e8106997216640",
-      "toSha256": "886b6e4ce240405db56758064ba6ae00d6f31d9c9d365ef09c4d62fd7448165d",
-      "reason": "Canonically bind the XRA-PS-02 native AC03 Root-QS execution-evidence family (executable Root-QS replay runner, focused Root-QS RED-GREEN-NEGATIVE test, v2 successor paired receipt, raw Root-QS execution evidence and v2 slice) to the existing CKS-12 closed-loop owner; admitted v1 and reviewed v2-v13 digests remain immutable."
-    },
-    {
-      "migrationId": "PORTFOLIO-PAR-XR-01-PAIRED-ANALYTICS/INTEGRITY-GENERATOR/V15",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 15,
-      "fromSha256": "886b6e4ce240405db56758064ba6ae00d6f31d9c9d365ef09c4d62fd7448165d",
-      "toSha256": "47882882a6682aa11852791c3e38ff83130bc30f70aa62ae5f7125d0ab0c11d0",
-      "reason": "Canonically bind the PAR-XR-01 paired-analytics integrity family (paired-analytics parity gate source, adversarial TDD suite, executable parity runner, secure parity workflow, head-bound compatibility evidence and the two exact consumer-support fixtures) to the existing repository-integrity owner and extend the checksum ledger; admitted v1 and reviewed v2-v14 digests remain immutable."
-    },
-    {
-      "migrationId": "PAN346-INDEPENDENT-AUTHORITY/INTEGRITY-GENERATOR/V16",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 16,
-      "fromSha256": "47882882a6682aa11852791c3e38ff83130bc30f70aa62ae5f7125d0ab0c11d0",
-      "toSha256": "6498ba70c69bcbd1e99229427c42e7fe6cd510646a7e2e903a1ddcacb8fac12b",
-      "reason": "Bind independent paired expectations, runner regression tests and pinned offline counterpart execution to the existing integrity owner and canonical owned test; preserve admitted v1 and reviewed v2-v15 bytes."
-    },
-    {
-      "migrationId": "PAN346-PUBLIC-SPELLING/INTEGRITY-GENERATOR/V17",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 17,
-      "fromSha256": "6498ba70c69bcbd1e99229427c42e7fe6cd510646a7e2e903a1ddcacb8fac12b",
-      "toSha256": "eb2669cba01995248ad49296fa3424cfcbb7271f554a7824e3107ba259f01d62",
-      "reason": "Bind the public PanSphaira spelling correction in the paired-analytics invariant; preserve admitted v1 and reviewed v2-v16 bytes."
-    },
-    {
-      "migrationId": "PAN346-FORWARD-QUALIFICATION/INTEGRITY-GENERATOR/V18",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 18,
-      "fromSha256": "eb2669cba01995248ad49296fa3424cfcbb7271f554a7824e3107ba259f01d62",
-      "toSha256": "a9c449c0071e5f15134491a1672970a203487f491260947e11fad3d577778694",
-      "reason": "Bind additive forward qualification, historical source archive, strict current-head runtime runner and negative probes to graph v50; preserve historical v1-v17 obligations and receipts."
-    },
-    {
-      "migrationId": "PAN346-PR235-PUBLIC-EVIDENCE/INTEGRITY-GENERATOR/V19",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 19,
-      "fromSha256": "a9c449c0071e5f15134491a1672970a203487f491260947e11fad3d577778694",
-      "toSha256": "7faf3040b4f835b44123aeaafcd6ab8a3c6cf64ae195a15303b20a70c700030a",
-      "reason": "Bind exact PR235 qualification and immutable historical provider evidence to graph v51; preserve historical v1-v18 obligations and receipts."
-    },
-    {
-      "migrationId": "PAN437-CURRENT-MAIN-INTEGRATION/INTEGRITY-GENERATOR/V20",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 20,
-      "fromSha256": "7faf3040b4f835b44123aeaafcd6ab8a3c6cf64ae195a15303b20a70c700030a",
-      "toSha256": "703189c79599fc298e8200c5937b9389b5a707b851a7503912bd93714d612419",
-      "reason": "Advance the verification DAG to graph v52 and canonically bind the bounded PAN437 current-Main neighbor integration while preserving the imported corrected ERP order-reader connection and all prior obligations."
-    },
-    {
-      "migrationId": "PAN435-436-SALES-STOCK/INTEGRITY-GENERATOR/V21",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 21,
-      "fromSha256": "703189c79599fc298e8200c5937b9389b5a707b851a7503912bd93714d612419",
-      "toSha256": "2d18296970298faf861f07e0cf5a89762e95d8fd7d72c6ea712118c49fe2d2b8",
-      "reason": "Advance verification DAG to graph v53 for the bounded sales-stock journey with unique ERP-cell ownership and explicit dependency; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "PAN433-DOMAIN-MAPPING/INTEGRITY-GENERATOR/V22",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 22,
-      "fromSha256": "2d18296970298faf861f07e0cf5a89762e95d8fd7d72c6ea712118c49fe2d2b8",
-      "toSha256": "9fd0b4d9c7888a2509a4fa14d519685068ce5b11c3187dfcfc890828cb2f5b79",
-      "reason": "Advance verification DAG to graph v54 and bind the bounded PAN433 domain convention plus default/alternate mapping acceptance to its explicit local owner; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "PAN441-EMPLOYEE-READONLY/INTEGRITY-GENERATOR/V23",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 23,
-      "fromSha256": "9fd0b4d9c7888a2509a4fa14d519685068ce5b11c3187dfcfc890828cb2f5b79",
-      "toSha256": "488fc3363b4d1cddd9d2c3ecedcbf1d465c02a3d825856858971eca0121d2c64",
-      "reason": "Advance verification DAG to graph v55 and bind the bounded PAN441 read-only employee-agent profile, focused denials and public registration to its explicit local owner; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "KS238-ORDER-SOURCE-HANDOFF/INTEGRITY-GENERATOR/V24",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 24,
-      "fromSha256": "488fc3363b4d1cddd9d2c3ecedcbf1d465c02a3d825856858971eca0121d2c64",
-      "toSha256": "81d565c053a1da1009327378d51908bb331c2b23f9a4e8af3a0e3c354fa2b8b1",
-      "reason": "Advance verification DAG to graph v56 and bind the bounded KS238 read-only order/source handoff over the released ERP order and customer readers, its negative tests and public registration to its explicit local owner; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "PAN442-BOUND-TASK-HANDLES/INTEGRITY-GENERATOR/V25",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 25,
-      "fromSha256": "81d565c053a1da1009327378d51908bb331c2b23f9a4e8af3a0e3c354fa2b8b1",
-      "toSha256": "4a4d5b6732e576628e2e0c658d7d2ebeb12e29246dedeb8dcafd569da32e090a",
-      "reason": "Advance verification DAG to graph v57 and bind the bounded PAN442 local bound business task and opaque tool handle journey over the accepted demo Order seam (owner-escalation decision, owner approval, owner-escalation lease execution with mutation reservation), its exact fail-closed negatives and repository-only registration to its explicit local owner; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "PAN468-IMPACT-SELECTION/INTEGRITY-GENERATOR/V26",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 26,
-      "fromSha256": "4a4d5b6732e576628e2e0c658d7d2ebeb12e29246dedeb8dcafd569da32e090a",
-      "toSha256": "b9a60ac7d3b0c6431b5b8c5c3341dd646e18142a3a7f20f8c27b743189c8605e",
-      "reason": "Advance verification DAG to graph v58 and bind the bounded PAN468 targeted impact selection and bounded historical path-scan work (contract-consumer classification, tree-mode enumeration without per-file content reads, diagnostics) to its explicit local owner; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "PAN469-CONTRIBUTION-VIEWS/INTEGRITY-GENERATOR/V27",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 27,
-      "fromSha256": "b9a60ac7d3b0c6431b5b8c5c3341dd646e18142a3a7f20f8c27b743189c8605e",
-      "toSha256": "d7c2c376c62bb4a5a8155264c0c432446c99ec87f0786b6666367965f1873c12",
-      "reason": "Advance verification DAG to graph v59 and bind the bounded PAN469 one-family contribution-records pilot (sealed individual records, order-independent byte-identical generated shared view with a single integration owner, drift refusal and integer contributor/work measurement against the existing path) to its explicit local owner; preserve all prior immutable obligations."
-    },
-    {
-      "migrationId": "PAN470-HANDOFF-EFFORT/INTEGRITY-GENERATOR/V28",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 28,
-      "fromSha256": "d7c2c376c62bb4a5a8155264c0c432446c99ec87f0786b6666367965f1873c12",
-      "toSha256": "ffb3e3ef8286456f91608cbf258e145f65785a6f36ce98c2a948545413b3693a",
-      "reason": "Advance graph to v60 and bind the bounded PAN470 handoff-effort slice while preserving all prior byte obligations."
-    },
-    {
-      "migrationId": "PAN471-CAPABILITY-INVENTORY/INTEGRITY-GENERATOR/V29",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 29,
-      "fromSha256": "ffb3e3ef8286456f91608cbf258e145f65785a6f36ce98c2a948545413b3693a",
-      "toSha256": "7e56b7ff64262a6cf55b0812c1a59094b16df9144aeaa73b1c093f1b19e49baf",
-      "reason": "Advance graph to v61 and bind the bounded PAN471 inventory on current Main while retaining historical obligations."
-    },
-    {
-      "migrationId": "PAN461-LIFECYCLE-INVENTORY/INTEGRITY-GENERATOR/V30",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 30,
-      "fromSha256": "7e56b7ff64262a6cf55b0812c1a59094b16df9144aeaa73b1c093f1b19e49baf",
-      "toSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
-      "reason": "Advance graph to v62 and bind the bounded PAN461 inventory with corrected schema and unproven process generation while retaining historical obligations."
-    },
-    {
-      "migrationId": "PAN-KS-SYNTHETIC-METRIC-READ/INTEGRITY-GENERATOR/V31",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 31,
-      "fromSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
-      "toSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
-      "reason": "Bind the separately scoped synthetic metric read task to the existing bound resolver and register its validator while preserving PAN453 v5 source and all earlier byte obligations."
-    },
-    {
-      "migrationId": "PAN462-NATIVE-BACKUP-RESTORE/INTEGRITY-GENERATOR/V32",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 32,
-      "fromSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
-      "toSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
-      "reason": "Bind the bounded PAN462 native backup/restore family (source, validator, schema, docs, boundary record and fixtures) to its own bounded owner; the integration owner keeps only the inputs no bounded node owns, so its input list stays inside the frozen Evidence-DAG schema bound without relaxing the schema. Admitted v1 and reviewed v2-v31 digests remain immutable."
-    },
-    {
-      "migrationId": "PAN453-AC04-STOP-REVOKE-RETENTION/GATE-PROFILE/V9",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 9,
-      "fromSha256": "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
-      "toSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
-      "reason": "Bind the bounded owned synthetic STOP/REVOKE control, durable retry-exhaustion fences and read-only recovery to the existing gate; retain reviewed v1-v8 bytes and make no host or external authority claim."
-    },
-    {
-      "migrationId": "PAN453-AC03-AUTHORITATIVE-TARGET-READBACK/GATE-PROFILE/V10",
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "profileVersion": 10,
-      "fromSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
-      "toSha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
-      "reason": "Bind the owned synthetic ambiguous reconciliation to an independently read persisted target before confirming success; preserve reviewed v1-v9 gate bytes, legacy semantics and unresolved safety without host or production authority."
-    },
-    {
-      "migrationId": "PAN470-PRODUCER-HANDOFF/INTEGRITY-GENERATOR/V33",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 33,
-      "fromSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
-      "toSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
-      "reason": "Register the PAN470 local producer adapter, synthetic fixture and actual-entry validator under the existing bounded handoff owner; preserve all prior immutable migrations and synthetic WorkReceiptV1 semantics."
-    },
-    {
-      "migrationId": "PAN463-NATIVE-UPDATE/INTEGRITY-GENERATOR/V34",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 34,
-      "fromSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
-      "toSha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
-      "reason": "Advance graph to v63 and register the bounded PAN463 native update adapter, real process/transaction tests and reused PAN453/doctor dependencies; preserve every prior byte obligation and authority boundary."
-    },
-    {
-      "migrationId": "PAN464-RETAINED-PAIR/INTEGRITY-GENERATOR/V35",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 35,
-      "fromSha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
-      "toSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
-      "reason": "Advance graph to v64 and bind the bounded PAN464 retained native pair, protected oracle, local-copy recovery, mandatory exact-head Docker workflow and reused native authorities; preserve every earlier byte obligation and hard gate."
-    },
-    {
-      "migrationId": "PAN465-OFFLINE-UPDATER/INTEGRITY-GENERATOR/V36",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 36,
-      "fromSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
-      "toSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
-      "reason": "Advance graph to v65 and own the bounded PAN465 external-trust signature, executable-slot/journal, authentic native bundle and closed distribution tests/guide without weakening retained native gates or any prior immutable byte obligation."
-    },
-    {
-      "migrationId": "DOC-README-03-R1/INTEGRITY-GENERATOR/V37",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 37,
-      "fromSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
-      "toSha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
-      "reason": "Advance graph to v66 and bind the approved R1 explanation routes, source-bound diagrams, VitePress configuration and docs validator to existing repository integrity; preserve every admitted and reviewed profile migration, hard gate and runtime nonclaim."
-    },
-    {
-      "migrationId": "PAN466-LIFE06/INTEGRITY-GENERATOR/V38",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 38,
-      "fromSha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
-      "toSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
-      "reason": "Advance graph to v67 for the bounded LIFE-06 descriptor/actual-CLI/native-use sources and distinct required same-PID native gate; retain old owners, all immutable profile migrations, pilot noncoverage and independent grant/history boundaries."
-    },
-    {
-      "migrationId": "PAN487-SEM-HOLDOUT01/INTEGRITY-GENERATOR/V39",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 39,
-      "fromSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
-      "toSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
-      "reason": "Advance graph to v68 and register the bounded product offering-purpose semantic successor actual entry, exact public rule/contracts/calibration and affected tests; preserve historical candidates/protocol/receipts, all prior owners and immutable profile obligations, distinct integrity/semantics and Main-exclusive sealed evaluation."
-    },
-    {
-      "migrationId": "PAN472-MIG02/INTEGRITY-GENERATOR/V40",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 40,
-      "fromSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
-      "toSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
-      "reason": "Advance graph to v69 and register the bounded persistent synthetic draft transfer actual CLI, independent native readback, fixtures and original-AC tests; preserve existing owners, hard gates, immutable migrations, journal authority and sealed semantic evaluation."
-    },
-    {
-      "migrationId": "PAN473-MIG03/INTEGRITY-GENERATOR/V41",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 41,
-      "fromSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
-      "toSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
-      "reason": "Advance graph to v70 and register the original bounded MIG-03 native writer-scope cutover, independent controller-down observation, actual living-client/SIGKILL/CLI tests and accepted ABA-safe correction; preserve all prior owners, immutable migrations, hard gates, nonclaims and private/sealed boundaries."
-    },
-    {
-      "migrationId": "PAN467-LIFE07/INTEGRITY-GENERATOR/V42",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 42,
-      "fromSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
-      "toSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
-      "reason": "Advance graph to v71 and register original LIFE-07 attributed native business correction, stable original effect identity, separate read-only diagnosis and actual CLI/process crash tests while retaining all prior owners, immutable migrations, hard gates and private/sealed boundaries."
-    },
-    {
-      "migrationId": "PAN456-EVO05/INTEGRITY-GENERATOR/V43",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 43,
-      "fromSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
-      "toSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
-      "reason": "Advance graph to v72 and bind one version-pinned actual process-separated policy tooling comparison, real copied-installation drift/malformed-result probes and reject-adoption recommendation without runtime activation; preserve all prior owners, immutable migrations, hard gates, retained baseline, private/sealed source and authority boundaries."
-    },
-    {
-      "migrationId": "PAN456-EVO05-PUBLIC-GUIDE/INTEGRITY-GENERATOR/V44",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 44,
-      "fromSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
-      "toSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
-      "reason": "Keep graph v72 and relocate byte-identical functional PAN-EVO-05 guide from forbidden development evidence namespace to public architecture namespace; unchanged supply-chain validator, original Main-qualified source bytes, prior V43 freeze/FAIL, owners, hard gates and all immutable migrations are retained."
-    },
-    {
-      "migrationId": "PAN454-EVO03/INTEGRITY-GENERATOR/V45",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 45,
-      "fromSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
-      "toSha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd",
-      "reason": "Advance graph to v73 and register one bounded existing-adapter task-journey evidence/falsification consumer with exact actual synthetic runtime boundaries and owned non-promoting corrections; preserve the runnable product manifest, retained foundations, previous owners, all immutable migrations and hard gates, privacy, paused projects and sealed custody. No implemented isolation capability from negative evidence."
-    },
-    {
-      "migrationId": "PAN360-ORIGINAL-EXECUTION/INTEGRITY-GENERATOR/V46",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 46,
-      "fromSha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd",
-      "toSha256": "dbfa9258e5719a9a264f14aacdd34c0cd65e01278132ecdf655ddc2cd421ce7c",
-      "reason": "Advance graph to v74 with exactly one bounded owner for the actual Original360 LEAN/200bps same-core pair, pinned synthetic intake, dialogue, relational admission, separate approval, UI/analytics/readback and reuse receipts. Preserve historical100bps and UNKNOWN evidence, original criteria, all prior immutable migrations/owners/hard gates, runnable product manifest, privacy and Main-only custody; no production or issue-completion authority."
-    },
-    {
-      "migrationId": "PAN378-SPENT-PILOT/INTEGRITY-GENERATOR/V47",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 47,
-      "fromSha256": "dbfa9258e5719a9a264f14aacdd34c0cd65e01278132ecdf655ddc2cd421ce7c",
-      "toSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
-      "reason": "Advance graph to v75 with one bounded original DOC-AI-01 owner for fixed-admission byte-exact complete frozen oracle reproduction of the independently evaluated spent real-OCR pilot. Keep FALSIFIED_WITH_EVIDENCE, all39 custody source bindings, report/v2 wire identity and separate v3 epoch, every original criterion, prior migration/owner/hard gate, historical synthetic outputs, private originals and runnable product manifest intact; no tuning, new blind trial, production or issue-completion authority."
-    },
-    {
-      "migrationId": "ERV-WORKFLOW-EVIDENCE/INTEGRITY-GENERATOR/V48",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 48,
-      "fromSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
-      "toSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
-      "reason": "Advance graph to v76 with one bounded user-authorized ERV workflow evidence owner, exact immutable public research packet, source-qualified real unchanged PSAi primitives, persisted outputs/expectedactual/gaps and mandatory replay. Preserve all historical v5 evidence,22 reused kernel/build/profile/document bindings,0 human workflows, denials/UNKNOWN, prior owners/migrations/hard gates, README R1 and runnable payloads; no operational database, identity/routing/new platform or390396 admission."
-    },
-    {
-      "migrationId": "PAN396-ORIGINAL-S3-SQS/INTEGRITY-GENERATOR/V49",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 49,
-      "fromSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
-      "toSha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
-      "reason": "Advance graph to v77 and register one bounded optional native S3/SQS lab using unchanged original PAN360 intake/core, closed typed broker, exact disabled service/UI probes and issue-owned cleanup. Preserve every prior migration, immutable admitted-base obligation, existing owner/hard gate, README, runnable manifest, original trust/privacy and Main-only sealed custody; no generic AWS, productive or completion authority."
-    },
-    {
-      "migrationId": "PAN515-NATIVE-TRADE-STATE/INTEGRITY-GENERATOR/V50",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 50,
-      "fromSha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
-      "toSha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
-      "reason": "Advance graph to v78 and register the additive PAN515 native PAN472/PAN473 trade scope, same-source common June/July events, original positive/negative CLI/process suites and bounded public registration. Preserve every historical migration, immutable admitted-base obligation, original common/legacy identities, prior owner and hard gate; no new platform, sealed source, productive or completion authority."
-    },
-    {
-      "migrationId": "PAN516-NATIVE-PROCUREMENT/INTEGRITY-GENERATOR/V51",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 51,
-      "fromSha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
-      "toSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
-      "reason": "Advance graph to v79 and register one bounded PAN516 native purchase/confirmation/receipt/target-first retry and unchanged ERV composition owner with original four criteria, original negatives and actual retained CLI. Preserve all historical migrations, immutable base obligations, previous owners, common source, original ERV variants/tolerance, hard gates and runnable public manifest; no new platform, private source, productive dispatch/payment or completion authority."
-    },
-    {
-      "migrationId": "PAN517-NATIVE-FULFILMENT/INTEGRITY-GENERATOR/V52",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 52,
-      "fromSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
-      "toSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
-      "reason": "Advance graph to v80 and register one bounded P03 native fulfilment owner using the existing PAN515 transaction and exported entry, original five criteria/six negatives and real calendar/rollback validation. Preserve every historical migration, immutable base obligation, existing owner and hard gate, common source and runnable manifest; no new CLI gate, productive movement, private source or completion authority."
-    },
-    {
-      "migrationId": "PAN524-EXACT-BI-PAIR/INTEGRITY-GENERATOR/V53",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 53,
-      "fromSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
-      "toSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
-      "reason": "Advance graph to v81 with one bounded J01 exact current BI pair owner; retain existing legacy external BI source owner, four original criteria/negatives, full attestation/artifact identity and independently owned real provider pairing. Preserve all prior migrations, immutable base obligations, hard gates, source/privacy boundaries and runnable manifest; no wildcard, registry promotion, productive or closure authority."
-    },
-    {
-      "migrationId": "PAN524-CLOSED-RESPONSE-METADATA-FIXTURES/INTEGRITY-GENERATOR/V54",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 54,
-      "fromSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
-      "toSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
-      "reason": "Bind two genuine released plan/preview captures to the existing graph81 J01 owner for closed exact response-origin metadata regression. Preserve the entire reviewed V53 migration, scanner, legacy request denial, immutable base obligations, hard gates and all existing owners; no registry or productive authority."
-    },
-    {
-      "migrationId": "PAN520-CURRENT-NATIVE-PROJECTIONS/INTEGRITY-GENERATOR/V55",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 55,
-      "fromSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
-      "toSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
-      "reason": "Advance graph to v82 with one additive native P06 projection owner beside released J01 graph81/V54. Preserve every historical migration, admitted byte obligation, existing native/source owner, legacy direct-read meaning, response/request safety boundary and mandatory hard gate. No KS selector rewrite, portable or productive authority, billing inference or completion claim."
-    },
-    {
-      "migrationId": "PAN525-EXACT-QUALIFIED-PAIR/INTEGRITY-GENERATOR/V56",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 56,
-      "fromSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
-      "toSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
-      "reason": "Advance graph to v83 with one bounded read-only J03 exact retained released-pair qualification owner. Preserve the same delivered six-intent run, separately evidenced native persistence, HELD KS250 second context, all prior migrations, immutable base obligations, old owners and mandatory gates. No provider registry mutation, source/publication or execution rights, latest/main admission, runnable distribution or issue-closure authority."
-    },
-    {
-      "migrationId": "PAN526-PORTABLE-RUNTIME/INTEGRITY-GENERATOR/V57",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 57,
-      "fromSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
-      "toSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
-      "reason": "Advance graph to v84 with one additive optional source-bound PAN-H01 portable local runtime owner. Preserve the early immutable shared contract, corrected Node-agent/platform binding, actual released native baseline, ten measured cold starts/40 raw phases, existing legacy installer/Compose/source owners and runnable payload, every previous immutable migration/byte obligation and hard gate. No receipt/caller-role authority, provider/host rights, remote effect route, paired acceptance, Main/CLOSED waiting gate or whole-release/closure claim."
-    },
-    {
-      "migrationId": "PAN527-ORIGIN-SESSION/INTEGRITY-GENERATOR/V58",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 58,
-      "fromSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
-      "toSha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66",
-      "reason": "Advance graph to v85 with one additive optional origin/protected-session source owner depending on the unchanged portable runtime. Preserve all historical migrations/byte obligations, RuntimeIdentity enum/effective rights, old owners, legacy installer/runnable payload and hard gates. Register actual certificate-verifying browser/native/legacy regressions with closed fail-on-missing-tooling runner; frozen public candidate and exact actual AC4 receipt stay bounded, no native KS or productive permission, reciprocal CLOSED/Main gate or full release/closure inference."
-    },
-    {
-      "migrationId": "PAN529-NATIVE-RUNTIME-BUDGET/INTEGRITY-GENERATOR/V59",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 59,
-      "fromSha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66",
-      "toSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
-      "reason": "Advance graph to v86 with one additive original H05 native template/budget owner. Preserve all historical migrations and sealed base obligations, old owners and hard gates, immutable published v1, existing shared broker export membership and unchanged legacy installer. Register actual100 native reservations/HTTP controllers, guarded synthetic usage and persisted result/unknown custody, not paid provider, pricing, new rights or image qualification, Main/CLOSED gate or whole-delivery inference."
-    },
-    {
-      "migrationId": "PAN521-LOCAL-CONNECTED-NATIVE/INTEGRITY-GENERATOR/V60",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 60,
-      "fromSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
-      "toSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
-      "reason": "Advance graph to v87 with exactly one additive P07 local native connected-journey owner. Preserve all original standalone business fixtures, unchanged historical cf199bbd reader/KS selectors, previous owners, classifications, sealed admitted obligations and mandatory gates. Register actual local actions/operator checkpoint/resume/correction and unqualified finance handoff, not fiscal/archive/FiBu/payment target qualification, runtime activation, Main/CLOSED wait or original issue acceptance."
-    },
-    {
-      "migrationId": "PAN522-DETERMINISTIC-MATERIAL-PLAN/INTEGRITY-GENERATOR/V61",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 61,
-      "fromSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
-      "toSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
-      "reason": "Advance graph to v88 with one additive P08 deterministic material-planning owner. Preserve all previous immutable migration obligations, unchanged census scanner, original native fixtures/stores and hard gates, source-only builder classification and runnable manifest. Register actual original four criteria/six negatives, component chronology, all same-date root allocations, authority-free native rollback and closed operator/owned-scratch suite; no finite-capacity promise, new source/role/dispatch/runtime right, Main wait or premature original closure."
-    },
-    {
-      "migrationId": "PAN528-GUIDED-NATIVE-BROWSER/INTEGRITY-GENERATOR/V62",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 62,
-      "fromSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
-      "toSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
-      "reason": "Advance graph to v89 with one additive optional PAN-H03 actual native browser owner. Preserve every historical migration, original semantic/byte obligation, old source owner, unchanged census scanner and mandatory gates. Register actual certificate-verifying browser/native lifecycle, pure typed helper and six original negatives; preserve legacy runnable payload and budget/unknown-effect custody. No productive/model/source rights, KS journey, human/phone study, Main approval wait or premature delivery claim."
-    },
-    {
-      "migrationId": "PAN523-RECOVERED-WITH-DELIVERED528/INTEGRITY-GENERATOR/V63",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 63,
-      "fromSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
-      "toSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
-      "reason": "Advance actual delivered graph89 to90 with the retained bounded P09 native production owner beside delivered PAN528 guided native browser. Preserve both capabilities, every old source owner and full descendant-owner/test set, immutable prior migration/base obligations, unchanged census scanner, all original native receipts and hard gates, existing runnable manifest and source-only builder. No separate leading store, physical/fiscal/archive/FiBu/financial-profit or finite-capacity qualification, new authority, Main approval wait or premature closure; prior native29 and released browser43 evidence are not relabelled or added."
-    },
-    {
-      "migrationId": "PAN537-EXISTING-PROPOSAL-BROWSER/INTEGRITY-GENERATOR/V64",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 64,
-      "fromSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
-      "toSha256": "8486140dd9afebae4382a58233e7baeff04467bfd033cd389df830fce9e490b3",
-      "reason": "Advance graph90 to91 with one bounded owner for the existing legacy proposal browser correction and mandatory actual Chromium/native regression. Registered proposal supplies the exact visible and transmitted Diff/digest, readable before/after facts precede approval, missing/tampered/stale/reject/authentication/no-executable-rights cases retain unchanged backend denial, and controlled real response-delivery loss stays unknown without blind retry. Preserve all prior owners, dependencies, own test lists, hard gates, immutable migration/base obligations, unchanged census scanner and legacy payload membership. This is a fork-local development successor, not a composite with held immutable541, public delivery, independent human/phone/whole-setup acceptance, new backend/provider/productive rights or publication clearance."
-    },
-    {
-      "migrationId": "PAN538-EXISTING-SETUP390-BOUNDS/INTEGRITY-GENERATOR/V65",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 65,
-      "fromSha256": "8486140dd9afebae4382a58233e7baeff04467bfd033cd389df830fce9e490b3",
-      "toSha256": "fc3191a44001d241a4e7b5bc00d6502d616970e0c6c8be2a82720abfe4840d12",
-      "reason": "Advance graph91 to92 by adding the mandatory actual setup390 layout regression to the existing proposal/dashboard component owner and closed browser runner, with no duplicate source owner or generic framework. Preserve every prior migration and immutable base obligation, unchanged mechanical scanner, all old source owners and hard gates, legacy payload membership, request/authentication/backend bytes and original negative cases. Actual desktop390, German synthetic content, CSS-layout200percent, keyboard, real pending-response delivery, native403 denial and authenticated synthetic setup are bounded product evidence, not German localization, physical/browser-chrome acceptance, productive/new provider rights or exact-head canonical/CI/release/closure qualification. Clean authorized14232 lineage only; historical provider objects are not claimed erased."
-    },
-    {
-      "migrationId": "PAN541-CURRENT-SHARED-BROWSER-SHELL/INTEGRITY-GENERATOR/V66",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 66,
-      "fromSha256": "fc3191a44001d241a4e7b5bc00d6502d616970e0c6c8be2a82720abfe4840d12",
-      "toSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
-      "reason": "Advance current graph92 to93 with exactly one additive PUI-01 shared typed browser shell owner reconstructed from retained reviewed development work on current protected2e3. Preserve current PAN537/PAN538 source correction, every prior public migration, immutable base obligations, all old owner semantics and hard gates, closed unchanged mechanical scanner and legacy runnable payload membership. Existing PAN516/PAN527 native TLS/SQLite readers remain the shell dependencies; closed code-owned factories and six typed slots do not load arbitrary code or grant backend authority. Actual standalone browser/tenant/session/read-only native tests and technical image review are distinct from historical private development proof, default-addresspool-held complete installer, frozen exact-head canonical, hosted CI, protected merge, release/archive and Original closure. No new worker/provider/global repair or old unsafe ancestry publication."
-    },
-    {
-      "migrationId": "PAN572-CLOSED-UNINSTALL-OWNERSHIP/INTEGRITY-GENERATOR/V67",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 67,
-      "fromSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
-      "toSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
-      "reason": "Keep currentgraph93 and all98 existing owners, unchanged scanner, historical migrations and byteobligations, all existing source-owner dependencies and hardgates. Register the focused closed uninstall parser/ownership regressions in the existing repository-integrity owner and actual canonical test entry; no competing module or new harness. Preserve historical526/527/528 evidence pins and allow only the exact actually executed new local safety source through a separate explicit byte-bound self-checked compatibility successor. New exclusively own no-network Docker stop/data-retention/purge/control/cleanup probes are distinct from fake interactions, old installer evidence, fullinstaller/ERP/model acceptance, exacthead canonical, CI, publication and closure. Missing or contradictory run/project/image/volume or linked-state custody remains denied without new rights or global repair."
-    },
-    {
-      "migrationId": "PAN574-BOUNDED-NATIVE-COMPOSITION/INTEGRITY-GENERATOR/V68",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 68,
-      "fromSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
-      "toSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
-      "reason": "Keep graph93 and all98 existing owners, original PAN471 read-only inventory, unchanged mechanical scanner, historical migrations and immutable byte obligations, every existing native kernel and hard gate. Register only the additive two-native-binding closed D1 export, independent public examples, preimplementation original D0/S byte declarations, authority-separated handoff and actual native regression under the existing integration owner. Source-only files do not extend the legacy runnable payload, grant execution/procurement/provider/source rights or assert model composition, novel connection, independent target oracle, persistence, canonical/CI/release or premature closure. D1 improvements and complete executable transitive pins never rewrite original D0 or selected original S."
-    },
-    {
-      "migrationId": "PAN576-SEPARATED-NATIVE-EXECUTION/INTEGRITY-GENERATOR/V69",
-      "path": "scripts/refresh-integrity-data.mjs",
-      "profileVersion": 69,
-      "fromSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
-      "toSha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b",
-      "reason": "Keep graph93 and all98 existing owners, every historical migration, immutable byte obligation, unchanged mechanical scanner, original PAN471 inventory and PAN574 D0/S and native tool contracts. Register only five source-only finite untrusted-workload members and the mandatory actual native regression on the existing integration owner. Bind actual artifact/build/runtime identity, kernel TSYNC crossings, native tools/oracle/signing state outside the guest, actual compensation, fresh input, foreign-resource retention and crash/timeout/abort/control-loss recovery without general shell/network, new model/provider/global authority, universal sandbox, model novelty or crash-durable Exactly-once claims. Development native evidence remains distinct from frozen source, canonical/hosted CI, protected merge, anonymous release archive/event and original closure."
+      "path": "tests/canonical-json-profile-inventory.test.ts",
+      "role": "VALIDATOR",
+      "sha256": "fe535264d8d8fb1030123bb319a15a0019c4e190253e957731336f6200a56aef"
     }
-  ],
+  ]
+},
+  "profileVersionMigrations": [
+  {
+    "migrationId": "PORTFOLIO-PS335-INTEGRATE/FND-PS-02-INTEGRITY-GENERATOR/V2",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 2,
+    "fromSha256": "6bffef78ac4be77ec5ab8c6a043e653d292b1b97d451dcf2db5bfad0979154a8",
+    "toSha256": "b19ee3ecb425a4404142b0a5e9edef48c8f22285a57504458c2c5ebd386fa12a",
+    "reason": "Advance verification DAG generation to graph v41 and canonically own the FND-PS-02 focused input family; the immutable v1 digest remains in the admitted-base fixture."
+  },
+  {
+    "migrationId": "PORTFOLIO-PS337-INTEGRATE/FND-XR-01-INTEGRITY-GENERATOR/V3",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 3,
+    "fromSha256": "b19ee3ecb425a4404142b0a5e9edef48c8f22285a57504458c2c5ebd386fa12a",
+    "toSha256": "cd13f5b07971b60c7440fc3ac102eb26f412b980798c56fb30e23ac947ad002f",
+    "reason": "Retain the reviewed graph v40 compatibility contract while canonically binding the FND-XR-01 paired-compatibility evidence and its repository-only pre-closure classification; the admitted v1 and reviewed v2 digests remain immutable."
+  },
+  {
+    "migrationId": "AP-01-INTEGRATE/INCOMING-INVOICE-INTEGRITY-GENERATOR/V4",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 4,
+    "fromSha256": "cd13f5b07971b60c7440fc3ac102eb26f412b980798c56fb30e23ac947ad002f",
+    "toSha256": "11805df03d04b7c862645f25304b0c81a252535c7f48bdf72df81e9f72b8a216",
+    "reason": "Advance the Verification DAG to graph v41 and canonically own the AP-01 local-synthetic incoming-invoice Blueprint family."
+  },
+  {
+    "migrationId": "AP-02-INTEGRATE/INCOMING-INVOICE-INTAKE-INTEGRITY-GENERATOR/V5",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 5,
+    "fromSha256": "11805df03d04b7c862645f25304b0c81a252535c7f48bdf72df81e9f72b8a216",
+    "toSha256": "1bb497ec42c16f2865502234404302af10da4a75f1fe293fc03bfa9dede195a2",
+    "reason": "Advance the Verification DAG to graph v42 and canonically own the AP-02 frozen local-synthetic incoming-invoice intake family."
+  },
+  {
+    "migrationId": "AP-03-INTEGRATE/INCOMING-INVOICE-EXTRACTION-INTEGRITY-GENERATOR/V6",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 6,
+    "fromSha256": "1bb497ec42c16f2865502234404302af10da4a75f1fe293fc03bfa9dede195a2",
+    "toSha256": "fab476df3904cb066dc9912afb28dc0d15965e0f2bf6fe71117f817981e70c69",
+    "reason": "Advance the Verification DAG to graph v43 and canonically own the AP-03 frozen local-synthetic extraction benchmark family."
+  },
+  {
+    "migrationId": "PORTFOLIO-PS333-INTEGRATE/E-FND-1-CUMULATIVE-CLOSURE/V7",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 7,
+    "fromSha256": "fab476df3904cb066dc9912afb28dc0d15965e0f2bf6fe71117f817981e70c69",
+    "toSha256": "fc0c76558346b3d6487b577a5283569f282fa5b3385b1f79de8efcae8d61ffa2",
+    "reason": "Retain the current-Main graph v43 compatibility contract while canonically binding the repository-only E-FND-1 cumulative closure inputs to the existing repository-integrity owner after all seven child terminal chains; admitted v1 and reviewed v2-v6 digests remain immutable."
+  },
+  {
+    "migrationId": "AUDIT-CORRECTION-376/REL-TRUTH-01-INTEGRITY-GENERATOR/V8",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 8,
+    "fromSha256": "fc0c76558346b3d6487b577a5283569f282fa5b3385b1f79de8efcae8d61ffa2",
+    "toSha256": "ed305fbf67bc649682876730e71c2b795d18fade41ddb3c5f1d67f1072ba189b",
+    "reason": "Advance the Verification DAG to graph v44 while reconciling REL-TRUTH-01 release-governance authority and its canonical integrity dependants; admitted v1 and reviewed v2-v7 digests remain immutable."
+  },
+  {
+    "migrationId": "AUDIT-CORRECTION-377/CURRENT-HEAD-DOCKER-E2E-INTEGRITY-GENERATOR/V9",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 9,
+    "fromSha256": "ed305fbf67bc649682876730e71c2b795d18fade41ddb3c5f1d67f1072ba189b",
+    "toSha256": "440b64c5769aef5bb2f90670802aebb08201b13c86de20889488b965cfeb4d54",
+    "reason": "Advance the Verification DAG to graph v45 and canonically own the bounded current-head Docker E2E contract, focused fail-closed proof and repository-only implementation record; admitted v1 and reviewed v2-v8 digests remain immutable."
+  },
+  {
+    "migrationId": "PS365-AP05-RECEIPT-MANIFEST-01/INTEGRITY-GENERATOR/V10",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 10,
+    "fromSha256": "440b64c5769aef5bb2f90670802aebb08201b13c86de20889488b965cfeb4d54",
+    "toSha256": "2a0f330f67410cb4cab426e9d57e69c7205743a5675521b3f842229c1fd81314",
+    "reason": "Advance the Verification DAG to graph v46 and canonically bind the AP-05 receipt manifest integrity chain; admitted v1 and reviewed v2-v9 digests remain immutable."
+  },
+  {
+    "migrationId": "PS364-AP04-ERV-RELATIONAL-V2/INTEGRITY-GENERATOR/V11",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 11,
+    "fromSha256": "2a0f330f67410cb4cab426e9d57e69c7205743a5675521b3f842229c1fd81314",
+    "toSha256": "11a5f5657e40951d323538bb2fc51d970a31843d0a2c5681126785b3074cbed0",
+    "reason": "Advance the Verification DAG to graph v47 and canonically own the AP-04 relational hardening v2 family (versioned relational matching, deterministic duplicate-kind denial and distinct evidence dimensions) while the historical v1 pack remains byte-identical; admitted v1 and reviewed v2-v10 digests remain immutable."
+  },
+  {
+    "migrationId": "CSCL-12-PILOT-RECONCILIATION/INTEGRITY-GENERATOR/V12",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 12,
+    "fromSha256": "11a5f5657e40951d323538bb2fc51d970a31843d0a2c5681126785b3074cbed0",
+    "toSha256": "c37787b6c0bb6b80df381c811c05310faafa229b4267cd2094574943ce6e0af4",
+    "reason": "Advance the Verification DAG to graph v48 and canonically own the CSCL-11 iDempiere serial holdout gate family registered as the reconciled pilot node; admitted v1 and reviewed v2-v11 digests remain immutable."
+  },
+  {
+    "migrationId": "P0-PS391-AUD-01/OWNER-AUTHORITY-USE-TIME-REVALIDATION/V2",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 2,
+    "fromSha256": "14a2f4f8b47ce045321576f0b485da8e5370910f14949d1b548359066ef1bad5",
+    "toSha256": "ccbbf73fe52c4453c13ff08e083527021f6af3a436898151688024c2e0dbd036",
+    "reason": "Bind the owner-authority use-time revalidation implementation to the immutable admitted-base digest; the admitted v1 digest remains immutable."
+  },
+  {
+    "migrationId": "P0-PS392-AUD-02/UNIFIED-MUTATION-RESERVATION-UNCERTAIN-RECOVERY/V3",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 3,
+    "fromSha256": "ccbbf73fe52c4453c13ff08e083527021f6af3a436898151688024c2e0dbd036",
+    "toSha256": "ba1a3a78527a0b5027e6d8d595149f29a8e48d27bb88004249cb6122977112df",
+    "reason": "Bind the unified mutation reservation, operation deadline and uncertain-outcome recovery implementation to the reviewed P0-PS392 source digest; admitted v1 and reviewed P0-PS391 v2 bytes remain immutable."
+  },
+  {
+    "migrationId": "P0-PS392-AUD-02/AUTHORITY-BOUND-UNCERTAIN-RECOVERY/V4",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 4,
+    "fromSha256": "ba1a3a78527a0b5027e6d8d595149f29a8e48d27bb88004249cb6122977112df",
+    "toSha256": "7ad2dc71454daf4465a7bcda01341deefd03c31cc84d45c08ed77437fee8fa0c",
+    "reason": "Bind ambiguous reconciliation to the originally reserved authority decision or owner lease and preserve operation-key conflict precedence; admitted v1 and reviewed v2-v3 bytes remain immutable."
+  },
+  {
+    "migrationId": "P0-PS393-AUD-03/AMBIGUOUS-PERSISTENCE-CONVERGENCE/V5",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 5,
+    "fromSha256": "7ad2dc71454daf4465a7bcda01341deefd03c31cc84d45c08ed77437fee8fa0c",
+    "toSha256": "7bef8ac531309c14e1bb768e87b7bcff18b1a9bf72a044d0f979bdbb7d8ad576",
+    "reason": "Converge in-memory and durable operation state on a final-persist failure after an ambiguous adapter outcome: roll the transient effect record and reservation back to the recoverable ambiguous/reconcile state, persist that convergence before rethrowing, so a restart reconciles to the same receipt instead of a phantom applied state; admitted v1 and reviewed v2-v4 gate bytes remain immutable."
+  },
+  {
+    "migrationId": "P0-PS393-AUD-03/FINAL-PERSIST-REGRESSION-FOLLOWTHROUGH/V6",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 6,
+    "fromSha256": "7bef8ac531309c14e1bb768e87b7bcff18b1a9bf72a044d0f979bdbb7d8ad576",
+    "toSha256": "d64714242f7517f15f4bc985534a82569adfca7fabaa2207e6f937ec67b5b64b",
+    "reason": "Correct the inaccurate final-persist convergence comments at both demo mutation-gate persistence sites (the reconciliation site's execute() catch does not re-run markAmbiguous because reserved remains false, and a persistent initial/recovery persist failure lets live AMBIGUOUS coexist with retained durable EXECUTING until storage recovers) and bind the new bounded canonical regression tests for both final-persist sites (real EISDIR at the store temp-file boundary, exact failed-gate retry, fresh Node child restart, persistent storage failure, and unavailable reconciliation); admitted v1 and reviewed v2-v5 gate bytes remain immutable."
+  },
+  {
+    "migrationId": "PAN-EVO-02-OWNED-SYNTHETIC-JOURNAL/GATE-PROFILE/V7",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 7,
+    "fromSha256": "d64714242f7517f15f4bc985534a82569adfca7fabaa2207e6f937ec67b5b64b",
+    "toSha256": "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20",
+    "reason": "Bind the bounded v2 synthetic journal-owner refusal and durable reconciliation changes while preserving the immutable reviewed v1-v6 gate source digests; no host enforcement claim."
+  },
+  {
+    "migrationId": "PAN-EVO-02-LEGACY-SNAPSHOT-PRESERVATION/GATE-PROFILE/V8",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 8,
+    "fromSha256": "65ce6cd381e022059eec20f95df5649840121fd4d886db2b63c6e2a548098a20",
+    "toSha256": "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
+    "reason": "Keep the v2 ambiguous-snapshot recovery and journal flush/sync scoped to the reserved synthetic namespace; legacy direct owner recovery retains pre-existing stale-snapshot denial and persistence semantics. Reviewed v1-v7 digests remain immutable."
+  },
+  {
+    "migrationId": "XRA-PS-02-NATIVE-WIRE-INTEGRATE/INTEGRITY-GENERATOR/V13",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 13,
+    "fromSha256": "c37787b6c0bb6b80df381c811c05310faafa229b4267cd2094574943ce6e0af4",
+    "toSha256": "c45eef7d08a69273146d264bb68c15a9f984767e51e8e11097e8106997216640",
+    "reason": "Advance the Verification DAG to graph v49 and canonically bind the XRA-PS-02 native wire/head integration family (native paired adjudication receipt and loopback real-HTTP capture fixtures) to the existing CKS-12 closed-loop owner; admitted v1 and reviewed v2-v12 digests remain immutable."
+  },
+  {
+    "migrationId": "XRA-PS-02-NATIVE-ROOT-QS-EXECUTION/INTEGRITY-GENERATOR/V14",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 14,
+    "fromSha256": "c45eef7d08a69273146d264bb68c15a9f984767e51e8e11097e8106997216640",
+    "toSha256": "886b6e4ce240405db56758064ba6ae00d6f31d9c9d365ef09c4d62fd7448165d",
+    "reason": "Canonically bind the XRA-PS-02 native AC03 Root-QS execution-evidence family (executable Root-QS replay runner, focused Root-QS RED-GREEN-NEGATIVE test, v2 successor paired receipt, raw Root-QS execution evidence and v2 slice) to the existing CKS-12 closed-loop owner; admitted v1 and reviewed v2-v13 digests remain immutable."
+  },
+  {
+    "migrationId": "PORTFOLIO-PAR-XR-01-PAIRED-ANALYTICS/INTEGRITY-GENERATOR/V15",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 15,
+    "fromSha256": "886b6e4ce240405db56758064ba6ae00d6f31d9c9d365ef09c4d62fd7448165d",
+    "toSha256": "47882882a6682aa11852791c3e38ff83130bc30f70aa62ae5f7125d0ab0c11d0",
+    "reason": "Canonically bind the PAR-XR-01 paired-analytics integrity family (paired-analytics parity gate source, adversarial TDD suite, executable parity runner, secure parity workflow, head-bound compatibility evidence and the two exact consumer-support fixtures) to the existing repository-integrity owner and extend the checksum ledger; admitted v1 and reviewed v2-v14 digests remain immutable."
+  },
+  {
+    "migrationId": "PAN346-INDEPENDENT-AUTHORITY/INTEGRITY-GENERATOR/V16",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 16,
+    "fromSha256": "47882882a6682aa11852791c3e38ff83130bc30f70aa62ae5f7125d0ab0c11d0",
+    "toSha256": "6498ba70c69bcbd1e99229427c42e7fe6cd510646a7e2e903a1ddcacb8fac12b",
+    "reason": "Bind independent paired expectations, runner regression tests and pinned offline counterpart execution to the existing integrity owner and canonical owned test; preserve admitted v1 and reviewed v2-v15 bytes."
+  },
+  {
+    "migrationId": "PAN346-PUBLIC-SPELLING/INTEGRITY-GENERATOR/V17",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 17,
+    "fromSha256": "6498ba70c69bcbd1e99229427c42e7fe6cd510646a7e2e903a1ddcacb8fac12b",
+    "toSha256": "eb2669cba01995248ad49296fa3424cfcbb7271f554a7824e3107ba259f01d62",
+    "reason": "Bind the public PanSphaira spelling correction in the paired-analytics invariant; preserve admitted v1 and reviewed v2-v16 bytes."
+  },
+  {
+    "migrationId": "PAN346-FORWARD-QUALIFICATION/INTEGRITY-GENERATOR/V18",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 18,
+    "fromSha256": "eb2669cba01995248ad49296fa3424cfcbb7271f554a7824e3107ba259f01d62",
+    "toSha256": "a9c449c0071e5f15134491a1672970a203487f491260947e11fad3d577778694",
+    "reason": "Bind additive forward qualification, historical source archive, strict current-head runtime runner and negative probes to graph v50; preserve historical v1-v17 obligations and receipts."
+  },
+  {
+    "migrationId": "PAN346-PR235-PUBLIC-EVIDENCE/INTEGRITY-GENERATOR/V19",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 19,
+    "fromSha256": "a9c449c0071e5f15134491a1672970a203487f491260947e11fad3d577778694",
+    "toSha256": "7faf3040b4f835b44123aeaafcd6ab8a3c6cf64ae195a15303b20a70c700030a",
+    "reason": "Bind exact PR235 qualification and immutable historical provider evidence to graph v51; preserve historical v1-v18 obligations and receipts."
+  },
+  {
+    "migrationId": "PAN437-CURRENT-MAIN-INTEGRATION/INTEGRITY-GENERATOR/V20",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 20,
+    "fromSha256": "7faf3040b4f835b44123aeaafcd6ab8a3c6cf64ae195a15303b20a70c700030a",
+    "toSha256": "703189c79599fc298e8200c5937b9389b5a707b851a7503912bd93714d612419",
+    "reason": "Advance the verification DAG to graph v52 and canonically bind the bounded PAN437 current-Main neighbor integration while preserving the imported corrected ERP order-reader connection and all prior obligations."
+  },
+  {
+    "migrationId": "PAN435-436-SALES-STOCK/INTEGRITY-GENERATOR/V21",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 21,
+    "fromSha256": "703189c79599fc298e8200c5937b9389b5a707b851a7503912bd93714d612419",
+    "toSha256": "2d18296970298faf861f07e0cf5a89762e95d8fd7d72c6ea712118c49fe2d2b8",
+    "reason": "Advance verification DAG to graph v53 for the bounded sales-stock journey with unique ERP-cell ownership and explicit dependency; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "PAN433-DOMAIN-MAPPING/INTEGRITY-GENERATOR/V22",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 22,
+    "fromSha256": "2d18296970298faf861f07e0cf5a89762e95d8fd7d72c6ea712118c49fe2d2b8",
+    "toSha256": "9fd0b4d9c7888a2509a4fa14d519685068ce5b11c3187dfcfc890828cb2f5b79",
+    "reason": "Advance verification DAG to graph v54 and bind the bounded PAN433 domain convention plus default/alternate mapping acceptance to its explicit local owner; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "PAN441-EMPLOYEE-READONLY/INTEGRITY-GENERATOR/V23",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 23,
+    "fromSha256": "9fd0b4d9c7888a2509a4fa14d519685068ce5b11c3187dfcfc890828cb2f5b79",
+    "toSha256": "488fc3363b4d1cddd9d2c3ecedcbf1d465c02a3d825856858971eca0121d2c64",
+    "reason": "Advance verification DAG to graph v55 and bind the bounded PAN441 read-only employee-agent profile, focused denials and public registration to its explicit local owner; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "KS238-ORDER-SOURCE-HANDOFF/INTEGRITY-GENERATOR/V24",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 24,
+    "fromSha256": "488fc3363b4d1cddd9d2c3ecedcbf1d465c02a3d825856858971eca0121d2c64",
+    "toSha256": "81d565c053a1da1009327378d51908bb331c2b23f9a4e8af3a0e3c354fa2b8b1",
+    "reason": "Advance verification DAG to graph v56 and bind the bounded KS238 read-only order/source handoff over the released ERP order and customer readers, its negative tests and public registration to its explicit local owner; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "PAN442-BOUND-TASK-HANDLES/INTEGRITY-GENERATOR/V25",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 25,
+    "fromSha256": "81d565c053a1da1009327378d51908bb331c2b23f9a4e8af3a0e3c354fa2b8b1",
+    "toSha256": "4a4d5b6732e576628e2e0c658d7d2ebeb12e29246dedeb8dcafd569da32e090a",
+    "reason": "Advance verification DAG to graph v57 and bind the bounded PAN442 local bound business task and opaque tool handle journey over the accepted demo Order seam (owner-escalation decision, owner approval, owner-escalation lease execution with mutation reservation), its exact fail-closed negatives and repository-only registration to its explicit local owner; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "PAN468-IMPACT-SELECTION/INTEGRITY-GENERATOR/V26",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 26,
+    "fromSha256": "4a4d5b6732e576628e2e0c658d7d2ebeb12e29246dedeb8dcafd569da32e090a",
+    "toSha256": "b9a60ac7d3b0c6431b5b8c5c3341dd646e18142a3a7f20f8c27b743189c8605e",
+    "reason": "Advance verification DAG to graph v58 and bind the bounded PAN468 targeted impact selection and bounded historical path-scan work (contract-consumer classification, tree-mode enumeration without per-file content reads, diagnostics) to its explicit local owner; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "PAN469-CONTRIBUTION-VIEWS/INTEGRITY-GENERATOR/V27",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 27,
+    "fromSha256": "b9a60ac7d3b0c6431b5b8c5c3341dd646e18142a3a7f20f8c27b743189c8605e",
+    "toSha256": "d7c2c376c62bb4a5a8155264c0c432446c99ec87f0786b6666367965f1873c12",
+    "reason": "Advance verification DAG to graph v59 and bind the bounded PAN469 one-family contribution-records pilot (sealed individual records, order-independent byte-identical generated shared view with a single integration owner, drift refusal and integer contributor/work measurement against the existing path) to its explicit local owner; preserve all prior immutable obligations."
+  },
+  {
+    "migrationId": "PAN470-HANDOFF-EFFORT/INTEGRITY-GENERATOR/V28",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 28,
+    "fromSha256": "d7c2c376c62bb4a5a8155264c0c432446c99ec87f0786b6666367965f1873c12",
+    "toSha256": "ffb3e3ef8286456f91608cbf258e145f65785a6f36ce98c2a948545413b3693a",
+    "reason": "Advance graph to v60 and bind the bounded PAN470 handoff-effort slice while preserving all prior byte obligations."
+  },
+  {
+    "migrationId": "PAN471-CAPABILITY-INVENTORY/INTEGRITY-GENERATOR/V29",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 29,
+    "fromSha256": "ffb3e3ef8286456f91608cbf258e145f65785a6f36ce98c2a948545413b3693a",
+    "toSha256": "7e56b7ff64262a6cf55b0812c1a59094b16df9144aeaa73b1c093f1b19e49baf",
+    "reason": "Advance graph to v61 and bind the bounded PAN471 inventory on current Main while retaining historical obligations."
+  },
+  {
+    "migrationId": "PAN461-LIFECYCLE-INVENTORY/INTEGRITY-GENERATOR/V30",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 30,
+    "fromSha256": "7e56b7ff64262a6cf55b0812c1a59094b16df9144aeaa73b1c093f1b19e49baf",
+    "toSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
+    "reason": "Advance graph to v62 and bind the bounded PAN461 inventory with corrected schema and unproven process generation while retaining historical obligations."
+  },
+  {
+    "migrationId": "PAN-KS-SYNTHETIC-METRIC-READ/INTEGRITY-GENERATOR/V31",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 31,
+    "fromSha256": "6b2a3cde7fc265a27ba9d8fd455575f647d9b778699bc723ec2372f62ea7eff1",
+    "toSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
+    "reason": "Bind the separately scoped synthetic metric read task to the existing bound resolver and register its validator while preserving PAN453 v5 source and all earlier byte obligations."
+  },
+  {
+    "migrationId": "PAN462-NATIVE-BACKUP-RESTORE/INTEGRITY-GENERATOR/V32",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 32,
+    "fromSha256": "5b13864750b49351693226fe8b312ab9144462825460b4e0534327e37040cc0d",
+    "toSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
+    "reason": "Bind the bounded PAN462 native backup/restore family (source, validator, schema, docs, boundary record and fixtures) to its own bounded owner; the integration owner keeps only the inputs no bounded node owns, so its input list stays inside the frozen Evidence-DAG schema bound without relaxing the schema. Admitted v1 and reviewed v2-v31 digests remain immutable."
+  },
+  {
+    "migrationId": "PAN453-AC04-STOP-REVOKE-RETENTION/GATE-PROFILE/V9",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 9,
+    "fromSha256": "f132640b6d964a84d991deb7bbd0d7fc1a29fb43f4dca0eaa7f9e36f3ff5ac1e",
+    "toSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
+    "reason": "Bind the bounded owned synthetic STOP/REVOKE control, durable retry-exhaustion fences and read-only recovery to the existing gate; retain reviewed v1-v8 bytes and make no host or external authority claim."
+  },
+  {
+    "migrationId": "PAN453-AC03-AUTHORITATIVE-TARGET-READBACK/GATE-PROFILE/V10",
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "profileVersion": 10,
+    "fromSha256": "5dfcf10b10caa83fff1e83a721502ec11f6021ca96147a3a5a4242b7d5503d9a",
+    "toSha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
+    "reason": "Bind the owned synthetic ambiguous reconciliation to an independently read persisted target before confirming success; preserve reviewed v1-v9 gate bytes, legacy semantics and unresolved safety without host or production authority."
+  },
+  {
+    "migrationId": "PAN470-PRODUCER-HANDOFF/INTEGRITY-GENERATOR/V33",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 33,
+    "fromSha256": "8e81c7e801358453c0035c5b5ed0f09b0e87225cccce82f63cd90ee59c75e0d2",
+    "toSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
+    "reason": "Register the PAN470 local producer adapter, synthetic fixture and actual-entry validator under the existing bounded handoff owner; preserve all prior immutable migrations and synthetic WorkReceiptV1 semantics."
+  },
+  {
+    "migrationId": "PAN463-NATIVE-UPDATE/INTEGRITY-GENERATOR/V34",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 34,
+    "fromSha256": "8335e222cc70ce4c9b1756e094e6bb04872b9fcef9a2d23b1ce362e5dfebb40d",
+    "toSha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
+    "reason": "Advance graph to v63 and register the bounded PAN463 native update adapter, real process/transaction tests and reused PAN453/doctor dependencies; preserve every prior byte obligation and authority boundary."
+  },
+  {
+    "migrationId": "PAN464-RETAINED-PAIR/INTEGRITY-GENERATOR/V35",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 35,
+    "fromSha256": "e609d57da3f8b30476ba344f4a02a4f7c486366ffefb29a05445dd207cbbdab2",
+    "toSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
+    "reason": "Advance graph to v64 and bind the bounded PAN464 retained native pair, protected oracle, local-copy recovery, mandatory exact-head Docker workflow and reused native authorities; preserve every earlier byte obligation and hard gate."
+  },
+  {
+    "migrationId": "PAN465-OFFLINE-UPDATER/INTEGRITY-GENERATOR/V36",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 36,
+    "fromSha256": "60439de1296bf9637646edbcb36791c4183be63a24bba646613b7ee744a307fb",
+    "toSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
+    "reason": "Advance graph to v65 and own the bounded PAN465 external-trust signature, executable-slot/journal, authentic native bundle and closed distribution tests/guide without weakening retained native gates or any prior immutable byte obligation."
+  },
+  {
+    "migrationId": "DOC-README-03-R1/INTEGRITY-GENERATOR/V37",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 37,
+    "fromSha256": "f0f436654878b3a58abcc77b1c21fecc99c9af574dabe372bfa4423b64551291",
+    "toSha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
+    "reason": "Advance graph to v66 and bind the approved R1 explanation routes, source-bound diagrams, VitePress configuration and docs validator to existing repository integrity; preserve every admitted and reviewed profile migration, hard gate and runtime nonclaim."
+  },
+  {
+    "migrationId": "PAN466-LIFE06/INTEGRITY-GENERATOR/V38",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 38,
+    "fromSha256": "29fd87084c446975c753090c37ac25ed15c4782ced997f124447a4cd30689a71",
+    "toSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
+    "reason": "Advance graph to v67 for the bounded LIFE-06 descriptor/actual-CLI/native-use sources and distinct required same-PID native gate; retain old owners, all immutable profile migrations, pilot noncoverage and independent grant/history boundaries."
+  },
+  {
+    "migrationId": "PAN487-SEM-HOLDOUT01/INTEGRITY-GENERATOR/V39",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 39,
+    "fromSha256": "ffe0e0ce9b269a5e255c98a48c7b857aa25bdb2537d2a8b6d8cbb5429ee3f631",
+    "toSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
+    "reason": "Advance graph to v68 and register the bounded product offering-purpose semantic successor actual entry, exact public rule/contracts/calibration and affected tests; preserve historical candidates/protocol/receipts, all prior owners and immutable profile obligations, distinct integrity/semantics and Main-exclusive sealed evaluation."
+  },
+  {
+    "migrationId": "PAN472-MIG02/INTEGRITY-GENERATOR/V40",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 40,
+    "fromSha256": "796432ce9ec8af68379f17a9090ba2245ce3ea740b4b13c6e5fadc0871d5848c",
+    "toSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
+    "reason": "Advance graph to v69 and register the bounded persistent synthetic draft transfer actual CLI, independent native readback, fixtures and original-AC tests; preserve existing owners, hard gates, immutable migrations, journal authority and sealed semantic evaluation."
+  },
+  {
+    "migrationId": "PAN473-MIG03/INTEGRITY-GENERATOR/V41",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 41,
+    "fromSha256": "443fb792a12b950b213246008392c2e7198283f724a8d42d50e9585c62662612",
+    "toSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
+    "reason": "Advance graph to v70 and register the original bounded MIG-03 native writer-scope cutover, independent controller-down observation, actual living-client/SIGKILL/CLI tests and accepted ABA-safe correction; preserve all prior owners, immutable migrations, hard gates, nonclaims and private/sealed boundaries."
+  },
+  {
+    "migrationId": "PAN467-LIFE07/INTEGRITY-GENERATOR/V42",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 42,
+    "fromSha256": "a2a5cde89f2f0e1047663328fcd89513d879b5d310a51e3970ff1920c929d83f",
+    "toSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
+    "reason": "Advance graph to v71 and register original LIFE-07 attributed native business correction, stable original effect identity, separate read-only diagnosis and actual CLI/process crash tests while retaining all prior owners, immutable migrations, hard gates and private/sealed boundaries."
+  },
+  {
+    "migrationId": "PAN456-EVO05/INTEGRITY-GENERATOR/V43",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 43,
+    "fromSha256": "6fe5c26badf1c67d1ed61606c98459618298ce0688730edd7baf934f6a08a6e8",
+    "toSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
+    "reason": "Advance graph to v72 and bind one version-pinned actual process-separated policy tooling comparison, real copied-installation drift/malformed-result probes and reject-adoption recommendation without runtime activation; preserve all prior owners, immutable migrations, hard gates, retained baseline, private/sealed source and authority boundaries."
+  },
+  {
+    "migrationId": "PAN456-EVO05-PUBLIC-GUIDE/INTEGRITY-GENERATOR/V44",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 44,
+    "fromSha256": "8ff2812c18c082b8dada847cc95707332527d54c87fbbbf4c6b2c9cf56edbdec",
+    "toSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
+    "reason": "Keep graph v72 and relocate byte-identical functional PAN-EVO-05 guide from forbidden development evidence namespace to public architecture namespace; unchanged supply-chain validator, original Main-qualified source bytes, prior V43 freeze/FAIL, owners, hard gates and all immutable migrations are retained."
+  },
+  {
+    "migrationId": "PAN454-EVO03/INTEGRITY-GENERATOR/V45",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 45,
+    "fromSha256": "1a42638c675864d2d89a629191f5c3cf82da5991261a14cc4c71e95262643b9c",
+    "toSha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd",
+    "reason": "Advance graph to v73 and register one bounded existing-adapter task-journey evidence/falsification consumer with exact actual synthetic runtime boundaries and owned non-promoting corrections; preserve the runnable product manifest, retained foundations, previous owners, all immutable migrations and hard gates, privacy, paused projects and sealed custody. No implemented isolation capability from negative evidence."
+  },
+  {
+    "migrationId": "PAN360-ORIGINAL-EXECUTION/INTEGRITY-GENERATOR/V46",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 46,
+    "fromSha256": "3622eecceed4869520473f5f45ea0dc9a67e492ba86bbf8e5ef1be9186e256cd",
+    "toSha256": "dbfa9258e5719a9a264f14aacdd34c0cd65e01278132ecdf655ddc2cd421ce7c",
+    "reason": "Advance graph to v74 with exactly one bounded owner for the actual Original360 LEAN/200bps same-core pair, pinned synthetic intake, dialogue, relational admission, separate approval, UI/analytics/readback and reuse receipts. Preserve historical100bps and UNKNOWN evidence, original criteria, all prior immutable migrations/owners/hard gates, runnable product manifest, privacy and Main-only custody; no production or issue-completion authority."
+  },
+  {
+    "migrationId": "PAN378-SPENT-PILOT/INTEGRITY-GENERATOR/V47",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 47,
+    "fromSha256": "dbfa9258e5719a9a264f14aacdd34c0cd65e01278132ecdf655ddc2cd421ce7c",
+    "toSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
+    "reason": "Advance graph to v75 with one bounded original DOC-AI-01 owner for fixed-admission byte-exact complete frozen oracle reproduction of the independently evaluated spent real-OCR pilot. Keep FALSIFIED_WITH_EVIDENCE, all39 custody source bindings, report/v2 wire identity and separate v3 epoch, every original criterion, prior migration/owner/hard gate, historical synthetic outputs, private originals and runnable product manifest intact; no tuning, new blind trial, production or issue-completion authority."
+  },
+  {
+    "migrationId": "ERV-WORKFLOW-EVIDENCE/INTEGRITY-GENERATOR/V48",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 48,
+    "fromSha256": "05248915b29f18abca5e3361f7eeb22dc260be614b013734694226aa02613c54",
+    "toSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
+    "reason": "Advance graph to v76 with one bounded user-authorized ERV workflow evidence owner, exact immutable public research packet, source-qualified real unchanged PSAi primitives, persisted outputs/expectedactual/gaps and mandatory replay. Preserve all historical v5 evidence,22 reused kernel/build/profile/document bindings,0 human workflows, denials/UNKNOWN, prior owners/migrations/hard gates, README R1 and runnable payloads; no operational database, identity/routing/new platform or390396 admission."
+  },
+  {
+    "migrationId": "PAN396-ORIGINAL-S3-SQS/INTEGRITY-GENERATOR/V49",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 49,
+    "fromSha256": "1566dcdeabe319d091dfc1587ef7ef87412632f69bf1373c28dd149adc298cc0",
+    "toSha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
+    "reason": "Advance graph to v77 and register one bounded optional native S3/SQS lab using unchanged original PAN360 intake/core, closed typed broker, exact disabled service/UI probes and issue-owned cleanup. Preserve every prior migration, immutable admitted-base obligation, existing owner/hard gate, README, runnable manifest, original trust/privacy and Main-only sealed custody; no generic AWS, productive or completion authority."
+  },
+  {
+    "migrationId": "PAN515-NATIVE-TRADE-STATE/INTEGRITY-GENERATOR/V50",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 50,
+    "fromSha256": "fcb8b75450bf75ece07ac1ee1f9697c27cd787eb31b93a65eab63bad1df87da3",
+    "toSha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
+    "reason": "Advance graph to v78 and register the additive PAN515 native PAN472/PAN473 trade scope, same-source common June/July events, original positive/negative CLI/process suites and bounded public registration. Preserve every historical migration, immutable admitted-base obligation, original common/legacy identities, prior owner and hard gate; no new platform, sealed source, productive or completion authority."
+  },
+  {
+    "migrationId": "PAN516-NATIVE-PROCUREMENT/INTEGRITY-GENERATOR/V51",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 51,
+    "fromSha256": "183223b0dc670bf9a5b7d20311b4d6e52c79bb6a80d00a399905db31ac8e9f81",
+    "toSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
+    "reason": "Advance graph to v79 and register one bounded PAN516 native purchase/confirmation/receipt/target-first retry and unchanged ERV composition owner with original four criteria, original negatives and actual retained CLI. Preserve all historical migrations, immutable base obligations, previous owners, common source, original ERV variants/tolerance, hard gates and runnable public manifest; no new platform, private source, productive dispatch/payment or completion authority."
+  },
+  {
+    "migrationId": "PAN517-NATIVE-FULFILMENT/INTEGRITY-GENERATOR/V52",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 52,
+    "fromSha256": "35d9445cf8227cd5e995ae0cea517c246f6f7a46bd0a68be94946a3a11c000ad",
+    "toSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
+    "reason": "Advance graph to v80 and register one bounded P03 native fulfilment owner using the existing PAN515 transaction and exported entry, original five criteria/six negatives and real calendar/rollback validation. Preserve every historical migration, immutable base obligation, existing owner and hard gate, common source and runnable manifest; no new CLI gate, productive movement, private source or completion authority."
+  },
+  {
+    "migrationId": "PAN524-EXACT-BI-PAIR/INTEGRITY-GENERATOR/V53",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 53,
+    "fromSha256": "7cd7285d53f5765100c2c331d52eb95eff2f1ffdec892ad1b57697cdf0b5032d",
+    "toSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
+    "reason": "Advance graph to v81 with one bounded J01 exact current BI pair owner; retain existing legacy external BI source owner, four original criteria/negatives, full attestation/artifact identity and independently owned real provider pairing. Preserve all prior migrations, immutable base obligations, hard gates, source/privacy boundaries and runnable manifest; no wildcard, registry promotion, productive or closure authority."
+  },
+  {
+    "migrationId": "PAN524-CLOSED-RESPONSE-METADATA-FIXTURES/INTEGRITY-GENERATOR/V54",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 54,
+    "fromSha256": "861826ed972e362222ddd40d421cded43449bcaffd2423d55df2f49953882a0b",
+    "toSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
+    "reason": "Bind two genuine released plan/preview captures to the existing graph81 J01 owner for closed exact response-origin metadata regression. Preserve the entire reviewed V53 migration, scanner, legacy request denial, immutable base obligations, hard gates and all existing owners; no registry or productive authority."
+  },
+  {
+    "migrationId": "PAN520-CURRENT-NATIVE-PROJECTIONS/INTEGRITY-GENERATOR/V55",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 55,
+    "fromSha256": "3e92656e9bf572e476466a7c57f479b23bdb58a3bef5ab75688eadb93676f157",
+    "toSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
+    "reason": "Advance graph to v82 with one additive native P06 projection owner beside released J01 graph81/V54. Preserve every historical migration, admitted byte obligation, existing native/source owner, legacy direct-read meaning, response/request safety boundary and mandatory hard gate. No KS selector rewrite, portable or productive authority, billing inference or completion claim."
+  },
+  {
+    "migrationId": "PAN525-EXACT-QUALIFIED-PAIR/INTEGRITY-GENERATOR/V56",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 56,
+    "fromSha256": "127a757054875e45ee796f3d5f1ec03b99e2c7bfa4c848a7e5d9bfc82fc2dc0a",
+    "toSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
+    "reason": "Advance graph to v83 with one bounded read-only J03 exact retained released-pair qualification owner. Preserve the same delivered six-intent run, separately evidenced native persistence, HELD KS250 second context, all prior migrations, immutable base obligations, old owners and mandatory gates. No provider registry mutation, source/publication or execution rights, latest/main admission, runnable distribution or issue-closure authority."
+  },
+  {
+    "migrationId": "PAN526-PORTABLE-RUNTIME/INTEGRITY-GENERATOR/V57",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 57,
+    "fromSha256": "f53030eac11cae522e7f3794e46627a8380a10cfd3c3af07082ff23f9d54ce19",
+    "toSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
+    "reason": "Advance graph to v84 with one additive optional source-bound PAN-H01 portable local runtime owner. Preserve the early immutable shared contract, corrected Node-agent/platform binding, actual released native baseline, ten measured cold starts/40 raw phases, existing legacy installer/Compose/source owners and runnable payload, every previous immutable migration/byte obligation and hard gate. No receipt/caller-role authority, provider/host rights, remote effect route, paired acceptance, Main/CLOSED waiting gate or whole-release/closure claim."
+  },
+  {
+    "migrationId": "PAN527-ORIGIN-SESSION/INTEGRITY-GENERATOR/V58",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 58,
+    "fromSha256": "027ced072eb25581928aa7821a25a9225e8c1556eaae4dffa81273452dede924",
+    "toSha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66",
+    "reason": "Advance graph to v85 with one additive optional origin/protected-session source owner depending on the unchanged portable runtime. Preserve all historical migrations/byte obligations, RuntimeIdentity enum/effective rights, old owners, legacy installer/runnable payload and hard gates. Register actual certificate-verifying browser/native/legacy regressions with closed fail-on-missing-tooling runner; frozen public candidate and exact actual AC4 receipt stay bounded, no native KS or productive permission, reciprocal CLOSED/Main gate or full release/closure inference."
+  },
+  {
+    "migrationId": "PAN529-NATIVE-RUNTIME-BUDGET/INTEGRITY-GENERATOR/V59",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 59,
+    "fromSha256": "49689daaf6d5bca74c0c47c2a318f95942942271c4848080360f946eeb35ea66",
+    "toSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
+    "reason": "Advance graph to v86 with one additive original H05 native template/budget owner. Preserve all historical migrations and sealed base obligations, old owners and hard gates, immutable published v1, existing shared broker export membership and unchanged legacy installer. Register actual100 native reservations/HTTP controllers, guarded synthetic usage and persisted result/unknown custody, not paid provider, pricing, new rights or image qualification, Main/CLOSED gate or whole-delivery inference."
+  },
+  {
+    "migrationId": "PAN521-LOCAL-CONNECTED-NATIVE/INTEGRITY-GENERATOR/V60",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 60,
+    "fromSha256": "9b59df351e42e0f9ca464aae081a20a6155ec3eadfa1b696ded0868bda3032c2",
+    "toSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
+    "reason": "Advance graph to v87 with exactly one additive P07 local native connected-journey owner. Preserve all original standalone business fixtures, unchanged historical cf199bbd reader/KS selectors, previous owners, classifications, sealed admitted obligations and mandatory gates. Register actual local actions/operator checkpoint/resume/correction and unqualified finance handoff, not fiscal/archive/FiBu/payment target qualification, runtime activation, Main/CLOSED wait or original issue acceptance."
+  },
+  {
+    "migrationId": "PAN522-DETERMINISTIC-MATERIAL-PLAN/INTEGRITY-GENERATOR/V61",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 61,
+    "fromSha256": "5ddb302338bcf253dfbe9cdf2304b5aeba64f0243019abe5ac022399d829fbff",
+    "toSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
+    "reason": "Advance graph to v88 with one additive P08 deterministic material-planning owner. Preserve all previous immutable migration obligations, unchanged census scanner, original native fixtures/stores and hard gates, source-only builder classification and runnable manifest. Register actual original four criteria/six negatives, component chronology, all same-date root allocations, authority-free native rollback and closed operator/owned-scratch suite; no finite-capacity promise, new source/role/dispatch/runtime right, Main wait or premature original closure."
+  },
+  {
+    "migrationId": "PAN528-GUIDED-NATIVE-BROWSER/INTEGRITY-GENERATOR/V62",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 62,
+    "fromSha256": "2054965658e5b6962285bd80c7ee600392dea8839ab4500f88becd960613b7c6",
+    "toSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
+    "reason": "Advance graph to v89 with one additive optional PAN-H03 actual native browser owner. Preserve every historical migration, original semantic/byte obligation, old source owner, unchanged census scanner and mandatory gates. Register actual certificate-verifying browser/native lifecycle, pure typed helper and six original negatives; preserve legacy runnable payload and budget/unknown-effect custody. No productive/model/source rights, KS journey, human/phone study, Main approval wait or premature delivery claim."
+  },
+  {
+    "migrationId": "PAN523-RECOVERED-WITH-DELIVERED528/INTEGRITY-GENERATOR/V63",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 63,
+    "fromSha256": "e66d99cb02c71c1be842ade6a1ac780f284bf5649683749e493aac81ec52b923",
+    "toSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
+    "reason": "Advance actual delivered graph89 to90 with the retained bounded P09 native production owner beside delivered PAN528 guided native browser. Preserve both capabilities, every old source owner and full descendant-owner/test set, immutable prior migration/base obligations, unchanged census scanner, all original native receipts and hard gates, existing runnable manifest and source-only builder. No separate leading store, physical/fiscal/archive/FiBu/financial-profit or finite-capacity qualification, new authority, Main approval wait or premature closure; prior native29 and released browser43 evidence are not relabelled or added."
+  },
+  {
+    "migrationId": "PAN537-EXISTING-PROPOSAL-BROWSER/INTEGRITY-GENERATOR/V64",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 64,
+    "fromSha256": "fb6e220d31bb5bd00540ae10e45f409d69bbdc6835ad41e767b81d54961ee8ce",
+    "toSha256": "8486140dd9afebae4382a58233e7baeff04467bfd033cd389df830fce9e490b3",
+    "reason": "Advance graph90 to91 with one bounded owner for the existing legacy proposal browser correction and mandatory actual Chromium/native regression. Registered proposal supplies the exact visible and transmitted Diff/digest, readable before/after facts precede approval, missing/tampered/stale/reject/authentication/no-executable-rights cases retain unchanged backend denial, and controlled real response-delivery loss stays unknown without blind retry. Preserve all prior owners, dependencies, own test lists, hard gates, immutable migration/base obligations, unchanged census scanner and legacy payload membership. This is a fork-local development successor, not a composite with held immutable541, public delivery, independent human/phone/whole-setup acceptance, new backend/provider/productive rights or publication clearance."
+  },
+  {
+    "migrationId": "PAN538-EXISTING-SETUP390-BOUNDS/INTEGRITY-GENERATOR/V65",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 65,
+    "fromSha256": "8486140dd9afebae4382a58233e7baeff04467bfd033cd389df830fce9e490b3",
+    "toSha256": "fc3191a44001d241a4e7b5bc00d6502d616970e0c6c8be2a82720abfe4840d12",
+    "reason": "Advance graph91 to92 by adding the mandatory actual setup390 layout regression to the existing proposal/dashboard component owner and closed browser runner, with no duplicate source owner or generic framework. Preserve every prior migration and immutable base obligation, unchanged mechanical scanner, all old source owners and hard gates, legacy payload membership, request/authentication/backend bytes and original negative cases. Actual desktop390, German synthetic content, CSS-layout200percent, keyboard, real pending-response delivery, native403 denial and authenticated synthetic setup are bounded product evidence, not German localization, physical/browser-chrome acceptance, productive/new provider rights or exact-head canonical/CI/release/closure qualification. Clean authorized14232 lineage only; historical provider objects are not claimed erased."
+  },
+  {
+    "migrationId": "PAN541-CURRENT-SHARED-BROWSER-SHELL/INTEGRITY-GENERATOR/V66",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 66,
+    "fromSha256": "fc3191a44001d241a4e7b5bc00d6502d616970e0c6c8be2a82720abfe4840d12",
+    "toSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
+    "reason": "Advance current graph92 to93 with exactly one additive PUI-01 shared typed browser shell owner reconstructed from retained reviewed development work on current protected2e3. Preserve current PAN537/PAN538 source correction, every prior public migration, immutable base obligations, all old owner semantics and hard gates, closed unchanged mechanical scanner and legacy runnable payload membership. Existing PAN516/PAN527 native TLS/SQLite readers remain the shell dependencies; closed code-owned factories and six typed slots do not load arbitrary code or grant backend authority. Actual standalone browser/tenant/session/read-only native tests and technical image review are distinct from historical private development proof, default-addresspool-held complete installer, frozen exact-head canonical, hosted CI, protected merge, release/archive and Original closure. No new worker/provider/global repair or old unsafe ancestry publication."
+  },
+  {
+    "migrationId": "PAN572-CLOSED-UNINSTALL-OWNERSHIP/INTEGRITY-GENERATOR/V67",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 67,
+    "fromSha256": "3823a22e5c192acfc57e0592c101a59feef1149d9a17fccaadc31fb5d6e43b87",
+    "toSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
+    "reason": "Keep currentgraph93 and all98 existing owners, unchanged scanner, historical migrations and byteobligations, all existing source-owner dependencies and hardgates. Register the focused closed uninstall parser/ownership regressions in the existing repository-integrity owner and actual canonical test entry; no competing module or new harness. Preserve historical526/527/528 evidence pins and allow only the exact actually executed new local safety source through a separate explicit byte-bound self-checked compatibility successor. New exclusively own no-network Docker stop/data-retention/purge/control/cleanup probes are distinct from fake interactions, old installer evidence, fullinstaller/ERP/model acceptance, exacthead canonical, CI, publication and closure. Missing or contradictory run/project/image/volume or linked-state custody remains denied without new rights or global repair."
+  },
+  {
+    "migrationId": "PAN574-BOUNDED-NATIVE-COMPOSITION/INTEGRITY-GENERATOR/V68",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 68,
+    "fromSha256": "dd297a565bf4979df8eaf7af0144c1a5a22526001ebf5e4b7b8a528c92423207",
+    "toSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
+    "reason": "Keep graph93 and all98 existing owners, original PAN471 read-only inventory, unchanged mechanical scanner, historical migrations and immutable byte obligations, every existing native kernel and hard gate. Register only the additive two-native-binding closed D1 export, independent public examples, preimplementation original D0/S byte declarations, authority-separated handoff and actual native regression under the existing integration owner. Source-only files do not extend the legacy runnable payload, grant execution/procurement/provider/source rights or assert model composition, novel connection, independent target oracle, persistence, canonical/CI/release or premature closure. D1 improvements and complete executable transitive pins never rewrite original D0 or selected original S."
+  },
+  {
+    "migrationId": "PAN576-SEPARATED-NATIVE-EXECUTION/INTEGRITY-GENERATOR/V69",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 69,
+    "fromSha256": "86f918a808d4f51b6fa6ab43f745f499e98b44acabcf37462baa98c4851646e9",
+    "toSha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b",
+    "reason": "Keep graph93 and all98 existing owners, every historical migration, immutable byte obligation, unchanged mechanical scanner, original PAN471 inventory and PAN574 D0/S and native tool contracts. Register only five source-only finite untrusted-workload members and the mandatory actual native regression on the existing integration owner. Bind actual artifact/build/runtime identity, kernel TSYNC crossings, native tools/oracle/signing state outside the guest, actual compensation, fresh input, foreign-resource retention and crash/timeout/abort/control-loss recovery without general shell/network, new model/provider/global authority, universal sandbox, model novelty or crash-durable Exactly-once claims. Development native evidence remains distinct from frozen source, canonical/hosted CI, protected merge, anonymous release archive/event and original closure."
+  },
+  {
+    "migrationId": "PAN543-PERSISTENT-PRESENTATION/INTEGRITY-GENERATOR/V70",
+    "path": "scripts/refresh-integrity-data.mjs",
+    "profileVersion": 70,
+    "fromSha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b",
+    "toSha256": "362e839d515656338f527e4a94256aed8861936860fd778cfd611b892c9fc6d9",
+    "reason": "Serially integrate only the already frozen optional tenant/user-owned browser presentation source and its additive focused test/inventory bindings onto exact delivered Main090. Preserve graph93/all98 nodes, all historical migrations, every immutable obligation, unchanged mechanical scanner, full security-input fallback, every old test owner and mandatory native PAN576/runtime contracts. This metadata successor is not original UI acceptance, a model/provider/production right, a canonical/CI/release PASS or closure; actual visual PAN543-VISUAL-01 remains a same-owner source correction."
+  }
+],
   "scanScope": {
     "roots": [
       "src",
@@ -685,314 +693,314 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1006,
-    "declarationSites": 37,
-    "declarationFiles": 37,
-    "importSites": 297,
-    "importFiles": 296,
-    "reexportSites": 7,
-    "similarShapeSites": 30,
-    "ledgerEntries": 2493,
-    "ledgerUniquePaths": 2493
-  },
+  "filesScanned": 1017,
+  "declarationSites": 37,
+  "declarationFiles": 37,
+  "importSites": 297,
+  "importFiles": 296,
+  "reexportSites": 7,
+  "similarShapeSites": 30,
+  "ledgerEntries": 2505,
+  "ledgerUniquePaths": 2505
+},
   "profiles": [
-    {
-      "file": "demo/runtime/enforcement-gate.mjs",
-      "line": 30,
-      "classification": "implementation",
-      "owner": "demo",
-      "pinned": true,
-      "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea"
-    },
-    {
-      "file": "packages/contracts/src/asf-synthetic-lifecycle-harness.ts",
-      "line": 262,
-      "classification": "alias",
-      "owner": "contracts",
-      "pinned": true,
-      "sha256": "efff63cc5f1d9293a56b892172fed9e6257b186209c693087ebad0fe2b8a1846"
-    },
-    {
-      "file": "packages/contracts/src/canonical-json.js",
-      "line": 1,
-      "classification": "implementation",
-      "owner": "contracts",
-      "pinned": true,
-      "sha256": "e0ab8804532a55b161407e59167cf3027ebceb7df72a4d1dd1a485b1db4400ec"
-    },
-    {
-      "file": "packages/contracts/src/canonical-json.ts",
-      "line": 1,
-      "classification": "implementation",
-      "owner": "contracts",
-      "pinned": true,
-      "sha256": "666513ba9a89c0eae0daa0e0159a262eb4e0aa105971a151a19bac1a9b6c4826"
-    },
-    {
-      "file": "scripts/cks-07-score-empty-kb.mjs",
-      "line": 39,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "bfa851a9cd482ba2a3d187596f0349b00537bc1919352fbd024daed1c3eb1d69"
-    },
-    {
-      "file": "scripts/cks-08-validate-public-readback.mjs",
-      "line": 19,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "a6a6fd01f19bbf5cc45ec6aaa55dd1b4967c6b26617008dce60490fe8e5f815a"
-    },
-    {
-      "file": "scripts/cks-09-validate-public-readback.mjs",
-      "line": 35,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "scripts/daily-poc.mjs",
-      "line": 58,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "9dfa75c197150b38331eda7293c754275ba58b53121c9665a9267f1260786016"
-    },
-    {
-      "file": "scripts/refresh-integrity-data.mjs",
-      "line": 9,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b"
-    },
-    {
-      "file": "scripts/render-asf-public-readback.mjs",
-      "line": 35,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "8cef62545a40571ea167393b82695292e1d0c94dd21a4bd1d6759ae3a18017e8"
-    },
-    {
-      "file": "scripts/run-cks-12-story-step-check.mjs",
-      "line": 41,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "scripts/verify-secure-default-proof.mjs",
-      "line": 28,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "4cc5b1c775f07620649bf8f94ec8e47bf0681e595c81da46173af1b7e83791e1"
-    },
-    {
-      "file": "scripts/verify-supply-chain.mjs",
-      "line": 10,
-      "classification": "implementation",
-      "owner": "scripts",
-      "pinned": true,
-      "sha256": "1d03380cb0f6d5c1c51eacce009f8ca312af1c0a4599d4189a11ad0e30d75641"
-    },
-    {
-      "file": "src/cks-12/deterministic-function-cost-parity.ts",
-      "line": 20,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/drift-revalidation-fastpath.ts",
-      "line": 11,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/empty-kb-acquisition-gate.ts",
-      "line": 220,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/experience-diversity-attribution.ts",
-      "line": 10,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/falsification-report-validator.ts",
-      "line": 9,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/governed-promotion-lineage.ts",
-      "line": 116,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/pattern-shadow-workflow.ts",
-      "line": 9,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/prerequisite-receipt-binder.ts",
-      "line": 39,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/readonly-kaleidosphere-bridge.ts",
-      "line": 72,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cks-12/story-step-manifest.ts",
-      "line": 11,
-      "classification": "implementation",
-      "owner": "cks-12",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-01/protocol.mjs",
-      "line": 58,
-      "classification": "implementation",
-      "owner": "cscl-01",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-04/profile-builder.mjs",
-      "line": 96,
-      "classification": "alias",
-      "owner": "cscl-04",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-05/tryton-profile.mjs",
-      "line": 40,
-      "classification": "implementation",
-      "owner": "cscl-05",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-06/profile.mjs",
-      "line": 76,
-      "classification": "implementation",
-      "owner": "cscl-06",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-07/matrix.mjs",
-      "line": 6,
-      "classification": "implementation",
-      "owner": "cscl-07",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-08/party-candidate.mjs",
-      "line": 9,
-      "classification": "implementation",
-      "owner": "cscl-08",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-09/product-candidate.mjs",
-      "line": 10,
-      "classification": "implementation",
-      "owner": "cscl-09",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-10/sales-candidate.mjs",
-      "line": 9,
-      "classification": "implementation",
-      "owner": "cscl-10",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/cscl-13/complaint.mjs",
-      "line": 13,
-      "classification": "implementation",
-      "owner": "cscl-13",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/rks-01/comparator.mjs",
-      "line": 3,
-      "classification": "implementation",
-      "owner": "rks-01",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/rks-01/deterministic-ingestion.mjs",
-      "line": 20,
-      "classification": "wrapper",
-      "owner": "rks-01",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "src/rks-01/source-governance.mjs",
-      "line": 38,
-      "classification": "implementation",
-      "owner": "rks-01",
-      "pinned": false,
-      "sha256": null
-    },
-    {
-      "file": "tests/daily-poc.test.mjs",
-      "line": 30,
-      "classification": "implementation",
-      "owner": "tests",
-      "pinned": true,
-      "sha256": "516194226603e1b484d3a6bb9201ea9245499750f0e39c84646be75c32649e09"
-    },
-    {
-      "file": "tools/video-production-reference/src/job-validator.mjs",
-      "line": 51,
-      "classification": "implementation",
-      "owner": "video-production-reference",
-      "pinned": true,
-      "sha256": "a1abaca9ff5e319e082de36dd7d42c02889d223aec8c5132139599d34a7d6977"
-    }
-  ],
+  {
+    "file": "demo/runtime/enforcement-gate.mjs",
+    "line": 30,
+    "classification": "implementation",
+    "owner": "demo",
+    "pinned": true,
+    "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea"
+  },
+  {
+    "file": "packages/contracts/src/asf-synthetic-lifecycle-harness.ts",
+    "line": 262,
+    "classification": "alias",
+    "owner": "contracts",
+    "pinned": true,
+    "sha256": "efff63cc5f1d9293a56b892172fed9e6257b186209c693087ebad0fe2b8a1846"
+  },
+  {
+    "file": "packages/contracts/src/canonical-json.js",
+    "line": 1,
+    "classification": "implementation",
+    "owner": "contracts",
+    "pinned": true,
+    "sha256": "e0ab8804532a55b161407e59167cf3027ebceb7df72a4d1dd1a485b1db4400ec"
+  },
+  {
+    "file": "packages/contracts/src/canonical-json.ts",
+    "line": 1,
+    "classification": "implementation",
+    "owner": "contracts",
+    "pinned": true,
+    "sha256": "666513ba9a89c0eae0daa0e0159a262eb4e0aa105971a151a19bac1a9b6c4826"
+  },
+  {
+    "file": "scripts/cks-07-score-empty-kb.mjs",
+    "line": 39,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "bfa851a9cd482ba2a3d187596f0349b00537bc1919352fbd024daed1c3eb1d69"
+  },
+  {
+    "file": "scripts/cks-08-validate-public-readback.mjs",
+    "line": 19,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "a6a6fd01f19bbf5cc45ec6aaa55dd1b4967c6b26617008dce60490fe8e5f815a"
+  },
+  {
+    "file": "scripts/cks-09-validate-public-readback.mjs",
+    "line": 35,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "scripts/daily-poc.mjs",
+    "line": 58,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "9dfa75c197150b38331eda7293c754275ba58b53121c9665a9267f1260786016"
+  },
+  {
+    "file": "scripts/refresh-integrity-data.mjs",
+    "line": 9,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "362e839d515656338f527e4a94256aed8861936860fd778cfd611b892c9fc6d9"
+  },
+  {
+    "file": "scripts/render-asf-public-readback.mjs",
+    "line": 35,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "8cef62545a40571ea167393b82695292e1d0c94dd21a4bd1d6759ae3a18017e8"
+  },
+  {
+    "file": "scripts/run-cks-12-story-step-check.mjs",
+    "line": 41,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "scripts/verify-secure-default-proof.mjs",
+    "line": 28,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "4cc5b1c775f07620649bf8f94ec8e47bf0681e595c81da46173af1b7e83791e1"
+  },
+  {
+    "file": "scripts/verify-supply-chain.mjs",
+    "line": 10,
+    "classification": "implementation",
+    "owner": "scripts",
+    "pinned": true,
+    "sha256": "1d03380cb0f6d5c1c51eacce009f8ca312af1c0a4599d4189a11ad0e30d75641"
+  },
+  {
+    "file": "src/cks-12/deterministic-function-cost-parity.ts",
+    "line": 20,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/drift-revalidation-fastpath.ts",
+    "line": 11,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/empty-kb-acquisition-gate.ts",
+    "line": 220,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/experience-diversity-attribution.ts",
+    "line": 10,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/falsification-report-validator.ts",
+    "line": 9,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/governed-promotion-lineage.ts",
+    "line": 116,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/pattern-shadow-workflow.ts",
+    "line": 9,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/prerequisite-receipt-binder.ts",
+    "line": 39,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/readonly-kaleidosphere-bridge.ts",
+    "line": 72,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cks-12/story-step-manifest.ts",
+    "line": 11,
+    "classification": "implementation",
+    "owner": "cks-12",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-01/protocol.mjs",
+    "line": 58,
+    "classification": "implementation",
+    "owner": "cscl-01",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-04/profile-builder.mjs",
+    "line": 96,
+    "classification": "alias",
+    "owner": "cscl-04",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-05/tryton-profile.mjs",
+    "line": 40,
+    "classification": "implementation",
+    "owner": "cscl-05",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-06/profile.mjs",
+    "line": 76,
+    "classification": "implementation",
+    "owner": "cscl-06",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-07/matrix.mjs",
+    "line": 6,
+    "classification": "implementation",
+    "owner": "cscl-07",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-08/party-candidate.mjs",
+    "line": 9,
+    "classification": "implementation",
+    "owner": "cscl-08",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-09/product-candidate.mjs",
+    "line": 10,
+    "classification": "implementation",
+    "owner": "cscl-09",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-10/sales-candidate.mjs",
+    "line": 9,
+    "classification": "implementation",
+    "owner": "cscl-10",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/cscl-13/complaint.mjs",
+    "line": 13,
+    "classification": "implementation",
+    "owner": "cscl-13",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/rks-01/comparator.mjs",
+    "line": 3,
+    "classification": "implementation",
+    "owner": "rks-01",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/rks-01/deterministic-ingestion.mjs",
+    "line": 20,
+    "classification": "wrapper",
+    "owner": "rks-01",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "src/rks-01/source-governance.mjs",
+    "line": 38,
+    "classification": "implementation",
+    "owner": "rks-01",
+    "pinned": false,
+    "sha256": null
+  },
+  {
+    "file": "tests/daily-poc.test.mjs",
+    "line": 30,
+    "classification": "implementation",
+    "owner": "tests",
+    "pinned": true,
+    "sha256": "516194226603e1b484d3a6bb9201ea9245499750f0e39c84646be75c32649e09"
+  },
+  {
+    "file": "tools/video-production-reference/src/job-validator.mjs",
+    "line": 51,
+    "classification": "implementation",
+    "owner": "video-production-reference",
+    "pinned": true,
+    "sha256": "a1abaca9ff5e319e082de36dd7d42c02889d223aec8c5132139599d34a7d6977"
+  }
+],
   "reexports": [
     {
       "file": "demo/openclaw-agent/capability-m1-4-adapter.mjs",
@@ -1445,112 +1453,112 @@
     }
   ],
   "byteObligations": [
-    {
-      "path": "demo/runtime/enforcement-gate.mjs",
-      "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
-      "basis": "profile-version-migration"
-    },
-    {
-      "path": "docs/evidence/conveyor/terra-psai285-canonical-root-qs-01.json",
-      "sha256": "0d0b3c54c3a711aba2eeda4017ba7e9885ec9b7588ceeeebad03bcb3d4638378",
-      "basis": "ledger-name-match"
-    },
-    {
-      "path": "docs/evidence/conveyor/terra-psai286-canonical-root-qs-01.json",
-      "sha256": "ad2b0db60b89fb6df019ae3b04421ee193f8adb3ec3f62e9503ed14998a7e5e7",
-      "basis": "ledger-name-match"
-    },
-    {
-      "path": "docs/evidence/conveyor/terra-psai287-canonical-root-qs-01.json",
-      "sha256": "f5a9537a3d77b6b989d0bd377a3a245a7ba485bac4c4ce6078b6221b7cf6c423",
-      "basis": "ledger-name-match"
-    },
-    {
-      "path": "docs/evidence/conveyor/terra-psai288-canonical-root-qs-01.json",
-      "sha256": "903a4d4c0b55ffb34e21d0094c8faaaff77f12b337b014d069b927067749eebf",
-      "basis": "ledger-name-match"
-    },
-    {
-      "path": "examples/company-data/erp-crm-canonical-company-data-pack.example.json",
-      "sha256": "cc0b1b1942365307c08a6396602dd0ac03732b92cdc5cc8931051ecffbe52658",
-      "basis": "ledger-name-match"
-    },
-    {
-      "path": "examples/company-data/erp-crm-canonical-company-data-pack.schema.json",
-      "sha256": "9ff3d2f0c17837c1cf60d36600fb3853f13012695c68c81a5d8bc19a582739ac",
-      "basis": "ledger-name-match"
-    },
-    {
-      "path": "packages/contracts/src/asf-synthetic-lifecycle-harness.ts",
-      "sha256": "efff63cc5f1d9293a56b892172fed9e6257b186209c693087ebad0fe2b8a1846",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "packages/contracts/src/canonical-json.js",
-      "sha256": "e0ab8804532a55b161407e59167cf3027ebceb7df72a4d1dd1a485b1db4400ec",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "packages/contracts/src/canonical-json.ts",
-      "sha256": "666513ba9a89c0eae0daa0e0159a262eb4e0aa105971a151a19bac1a9b6c4826",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "scripts/cks-07-score-empty-kb.mjs",
-      "sha256": "bfa851a9cd482ba2a3d187596f0349b00537bc1919352fbd024daed1c3eb1d69",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "scripts/cks-08-validate-public-readback.mjs",
-      "sha256": "a6a6fd01f19bbf5cc45ec6aaa55dd1b4967c6b26617008dce60490fe8e5f815a",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "scripts/daily-poc.mjs",
-      "sha256": "9dfa75c197150b38331eda7293c754275ba58b53121c9665a9267f1260786016",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "5370db08e8b62caa001d30d87362e4791d27e0f7abf8c11f363c64eb2ff17d0b",
-      "basis": "profile-version-migration"
-    },
-    {
-      "path": "scripts/render-asf-public-readback.mjs",
-      "sha256": "8cef62545a40571ea167393b82695292e1d0c94dd21a4bd1d6759ae3a18017e8",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "scripts/verify-secure-default-proof.mjs",
-      "sha256": "4cc5b1c775f07620649bf8f94ec8e47bf0681e595c81da46173af1b7e83791e1",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "scripts/verify-supply-chain.mjs",
-      "sha256": "1d03380cb0f6d5c1c51eacce009f8ca312af1c0a4599d4189a11ad0e30d75641",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "tests/canonical-json-runtime-parity.test.mjs",
-      "sha256": "929ab3a426ed99e3aaadf00b0a8ffe6866503bdaadebbd348995a871b63f2ed2",
-      "basis": "parity-evidence"
-    },
-    {
-      "path": "tests/daily-poc.test.mjs",
-      "sha256": "516194226603e1b484d3a6bb9201ea9245499750f0e39c84646be75c32649e09",
-      "basis": "profile-implementation"
-    },
-    {
-      "path": "tests/fixtures/asf-bundle-lock/noncanonical.json",
-      "sha256": "76b850174440a13247ba98a3217cb9429dc9390c920b23ed030bc7bd25f97974",
-      "basis": "parity-fixture"
-    },
-    {
-      "path": "tools/video-production-reference/src/job-validator.mjs",
-      "sha256": "a1abaca9ff5e319e082de36dd7d42c02889d223aec8c5132139599d34a7d6977",
-      "basis": "profile-implementation"
-    }
-  ],
+  {
+    "path": "demo/runtime/enforcement-gate.mjs",
+    "sha256": "21be98b220f747613305fc1fa17d9bebb5d2d959ea4b35d84264d3befd01edea",
+    "basis": "profile-version-migration"
+  },
+  {
+    "path": "docs/evidence/conveyor/terra-psai285-canonical-root-qs-01.json",
+    "sha256": "0d0b3c54c3a711aba2eeda4017ba7e9885ec9b7588ceeeebad03bcb3d4638378",
+    "basis": "ledger-name-match"
+  },
+  {
+    "path": "docs/evidence/conveyor/terra-psai286-canonical-root-qs-01.json",
+    "sha256": "ad2b0db60b89fb6df019ae3b04421ee193f8adb3ec3f62e9503ed14998a7e5e7",
+    "basis": "ledger-name-match"
+  },
+  {
+    "path": "docs/evidence/conveyor/terra-psai287-canonical-root-qs-01.json",
+    "sha256": "f5a9537a3d77b6b989d0bd377a3a245a7ba485bac4c4ce6078b6221b7cf6c423",
+    "basis": "ledger-name-match"
+  },
+  {
+    "path": "docs/evidence/conveyor/terra-psai288-canonical-root-qs-01.json",
+    "sha256": "903a4d4c0b55ffb34e21d0094c8faaaff77f12b337b014d069b927067749eebf",
+    "basis": "ledger-name-match"
+  },
+  {
+    "path": "examples/company-data/erp-crm-canonical-company-data-pack.example.json",
+    "sha256": "cc0b1b1942365307c08a6396602dd0ac03732b92cdc5cc8931051ecffbe52658",
+    "basis": "ledger-name-match"
+  },
+  {
+    "path": "examples/company-data/erp-crm-canonical-company-data-pack.schema.json",
+    "sha256": "9ff3d2f0c17837c1cf60d36600fb3853f13012695c68c81a5d8bc19a582739ac",
+    "basis": "ledger-name-match"
+  },
+  {
+    "path": "packages/contracts/src/asf-synthetic-lifecycle-harness.ts",
+    "sha256": "efff63cc5f1d9293a56b892172fed9e6257b186209c693087ebad0fe2b8a1846",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "packages/contracts/src/canonical-json.js",
+    "sha256": "e0ab8804532a55b161407e59167cf3027ebceb7df72a4d1dd1a485b1db4400ec",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "packages/contracts/src/canonical-json.ts",
+    "sha256": "666513ba9a89c0eae0daa0e0159a262eb4e0aa105971a151a19bac1a9b6c4826",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "scripts/cks-07-score-empty-kb.mjs",
+    "sha256": "bfa851a9cd482ba2a3d187596f0349b00537bc1919352fbd024daed1c3eb1d69",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "scripts/cks-08-validate-public-readback.mjs",
+    "sha256": "a6a6fd01f19bbf5cc45ec6aaa55dd1b4967c6b26617008dce60490fe8e5f815a",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "scripts/daily-poc.mjs",
+    "sha256": "9dfa75c197150b38331eda7293c754275ba58b53121c9665a9267f1260786016",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "scripts/refresh-integrity-data.mjs",
+    "sha256": "362e839d515656338f527e4a94256aed8861936860fd778cfd611b892c9fc6d9",
+    "basis": "profile-version-migration"
+  },
+  {
+    "path": "scripts/render-asf-public-readback.mjs",
+    "sha256": "8cef62545a40571ea167393b82695292e1d0c94dd21a4bd1d6759ae3a18017e8",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "scripts/verify-secure-default-proof.mjs",
+    "sha256": "4cc5b1c775f07620649bf8f94ec8e47bf0681e595c81da46173af1b7e83791e1",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "scripts/verify-supply-chain.mjs",
+    "sha256": "1d03380cb0f6d5c1c51eacce009f8ca312af1c0a4599d4189a11ad0e30d75641",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "tests/canonical-json-runtime-parity.test.mjs",
+    "sha256": "929ab3a426ed99e3aaadf00b0a8ffe6866503bdaadebbd348995a871b63f2ed2",
+    "basis": "parity-evidence"
+  },
+  {
+    "path": "tests/daily-poc.test.mjs",
+    "sha256": "516194226603e1b484d3a6bb9201ea9245499750f0e39c84646be75c32649e09",
+    "basis": "profile-implementation"
+  },
+  {
+    "path": "tests/fixtures/asf-bundle-lock/noncanonical.json",
+    "sha256": "76b850174440a13247ba98a3217cb9429dc9390c920b23ed030bc7bd25f97974",
+    "basis": "parity-fixture"
+  },
+  {
+    "path": "tools/video-production-reference/src/job-validator.mjs",
+    "sha256": "a1abaca9ff5e319e082de36dd7d42c02889d223aec8c5132139599d34a7d6977",
+    "basis": "profile-implementation"
+  }
+],
   "equivalence": {
     "stance": "NOT-PROVEN",
     "claims": [],

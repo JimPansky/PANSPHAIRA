@@ -2707,8 +2707,26 @@ if (pan541Node === undefined) {
   };
   dag.nodes.push(pan541Node);
 }
-pan541Node.inputs = pan541Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+// PAN543 extends the existing optional shell owner; no new owner/edges,
+// selector, hard gates, provider behavior or runnable payload is introduced.
+const pan543Inputs = [
+  ["docs/architecture/browser-profile-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/browser-workspace/src/profile-editor-v1.ts", "SOURCE"],
+  ["packages/contracts/src/browser-profile-v1.ts", "CONTRACT"],
+  ["scripts/run-pan543-browser-profile-tests.mjs", "VALIDATOR"],
+  ["scripts/refresh-pan543-integrity.mjs", "SOURCE"],
+  ["src/pan543/profile-store.mjs", "SECURITY"],
+  ["tests/pan543/backend-fixture.mjs", "VALIDATOR"],
+  ["tests/pan543/browser.test.mjs", "VALIDATOR"],
+  ["tests/pan543/profile-types.ts", "VALIDATOR"],
+  ["tests/pan543/profile.test.mjs", "VALIDATOR"],
+  ["tests/pan543/registration.test.mjs", "VALIDATOR"],
+  ["tests/pan543/transport.test.mjs", "VALIDATOR"],
+];
+pan541Node.inputs = [...pan541Inputs, ...pan543Inputs].map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+pan541Node.ownedTests = ["npm run pan541:test", "npm run pan543:test"];
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan541:test")) repositoryIntegrityNode.ownedTests.push("npm run pan541:test");
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan543:test")) repositoryIntegrityNode.ownedTests.push("npm run pan543:test");
 dag.graphVersion = 93;
 
 // PAN574 is an additive two-export seam, not a new native kernel or registry.
@@ -2808,6 +2826,7 @@ for (const [inputPath] of pan528Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan543Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

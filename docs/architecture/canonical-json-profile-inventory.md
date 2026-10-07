@@ -110,6 +110,19 @@ explicit migration. The runnable public manifest is unchanged. Only current
 scanner counts and actual changed-byte bindings advance; no canonical-profile
 equivalence claim or new source/execution authority is introduced.
 
+## PUI-02 serial presentation integration refresh
+
+PAN543 extends only the existing optional browser-shell owner at graph v93 with 98
+nodes and adds the exact integrity-generator migration V70 after retained V69.
+The unchanged scanner observes 1017 source files and 2505 unique checksum paths;
+37 declaration sites/files, 297 import sites in 296 files, 7 re-export sites and 30
+similar-shape sites remain unchanged. Every admitted profile retains its original
+class, owner, line and pin semantics; only the explicitly migrated generator
+digest advances. The immutable 21-entry base obligations, original consumer
+families, non-equivalence classifications, runnable manifest and every hard gate
+remain intact. This is source/inventory integration, not UI, canonical-CI, native
+installer, publication or human acceptance.
+
 ## Fresh census vs historical hints
 
 Historical lexical counts (81 declarations / 80 files; 172 import sites /

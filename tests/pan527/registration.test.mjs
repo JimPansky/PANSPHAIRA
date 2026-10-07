@@ -28,7 +28,7 @@ test('optional origin/session surface has one additive source owner and real bro
     assert.ok(builder.includes(JSON.stringify(row.path)), row.path);
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: 'verification/verification-dag-v2.json', baseSha: '1'.repeat(40), headSha: '2'.repeat(40), changedPaths: [row.path], observedInputDigests });
     assert.deepEqual(plan.selectedNodes, [owner.id, 'pan528-guided-native-browser-v1', "pan541-shared-browser-shell-v1"]);
-    assert.deepEqual(plan.selectedTests, ['npm run pan527:test', 'npm run pan528:test', "npm run pan541:test"]);
+    assert.deepEqual(plan.selectedTests, ['npm run pan527:test', 'npm run pan528:test', "npm run pan541:test", "npm run pan543:test"]);
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a,b) => a.localeCompare(b,'en')));
   }
   const pkg = load('package.json');
