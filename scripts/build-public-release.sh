@@ -649,6 +649,20 @@ repository_only_files = {
     "tests/pan542/registration.test.mjs",
     "tests/pan542/restart-reader.mjs",
 
+    # PAN544 personal native feed: source-only; legacy payload and rights unchanged.
+    "docs/architecture/native-workspace-notifications-v1.md",
+    "packages/browser-workspace/src/notifications-v1.ts",
+    "packages/contracts/src/workspace-notifications-v1.ts",
+    "scripts/run-pan544-native-notification-tests.mjs",
+    "src/pan544/native-notifications.mjs",
+    "tests/pan544/browser-fixture.mjs",
+    "tests/pan544/browser-notifications.test.mjs",
+    "tests/pan544/contracts.test.mjs",
+    "tests/pan544/gateway.test.mjs",
+    "tests/pan544/native-notifications.test.mjs",
+    "tests/pan544/registration.test.mjs",
+    "tests/pan544/restart-reader.mjs",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

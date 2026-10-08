@@ -8,6 +8,8 @@ import { PocEarlyAdminCoordinatorV1, createPocEarlyAdminDashboardServerV1 } from
 import { canonicalJson } from "../../dist/packages/contracts/src/canonical-json.js";
 import { validateBrowserProfileReadV1, validateBrowserProfileWriteV1 } from "../../dist/packages/contracts/src/browser-profile-v1.js";
 import { runtimeIdentityDigestV1, validateRuntimeIdentityV1 } from "../pan526/runtime-contract.mjs";
+import { validateBrowserErvReadV1 } from "../../dist/packages/contracts/src/browser-erv-read-v1.js";
+import { validateWorkspaceNotificationsFeedV1, validateWorkspaceNotificationSelectorV1, validateWorkspaceNotificationPreferencesV1, validateWorkspaceNotificationPreferencesWriteV1 } from "../../dist/packages/contracts/src/workspace-notifications-v1.js";
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
 export function validateHostedOriginV1(value) {
@@ -266,6 +268,19 @@ export function mountProtectedWorkspaceConfigurationV1(gateway, options) {
   return Object.freeze({ close() { if (product.workspaceConfiguration === attachment) delete product.workspaceConfiguration; } });
 }
 
+// Closed code-owner attachment. Never an HTTP plugin/publisher/decision registry.
+export function mountProtectedWorkspaceNotificationsV1(gateway, options) {
+  const methods = ["feed", "open", "markRead", "reconcileRead", "savePreferences"];
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "adapterVersion", ...methods], "HOSTED_NOTIFICATIONS_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product?.workspaceDocument || product.workspaceNotifications
+    || options.identityDigest !== product.sessions.binding.identityDigest || options.origin !== product.sessions.origin
+    || options.adapterVersion !== "pan542-native-notifications/v1" || methods.some(k => typeof options[k] !== "function")) throw new Error("HOSTED_NOTIFICATIONS_OWNER_DENIED");
+  const attachment = Object.freeze(Object.fromEntries(methods.map(k => [k, options[k]])));
+  product.workspaceNotifications = attachment;
+  return Object.freeze({ close() { if (product.workspaceNotifications === attachment) delete product.workspaceNotifications; } });
+}
+
 // Closed existing native product handlers, not a general-purpose reverse proxy.
 // This optional local test ingress neither implements OIDC nor creates a portal.
 export function createOptionalHttpsProductIngressV1(options) {
@@ -303,13 +318,55 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile|\/configuration)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile|\/configuration|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (!["/workspace/profile", "/workspace/configuration"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (!["/workspace/profile", "/workspace/configuration"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if (match[2]?.startsWith("/workspace/notifications")) {
+          const adapter = product.workspaceNotifications;
+          if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+          const checkNotificationContext = () => {
+            const principal = product.sessions.authenticate(request.headers);
+            const pair = request.headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
+            if (request.headers["x-pan544-context"] !== "session:" + hash(pair)) throw new Error("HOSTED_SESSION_DENIED");
+            if (request.method === "POST" && request.headers.origin !== origin) throw new Error("HOSTED_CSRF_DENIED");
+            return principal;
+          };
+          const principal = checkNotificationContext(); let result;
+          if (request.method === "GET") {
+            if ((request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") || request.headers["transfer-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            result = validateWorkspaceNotificationsFeedV1(adapter.feed(request.headers), principal.tenantId);
+          } else {
+            if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            const chunks = []; let bytes = 0;
+            for await (const chunk of request) { bytes += chunk.length; if (bytes > 8192) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+            let body; try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); } catch { return reply(response, 400, "HOSTED_BODY_DENIED"); }
+            checkNotificationContext();
+            if (match[2] === "/workspace/notifications/preferences") {
+              result = validateWorkspaceNotificationPreferencesV1(adapter.savePreferences(request.headers, validateWorkspaceNotificationPreferencesWriteV1(body)));
+            } else {
+              const op = match[2] === "/workspace/notifications/open" ? "open" : match[2] === "/workspace/notifications/read" ? "mark-read" : "reconcile-read";
+              const command = validateWorkspaceNotificationSelectorV1(body, op);
+              result = adapter[op === "open" ? "open" : op === "mark-read" ? "markRead" : "reconcileRead"](request.headers, command);
+              if (op === "open") {
+                exactData(result, ["schemaVersion", "outcome", "eventId", "eventRevision", "target", "invoice", "taskIdentityDigest", "taskState", "executionAuthorityGranted"], "NOTIFICATION_CONTRACT_DENIED");
+                exactData(result.target, ["pluginId", "routeId", "params"], "NOTIFICATION_CONTRACT_DENIED"); exactData(result.target.params, ["objectId", "revision"], "NOTIFICATION_CONTRACT_DENIED");
+                const invoice = validateBrowserErvReadV1(result.invoice);
+                if (result.schemaVersion !== "pansphaira.workspace-notifications/open-readback/v1" || result.outcome !== "TARGET_READ_CONFIRMED" || result.target.pluginId !== "pan.erv" || result.target.routeId !== "pan.erv.route" || invoice.tenantId !== principal.tenantId || invoice.invoiceId !== result.target.params.objectId || invoice.revision !== result.target.params.revision || result.taskState !== "PENDING_LOCAL_EVIDENCE_APPROVAL" || !/^[a-f0-9]{64}$/.test(result.taskIdentityDigest)) throw new Error("NOTIFICATION_CONTRACT_DENIED");
+              } else {
+                exactData(result, ["schemaVersion", "outcome", "eventId", "eventRevision", "read", "newTaskEffect", "executionAuthorityGranted"], "NOTIFICATION_CONTRACT_DENIED");
+                const reconciliation = op === "reconcile-read";
+                if (result.schemaVersion !== "pansphaira.workspace-notifications/" + (reconciliation ? "read-reconciliation" : "mark-readback") + "/v1" || !(reconciliation ? ["READ_CONFIRMED", "NOT_RECORDED"] : ["READ_CONFIRMED", "ALREADY_READ_CONFIRMED"]).includes(result.outcome) || result.read !== (result.outcome !== "NOT_RECORDED") || result.newTaskEffect !== false) throw new Error("NOTIFICATION_CONTRACT_DENIED");
+              }
+              if (result.eventId !== command.eventId || result.eventRevision !== command.eventRevision || result.executionAuthorityGranted !== false) throw new Error("NOTIFICATION_CONTRACT_DENIED");
+            }
+          }
+          checkNotificationContext();
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(result) + "\n"); return;
+        }
         if (match[2] === "/workspace/configuration") {
           if (!product.workspaceConfiguration) return reply(response, 404, "HOSTED_ROUTE_DENIED");
           const authenticateDraftWrite = () => {
@@ -439,6 +496,10 @@ export function createOptionalHttpsProductIngressV1(options) {
       if (response.headersSent) { response.destroy(); return; }
       const code = error instanceof Error ? error.message : "HOSTED_AUTH_UNAVAILABLE";
       if (["HOSTED_HEADER_AUTHORITY_DENIED", "HOSTED_ROLE_DENIED", "HOSTED_CSRF_DENIED", "GUIDED_BOUND_PRINCIPAL_DENIED"].includes(code)) reply(response, 403, code);
+      else if (["NOTIFICATION_NATIVE_ROLE_DENIED", "ERV_HUMAN_NATIVE_ROLE_REQUIRED_DENIED", "NOTIFICATION_ORIGIN_DENIED"].includes(code)) reply(response, 403, code);
+      else if (["NOTIFICATION_OBSOLETE_TARGET_DENIED", "NOTIFICATION_PLUGIN_UNAVAILABLE_DENIED", "NOTIFICATION_PREFERENCES_REVISION_DENIED"].includes(code)) reply(response, 409, code);
+      else if (code === "NOTIFICATION_EVENT_EXPIRED_DENIED") reply(response, 410, code);
+      else if (code === "NOTIFICATION_CONTRACT_DENIED" || /^(NOTIFICATION_(OPEN|READ|EVENT_SELECTOR|PREFERENCES_SHAPE|READ_RECONCILIATION|ROUTE_PARAM))/.test(code)) reply(response, 400, code);
       else if (code === "CONFIGURATION_REVISION_CONFLICT") reply(response, 409, code);
       else if (code === "CONFIGURATION_OWNERSHIP_DENIED") reply(response, 403, code);
       else if (code.startsWith("CONFIGURATION_") && !["CONFIGURATION_STORE_CLOSED", "CONFIGURATION_POLICY_CHANGED_REJECT_REQUIRES_RECONFIRMATION"].includes(code)) reply(response, 400, code);

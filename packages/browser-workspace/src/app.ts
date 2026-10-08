@@ -9,6 +9,7 @@ import { configurationDraftPluginV1, createConfigurationDraftViewV1 } from "./pl
 import { text, type WorkspaceViewApiV1 } from "./api-v1.js";
 import { createWorkspaceProfileEditorV1 } from "./profile-editor-v1.js";
 import type { BrowserProfileReadV1 } from "../../contracts/src/browser-profile-v1.js";
+import { createWorkspaceNotificationsV1 } from "./notifications-v1.js";
 const element = (id: string): HTMLElement => { const node = document.getElementById(id); if (!node) throw new Error("SHELL_SLOT_MISSING"); return node; };
 async function start() {
   const scope = /^\/t\/([a-z0-9][a-z0-9-]{0,63})\/workspace$/.exec(location.pathname); if (!scope) throw new Error("WORKSPACE_ROUTE_DENIED");
@@ -16,6 +17,7 @@ async function start() {
   const lifetime = new AbortController(); let invoice: BrowserErvReadV1 | null = null; let link: BrowserDeepLinkV1 | null = null;
   let profileEditor: Awaited<ReturnType<typeof createWorkspaceProfileEditorV1>> | null = null;
   let presentation: BrowserProfileReadV1 | null = null; let panelEpoch = 0;
+  let notifications: ReturnType<typeof createWorkspaceNotificationsV1> | null = null;
   const canvas = element("profile.canvas"); const boundary = element("pan.workspace.boundary");
   const cards = new Map([["shell.main", main], ["shell.widgets", widget], ["pan.workspace.boundary", boundary], ["pan.erv.information", panel]]);
   async function renderPanel() {
@@ -104,20 +106,35 @@ async function start() {
     if (result.outcome !== "DENIED" || !("reason" in result) || result.reason !== "PLUGIN_VERSION_DENIED") throw new Error("DIAGNOSTIC_VERSION_DENIAL_MISSING");
     diagnosticStates.push("Inkompatible Shellversion: " + diagnostic.incompatible.id);
   }
+  if (document.body.dataset.ownerNotifications === "true") notifications = createWorkspaceNotificationsV1({ root: element("shell.notifications"), base, context: owner.context, signal: lifetime.signal,
+    onSessionDenied() {
+      const c = owner.context(); owner.switchContext({ ...c, objectId: null, revision: c.revision + 1 }); disposal();
+      document.body.dataset.nativeRevision = "unknown"; main.hidden = false;
+      main.append(text("h1", "Zugriff verweigert"), text("p", "Session, Berechtigung oder aktueller Objektstand nicht mehr bestätigt. Frühere fachliche Inhalte und Kontextlisteners wurden verworfen. Arbeitsbereich mit aktueller Session neu laden."));
+      widget.dataset.state = "DENIED"; widget.textContent = "Aktueller Zugriff nicht bestätigt — keine alten Vorgangsinhalte.";
+    },
+    openTarget(value) {
+      if (registry.status(value.target.pluginId).outcome !== "REGISTERED" || !registry.routes().some(r => r.pluginId === value.target.pluginId && r.routeId === value.target.routeId && r.state === "REGISTERED" && r.path === "/workspace/erv")) throw new Error("WORKSPACE_NOTIFICATION_ROUTE_DENIED");
+      const c = owner.context(); location.hash = buildBrowserDeepLinkV1({ path: "/workspace/erv", tenantId: c.tenantId, sessionId: c.sessionId, objectId: value.invoice.invoiceId, revision: value.invoice.revision });
+    },
+  });
   function disposal() { owner.onDispose(() => { panelEpoch++; registry.retireAll(); invoice = null; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
   async function activate() {
     const current = owner.context(); let selected: BrowserDeepLinkV1;
     try { selected = parseBrowserDeepLinkV1(location.hash || "#/workspace/setup", current, registry.routes().filter(r => r.state === "REGISTERED").map(r => r.path!)); }
     catch {
       owner.switchContext({ ...current, objectId: null, revision: current.revision + 1 }); disposal();
+      void notifications?.refresh();
       main.hidden = false;
       main.append(text("h1", "Deep Link verweigert"), text("p", "Route, Tenant, Session, Objektparameter oder Version sind nicht gültig. Keine Anfrage an einen fremden Tenant."));
+      showStates("Deep Link verweigert — terminaler Zustand. Persönliche Hinweise werden unabhängig mit der aktuellen Session geprüft.");
       for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
       return;
     }
     link = selected;
     owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : null, revision: current.revision + 1 }); disposal();
     document.body.dataset.contextRevision = String(owner.context().revision); document.body.dataset.nativeRevision = "unknown";
+    void notifications?.refresh();
     showStates("Lesender Arbeitsplatz. Pluginmetadaten gewähren keine Backendrechte.");
     for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
     const plugin = plugins.find(p => p.contributions.some(c => c.kind === "ROUTE" && c.path === selected.path));
@@ -130,7 +147,7 @@ async function start() {
       anchor.href = buildBrowserDeepLinkV1({ path: selected.path, tenantId: current.tenantId, sessionId: current.sessionId, objectId: invoice.invoiceId, revision: invoice.revision }); actions.append(anchor);
     }
     if (presentation) applyPresentation(presentation);
-    if (target.isConnected && !main.hidden) main.focus();
+    if (target.isConnected && !main.hidden && !element("shell.notifications").contains(document.activeElement)) main.focus();
   }
   disposal(); window.addEventListener("hashchange", () => { void activate(); }, { signal: lifetime.signal });
   element("shell.logout").addEventListener("click", async () => {

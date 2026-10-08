@@ -55,3 +55,23 @@ footer { color: #425b6b; border-top: 1px solid #cbd6de; padding: 1rem 1.5rem; fo
   dd { margin-bottom: .65rem; }
 }
 @media (max-width: 680px) { .profile-canvas .profile-large { padding: 1rem; } [id="profile.editor"], [data-profile="diff"] { padding: .75rem; } }
+
+[id="shell.notifications"] { margin-bottom: 1rem; padding: 1rem; background: #fff; border: 1px solid #cbd6de; border-radius: .5rem; min-width: 0; }
+.notification-row { min-width: 0; padding: 1rem; margin-top: 1rem; border: 1px solid #cbd6de; border-left: 4px solid #456c83; border-radius: .4rem; }
+.notification-row h3 { margin: 0 0 .75rem; font-size: 1.05rem; hyphens: auto; }
+.notification-controls { display: flex; flex-wrap: wrap; gap: .75rem; }
+.notification-controls button { min-width: 0; max-width: 100%; flex: 1 1 15rem; }
+[data-notification="read-diff"] { margin-top: 1rem; padding: 1rem; border-left: 4px solid #ca651c; background: #fff8ee; }
+[data-notification="read-diff"] button { max-width: 100%; margin: .5rem .5rem 0 0; }
+
+.notification-preferences { margin-top: 1rem; min-width: 0; }
+.notification-preferences label { display: flex; align-items: center; flex-wrap: wrap; gap: .75rem; margin-bottom: .75rem; min-width: 0; }
+.notification-preferences input[type="checkbox"] { width: 1.25rem; min-width: 1.25rem; }
+.notification-preferences select { min-width: 0; max-width: 100%; }
+.notification-preferences button { max-width: 100%; margin: .5rem .5rem 0 0; }
+/* Keep personal feed and proposal text usable at narrow actual CSS layout width. */
+@container workspace (max-width: 20rem) {
+  [id="shell.notifications"], .notification-row, [data-notification="read-diff"] { padding: .5rem; }
+  .notification-row, [data-notification="read-diff"] { border-left-width: 2px; }
+  .notification-controls button, [data-notification="read-diff"] button, .notification-preferences button { padding-inline: .5rem; margin-inline: 0; }
+}

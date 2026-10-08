@@ -116,6 +116,14 @@ export function createNativeErvHumanBackendV1(options){
       closed(request,['invoiceId'],'ERV_HUMAN_READ_REQUEST_DENIED');const principal=sessions.authenticate(headers);
       return local(root,false,(db,tradeBinding)=>projection(db,binding(db,tradeBinding),tradeBinding,principal,request.invoiceId,root));
     },
+    notificationSource(headers,request){
+      closed(request,['invoiceId'],'ERV_HUMAN_NOTIFICATION_REQUEST_DENIED');const principal=sessions.authenticate(headers);
+      return local(root,false,(db,tradeBinding)=>{
+        const record=binding(db,tradeBinding),readback=projection(db,record,tradeBinding,principal,request.invoiceId,root);
+        const journal=history(db,record,request.invoiceId,root);
+        return frozen({schemaVersion:'pansphaira.erv-human/notification-source/v1',readback,lastEvent:journal.events.at(-1)??null});
+      });
+    },
     reconcile(headers,request){
       closed(request,['invoiceId','effectId'],'ERV_HUMAN_RECONCILIATION_REQUEST_DENIED');
       if(typeof request.effectId!=='string'||!/^synthetic:[a-z0-9-]{3,64}$/.test(request.effectId))fail('ERV_HUMAN_RECONCILIATION_REQUEST_DENIED');
