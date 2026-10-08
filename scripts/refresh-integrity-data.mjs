@@ -2845,6 +2845,54 @@ pan563Node.inputs = pan563Inputs.map(([inputPath, role]) => ({ path: inputPath, 
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan563:test")) repositoryIntegrityNode.ownedTests.push("npm run pan563:test");
 dag.graphVersion = 94;
 
+// PAN542 is a bounded human-decision attachment to existing native ERV,
+// protected sessions and durable task controls; no general workflow engine.
+const pan542Inputs = [
+  [
+    "docs/architecture/erv-human-native-backend-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "scripts/run-pan542-native-human-tests.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "src/pan542/native-human-backend.mjs",
+    "SECURITY"
+  ],
+  [
+    "tests/pan542/native-human-backend.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan542/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan542/restart-reader.mjs",
+    "VALIDATOR"
+  ]
+];
+let pan542Node = dag.nodes.find(({ id }) => id === "pan542-native-erv-human-v1");
+if (pan542Node === undefined) {
+  pan542Node = {
+    id: "pan542-native-erv-human-v1",
+    dependsOn: ["pan516-native-procurement-v1", "pan527-origin-session-v1", "pan464-retained-pair-v1"],
+    inputs: [], ownedTests: ["npm run pan542:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "One exact local synthetic native invoice scenario, immutable executed-source/configuration identity and versioned server-side subject/native-role mapping; browser claims, copied session facades and client taskstores are not authority.",
+      "Existing native liability/ERV evaluation, PAN453 owner/task identity and STOP/REVOKE controls are reused; only bounded review/query/evidence-approval state is added to the same leading SQLite target.",
+      "Current native/proposal revision and digest, separate mapped reviewer/approver and immutable task/event history are checked before each effect; transport identity does not create a second decision.",
+      "Actual fresh-process persistence and committed-response-loss read-only reconciliation bind the retained event/task to the current native basis; missing/drifted outcomes remain unknown and no blind retry is authorized.",
+      "APPROVED_LOCAL_EVIDENCE_ONLY gives no booking/payment/dispatch/execution rights. Backend-only native tests do not claim browser, image, human, provider, whole canonical/CI/release or closure acceptance."
+    ]
+  };
+  dag.nodes.push(pan542Node);
+}
+pan542Node.inputs = pan542Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan542:test")) repositoryIntegrityNode.ownedTests.push("npm run pan542:test");
+dag.graphVersion = 95;
+
 // PAN574 is an additive two-export seam, not a new native kernel or registry.
 // Keep PAN471's read-only inventory owner and every bounded owner unchanged;
 // register this closed source-only seam on the existing integration owner.
@@ -2944,6 +2992,7 @@ for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan543Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan563Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan542Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

@@ -659,6 +659,14 @@
       "fromSha256": "362e839d515656338f527e4a94256aed8861936860fd778cfd611b892c9fc6d9",
       "toSha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458",
       "reason": "Serially register the same-owner frozen A2 optional durable configuration draft on delivered Main3ddb with graph94 and one bounded existing-profile/budget/shell-dependent owner. Preserve all98 prior owner semantics, roles, edges and own tests, all hard gates, immutable base and every historical migration, unchanged mechanical census and legacy runnable payload. Exact source-only member additions and fixed native/browser negative suite bindings are not model/provider/apply rights, human/device acceptance, whole canonical or hosted CI PASS, release/archive/event acceptance or original closure."
+    },
+    {
+      "migrationId": "PAN542-BOUNDED-NATIVE-ERV-HUMAN/INTEGRITY-GENERATOR/V72",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 72,
+      "fromSha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458",
+      "toSha256": "86f7245ce71803c6bab7d5fd6c930f91f73af74dcffd17f4374dc2d5c725b9c6",
+      "reason": "Advance graph95 with exactly one bounded native human-decision attachment to existing ERV/liability, protected sessions and durable task controls. Preserve all prior owner semantics, hard gates, historical migrations and immutable base obligations, unchanged mechanical census and legacy runnable payload membership. Register only the six source-only members and fixed real SQLite/session/fresh-process negative suite. LOCAL_SYNTHETIC review/query/evidence approval is neither productive booking/execution/payment/dispatch authority, browser/human/model acceptance nor frozen canonical/CI/release/closure qualification."
     }
   ],
   "scanScope": {
@@ -701,15 +709,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1037,
+    "filesScanned": 1042,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 300,
-    "importFiles": 299,
+    "importSites": 301,
+    "importFiles": 300,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2528,
-    "ledgerUniquePaths": 2528
+    "ledgerEntries": 2534,
+    "ledgerUniquePaths": 2534
   },
   "profiles": [
     {
@@ -782,7 +790,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458"
+      "sha256": "86f7245ce71803c6bab7d5fd6c930f91f73af74dcffd17f4374dc2d5c725b9c6"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1213,6 +1221,11 @@
       "importFiles": 2
     },
     {
+      "owner": "pan542",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan563",
       "importSites": 1,
       "importFiles": 1
@@ -1533,7 +1546,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458",
+      "sha256": "86f7245ce71803c6bab7d5fd6c930f91f73af74dcffd17f4374dc2d5c725b9c6",
       "basis": "profile-version-migration"
     },
     {

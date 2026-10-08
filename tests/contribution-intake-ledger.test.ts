@@ -767,7 +767,7 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     nodes: Array<{ id: string; inputs: Array<{ path: string; role: string; sha256: string }>; ownedTests: string[] }>;
   };
   // v93 adds exactly one PAN541 owner beside current Main; all prior bindings remain intact.
-  assert.equal(dag.graphVersion, 94);
+  assert.equal(dag.graphVersion, 95);
   const life06 = dag.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
   assert.equal(life06.length, 1);
   const life06Inputs: ReadonlyArray<readonly [string, string]> = [
@@ -802,7 +802,7 @@ test("CCP-M1-INT-026 Verification DAG ownership expansion advances its graph ver
     assert.deepEqual(matches[0], { path, role, sha256: createHash("sha256").update(readFileSync(path)).digest("hex") });
   }
   assert.equal(integrity[0]!.ownedTests.filter((command) => command === "npm run docs:test").length, 1);
-  assert.equal(dag.nodes.length, 99);
+  assert.equal(dag.nodes.length, 100);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan541-shared-browser-shell-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan516-native-procurement-v1").length, 1);
   assert.equal(dag.nodes.filter(({ id }) => id === "pan515-native-trade-state-v1").length, 1);

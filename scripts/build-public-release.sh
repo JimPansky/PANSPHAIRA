@@ -641,6 +641,14 @@ repository_only_files = {
     "tests/pan563/zoom-extension/manifest.json",
     "tests/pan563/zoom-extension/worker.js",
 
+    # PAN542 bounded native human backend: source-only, no legacy payload/rights change.
+    "docs/architecture/erv-human-native-backend-v1.md",
+    "scripts/run-pan542-native-human-tests.mjs",
+    "src/pan542/native-human-backend.mjs",
+    "tests/pan542/native-human-backend.test.mjs",
+    "tests/pan542/registration.test.mjs",
+    "tests/pan542/restart-reader.mjs",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

@@ -8,7 +8,7 @@ const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
 const expected=['scripts/verify-pan524-exact-bi-pair-v1.mjs','tests/fixtures/pan524/published-j02-provider-v0181.json','tests/fixtures/pan524/published-plan-extraction-response-v1.json','tests/fixtures/pan524/published-preview-response-v1.json','tests/pan524/exact-bi-pair-profile.test.mjs','tests/pan524/delivery-surface.test.mjs','tests/pan524/registration.test.mjs','verification/pan524-exact-bi-pair-evidence-v1.json'];
 
 test('J01 exact current pair is additive canonically owned source evidence with unchanged original hard gates',()=>{
-  const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,94);
+  const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,95);
   const nodes=graph.nodes.filter(n=>n.id==='pan524-exact-bi-pair-v1');assert.equal(nodes.length,1);const node=nodes[0];
   assert.deepEqual(node.dependsOn,['external-bi-service-v2']);assert.deepEqual(node.ownedTests,['npm run pan524:test']);assert.equal(node.riskClass,'HIGH');assert.equal(node.globalInvalidation,false);assert.deepEqual(node.inputs.map(i=>i.path),expected);
   const inputDigests=Object.fromEntries(graph.nodes.flatMap(n=>n.inputs.map(i=>[i.path,i.sha256])));
@@ -17,7 +17,7 @@ test('J01 exact current pair is additive canonically owned source evidence with 
   for(const row of node.inputs){
     assert.equal(row.sha256,sha(row.path));assert.deepEqual(graph.nodes.filter(n=>n.inputs.some(i=>i.path===row.path)).map(n=>n.id),[node.id]);assert.equal(manifest.has(row.path),false);assert(builder.includes(JSON.stringify(row.path)));
     const plan=buildVerificationImpactPlanV2({graph,graphPath:'verification/verification-dag-v2.json',baseSha:'1'.repeat(40),headSha:'2'.repeat(40),changedPaths:[row.path],observedInputDigests:inputDigests});
-    assert.deepEqual(plan.selectedNodes,[node.id,'pan525-exact-qualified-pair-v1']);assert.deepEqual(plan.selectedTests,['npm run pan524:test','npm run pan525:test']);assert.deepEqual(plan.hardGates,[...graph.hardGates].sort((a,b)=>a.localeCompare(b,'en')));
+    assert.deepEqual(plan.selectedNodes,[node.id, 'pan525-exact-qualified-pair-v1']);assert.deepEqual(plan.selectedTests,['npm run pan524:test', 'npm run pan525:test']);assert.deepEqual(plan.hardGates,[...graph.hardGates].sort((a,b)=>a.localeCompare(b,'en')));
   }
   for(const path of ['packages/contracts/src/external-bi-service.ts','docs/EXTERNAL-BI-SERVICE.md'])assert.deepEqual(graph.nodes.filter(n=>n.inputs.some(i=>i.path===path)).map(n=>n.id),['external-bi-service-v2']);
   const pkg=load('package.json');assert.equal(pkg.scripts['pan524:test'],'node --test tests/pan524/*.test.mjs');assert.equal(pkg.scripts.pretest.split('npm run pan524:test').length,2);assert.equal(graph.nodes.find(n=>n.id==='repository-integrity').ownedTests.filter(c=>c==='npm run pan524:test').length,1);

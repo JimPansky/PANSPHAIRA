@@ -4,7 +4,7 @@ import test from 'node:test';
 import {buildVerificationImpactPlanV2} from '../../dist/packages/contracts/src/index.js';
 const load=p=>JSON.parse(readFileSync(p,'utf8'));
 test('DOC-AI exact canonical owner, mandatory complete replay tests, preserved hard gates and source-only distribution',()=>{
- const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,94);
+ const graph=load('verification/verification-dag-v2.json');assert.equal(graph.graphVersion,95);
  const nodes=graph.nodes.filter(n=>n.id==='pan378-spent-pilot-reproduction-v3');assert.equal(nodes.length,1);const node=nodes[0];
  assert.equal(node.globalInvalidation,false);assert.deepEqual(node.ownedTests,['npm run pan378:test']);assert.deepEqual(node.dependsOn,[]);
  const pkg=load('package.json');assert.ok(pkg.scripts.posttest.endsWith('&& npm run pan360:test && npm run pan378:test && npm run erv-workflow:test'));assert.equal(pkg.scripts.posttest.split('npm run pan378:test').length,2);assert.match(pkg.scripts['pan378:test'],/node --test tests\/pan378\/\*\.test\.mjs && node scripts\/run-pan378-spent-pilot\.mjs --check$/);

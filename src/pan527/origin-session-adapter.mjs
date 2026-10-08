@@ -30,6 +30,12 @@ const hash = (value) => createHash("sha256").update(value).digest("hex");
 let routeBindingValidator;
 const ownedProductIngresses = new WeakMap();
 const ownedSessionRevocations = new WeakMap();
+// Code-owner composition marker; a serialized role/binding or copied facade
+// is not a protected session owner. Read-only counterpart adapters stay read-only.
+export function isProtectedSessionAdapterV1(adapter, tenantId) {
+  return typeof tenantId === "string" && ownedSessionRevocations.has(adapter)
+    && adapter.binding.tenantId === tenantId && typeof adapter.authorizeMutation === "function";
+}
 export function validateProtectedRouteBindingV1(value) {
   exactData(value, ["schemaVersion", "componentId", "entrypointPath", "sourceCommit", "sourceTree", "entrypointSha256", "runtime", "instanceId", "tenantId", "generation"], "HOSTED_ROUTE_BINDING_DENIED");
   exactData(value.runtime, ["name", "version"], "HOSTED_ROUTE_BINDING_DENIED");
