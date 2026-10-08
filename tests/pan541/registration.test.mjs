@@ -8,7 +8,7 @@ const sha = p => createHash("sha256").update(readFileSync(p)).digest("hex");
 test("PAN541 shared browser/typed shell has exactly one additive owner, native dependencies and every original hard gate", () => {
   const graph = load("verification/verification-dag-v2.json"); const owners = graph.nodes.filter(n => n.id === "pan541-shared-browser-shell-v1");
   assert.equal(owners.length, 1, "PAN541_AUTHORITATIVE_SOURCE_OWNER_NOT_REGISTERED");
-  assert.equal(graph.graphVersion, 94); const owner = owners[0];
+  assert.equal(graph.graphVersion, 95); const owner = owners[0];
   assert.deepEqual(owner.dependsOn, ["pan516-native-procurement-v1", "pan527-origin-session-v1"]);
   assert.deepEqual(owner.ownedTests, ["npm run pan541:test", "npm run pan543:test"]); assert.equal(owner.riskClass, "HIGH"); assert.equal(owner.globalInvalidation, false);
   assert.deepEqual(graph.hardGates, ["npm run lint", "npm run release-governance:verify", "npm run supply-chain:verify", "sha256sum -c SHA256SUMS", "./scripts/build-public-release.sh --output <isolated-absolute-path>"]);

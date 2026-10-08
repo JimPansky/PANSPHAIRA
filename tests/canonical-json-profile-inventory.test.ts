@@ -699,6 +699,14 @@ const PROFILE_VERSION_MIGRATIONS: readonly Readonly<ProfileVersionMigration>[] =
   "toSha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458",
   "reason": "Serially register the same-owner frozen A2 optional durable configuration draft on delivered Main3ddb with graph94 and one bounded existing-profile/budget/shell-dependent owner. Preserve all98 prior owner semantics, roles, edges and own tests, all hard gates, immutable base and every historical migration, unchanged mechanical census and legacy runnable payload. Exact source-only member additions and fixed native/browser negative suite bindings are not model/provider/apply rights, human/device acceptance, whole canonical or hosted CI PASS, release/archive/event acceptance or original closure."
 }),
+  Object.freeze({
+  "migrationId": "PAN542-BOUNDED-NATIVE-ERV-HUMAN/INTEGRITY-GENERATOR/V72",
+  "path": "scripts/refresh-integrity-data.mjs",
+  "profileVersion": 72,
+  "fromSha256": "fb3f6ef0efb3903d31754adf52a832082ab74249bfd0bc83d317299acf46b458",
+  "toSha256": "86f7245ce71803c6bab7d5fd6c930f91f73af74dcffd17f4374dc2d5c725b9c6",
+  "reason": "Advance graph95 with exactly one bounded native human-decision attachment to existing ERV/liability, protected sessions and durable task controls. Preserve all prior owner semantics, hard gates, historical migrations and immutable base obligations, unchanged mechanical census and legacy runnable payload membership. Register only the six source-only members and fixed real SQLite/session/fresh-process negative suite. LOCAL_SYNTHETIC review/query/evidence approval is neither productive booking/execution/payment/dispatch authority, browser/human/model acceptance nor frozen canonical/CI/release/closure qualification."
+}),
 ]);
 
 const REQUIRED_DIMENSIONS = ["valid", "invalid", "unicode", "number"] as const;
@@ -711,17 +719,17 @@ const CLASSIFICATIONS = new Set(["implementation", "alias", "wrapper"]);
  * sites) are historical hints only — the fresh mechanical scan supersedes them.
  */
 const EXPECTED_COUNTS = {
-  "filesScanned": 1037,
+  "filesScanned": 1042,
   "declarationSites": 37,
   "declarationFiles": 37,
-  "importSites": 300,
-  "importFiles": 299,
+  "importSites": 301,
+  "importFiles": 300,
   "reexportSites": 7,
   "similarShapeSites": 30,
   "byteObligations": 21,
   "pinnedProfileFiles": 13
 } as const;
-const EXPECTED_LEDGER = {"entries": 2528, "uniquePaths": 2528, "duplicatePaths": 0} as const;
+const EXPECTED_LEDGER = {"entries":2534,"uniquePaths":2534,"duplicatePaths":0} as const;
 
 type Classification = "implementation" | "alias" | "wrapper";
 
@@ -1504,7 +1512,7 @@ test("all admitted pinned profiles keep their immutable digest or exact version 
 test("integrity generator migration chain preserves immutable admitted and reviewed obligations", () => {
   const base = loadBaseObligations();
   const migrations = PROFILE_VERSION_MIGRATIONS.filter(({ path: file }) => file === "scripts/refresh-integrity-data.mjs");
-  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71]);
+  assert.deepEqual(migrations.map(({ profileVersion }) => profileVersion), [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72]);
   const baseDigest = base.pinnedProfiles.find(({ path: file }) => file === migrations[0]?.path)?.sha256;
   assert.equal(baseDigest, base.byteObligations.find(({ path: file }) => file === migrations[0]?.path)?.sha256);
   let previousDigest = baseDigest;
