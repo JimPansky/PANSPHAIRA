@@ -2729,6 +2729,122 @@ if (!repositoryIntegrityNode.ownedTests.includes("npm run pan541:test")) reposit
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan543:test")) repositoryIntegrityNode.ownedTests.push("npm run pan543:test");
 dag.graphVersion = 93;
 
+// PAN563 extends the existing profile/budget/session contracts with a bounded
+// durable draft owner. A source distribution is not model/apply authority.
+const pan563Inputs = [
+  [
+    "docs/architecture/agent-configuration-draft-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "packages/browser-workspace/src/configuration-draft-v1.css",
+    "SOURCE"
+  ],
+  [
+    "packages/browser-workspace/src/plugin-configuration-draft-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/contracts/src/agent-configuration-draft-v1.ts",
+    "CONTRACT"
+  ],
+  [
+    "scripts/run-pan563-configuration-draft-tests.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "src/pan563/draft-store.mjs",
+    "SECURITY"
+  ],
+  [
+    "tests/pan563/browser-draft.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/capture-coverage.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/compatibility.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/configuration-contract.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/contract-types.ts",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/durable-draft.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/helpers.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/native-view-capture.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/process-cas.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/process-drain-parent.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/process-drain-tail.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/process-observation.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/process-writer.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/protected-draft.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/zoom-extension/manifest.json",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan563/zoom-extension/worker.js",
+    "VALIDATOR"
+  ]
+];
+let pan563Node = dag.nodes.find(({ id }) => id === "pan563-configuration-draft-v1");
+if (pan563Node === undefined) {
+  pan563Node = {
+    id: "pan563-configuration-draft-v1",
+    dependsOn: ["pan441-employee-profile-v1", "pan529-runtime-budget-v1", "pan541-shared-browser-shell-v1"],
+    inputs: [], ownedTests: ["npm run pan563:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Closed typed/runtime-validated drafts extend the existing profile/template and runtime budget contracts; no competing registry or policy engine.",
+      "Field provenance, dependency invalidation and next required questions derive server-side; no silent UNKNOWN defaults, caller identity or role authority.",
+      "Native revision CAS and versioned persistent drafts bind tenant, user, instance and profile; raw secrets, stale/cross-tenant and incompatible schema writes deny.",
+      "Saving a model-less draft does not apply effects, infer model/provider access, grant tool rights or prove model-assisted conversation.",
+      "Fixed actual native/browser tests and finite desktop/390px/native200 view evidence remain distinct from human/device, full canonical/CI/release and closure qualification."
+    ]
+  };
+  dag.nodes.push(pan563Node);
+}
+pan563Node.inputs = pan563Inputs.map(([inputPath, role]) => ({ path: inputPath, role, sha256: digest(inputPath) }));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan563:test")) repositoryIntegrityNode.ownedTests.push("npm run pan563:test");
+dag.graphVersion = 94;
+
 // PAN574 is an additive two-export seam, not a new native kernel or registry.
 // Keep PAN471's read-only inventory owner and every bounded owner unchanged;
 // register this closed source-only seam on the existing integration owner.
@@ -2827,6 +2943,7 @@ for (const [inputPath] of pan523Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan537Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan543Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan563Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

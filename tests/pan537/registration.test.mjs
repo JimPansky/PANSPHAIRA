@@ -10,7 +10,7 @@ test("PAN537 existing proposal browser correction has one bounded owner and mand
   const graph = load("verification/verification-dag-v2.json");
   const owners = graph.nodes.filter(node => node.id === "pan537-proposal-diff-browser-v1");
   assert.equal(owners.length, 1, "PAN537_AUTHORITATIVE_SOURCE_OWNER_NOT_REGISTERED");
-  const owner = owners[0]; assert.equal(graph.graphVersion, 93);
+  const owner = owners[0]; assert.equal(graph.graphVersion, 94);
   assert.deepEqual(owner.dependsOn, []); assert.deepEqual(owner.ownedTests, ["npm run pan537:test"]);
   assert.equal(owner.riskClass, "HIGH"); assert.equal(owner.globalInvalidation, false);
   assert.deepEqual(graph.hardGates, ["npm run lint", "npm run release-governance:verify", "npm run supply-chain:verify", "sha256sum -c SHA256SUMS", "./scripts/build-public-release.sh --output <isolated-absolute-path>"]);

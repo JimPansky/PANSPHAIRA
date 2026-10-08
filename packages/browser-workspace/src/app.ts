@@ -5,6 +5,7 @@ import type { BrowserErvReadV1 } from "../../contracts/src/browser-erv-read-v1.j
 import { setupPluginV1, createSetupViewV1 } from "./plugin-setup-v1.js";
 import { ervPluginV1, createErvViewV1, createErvPanelV1, createErvActionV1 } from "./plugin-erv-v1.js";
 import { diagnosticPluginsV1, diagnosticFailingViewV1 } from "./plugin-diagnostics-v1.js";
+import { configurationDraftPluginV1, createConfigurationDraftViewV1 } from "./plugin-configuration-draft-v1.js";
 import { text, type WorkspaceViewApiV1 } from "./api-v1.js";
 import { createWorkspaceProfileEditorV1 } from "./profile-editor-v1.js";
 import type { BrowserProfileReadV1 } from "../../contracts/src/browser-profile-v1.js";
@@ -27,6 +28,7 @@ async function start() {
     if (result.outcome !== "RENDERED") { panel.hidden = true; panel.replaceChildren(); }
   }
   function applyPresentation(value: BrowserProfileReadV1) {
+    const configurationFocus = document.body.dataset.ownerConfigurationDrafts === "true" && document.activeElement instanceof HTMLElement && document.activeElement.closest(".configuration-draft") ? document.activeElement : null;
     presentation = value;
     for (const [id, node] of cards) {
       const item = value.effectiveItems.find(i => i.id === id);
@@ -39,6 +41,7 @@ async function start() {
     canvas.classList.remove("panel-compact", "panel-regular", "panel-large"); canvas.classList.add("panel-" + size);
     canvas.classList.toggle("panel-open", !panel.hidden);
     void renderPanel();
+    if (configurationFocus?.isConnected && !main.hidden) configurationFocus.focus({ preventScroll: true });
   }
   const skip = document.querySelector<HTMLAnchorElement>(".skip-link"); if (!skip) throw new Error("SHELL_SKIP_LINK_MISSING");
   skip.addEventListener("click", event => { event.preventDefault(); if (main.hidden) element("profile.controls").querySelector<HTMLButtonElement>("button")?.focus(); else main.focus(); }, { signal: lifetime.signal });
@@ -68,7 +71,8 @@ async function start() {
     })(); },
   });
   const diagnostic = document.body.dataset.ownerDiagnosticPlugins === "true" ? diagnosticPluginsV1() : null;
-  const plugins = [setupPluginV1, ervPluginV1]; if (diagnostic) plugins.push(diagnostic.broken, diagnostic.disabled, diagnostic.missing);
+  const configurationEnabled = document.body.dataset.ownerConfigurationDrafts === "true";
+  const plugins = [setupPluginV1, ervPluginV1]; if (configurationEnabled) plugins.push(configurationDraftPluginV1); if (diagnostic) plugins.push(diagnostic.broken, diagnostic.disabled, diagnostic.missing);
   const diagnosticStates: string[] = [];
   function showStates(message: string) {
     widget.replaceChildren(text("p", message));
@@ -78,6 +82,7 @@ async function start() {
     ["pan.setup.view", createSetupViewV1(api)], ["pan.erv.view", createErvViewV1(api)], ["pan.erv.information", createErvPanelV1(api)], ["pan.erv.action", createErvActionV1(api)],
   ]);
   if (diagnostic) for (const p of [diagnostic.broken, diagnostic.disabled, diagnostic.missing, diagnostic.incompatible]) factories.set(p.id + ".view", diagnosticFailingViewV1);
+  if (configurationEnabled) factories.set("pan.configuration.view", createConfigurationDraftViewV1(owner.context));
   for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
     const route = plugin.contributions.find(r => r.kind === "ROUTE" && r.id === c.routeId);
     factories.set(c.factoryId, { kind: "NAVIGATION", render({ target, signal }) {

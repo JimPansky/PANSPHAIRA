@@ -1,0 +1,14 @@
+.configuration-draft .configuration-parameters { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr)); gap: 1rem; }
+.configuration-draft .configuration-parameters li { border: 1px solid #cbd6de; border-radius: .4rem; padding: 1rem; min-width: 0; }
+.configuration-draft button, .configuration-draft input, .configuration-draft select { max-width: 100%; }
+.configuration-draft .configuration-editor { border-top: 2px solid #456c83; padding-top: 1rem; margin-top: 1.5rem; }
+.configuration-draft form { display: flex; flex-direction: column; align-items: stretch; gap: 1rem; }
+.configuration-draft fieldset { min-width: 0; border: 1px solid #587b91; }
+.configuration-draft label { display: block; padding: .4rem 0; }
+.configuration-draft input[type="checkbox"] { width: 1.25rem; height: 1.25rem; margin-right: .7rem; }
+.configuration-draft select, .configuration-draft input[type="number"] { display: block; width: 100%; min-height: 44px; padding: .5rem; font: inherit; margin-top: .4rem; border: 1px solid #587b91; border-radius: .3rem; background: white; color: #182b3a; }
+.configuration-draft h1 { hyphens: auto; }
+.configuration-draft .configuration-group { margin-top: 1rem; border-top: 1px solid #cbd6de; padding-top: .75rem; }
+.configuration-draft .configuration-group > summary { cursor: pointer; padding: .75rem; font-weight: 700; min-height: 44px; }
+.configuration-draft pre { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 100%; }
+.configuration-draft [data-outcome="CONFLICT"], .configuration-draft [data-outcome="DENIED"] { border-color: #a63829; }

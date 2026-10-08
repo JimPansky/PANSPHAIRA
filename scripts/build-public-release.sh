@@ -616,6 +616,31 @@ repository_only_files = {
     "tests/pan543/profile.test.mjs",
     "tests/pan543/registration.test.mjs",
     "tests/pan543/transport.test.mjs",
+    # PAN563 bounded configuration draft: source evidence only, not legacy runnable payload.
+    "docs/architecture/agent-configuration-draft-v1.md",
+    "packages/browser-workspace/src/configuration-draft-v1.css",
+    "packages/browser-workspace/src/plugin-configuration-draft-v1.ts",
+    "packages/contracts/src/agent-configuration-draft-v1.ts",
+    "scripts/run-pan563-configuration-draft-tests.mjs",
+    "src/pan563/draft-store.mjs",
+    "tests/pan563/browser-draft.test.mjs",
+    "tests/pan563/capture-coverage.mjs",
+    "tests/pan563/compatibility.test.mjs",
+    "tests/pan563/configuration-contract.test.mjs",
+    "tests/pan563/contract-types.ts",
+    "tests/pan563/durable-draft.test.mjs",
+    "tests/pan563/helpers.mjs",
+    "tests/pan563/native-view-capture.mjs",
+    "tests/pan563/process-cas.test.mjs",
+    "tests/pan563/process-drain-parent.mjs",
+    "tests/pan563/process-drain-tail.mjs",
+    "tests/pan563/process-observation.mjs",
+    "tests/pan563/process-writer.mjs",
+    "tests/pan563/protected-draft.test.mjs",
+    "tests/pan563/registration.test.mjs",
+    "tests/pan563/zoom-extension/manifest.json",
+    "tests/pan563/zoom-extension/worker.js",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real
