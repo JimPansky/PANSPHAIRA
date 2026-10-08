@@ -675,6 +675,14 @@
       "fromSha256": "86f7245ce71803c6bab7d5fd6c930f91f73af74dcffd17f4374dc2d5c725b9c6",
       "toSha256": "2866ad96c9f3e8818e2f460ef21e389251f2904d671e7e1770572b58d62c96d8",
       "reason": "Advance graph96 with one native personal notification owner dependent on the existing shared shell and human/task owner. Preserve every old owner and hard gate, immutable base and historical migration, unchanged mechanical census and legacy runnable payload. Closed native event publication, persistent personal read/preferences, real protected TLS/browser and child restart evidence are distinct from business approval, productive rights, model/human/device acceptance and full delivery gates."
+    },
+    {
+      "migrationId": "PAN549-BOUNDED-NATIVE-ANALYSIS/INTEGRITY-GENERATOR/V74",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 74,
+      "fromSha256": "2866ad96c9f3e8818e2f460ef21e389251f2904d671e7e1770572b58d62c96d8",
+      "toSha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644",
+      "reason": "Advance graph97 with one bounded read-only native STOCK/result owner consuming existing PAN520, local Usage Insights and shared shell. Preserve all101 prior owner semantics, every hard gate, immutable base obligations, all historical migrations and the unchanged mechanical scanner. Register only fourteen source-only members and one fixed native/cohort/protected/browser entry; no legacy payload expansion, query engine, consent/transport or execution authority. Early counterpart descriptor bytes remain historical; local measurements do not imply frozen canonical, CI, paired KS, release or closure acceptance."
     }
   ],
   "scanScope": {
@@ -717,15 +725,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1053,
+    "filesScanned": 1064,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 302,
-    "importFiles": 301,
+    "importSites": 305,
+    "importFiles": 304,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2546,
-    "ledgerUniquePaths": 2546
+    "ledgerEntries": 2560,
+    "ledgerUniquePaths": 2560
   },
   "profiles": [
     {
@@ -798,7 +806,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "2866ad96c9f3e8818e2f460ef21e389251f2904d671e7e1770572b58d62c96d8"
+      "sha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1085,8 +1093,8 @@
     },
     {
       "owner": "contracts",
-      "importSites": 142,
-      "importFiles": 142
+      "importSites": 143,
+      "importFiles": 143
     },
     {
       "owner": "cscl-03",
@@ -1239,6 +1247,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan549",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "pan563",
       "importSites": 1,
       "importFiles": 1
@@ -1265,8 +1278,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 67,
-      "importFiles": 66
+      "importSites": 68,
+      "importFiles": 67
     },
     {
       "owner": "usage-insights",
@@ -1559,7 +1572,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "2866ad96c9f3e8818e2f460ef21e389251f2904d671e7e1770572b58d62c96d8",
+      "sha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644",
       "basis": "profile-version-migration"
     },
     {

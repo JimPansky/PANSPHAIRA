@@ -9,7 +9,7 @@ const sha = path => createHash("sha256").update(readFileSync(path)).digest("hex"
 test("PAN528 full native browser journey is registered once with existing transport/domain/budget owners and all unchanged hard gates", () => {
   const graph = load("verification/verification-dag-v2.json"); const nodes = graph.nodes.filter(node => node.id === "pan528-guided-native-browser-v1");
   assert.equal(nodes.length, 1, "PAN528_AUTHORITATIVE_SOURCE_REGISTRATION_REQUIRED");
-  assert.equal(graph.graphVersion, 96); const owner = nodes[0];
+  assert.equal(graph.graphVersion, 97); const owner = nodes[0];
   assert.deepEqual(owner.dependsOn, ["pan515-native-trade-state-v1", "pan527-origin-session-v1", "pan529-runtime-budget-v1"]);
   assert.deepEqual(owner.ownedTests, ["npm run pan528:test"]); assert.equal(owner.riskClass, "HIGH"); assert.equal(owner.globalInvalidation, false);
   assert.deepEqual(graph.hardGates, ["npm run lint", "npm run release-governance:verify", "npm run supply-chain:verify", "sha256sum -c SHA256SUMS", "./scripts/build-public-release.sh --output <isolated-absolute-path>"]);

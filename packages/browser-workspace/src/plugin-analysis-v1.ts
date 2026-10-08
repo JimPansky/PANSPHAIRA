@@ -40,7 +40,7 @@ export function createAnalysisViewV1(api:{readonly base:string;readonly context:
   const captured=api.context(),selected=api.selected();delete document.body.dataset.analysisResultRevision;target.classList.add('workspace-analysis');target.append(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis','LOADING','Aktuelle Session und native Ergebnisquelle werden geprüft …');
   const current=()=>!signal.aborted&&api.context().sessionId===captured.sessionId&&api.context().tenantId===captured.tenantId&&api.context().objectId===captured.objectId&&api.context().revision===captured.revision;
   const confirmed=async()=>{const r=await fetch(api.base+'/workspace/context',{credentials:'same-origin',cache:'no-store',signal});if(r.status!==200)return false;const c=await r.json() as BrowserContextV1;return c.sessionId===captured.sessionId&&c.tenantId===captured.tenantId;};
-  const terminal=(state:string,message:string)=>{delete document.body.dataset.analysisResultRevision;target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis',state,message);};
+  const terminal=(state:string,message:string)=>{delete document.body.dataset.analysisResultRevision;target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis',state,state+' — '+message);};
   try{
    if(!await confirmed()){if(current())terminal('DENIED','Aktuelle Session nicht bestätigt. Keine früheren Fachwerte.');return;}if(!current())return;
    const selector=validateWorkspaceAnalysisReadV1({schemaVersion:'pansphaira.workspace-analysis/read/v1',objectId:captured.objectId,expectedNativeRevision:selected?.revision??null,expectedResultRevision:null,asOf:'2026-06-30T23:59:59+02:00'});

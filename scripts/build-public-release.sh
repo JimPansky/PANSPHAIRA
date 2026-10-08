@@ -663,6 +663,22 @@ repository_only_files = {
     "tests/pan544/registration.test.mjs",
     "tests/pan544/restart-reader.mjs",
 
+    # PAN549 bounded read-only result view: source-only; no legacy payload expansion.
+    "contracts/workspace-analysis/pan549-early-candidate-v1.json",
+    "docs/architecture/pan549-workspace-analysis-v1.md",
+    "packages/browser-workspace/src/analysis-v1.css",
+    "packages/browser-workspace/src/plugin-analysis-v1.ts",
+    "packages/contracts/src/workspace-analysis-v1.ts",
+    "scripts/run-pan549-native-analysis-tests.mjs",
+    "src/pan549/native-analysis-read.mjs",
+    "tests/pan549/browser-analysis.test.mjs",
+    "tests/pan549/browser-fixture.mjs",
+    "tests/pan549/browser-lifecycle-analysis.test.mjs",
+    "tests/pan549/cohort-analysis.test.mjs",
+    "tests/pan549/native-analysis-read.test.mjs",
+    "tests/pan549/protected-analysis.test.mjs",
+    "tests/pan549/registration.test.mjs",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

@@ -1,8 +1,11 @@
-# PAN549 bounded result contract — early development candidate
+# PAN549 bounded native result contract v1
 
-This is an early implementation candidate for PAN549 and the existing KS303
-consumer. It is not a release, full PAN549 acceptance, actual KS pairing,
-production authority, new data access, or a general dashboard/query engine.
+The immutable early implementation candidate for PAN549 and the existing KS303
+consumer remains historical at fd1fcf3b0392a7069169b7459c8ff8923466f38b.
+Its descriptor bytes and recorded early runtime pins are not rewritten or
+promoted to the current renderer. Source development alone is not a release,
+full PAN549 acceptance, actual KS pairing, production authority, new data
+access, or a general dashboard/query engine.
 The consumer selects the exact containing Git commit and its primary tree;
 branch names, matching shapes and similarly named fields are not selectors.
 
@@ -109,20 +112,74 @@ the existing file and OFF network mode. Tests deny missing-denominator
 smoothing, suppressed statistics, wrong scope/revisions, tampered full result
 bytes, accessor reads and proposal/effect/consent/transport escalation.
 
-Reproduce with the repository's locked dependencies, supported Linux x86-64
-Node 24.14.1 / npm 11.16.0, an invocation-owned TMPDIR, the existing Playwright
-browser and certutil. Compile first (`npm run build` and
-`node scripts/build-pan541-browser.mjs`). The browser test requires
-PAN527_BROWSER_MODULE, PAN527_CERTUTIL, PLAYWRIGHT_BROWSERS_PATH and
-PAN549_BROWSER_EVIDENCE. There is no optional browser skip or fake TLS backend.
+Reproduce the complete fixed profile with the repository's locked dependencies,
+supported Linux x86-64 Node 24.14.1 / npm 11.16.0, invocation-owned scratch and
+the existing Playwright browser and certutil: `npm run pan549:test`.
+The public entry compiles TypeScript, builds the actual browser bundle and runs
+all six fixed test files; caller filters and browser/native skips are denied.
+The owned scratch is TMPDIR or an explicitly supplied RUNNER_TEMP, never an
+implicit system-temp fallback. A direct development browser invocation must
+also supply PAN527_BROWSER_MODULE, PAN527_CERTUTIL, PLAYWRIGHT_BROWSERS_PATH and
+PAN549_BROWSER_EVIDENCE. There is no fake TLS backend.
 
-## Explicit remaining delivery gates
+## Original acceptance and UI boundaries
 
-Full original browser state/lifecycle/keyboard/layout coverage, actual image
-sighting, immutable focused qualification, public runner/source registration,
-unchanged WholeCanonical and all required source/Main CI/raw artifacts,
-protected merge, correctly classified new functional release, exact anonymous
-archives/product readback, release workflow and explicit original closure
-remain pending. An actual KS consumer integration is NOT_RUN here and is owned
-by KS303, not made a prerequisite for standalone PAN delivery. Voice, widget,
-whole foreign epics and Main preapproval are not waiting gates.
+- PUI-08-AC01/04: actual persisted native commands are the independent numeric
+  oracle. The native and real protected SharedShell consumer tests separately
+  compare physical stock 2 STK; the browser observes its actual request and the
+  exact source/result bytes before checking the rendered table. No chart is
+  required for this bounded tabular stock profile. Source, cutoff, revision,
+  grain, units and unavailable facts remain visible.
+- PUI-08-AC02: native missing-history/valuation facts remain UNAVAILABLE/null,
+  the overall view remains PARTIAL, and EMPTY/SUPPRESSED local reports retain
+  UNKNOWN/null population denominator and no metrics. Shape-valid byte
+  mutations are denied by the direct integrity consumer before display.
+- PUI-08-AC03: this read-only profile produces neither a proposal nor a mutation.
+  There is no approval control, applied-change badge or consent/transport write.
+  Consequently a mutating before/after confirmation or persisted effect is
+  inapplicable; tests instead prove retained source events and local report
+  bytes, independently of the rendered result.
+- UIDOD-01/02/03/07: actual protected browser navigation, observed native request,
+  closed versioned selectors and complete result validation; real stale source
+  and result, foreign context, unavailable selector, interrupted delivery,
+  changed session, logout and genuinely expired session probes. Late successful
+  native bytes are discarded after context retirement; denial never renews the
+  cookie or offers a blind effect retry.
+- UIDOD-04/05: real desktop and 390-px captures for positive, EMPTY, LOADING,
+  STALE, UNAVAILABLE, DENIED and UNKNOWN states; measured positive page/control
+  bounds, keyboard focus and actual local-table horizontal scrolling. The
+  fixture also applies CSS layout zoom and wider-font/content stress. These are
+  not physical-device, browser-chrome zoom or localization-study acceptance.
+  Known terminal states are visible text, not only dataset tokens; desktop
+  unit/state/header tokens remain whole. Actual image inspection is a separate
+  required observation, not inferred from DOM assertions or capture success.
+- UIDOD-06: trusted code-owned optional attachment, current protected
+  session/context/deep-link boundaries, lifecycle retirement and independent
+  setup availability after analysis denial, lost delivery or source withdrawal.
+  Layout and navigation never grant native rights.
+- UIDOD-08: bind execution, compiled/runtime pins, screenshots and focused
+  qualification to the actual immutable source. Retain unchanged component
+  reviews only at matching bytes; remaining seams use the explicitly authorized
+  owner self-check, not a claimed new independent person/worker review.
+
+The required shared-shell capability is the existing delivered PAN541 path.
+PAN545 supplies common quality rules, not a reciprocal whole-issue CLOSED gate:
+this profile implements its own applicable browser/evidence/registration checks.
+The later dialog, widget, voice and router consumers retain their own owners.
+They do not add reverse prerequisites to this standalone result profile.
+
+## Explicit delivery gates and historical provenance
+
+The early descriptor remains bound only to its containing early commit and
+recorded source/compiled pins. Current source, renderer and registration must
+be qualified separately; matching schema names do not promote those historical
+pins. The source-only classification does not expand the legacy runnable
+public manifest or claim a turnkey installer.
+
+Immutable focused qualification, actual image sighting, unchanged WholeCanonical
+and all required source/Main CI/raw artifacts, protected merge, correctly
+classified new functional release, exact anonymous archives/product readback,
+release workflow and explicit original closure are required. An actual KS
+consumer integration is NOT_RUN here and is owned by KS303, not made a
+prerequisite for standalone PAN delivery. Voice, widget, whole foreign epics
+and Main preapproval are not waiting gates.

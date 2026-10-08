@@ -7,5 +7,8 @@
 .analysis-table-scroll:focus-visible { outline: 3px solid #257da6; outline-offset: 3px; }
 .analysis-table-scroll table { width: 100%; min-width: 44rem; border-collapse: collapse; text-align: left; }
 .analysis-table-scroll caption { text-align: left; font-weight: 700; margin-block-end: .5rem; }
-.analysis-table-scroll th, .analysis-table-scroll td { border: 1px solid #aec7d1; padding: .6rem; vertical-align: top; overflow-wrap: anywhere; }
+.analysis-table-scroll th, .analysis-table-scroll td { border: 1px solid #aec7d1; padding: .6rem; vertical-align: top; overflow-wrap: normal; word-break: normal; }
+/* Exact state/unit identifiers remain whole; wider facts stay locally scrollable. */
+.analysis-table-scroll thead th:nth-child(2), .analysis-table-scroll tbody td:nth-child(2), .analysis-table-scroll tbody td:nth-child(4) { white-space: nowrap; }
+.analysis-table-scroll tbody td:nth-child(4) { min-width: 6rem; }
 .analysis-table-scroll thead { background: #eaf3f7; }
