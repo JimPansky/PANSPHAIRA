@@ -10,6 +10,7 @@ import { text, type WorkspaceViewApiV1 } from "./api-v1.js";
 import { createWorkspaceProfileEditorV1 } from "./profile-editor-v1.js";
 import type { BrowserProfileReadV1 } from "../../contracts/src/browser-profile-v1.js";
 import { createWorkspaceNotificationsV1 } from "./notifications-v1.js";
+import { analysisPluginV1, createAnalysisViewV1 } from "./plugin-analysis-v1.js";
 const element = (id: string): HTMLElement => { const node = document.getElementById(id); if (!node) throw new Error("SHELL_SLOT_MISSING"); return node; };
 async function start() {
   const scope = /^\/t\/([a-z0-9][a-z0-9-]{0,63})\/workspace$/.exec(location.pathname); if (!scope) throw new Error("WORKSPACE_ROUTE_DENIED");
@@ -74,7 +75,8 @@ async function start() {
   });
   const diagnostic = document.body.dataset.ownerDiagnosticPlugins === "true" ? diagnosticPluginsV1() : null;
   const configurationEnabled = document.body.dataset.ownerConfigurationDrafts === "true";
-  const plugins = [setupPluginV1, ervPluginV1]; if (configurationEnabled) plugins.push(configurationDraftPluginV1); if (diagnostic) plugins.push(diagnostic.broken, diagnostic.disabled, diagnostic.missing);
+  const analysisEnabled = document.body.dataset.ownerAnalysisReader === "true";
+  const plugins = [setupPluginV1, ervPluginV1]; if (analysisEnabled) plugins.push(analysisPluginV1); if (configurationEnabled) plugins.push(configurationDraftPluginV1); if (diagnostic) plugins.push(diagnostic.broken, diagnostic.disabled, diagnostic.missing);
   const diagnosticStates: string[] = [];
   function showStates(message: string) {
     widget.replaceChildren(text("p", message));
@@ -85,6 +87,7 @@ async function start() {
   ]);
   if (diagnostic) for (const p of [diagnostic.broken, diagnostic.disabled, diagnostic.missing, diagnostic.incompatible]) factories.set(p.id + ".view", diagnosticFailingViewV1);
   if (configurationEnabled) factories.set("pan.configuration.view", createConfigurationDraftViewV1(owner.context));
+  if (analysisEnabled) factories.set("pan.analysis.view", createAnalysisViewV1({ base, context: owner.context, selected: () => link }));
   for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
     const route = plugin.contributions.find(r => r.kind === "ROUTE" && r.id === c.routeId);
     factories.set(c.factoryId, { kind: "NAVIGATION", render({ target, signal }) {
@@ -97,7 +100,7 @@ async function start() {
   registry = createBrowserShellRegistryV1({ factories, reportFault(fault) { showStates("Pluginfehler: " + fault.outcome + ". Andere Module und Abmelden bleiben bedienbar."); } });
   for (const plugin of plugins) {
     const result = registry.register(plugin);
-    if ([setupPluginV1.id, ervPluginV1.id].includes(plugin.id) && result.outcome !== "REGISTERED") throw new Error("WORKSPACE_PLUGIN_REGISTRATION_DENIED");
+    if ([setupPluginV1.id, ervPluginV1.id, ...(analysisEnabled ? [analysisPluginV1.id] : [])].includes(plugin.id) && result.outcome !== "REGISTERED") throw new Error("WORKSPACE_PLUGIN_REGISTRATION_DENIED");
     if (result.outcome === "DISABLED") diagnosticStates.push("Deaktiviert: " + plugin.id);
     if (result.outcome === "MISSING_DEPENDENCY") diagnosticStates.push("Fehlende Pflichtabhängigkeit: " + plugin.id);
   }
@@ -118,7 +121,7 @@ async function start() {
       const c = owner.context(); location.hash = buildBrowserDeepLinkV1({ path: "/workspace/erv", tenantId: c.tenantId, sessionId: c.sessionId, objectId: value.invoice.invoiceId, revision: value.invoice.revision });
     },
   });
-  function disposal() { owner.onDispose(() => { panelEpoch++; registry.retireAll(); invoice = null; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
+  function disposal() { owner.onDispose(() => { panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
   async function activate() {
     const current = owner.context(); let selected: BrowserDeepLinkV1;
     try { selected = parseBrowserDeepLinkV1(location.hash || "#/workspace/setup", current, registry.routes().filter(r => r.state === "REGISTERED").map(r => r.path!)); }
@@ -132,7 +135,7 @@ async function start() {
       return;
     }
     link = selected;
-    owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : null, revision: current.revision + 1 }); disposal();
+    owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : selected.path === "/workspace/analysis" ? selected.objectId ?? "analysis:common-trade-01:stock" : null, revision: current.revision + 1 }); disposal();
     document.body.dataset.contextRevision = String(owner.context().revision); document.body.dataset.nativeRevision = "unknown";
     void notifications?.refresh();
     showStates("Lesender Arbeitsplatz. Pluginmetadaten gewähren keine Backendrechte.");

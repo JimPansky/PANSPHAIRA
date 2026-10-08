@@ -1,0 +1,63 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import {mkdirSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {nativeFixture527} from '../pan527/helpers.mjs';
+import {financeFixture} from '../pan519/native-fixture.mjs';
+import {nativeRows} from '../fixtures/pan515/native-trade-fixture.mjs';
+import {createNativeAnalysisReadAdapterV1} from '../../src/pan549/native-analysis-read.mjs';
+import {createNativeErvReadAdapterV1} from '../../src/pan541/native-erv-read-adapter.mjs';
+import {enableWorkspaceBrowserV1} from '../../src/pan541/workspace-browser.mjs';
+import {UsageInsightsLocalServiceV1} from '../../dist/packages/usage-insights/src/index.js';
+const cutoff='2026-06-30T23:59:59+02:00';
+
+test('PUI-08-AC01/04 actual protected shared-shell action consumes the native result and renders independently checked values at desktop and390px',async()=>{
+ assert.ok(process.env.PAN527_BROWSER_MODULE&&process.env.PAN527_CERTUTIL&&process.env.PAN549_BROWSER_EVIDENCE,'PAN549_REAL_OWNED_BROWSER_REQUIRED_NO_SKIP');
+ const {chromium}=await import(process.env.PAN527_BROWSER_MODULE);
+ const tls=await nativeFixture527();let native,workspace,browser;
+ try{
+  native=await financeFixture();const before=nativeRows(native.root,'SELECT revision,command,event FROM pan515_events ORDER BY revision');
+  const commands=before.map(r=>JSON.parse(r.command)).filter(c=>Date.parse(c.effectiveAt)<=Date.parse(cutoff));
+  const sourcePhysical=commands.filter(c=>c.kind==='RECEIPT').reduce((s,c)=>s+c.quantity,0)-commands.filter(c=>c.kind==='SHIP').reduce((s,c)=>s+c.quantity,0);
+  assert.equal(sourcePhysical,2);
+  const store=join(native.parent,'browser-local-usage.json'),usage=UsageInsightsLocalServiceV1.open(store);usage.grant('basic');assert.equal(usage.record({capabilityId:'capability.gateway',lifecycleOutcome:'INSTALL_STARTED'}).outcome,'ACCEPTED');
+  const sessions=tls.gateway.sessionAdapter('tenant-a');const reader=createNativeAnalysisReadAdapterV1({optIn:true,root:native.root,sessions,usageInsightsStore:store});
+  workspace=enableWorkspaceBrowserV1({optIn:true,gateway:tls.gateway,tenantId:'tenant-a',origin:tls.origin,nativeReader:createNativeErvReadAdapterV1({tenantId:'tenant-a',root:native.root}),analysisReader:reader});
+  const home=join(tls.root,'analysis-browser-home'),nss=join(home,'.pki/nssdb');mkdirSync(nss,{recursive:true,mode:0o700});
+  execFileSync(process.env.PAN527_CERTUTIL,['-N','--empty-password','-d','sql:'+nss],{stdio:'ignore'});
+  execFileSync(process.env.PAN527_CERTUTIL,['-A','-d','sql:'+nss,'-n','PAN549 isolated synthetic native test CA','-t','CT,C,C','-i',tls.options.tls.certPath],{stdio:'ignore'});
+  browser=await chromium.launch({headless:true,env:{...process.env,HOME:home},args:['--no-proxy-server','--disable-background-networking']});
+  const context=await browser.newContext({ignoreHTTPSErrors:false,viewport:{width:1280,height:900}});
+  await context.route('**/*',r=>new URL(r.request().url()).origin===tls.origin?r.continue():r.abort());
+  const issued=sessions.issueOwnerSession({subjectId:'synthetic:analysis-browser-reader',role:'reader',expiresAtMs:Date.now()+300000});
+  await context.addCookies([{name:'__Host-pan527-session',value:issued.cookieHeader.split('=')[1],url:tls.origin,secure:true,httpOnly:true,sameSite:'Strict'}]);
+  const page=await context.newPage();const requests=[],errors=[],results=[];
+  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push({method:r.method(),path:new URL(r.url()).pathname}));
+  page.on('response',async r=>{if(new URL(r.url()).pathname.endsWith('/workspace/analysis')&&r.status()===200)results.push(await r.json());});
+  await page.goto(tls.origin+'/t/tenant-a/workspace');await page.locator('[data-backend="setup"][data-outcome="READBACK_RECEIVED"]').waitFor();
+  const action=page.getByRole('button',{name:'Gebundene Bestandsanalyse — nur lesen',exact:true});
+  assert.equal(await action.count(),1,'PAN549_REAL_SHARED_SHELL_ANALYSIS_NAVIGATION_AND_RENDERER_NOT_IMPLEMENTED');await action.click();
+  await page.locator('[data-backend="analysis"][data-outcome="READBACK_RECEIVED"]').waitFor();
+  assert.ok(requests.some(r=>r.method==='POST'&&r.path==='/t/tenant-a/workspace/analysis'));
+  const physical=page.locator('tr[data-analysis-key="physical"] td[data-analysis-value]');assert.equal(await physical.innerText(),String(sourcePhysical));
+  assert.equal(await page.locator('tr[data-analysis-key="stockRunwayDays"] td[data-analysis-value]').innerText(),'Nicht verfügbar');
+  assert.match(await page.locator('main').innerText(),/PARTIAL/);assert.match(await page.locator('main').innerText(),/keine angewendete Änderung/);
+  assert.equal(await page.locator('[data-analysis-cohort="SUPPRESSED"]').count(),1,'PAN549_ACTUAL_SUPPRESSED_LOCAL_COHORT_RENDERING_MISSING');
+  assert.match(await page.locator('[data-analysis-cohort]').innerText(),/Kleine Kohorte unterdrückt/);
+  assert.match(await page.locator('[data-analysis-cohort]').innerText(),/Nenner unbekannt/);
+  assert.doesNotMatch(await page.locator('[data-analysis-cohort]').innerText(),/Adoption:\s*0|Installationen:\s*[0-9]/);
+  assert.equal(usage.consentStatus().networkMode,'OFF');
+  assert.equal(await page.evaluate(()=>document.cookie),'');assert.equal(await page.evaluate(()=>window.isSecureContext),true);
+  await page.screenshot({path:join(process.env.PAN549_BROWSER_EVIDENCE,'desktop-native-stock.png'),fullPage:true});
+  await page.setViewportSize({width:390,height:844});await page.screenshot({path:join(process.env.PAN549_BROWSER_EVIDENCE,'390-native-stock.png'),fullPage:true});
+  const dimensions=await page.evaluate(()=>({viewport:innerWidth,width:document.documentElement.scrollWidth,table:document.querySelector('.analysis-table-scroll')?.getBoundingClientRect().toJSON(),controls:[...document.querySelectorAll('button:not(:disabled),a,[tabindex="0"]')].filter(e=>e.getClientRects().length).map(e=>{const r=e.getBoundingClientRect();return {label:e.getAttribute('aria-label')??e.textContent,x:r.x,right:r.right,width:r.width,height:r.height};})}));
+  assert.ok(dimensions.width<=dimensions.viewport,'PAN549_390_NATIVE_RESULT_PAGE_OVERFLOW');assert.ok(dimensions.table.width>0&&dimensions.table.x>=0&&dimensions.table.right<=390);
+  assert.ok(dimensions.controls.every(c=>c.width>0&&c.height>0&&c.x>=0&&c.right<=390));
+  assert.equal(results.length,1);assert.equal(results[0].rows.find(r=>r.key==='physical').value,sourcePhysical);
+  assert.deepEqual(errors,[]);assert.deepEqual(nativeRows(native.root,'SELECT revision,command,event FROM pan515_events ORDER BY revision'),before);
+  // This receipt is actual execution, not an independent human/image review.
+  writeFileSync(join(process.env.PAN549_BROWSER_EVIDENCE,'actual-source-network-rendered-value-pairing.json'),JSON.stringify({sourcePhysical,renderedPhysical:await physical.innerText(),actualNativeResult:results[0],requests,dimensions,browser:browser.version(),visualSighted:false,scope:'Real permitted local synthetic source/HTTPS/browser, not production/provider/human acceptance'},null,2)+'\n');
+  await context.close();
+ }finally{await browser?.close();workspace?.close();native?.close();await tls.close();}
+});
