@@ -1,13 +1,14 @@
 import { readFileSync } from "node:fs";
-import { mountProtectedWorkspaceDocumentV1, mountProtectedWorkspaceConfigurationV1, protectedGuidedOwnerContextV1 } from "../pan527/origin-session-adapter.mjs";
+import { mountProtectedWorkspaceDocumentV1, mountProtectedWorkspaceConfigurationV1, mountProtectedWorkspaceNotificationsV1, protectedGuidedOwnerContextV1 } from "../pan527/origin-session-adapter.mjs";
 import { createBrowserProfileStoreV1 } from "../pan543/profile-store.mjs";
 import { defaultBrowserProfileV1 } from "../../dist/packages/contracts/src/browser-profile-v1.js";
 import { isNativeErvReadAdapterV1 } from "./native-erv-read-adapter.mjs";
 import { isAgentConfigurationDraftStoreV1 } from "../pan563/draft-store.mjs";
+import { isNativeNotificationsV1 } from "../pan544/native-notifications.mjs";
 // Owner-only assembly; no HTTP registration, arbitrary code URL or business-store replacement.
 export function enableWorkspaceBrowserV1(options) {
   if (!options || Object.getPrototypeOf(options) !== Object.prototype) throw new Error("WORKSPACE_OWNER_DENIED");
-  const descriptors = Object.getOwnPropertyDescriptors(options); const keys = ["optIn", "gateway", "tenantId", "origin", "nativeReader", "diagnosticPlugins", "profileCatalogV1", "configurationDrafts"];
+  const descriptors = Object.getOwnPropertyDescriptors(options); const keys = ["optIn", "gateway", "tenantId", "origin", "nativeReader", "diagnosticPlugins", "profileCatalogV1", "configurationDrafts", "notifications"];
   if (Object.hasOwn(descriptors, "profileCatalogV1") && typeof descriptors.profileCatalogV1.value !== "function") throw new Error("WORKSPACE_OWNER_DENIED");
   if (!keys.slice(0, 5).every(k => Object.hasOwn(descriptors, k)) || Reflect.ownKeys(descriptors).some(k => typeof k !== "string" || !keys.includes(k))
     || Object.values(descriptors).some(d => !d.enumerable || !("value" in d)) || options.optIn !== true
@@ -17,12 +18,13 @@ export function enableWorkspaceBrowserV1(options) {
   const { gateway, tenantId, origin, nativeReader } = options;
   const sessions = gateway.sessionAdapter(tenantId);
   if (Object.hasOwn(descriptors, "configurationDrafts") && !isAgentConfigurationDraftStoreV1(options.configurationDrafts, sessions.binding)) throw new Error("WORKSPACE_CONFIGURATION_OWNER_DENIED");
+  if (Object.hasOwn(descriptors, "notifications") && !isNativeNotificationsV1(options.notifications, sessions.binding)) throw new Error("WORKSPACE_NOTIFICATIONS_OWNER_DENIED");
   const owner = protectedGuidedOwnerContextV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest });
   const profiles = createBrowserProfileStoreV1({ root: owner.productRoot, catalog: options.profileCatalogV1 ?? (() => defaultBrowserProfileV1().items.map(i => ({ id: i.id, version: i.version, state: "AVAILABLE" }))) });
-  let mounted; let attachment;
+  let mounted; let attachment; let notifications;
   try { mounted = mountProtectedWorkspaceDocumentV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest,
     html: readFileSync(new URL("../../packages/browser-workspace/src/workspace.html", import.meta.url), "utf8")
-      .replace("<body>", '<body' + (options.diagnosticPlugins === true ? ' data-owner-diagnostic-plugins="true"' : '') + (options.configurationDrafts ? ' data-owner-configuration-drafts="true"' : '') + '>'),
+      .replace("<body>", '<body' + (options.diagnosticPlugins === true ? ' data-owner-diagnostic-plugins="true"' : '') + (options.configurationDrafts ? ' data-owner-configuration-drafts="true"' : '') + (options.notifications ? ' data-owner-notifications="true"' : '') + '>'),
     style: readFileSync(new URL("../../packages/browser-workspace/src/workspace.css", import.meta.url), "utf8") + (options.configurationDrafts ? readFileSync(new URL("../../packages/browser-workspace/src/configuration-draft-v1.css", import.meta.url), "utf8") : ""),
     script: readFileSync(new URL("../../dist/browser-workspace/app.js", import.meta.url), "utf8"),
     readErv(request, principal) { return nativeReader.read({ tenantId: principal.tenantId, objectId: request.objectId, expectedRevision: request.expectedRevision }); },
@@ -30,6 +32,9 @@ export function enableWorkspaceBrowserV1(options) {
   });
     if (options.configurationDrafts) attachment = mountProtectedWorkspaceConfigurationV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest,
       adapterVersion: "pan441-pan529/v1", read: principal => options.configurationDrafts.read(principal), save: (command, principal) => options.configurationDrafts.save(command, principal) });
-  } catch (error) { attachment?.close(); mounted?.close(); profiles.close(); throw error; }
-  return Object.freeze({ close() { attachment?.close(); mounted.close(); profiles.close(); } });
+    if (options.notifications) notifications = mountProtectedWorkspaceNotificationsV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest,
+      adapterVersion: "pan542-native-notifications/v1", feed: headers => options.notifications.feed(headers), open: (headers, command) => options.notifications.open(headers, command),
+      markRead: (headers, command) => options.notifications.markRead(headers, command), reconcileRead: (headers, command) => options.notifications.reconcileRead(headers, command), savePreferences: (headers, command) => options.notifications.savePreferences(headers, command) });
+  } catch (error) { notifications?.close(); attachment?.close(); mounted?.close(); profiles.close(); throw error; }
+  return Object.freeze({ close() { notifications?.close(); attachment?.close(); mounted.close(); profiles.close(); } });
 }

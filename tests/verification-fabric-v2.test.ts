@@ -100,7 +100,7 @@ test("PAN464 retains native ownership and its mandatory separate exact-head Dock
 test("LIFE-06 adds only a bounded owner and separately required native module-use gate", () => {
   const manifest = graph();
   const nodes = manifest.nodes.filter(({ id }) => id === "pan466-qualified-module-generations-v1");
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   assert.equal(nodes.length, 1);
   const node = nodes[0]!;
   assert.deepEqual(node.dependsOn, ["pan468-impact-selection-v1", "pan464-retained-pair-v1"]);
@@ -176,7 +176,7 @@ test("#377 current-head Docker E2E is a focused repository-integrity obligation"
   const manifest = graph();
   const node = manifest.nodes.find(({ id }) => id === "repository-integrity");
   assert.ok(node);
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };
@@ -211,7 +211,7 @@ test("PAN-EVO-03 registers one finite repository-only evidence owner without iso
   const nodes=manifest.nodes.filter(({id})=>id==="pan454-journey-mediation-evidence-v1");
   assert.equal(nodes.length,1);
   const node=nodes[0]!;
-  assert.equal(manifest.graphVersion,95);
+  assert.equal(manifest.graphVersion,96);
   assert.equal(node.globalInvalidation,false);
   assert.deepEqual(node.dependsOn,["pan442-bound-task-handles-v1"]);
   assert.deepEqual(node.ownedTests,["npm run pan454:test"]);
@@ -247,7 +247,7 @@ test("PAN-EVO-05 registers exactly one bounded executable tooling owner without 
   const nodes=manifest.nodes.filter(({id})=>id==="pan456-policy-backend-evaluation-v1");
   assert.equal(nodes.length,1);
   const node=nodes[0]!;
-  assert.equal(manifest.graphVersion,95);
+  assert.equal(manifest.graphVersion,96);
   assert.equal(node.globalInvalidation,false);
   assert.deepEqual(node.dependsOn,[]);
   assert.deepEqual(node.ownedTests,["npm run pan456:test"]);
@@ -280,7 +280,7 @@ test("LIFE-07 registers one bounded attributed correction owner and both actual 
   const nodes = manifest.nodes.filter(({ id }) => id === "pan467-attributed-business-correction-v1");
   assert.equal(nodes.length, 1);
   const node = nodes[0]!;
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   assert.equal(node.globalInvalidation, false);
   assert.deepEqual(node.dependsOn, ["pan473-writer-scope-cutover-v1", "pan462-native-backup-restore-v1"]);
   assert.deepEqual(node.ownedTests, ["npm run pan467:test"]);
@@ -312,7 +312,7 @@ test("MIG-03 registers the original scope, mandatory native process tests and un
   const nodes = manifest.nodes.filter(({ id }) => id === "pan473-writer-scope-cutover-v1");
   assert.equal(nodes.length, 1);
   const node = nodes[0]!;
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   assert.equal(node.globalInvalidation, false);
   assert.deepEqual(node.dependsOn, ["pan472-persistent-draft-transfer-v1", "pan462-native-backup-restore-v1"]);
   assert.deepEqual(node.ownedTests, ["npm run pan473:test"]);
@@ -330,8 +330,8 @@ test("MIG-03 registers the original scope, mandatory native process tests and un
   for (const [path] of inputs) {
     assert.deepEqual(manifest.nodes.filter(owner => owner.inputs.some(input => input.path === path)).map(({ id }) => id), [node.id]);
     const selected = plan([path]);
-    assert.deepEqual(selected.selectedNodes, ["pan467-attributed-business-correction-v1", node.id, "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan563-configuration-draft-v1"]);
-    assert.deepEqual(selected.selectedTests, ["npm run pan467:test", "npm run pan473:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan528:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan563:test"]);
+    assert.deepEqual(selected.selectedNodes, ["pan467-attributed-business-correction-v1", node.id, "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan563-configuration-draft-v1"]);
+    assert.deepEqual(selected.selectedTests, ["npm run pan467:test", "npm run pan473:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan528:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan563:test"]);
     assert.deepEqual(selected.hardGates, [...manifest.hardGates].sort((a,b) => a.localeCompare(b,"en")));
   }
   const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string,string> };
@@ -344,7 +344,7 @@ test("MIG-02 registers only the bounded persistent native entry and preserves ma
   const nodes = manifest.nodes.filter(({ id }) => id === "pan472-persistent-draft-transfer-v1");
   assert.equal(nodes.length, 1);
   const node = nodes[0]!;
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   assert.equal(node.globalInvalidation, false);
   assert.deepEqual(node.dependsOn, ["pan442-bound-task-handles-v1", "pan471-capability-inventory-v1"]);
   assert.deepEqual(node.ownedTests, ["npm run pan472:test"]);
@@ -361,8 +361,8 @@ test("MIG-02 registers only the bounded persistent native entry and preserves ma
   for (const [path] of inputs) {
     assert.deepEqual(manifest.nodes.filter(owner => owner.inputs.some(input => input.path === path)).map(({ id }) => id), [node.id]);
     const selected = plan([path]);
-    assert.deepEqual(selected.selectedNodes, ["pan467-attributed-business-correction-v1", node.id, "pan473-writer-scope-cutover-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan563-configuration-draft-v1"]);
-    assert.deepEqual(selected.selectedTests, ["npm run pan467:test", "npm run pan472:test", "npm run pan473:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan528:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan563:test"]);
+    assert.deepEqual(selected.selectedNodes, ["pan467-attributed-business-correction-v1", node.id, "pan473-writer-scope-cutover-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan563-configuration-draft-v1"]);
+    assert.deepEqual(selected.selectedTests, ["npm run pan467:test", "npm run pan472:test", "npm run pan473:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan528:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan563:test"]);
     assert.deepEqual(selected.hardGates, [...manifest.hardGates].sort((a,b) => a.localeCompare(b,"en")));
   }
   const pkg = JSON.parse(readFileSync("package.json", "utf8")) as { scripts: Record<string,string> };
@@ -375,7 +375,7 @@ test("SEM-HOLDOUT-01 registers only the explicit semantic successor without impl
   const nodes = manifest.nodes.filter(({ id }) => id === "pan487-product-purpose-semantic-successor-v1");
   assert.equal(nodes.length, 1);
   const node = nodes[0]!;
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   assert.deepEqual(node.dependsOn, ["cscl-11-idempiere-serial-holdout-gate-v1"]);
   assert.deepEqual(node.ownedTests, ["npm run pan487:test"]);
   assert.equal(node.globalInvalidation, false);
@@ -405,7 +405,7 @@ test("AWI-03 knowledge changes select the bounded critical owner and hard gates"
   const result = plan(["packages/contracts/src/knowledge-envelope.ts"]);
   assert.equal(result.mode, "IMPACTED_SHADOW");
   assert.deepEqual(result.selectedNodes, ["awi-03-knowledge-envelope", "awi-plugin-01-knowledge-harvest-v1", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "lkc-files-01-local-file-corpus", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "pan487-product-purpose-semantic-successor-v1", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof"]);
-  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run docs:test", "npm run erv-workflow:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan360:test", "npm run pan378:test", "npm run pan396:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan454:test", "npm run pan456:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan465:test", "npm run pan466:test", "npm run pan467:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run pan472:test", "npm run pan473:test", "npm run pan487:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan524:test", "npm run pan525:test", "npm run pan526:test", "npm run pan527:test", "npm run pan528:test", "npm run pan529:test", "npm run pan537:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan563:test", "npm run pan574:test", "npm run pan576:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
+  assert.deepEqual(result.selectedTests, ["node --test dist/tests/canonical-json-profile-inventory.test.js", "node --test tests/demo-current-head-e2e*.test.mjs", "node --test tests/supply-chain-verifier.test.mjs", "npm run build --silent && node --test dist/tests/trust-compatibility-foundation-closure.test.js", "npm run cks02:test", "npm run cks03:test", "npm run cks04:test", "npm run cks05:test", "npm run cks07:test", "npm run cks08:test", "npm run cks09:test", "npm run cks10:test", "npm run cks11:test", "npm run cks12:test", "npm run cksm1:test", "npm run cscl01:test", "npm run cscl02:test", "npm run cscl03:test", "npm run cscl04:test", "npm run cscl05:test", "npm run cscl06:test", "npm run cscl07:test", "npm run cscl08:test", "npm run cscl09:test", "npm run cscl10:test", "npm run cscl11:test", "npm run docs:test", "npm run erv-workflow:test", "npm run fnd-ps-fu-01:test", "npm run knowledge-envelope:test", "npm run ks238:test", "npm run local-file-corpus:test", "npm run module:check", "npm run openclaw-m1.4:test", "npm run openclaw-m1.5:evidence", "npm run openclaw-m1.5:test", "npm run paired-analytics:test", "npm run pan360:test", "npm run pan378:test", "npm run pan396:test", "npm run pan433:mapping:test", "npm run pan441:test", "npm run pan442:test", "npm run pan454:test", "npm run pan456:test", "npm run pan461:test", "npm run pan462:test", "npm run pan463:test", "npm run pan464:test", "npm run pan465:test", "npm run pan466:test", "npm run pan467:test", "npm run pan468:test", "npm run pan469:test", "npm run pan470:test", "npm run pan471:test", "npm run pan472:test", "npm run pan473:test", "npm run pan487:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan524:test", "npm run pan525:test", "npm run pan526:test", "npm run pan527:test", "npm run pan528:test", "npm run pan529:test", "npm run pan537:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan563:test", "npm run pan574:test", "npm run pan576:test", "npm run plugin-knowledge-harvest:test", "npm run proof:secure-default", "npm run release-governance:test", "npm run rks01:test", "npm run rks02:test", "npm run wiki:test"]);
   assert.deepEqual(result.hardGates, [...graph().hardGates].sort((a, b) => a.localeCompare(b, "en")));
 });
 
@@ -424,7 +424,7 @@ test("contract and cross-contract changes invalidate downstream dependants", () 
   ]) {
     const result = plan([changed]);
     assert.equal(result.mode, "IMPACTED_SHADOW");
-    assert.deepEqual(result.selectedNodes, ["awi-plugin-01-knowledge-harvest-v1", "azpp-m1-repository-synthetic-v1", "cap-cell-erp-01", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "etl-01-extension-assurance-profile-v1", "etl-02-external-plugin-preflight-v1", "external-bi-service-v2", "intake-001-issue-candidate-v1", "integration-profile-v1", "know-media-m1-audience-learning-v1", "learning-routing-foundation", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "pan435-436-sales-stock-journey-v1", "pan441-employee-profile-v1", "pan487-product-purpose-semantic-successor-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan524-exact-bi-pair-v1", "pan525-exact-qualified-pair-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan563-configuration-draft-v1", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof", "vf-contract-v1", "vf-m2-adaptive-evidence-gates-v1", "vf-shadow-v2"]);
+    assert.deepEqual(result.selectedNodes, ["awi-plugin-01-knowledge-harvest-v1", "azpp-m1-repository-synthetic-v1", "cap-cell-erp-01", "cks-02-local-knowledge-fabric-closure-v1", "cks-03-fresh-synthetic-qualification-v1", "cks-04-no-finetune-runtime-baseline-v1", "cks-05-comparative-falsification-v1", "cks-07-empty-kb-sufficiency-v1", "cks-08-usage-lineage-attribution-v1", "cks-09-task-pattern-proof-v1", "cks-10-readonly-analytics-bridge-v1", "cks-11-governed-workflow-function-v1", "cks-12-closed-learning-loop-v1", "cks-m1-parent-closure-v1", "cscl-01-cross-system-protocol-freeze-v1", "cscl-02-odoo-source-native-profile-v1", "cscl-03-erpnext-source-native-profile-v1", "cscl-04-dolibarr-source-native-profile-v1", "cscl-05-tryton-source-native-profile-v1", "cscl-06-ofbiz-source-native-profile-v1", "cscl-07-cross-system-semantic-matrix-v1", "cscl-08-party-candidate-v1", "cscl-09-product-candidate-v1", "cscl-10-sales-candidate-v1", "cscl-11-idempiere-serial-holdout-gate-v1", "etl-01-extension-assurance-profile-v1", "etl-02-external-plugin-preflight-v1", "external-bi-service-v2", "intake-001-issue-candidate-v1", "integration-profile-v1", "know-media-m1-audience-learning-v1", "learning-routing-foundation", "lkc-wiki-01-governed-local-edition-v1", "openclaw-m1-4", "openclaw-m1-5", "pan435-436-sales-stock-journey-v1", "pan441-employee-profile-v1", "pan487-product-purpose-semantic-successor-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan524-exact-bi-pair-v1", "pan525-exact-qualified-pair-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan563-configuration-draft-v1", "repository-integrity", "rks-01-real-source-protocol-falsification-v1", "rks-02-core-small-vs-raw-falsification-v1", "secure-default-proof", "vf-contract-v1", "vf-m2-adaptive-evidence-gates-v1", "vf-shadow-v2"]);
   }
 });
 
@@ -462,15 +462,15 @@ test("learning-routing changes select the complete foundation and downstream int
 test("integration profile changes select the bounded owner and downstream integrity gates", () => {
   const result = plan(["packages/contracts/src/integration-profile.ts"]);
   assert.equal(result.mode, "IMPACTED_SHADOW");
-  assert.deepEqual(result.selectedNodes, ["cap-cell-erp-01", "integration-profile-v1", "openclaw-m1-4", "openclaw-m1-5", "pan435-436-sales-stock-journey-v1", "pan441-employee-profile-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan563-configuration-draft-v1", "repository-integrity", "secure-default-proof"]);
+  assert.deepEqual(result.selectedNodes, ["cap-cell-erp-01", "integration-profile-v1", "openclaw-m1-4", "openclaw-m1-5", "pan435-436-sales-stock-journey-v1", "pan441-employee-profile-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan563-configuration-draft-v1", "repository-integrity", "secure-default-proof"]);
   assert.ok(result.selectedTests.includes("npm run integration-profile:test"));
 });
 
 test("ERP capability-cell changes select the bounded owner and exact focused suite", () => {
   const result = plan(["packages/contracts/src/erp-order-capability-cell.ts"]);
   assert.equal(result.mode, "IMPACTED_SHADOW");
-  assert.deepEqual(result.selectedNodes, ["cap-cell-erp-01", "pan435-436-sales-stock-journey-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan563-configuration-draft-v1"]);
-  assert.deepEqual(result.selectedTests, ["npm run erp-order-cell:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan528:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan563:test", "npm run sales-stock:journey", "npm run sales-stock:journey:test"]);
+  assert.deepEqual(result.selectedNodes, ["cap-cell-erp-01", "pan435-436-sales-stock-journey-v1", "pan515-native-trade-state-v1", "pan516-native-procurement-v1", "pan517-native-fulfilment-v1", "pan520-native-projections-v1", "pan521-local-connected-native-v1", "pan522-material-plan-v1", "pan523-native-production-v1", "pan528-guided-native-browser-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan563-configuration-draft-v1"]);
+  assert.deepEqual(result.selectedTests, ["npm run erp-order-cell:test", "npm run pan515:test", "npm run pan516:test", "npm run pan517:test", "npm run pan520:test", "npm run pan521:test", "npm run pan522:test", "npm run pan523:test", "npm run pan528:test", "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan563:test", "npm run sales-stock:journey", "npm run sales-stock:journey:test"]);
 });
 
 test("AP-01 blueprint changes select its owner and dependent AP-02/AP-03 slices", () => {
@@ -657,7 +657,7 @@ test("FND-PS-02 edge-evidence focused family is canonical and selects its owner 
 
 test("CSCL-11 serial holdout gate is a registered DAG node bound to the frozen reconciled pilot", () => {
   const manifest = graph();
-  assert.equal(manifest.graphVersion, 95);
+  assert.equal(manifest.graphVersion, 96);
   const packageJson = JSON.parse(readFileSync("package.json", "utf8")) as {
     scripts: Record<string, string>;
   };

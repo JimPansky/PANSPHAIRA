@@ -2932,6 +2932,76 @@ for (const [inputPath, role] of pan576Inputs) {
 }
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan576:test")) repositoryIntegrityNode.ownedTests.push("npm run pan576:test");
 
+// PAN544 personal native notifications: projection, never a business workflow owner.
+const pan544Inputs = [
+  [
+    "docs/architecture/native-workspace-notifications-v1.md",
+    "DERIVED_EVIDENCE"
+  ],
+  [
+    "packages/browser-workspace/src/notifications-v1.ts",
+    "SOURCE"
+  ],
+  [
+    "packages/contracts/src/workspace-notifications-v1.ts",
+    "CONTRACT"
+  ],
+  [
+    "scripts/run-pan544-native-notification-tests.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "src/pan544/native-notifications.mjs",
+    "SECURITY"
+  ],
+  [
+    "tests/pan544/browser-fixture.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan544/browser-notifications.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan544/contracts.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan544/gateway.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan544/native-notifications.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan544/registration.test.mjs",
+    "VALIDATOR"
+  ],
+  [
+    "tests/pan544/restart-reader.mjs",
+    "VALIDATOR"
+  ]
+];
+let pan544Node = dag.nodes.find(({id}) => id === "pan544-native-notifications-v1");
+if (pan544Node === undefined) {
+  pan544Node = {
+    id: "pan544-native-notifications-v1", dependsOn: ["pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1"],
+    inputs: [], ownedTests: ["npm run pan544:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Protected native human/event/task publication before first plugin visit; closed target and canonical event identity, no arbitrary URL/HTML/callback or new workflow engine.",
+      "Persistent tenant/subject preferences, subscriptions, filters and personal read are distinct from task completion, approval, financial effect and execution rights.",
+      "Current effective origin/session/role/realm/generation and native object/task revision; stale, removed, completed, unavailable and expired targets deny without rematching or false success.",
+      "Actual native child commit and fresh-process read; real browser response-loss reconciliation without a repeated mutation, revoked logout and late-delivery context retirement.",
+      "Complete fixed native/contracts/TLS/browser suite, genuine screenshots and measured focus/narrow-layout regression; unchanged hard gates and explicit synthetic/source-only nonclaims."
+    ]
+  };
+  dag.nodes.push(pan544Node);
+}
+pan544Node.inputs = pan544Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan544:test")) repositoryIntegrityNode.ownedTests.push("npm run pan544:test");
+dag.graphVersion = 96;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -2993,6 +3063,7 @@ for (const [inputPath] of pan541Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan543Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan563Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan542Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan544Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

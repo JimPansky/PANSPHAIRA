@@ -31,8 +31,8 @@ const allowed = new Set([...inputs.map(([p]) => p),
 ]);
 const graphPath = "verification/verification-dag-v2.json";
 const graph = JSON.parse(readFileSync(graphPath, "utf8"));
-assert.equal(graph.graphVersion, 95);
-assert.equal(graph.nodes.length, 100);
+assert.equal(graph.graphVersion, 96);
+assert.equal(graph.nodes.length, 101);
 assert.deepEqual(graph.hardGates, ["npm run lint", "npm run release-governance:verify", "npm run supply-chain:verify", "sha256sum -c SHA256SUMS", "./scripts/build-public-release.sh --output <isolated-absolute-path>"]);
 const owners = graph.nodes.filter(n => n.id === "pan541-shared-browser-shell-v1");
 assert.equal(owners.length, 1, "PAN543_EXISTING_SHELL_OWNER_REQUIRED");
