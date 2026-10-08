@@ -10372,7 +10372,7 @@
         {
           "path": "tests/pan549/browser-lifecycle-analysis.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4624c3e4848c71e9930c621da97007a7c445ff15c4b9f7c22018118d6a6111f6"
+          "sha256": "95ccd349e2e43d483906a486fd5761f300b0055de28132d7be112e206957257d"
         },
         {
           "path": "tests/pan549/cohort-analysis.test.mjs",

@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {browserFixture549,launch549,start549,enter549,forward549,responsive549,screenshot549} from './browser-fixture.mjs';
 import {request527} from '../pan527/helpers.mjs';
-function deferred(){let resolve;const promise=new Promise(r=>{resolve=r;});return {promise,resolve};}
+// Observe rejection immediately without replacing the promise awaited by the case.
+function deferred(timeout=0){let resolve,reject;const promise=new Promise((yes,no)=>{resolve=yes;reject=no;});const clock=timeout?setTimeout(()=>reject(new Error('PAN549_HELD_NATIVE_READ_OBSERVER_DEADLINE')),timeout):null;void promise.then(()=>{if(clock)clearTimeout(clock);},()=>{if(clock)clearTimeout(clock);});return {promise,resolve,reject};}
 async function noFacts(page){assert.equal(await page.locator('[data-analysis-key]').count(),0);assert.equal(await page.locator('[data-analysis-cohort]').count(),0);assert.equal(await page.locator('body').getAttribute('data-analysis-result-revision'),null);assert.doesNotMatch(await page.locator('main').innerText(),/READBACK_RECEIVED|Adoption:\s*0|Bestand:\s*0/);}
 const cases=[
  {name:'stale-source',expected:'STALE',status:409,change:s=>{s.expectedNativeRevision=999;}},
@@ -31,7 +32,7 @@ test('UIDOD actual loading response becomes retired on module context switch and
  try{
   live=await launch549(f);const page=await live.context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
   await start549(page,f);
-  await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route);assert.equal(actual.status,200);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}finally{done.resolve();}});
+  await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route);assert.equal(actual.status,200);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}catch(error){read.reject(error);throw error;}finally{done.resolve();}});
   await enter549(page);await read.promise;await page.locator('[data-backend="analysis"][data-outcome="LOADING"]').waitFor();await noFacts(page);await responsive549(page,'actual-native-read-held-loading',f,live.browser,{actualNativeStatus:200,observerFault:'Actual source read already returned; only browser delivery held by owned observer'});
   await page.locator('[id="shell.navigation"] button').first().click();await page.locator('[data-backend="setup"][data-outcome="READBACK_RECEIVED"]').waitFor();release.resolve();await done.promise;await noFacts(page);assert.match(await page.locator('main').innerText(),/Einrichtung und Betriebszustand/);await responsive549(page,'late-read-retired-context',f,live.browser);f.unchanged();assert.deepEqual(errors,[]);
  }finally{release.resolve();await live?.context.close();await f.close();}
@@ -41,7 +42,7 @@ for(const transition of ['native-logout','fresh-session','foreign-tenant-session
  const f=await browserFixture549();let live;const read=deferred(),release=deferred(),done=deferred();
  try{
   live=await launch549(f);const page=await live.context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await start549(page,f);
-  await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route);assert.equal(actual.status,200);assert.equal(actual.headers['set-cookie'],undefined);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}finally{done.resolve();}});
+  await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route);assert.equal(actual.status,200);assert.equal(actual.headers['set-cookie'],undefined);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}catch(error){read.reject(error);throw error;}finally{done.resolve();}});
   await enter549(page);await read.promise;
   if(transition==='native-logout')assert.equal((await request527(f.tls,'/t/tenant-a/workspace/logout',{cookie:live.who.cookieHeader,origin:f.tls.origin},'POST')).status,200);
   else if(transition==='fresh-session')await live.login(f.issue('reviewer'));
@@ -50,11 +51,22 @@ for(const transition of ['native-logout','fresh-session','foreign-tenant-session
  }finally{release.resolve();await live?.context.close();await f.close();}
 });
 
-test('UIDOD actual native-session expiry after a held successful source read denies late rendering without renewal or facts',async()=>{
- const f=await browserFixture549();let live;const read=deferred(),release=deferred(),done=deferred();
+test('UIDOD held-read observer can reject an actually expired native request instead of leaving an unresolved read promise', {timeout:15000}, async()=>{
+ const f=await browserFixture549();
+ try{
+  const expiresAtMs=Date.now()+1000,short=f.sessions.issueOwnerSession({subjectId:'synthetic:analysis-observer-expiry',role:'reader',expiresAtMs});
+  await new Promise(resolve=>setTimeout(resolve,expiresAtMs-Date.now()+10));assert.ok(Date.now()>=expiresAtMs);assert.throws(()=>f.sessions.authenticate({cookie:short.cookieHeader}),/HOSTED_SESSION_DENIED/);
+  const actual=await request527(f.tls,'/t/tenant-a/workspace/analysis',{cookie:short.cookieHeader,origin:f.tls.origin},'POST',{schemaVersion:'pansphaira.workspace-analysis/read/v1',objectId:'analysis:common-trade-01:stock',expectedNativeRevision:null,expectedResultRevision:null,asOf:'2026-06-30T23:59:59+02:00'});assert.equal(actual.status,401);
+  const read=deferred();assert.equal(typeof read.reject,'function','PAN549_HELD_READ_OBSERVER_MUST_PROPAGATE_NATIVE_FAILURE');
+  const rejected=assert.rejects(read.promise,{code:'ERR_ASSERTION'});try{assert.equal(actual.status,200);}catch(error){read.reject(error);}await rejected;f.unchanged();
+ }finally{await f.close();}
+});
+
+test('UIDOD actual native-session expiry after a held successful source read denies late rendering without renewal or facts',{timeout:30000},async()=>{
+ const f=await browserFixture549();let live;const read=deferred(10000),release=deferred(),done=deferred();
  try{
   live=await launch549(f);const expiresAtMs=Date.now()+5000,short=f.sessions.issueOwnerSession({subjectId:'synthetic:analysis-short-expiry',role:'reader',expiresAtMs});await live.login(short);const page=await live.context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));await start549(page,f);
-  await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route);assert.equal(actual.status,200);assert.equal(actual.headers['set-cookie'],undefined);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}finally{done.resolve();}});
+  await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route);assert.equal(actual.status,200);assert.equal(actual.headers['set-cookie'],undefined);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}catch(error){read.reject(error);throw error;}finally{done.resolve();}});
   await enter549(page);await read.promise;assert.equal(f.sessions.authenticate({cookie:short.cookieHeader}).role,'reader');assert.ok(Date.now()<expiresAtMs,'PAN549_EXPIRY_PROBE_MUST_FIRST_OBSERVE_ACTUALLY_LIVE_NATIVE_SESSION');
   // Cookie-renewal401 in the final subsecond is not native expiry. Await the actual issued binding expiry, without changing the clock or backend.
   const remaining=expiresAtMs-Date.now()+10;assert.ok(remaining>0&&remaining<=5010);await new Promise(resolve=>setTimeout(resolve,remaining));assert.ok(Date.now()>=expiresAtMs);assert.throws(()=>f.sessions.authenticate({cookie:short.cookieHeader}),/HOSTED_SESSION_DENIED/);
