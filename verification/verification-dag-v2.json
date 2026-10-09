@@ -10332,7 +10332,7 @@
         {
           "path": "docs/architecture/pan549-workspace-analysis-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "942042a2e8790c22a6c3e40d1055ff2f35b8a9b785a960459b4092bde2afb89a"
+          "sha256": "1668f4b859e70e0f67638610ddd76f0aa67a653099df036c89b03887672ce839"
         },
         {
           "path": "packages/browser-workspace/src/analysis-v1.css",
@@ -10352,7 +10352,7 @@
         {
           "path": "scripts/run-pan549-native-analysis-tests.mjs",
           "role": "VALIDATOR",
-          "sha256": "323319186c841a6190c5bc52142ada1e5be01900b0de930e426cb962241eb6cf"
+          "sha256": "e597cacca1e0894e7a306882f0b9250b84e2f5a4f0d614377fbb8359d3005ca6"
         },
         {
           "path": "src/pan549/native-analysis-read.mjs",
@@ -10392,7 +10392,7 @@
         {
           "path": "tests/pan549/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "50b6084741a5d7276b0ef2450a09bb8b8e964ef05dc1e88c92bf878d62fd725f"
+          "sha256": "9101a7b39d7ada2f56e5b05bf1c728f194ad6432854ac116ce3a0d9f0e3f78ec"
         }
       ],
       "ownedTests": [

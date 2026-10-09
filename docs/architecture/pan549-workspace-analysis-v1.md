@@ -140,6 +140,9 @@ all six fixed test files; caller filters, browser/native skips and test controls
 are denied, including sharding, rerun histories, setup hooks and output controls.
 NODE_OPTIONS uses the declared Node quote/escape grammar before underscore-alias
 normalization, so embedded split quotes or escapes cannot select a partial suite.
+An inherited NODE_TEST_CONTEXT is denied in execution mode even when its value
+is empty: Node24 checks its presence and otherwise suppresses all test files.
+The explicit --list mode remains a side-effect-free fixed-file enumeration.
 The owned scratch is TMPDIR or an explicitly supplied RUNNER_TEMP, never an
 implicit system-temp fallback. A direct development browser invocation must
 also supply PAN527_BROWSER_MODULE, PAN527_CERTUTIL, PLAYWRIGHT_BROWSERS_PATH and

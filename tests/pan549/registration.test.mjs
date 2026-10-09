@@ -11,14 +11,20 @@ test('PUI-08 registration: complete fixed native, real cohort, protected ingress
  const list=spawnSync(process.execPath,[entry,'--list'],{encoding:'utf8'});assert.equal(list.status,0,list.stderr);assert.deepEqual(JSON.parse(list.stdout),files);
 });
 test('PUI-08 registration: selection, skip and missing owned scratch deny before product work',()=>{
- for(const args of [['--skip-native'],[files[0]],['--list','--skip-browser']]){const r=spawnSync(process.execPath,[entry,...args],{encoding:'utf8'});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_TEST_ARGUMENT_DENIED/);}
+ const probeEnv={...process.env};delete probeEnv.NODE_TEST_CONTEXT;
+ for(const args of [['--skip-native'],[files[0]],['--list','--skip-browser']]){const r=spawnSync(process.execPath,[entry,...args],{encoding:'utf8',env:probeEnv});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_TEST_ARGUMENT_DENIED/);}
  for(const options of ['--test-name-pattern=never','--test_name_pattern=never','--test_skip_pattern=.*','--test_only','--test-shard=1/6','--test_shard=1/6','"--test_name_pattern=never"','--test-"name-pattern"=(?!)','--test-"skip-pattern"=.*','--test-"shard"=1/6','--test-na"me"_pattern=(?!)','--test-"na\\me-pattern"=(?!)','--test-"only"','--test-rerun-failures=pan549-not-admitted-history','--test-global-setup=./pan549-not-admitted-hook.mjs','--test-isolation=none','--test-reporter=spec']){
-  const filtered=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...process.env,NODE_OPTIONS:options}});assert.equal(filtered.error,undefined);assert.notEqual(filtered.status,0,options);assert.match(filtered.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.doesNotMatch(filtered.stdout,/PAN549_BROWSER_EVIDENCE_DIR=|TAP version|Subtest:/,options);
+  const filtered=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...probeEnv,NODE_OPTIONS:options}});assert.equal(filtered.error,undefined);assert.notEqual(filtered.status,0,options);assert.match(filtered.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.doesNotMatch(filtered.stdout,/PAN549_BROWSER_EVIDENCE_DIR=|TAP version|Subtest:/,options);
  }
  for(const options of ['--experimental-test-isolation=none','--experimental_test_isolation=none','--experi"mental-test-isolation"=none','--no-test-only']){
-  const filtered=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...process.env,NODE_OPTIONS:options}});assert.equal(filtered.error,undefined);assert.notEqual(filtered.status,0,options);assert.match(filtered.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.doesNotMatch(filtered.stdout,/PAN549_BROWSER_EVIDENCE_DIR=|TAP version|Subtest:/,options);
+  const filtered=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...probeEnv,NODE_OPTIONS:options}});assert.equal(filtered.error,undefined);assert.notEqual(filtered.status,0,options);assert.match(filtered.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.doesNotMatch(filtered.stdout,/PAN549_BROWSER_EVIDENCE_DIR=|TAP version|Subtest:/,options);
  }
- const env={...process.env};delete env.TMPDIR;delete env.RUNNER_TEMP;const r=spawnSync(process.execPath,[entry],{encoding:'utf8',env});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/);
+ for(const marker of ['child-v8','child','','unexpected-marker']){
+  const markerEnv={...probeEnv,NODE_TEST_CONTEXT:marker};delete markerEnv.NODE_OPTIONS;delete markerEnv.PAN549_BROWSER_EVIDENCE;
+  const denied=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:markerEnv});assert.equal(denied.error,undefined);assert.notEqual(denied.status,0,JSON.stringify(marker));assert.match(denied.stderr,/PAN549_TEST_ARGUMENT_DENIED/,JSON.stringify(marker));assert.equal(denied.stdout,'',JSON.stringify(marker));
+  const list=spawnSync(process.execPath,[entry,'--list'],{encoding:'utf8',timeout:45000,env:markerEnv});assert.equal(list.error,undefined);assert.equal(list.status,0,list.stderr);assert.deepEqual(JSON.parse(list.stdout),files);assert.equal(list.stderr,'');
+ }
+ const env={...probeEnv};delete env.TMPDIR;delete env.RUNNER_TEMP;const r=spawnSync(process.execPath,[entry],{encoding:'utf8',env});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/);
  const ordinary=spawnSync(process.execPath,[entry],{encoding:'utf8',env:{...env,NODE_OPTIONS:'--conditions=--test-not-a-control'}});assert.notEqual(ordinary.status,0);assert.match(ordinary.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/);assert.doesNotMatch(ordinary.stderr,/PAN549_TEST_ARGUMENT_DENIED/);assert.equal(ordinary.stdout,'');
 });
 test('PUI-08 registration: additive owner reuses actual native projection, existing cohort and shared shell without old owner or gate removal',()=>{
