@@ -18,7 +18,7 @@ test("PAN543 optional presentation sources have unique existing shell ownership,
   const graph = JSON.parse(readFileSync("verification/verification-dag-v2.json", "utf8"));
   const owner = graph.nodes.find(n => n.id === "pan541-shared-browser-shell-v1");
   const paths = ["docs/architecture/browser-profile-v1.md", "packages/browser-workspace/src/profile-editor-v1.ts", "packages/contracts/src/browser-profile-v1.ts", "scripts/run-pan543-browser-profile-tests.mjs", "scripts/refresh-pan543-integrity.mjs", "src/pan543/profile-store.mjs", "tests/pan543/backend-fixture.mjs", "tests/pan543/browser.test.mjs", "tests/pan543/profile-types.ts", "tests/pan543/profile.test.mjs", "tests/pan543/registration.test.mjs", "tests/pan543/transport.test.mjs"];
-  assert.equal(graph.graphVersion, 97); assert.equal(graph.nodes.length, 102);
+  assert.equal(graph.graphVersion, 98); assert.equal(graph.nodes.length, 103);
   const expectedGates = ["npm run lint", "npm run release-governance:verify", "npm run supply-chain:verify", "sha256sum -c SHA256SUMS", "./scripts/build-public-release.sh --output <isolated-absolute-path>"];
   assert.deepEqual(graph.hardGates, expectedGates);
   const builder = readFileSync("scripts/build-public-release.sh", "utf8");
@@ -40,7 +40,7 @@ test("PAN543 optional presentation sources have unique existing shell ownership,
       assert.deepEqual(plan.selectedNodes, graph.nodes.map(n => n.id).sort((a,b) => a.localeCompare(b,"en")));
       assert.deepEqual(plan.selectedTests, [...new Set(graph.nodes.flatMap(n => n.ownedTests))].sort((a,b) => a.localeCompare(b,"en")));
     } else {
-      assert.equal(plan.mode, "IMPACTED_SHADOW"); assert.deepEqual(plan.selectedNodes, [owner.id, "pan544-native-notifications-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]); assert.deepEqual(plan.selectedTests, ["npm run pan541:test", "npm run pan543:test", "npm run pan544:test", "npm run pan549:test", "npm run pan563:test"]);
+      assert.equal(plan.mode, "IMPACTED_SHADOW"); assert.deepEqual(plan.selectedNodes, [owner.id, "pan544-native-notifications-v1", "pan548-authentic-context-selection-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]); assert.deepEqual(plan.selectedTests, ["npm run pan541:test", "npm run pan543:test", "npm run pan544:test", "npm run pan548:test", "npm run pan549:test", "npm run pan563:test"]);
     }
   }
   assert.deepEqual(owner.ownedTests, ["npm run pan541:test", "npm run pan543:test"]);

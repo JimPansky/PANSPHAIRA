@@ -4,7 +4,7 @@ import {readFileSync,readdirSync,mkdtempSync,writeFileSync,rmSync} from 'node:fs
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const entry='scripts/run-pan548-authentic-context-tests.mjs';
-const files=['tests/pan548/context-contract.test.mjs','tests/pan548/native-context.test.mjs','tests/pan548/native-expiry.test.mjs','tests/pan548/browser-context.test.mjs','tests/pan548/registration.test.mjs'];
+const files=['tests/pan548/context-contract.test.mjs','tests/pan548/native-context.test.mjs','tests/pan548/native-expiry.test.mjs','tests/pan548/native-reentrant.test.mjs','tests/pan548/browser-context.test.mjs','tests/pan548/registration.test.mjs'];
 const inputs=[['docs/architecture/workspace-context-selection-v1.md','DERIVED_EVIDENCE'],['packages/browser-shell/src/extended-context-owner-v1.ts','SOURCE'],['packages/browser-workspace/src/context-selection-v1.ts','SOURCE'],['packages/contracts/src/workspace-context-selection-v1.ts','CONTRACT'],[entry,'VALIDATOR'],['src/pan548/native-context-selection.mjs','SECURITY'],...files.map(p=>[p,'VALIDATOR'])];
 const digest=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
 test('DUI-02 registration: one complete fixed canonical entry owns every context/native/expiry/real-browser/registration case, without replacing older entries',()=>{

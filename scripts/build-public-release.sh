@@ -690,6 +690,7 @@ repository_only_files = {
     "tests/pan548/context-contract.test.mjs",
     "tests/pan548/native-context.test.mjs",
     "tests/pan548/native-expiry.test.mjs",
+    "tests/pan548/native-reentrant.test.mjs",
     "tests/pan548/browser-context.test.mjs",
     "tests/pan548/registration.test.mjs",
 

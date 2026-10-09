@@ -3051,6 +3051,7 @@ const pan548Inputs = [
   ["tests/pan548/context-contract.test.mjs", "VALIDATOR"],
   ["tests/pan548/native-context.test.mjs", "VALIDATOR"],
   ["tests/pan548/native-expiry.test.mjs", "VALIDATOR"],
+  ["tests/pan548/native-reentrant.test.mjs", "VALIDATOR"],
   ["tests/pan548/browser-context.test.mjs", "VALIDATOR"],
   ["tests/pan548/registration.test.mjs", "VALIDATOR"]
 ];

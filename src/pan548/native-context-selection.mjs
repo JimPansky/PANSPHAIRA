@@ -34,13 +34,18 @@ export function createNativeWorkspaceContextSelectionV1(options){
  }
  function state(a,tab,target=tab){
   registered(target.moduleId,target.viewId);
-  const setup=readSetup(a.principal);
+  // Trusted native readers may re-enter this owner. Keep data paired with its
+  // captured revision, and never resurrect a tab retired during a leading read.
+  const keys=['moduleId','viewId','primaryObjectId','epoch','selectionRevision','selection','catalogRevision','catalogDigest','context'];
+  const before=keys.map(key=>tab[key]);
+  const stableTab=()=>{const fresh=authorize(a.headers??{});if(fresh.sessionId!==a.sessionId||fresh.principal.subjectId!==a.principal.subjectId||fresh.principal.role!==a.principal.role||keys.some((key,i)=>tab[key]!==before[i]))throw new Error('CONTEXT_REVISION_STALE');if(clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');};
+  const setupBytes=JSON.stringify(readSetup(a.principal));let setup;try{setup=JSON.parse(setupBytes);}catch{throw new Error('CONTEXT_NATIVE_RIGHTS_DENIED');}stableTab();
   if(setup?.apiVersion!=='chimpmaera.dev/poc-early-admin-status/v1'||setup.kind!=='PocEarlyAdminStatus'||setup.authority?.profile?.profileId!=='SAFE_GUIDED'||!Array.isArray(setup.stages)||setup.stages.length>16)throw new Error('CONTEXT_NATIVE_RIGHTS_DENIED');
-  const digest=hash(JSON.stringify(setup));if(hostDigest!==null&&hostDigest!==digest)hostRevision=next(hostRevision);hostDigest=digest;
+  const digest=hash(setupBytes);if(hostDigest!==null&&hostDigest!==digest)hostRevision=next(hostRevision);hostDigest=digest;const capturedHostRevision=hostRevision;
   const profile=validateBrowserProfileReadV1(readProfile(a.principal)),main=profile.catalog.find(x=>x.id==='shell.main');
+  stableTab();
   if(main?.state!=='AVAILABLE'||!profile.effectiveItems.some(x=>x.id==='shell.main'&&x.visible))throw new Error('CONTEXT_NATIVE_VIEW_DENIED');
   const catalog=hash(JSON.stringify([setupPluginV1,ervPluginV1,profile.catalog]));
-  if(tab.catalogDigest!==null&&tab.catalogDigest!==catalog)tab.catalogRevision=next(tab.catalogRevision);tab.catalogDigest=catalog;
   let primaryObject=null,selections=[];
   if(target.moduleId==='pan.setup'){
    if(target.primaryObjectId!==null)throw new Error('CONTEXT_NATIVE_OBJECT_DENIED');
@@ -50,8 +55,11 @@ export function createNativeWorkspaceContextSelectionV1(options){
    primaryObject={objectId:invoice.invoiceId,revision:invoice.revision};
    selections=[{elementId:'pan.erv.amount',rowId:null,label:'Rechnungsbetrag in EUR'},{elementId:'pan.erv.status',rowId:null,label:'Aktueller fachlicher Rechnungsstatus'},{elementId:'pan.erv.summary',rowId:invoice.invoiceId,label:'Zusammenfassung der Rechnung '+invoice.invoiceId}];
   }
-  authorize(a.headers??{}); // Caller sets headers; fresh rights after native reads.
-  return {primaryObject,selections,revisions:{hostRevision,domainRevision:primaryObject?.revision??null,viewRevision:profile.revision+1,catalogRevision:tab.catalogRevision,selectionRevision:tab.selectionRevision}};
+  stableTab(); // Fresh same-session rights and tab lifetime after native reads.
+  if(hostDigest!==digest||hostRevision!==capturedHostRevision)throw new Error('CONTEXT_REVISION_STALE');
+  const catalogRevision=tab.catalogDigest!==null&&tab.catalogDigest!==catalog?next(tab.catalogRevision):tab.catalogRevision;
+  tab.catalogDigest=catalog;tab.catalogRevision=catalogRevision;
+  return {primaryObject,selections,revisions:{hostRevision:capturedHostRevision,domainRevision:primaryObject?.revision??null,viewRevision:profile.revision+1,catalogRevision,selectionRevision:tab.selectionRevision}};
  }
  function tabFor(headers){const a=authorize(headers);a.headers=headers;const id=headers['x-pan548-tab-id'],proof=headers['x-pan548-tab'];if(typeof id!=='string'||!/^tab:[a-f0-9]{32}$/.test(id)||typeof proof!=='string'||!/^[a-f0-9]{64}$/.test(proof))throw new Error('CONTEXT_TAB_DENIED');const tab=tabs.get(id);if(!tab||tab.sessionId!==a.sessionId||tab.subjectId!==a.principal.subjectId||tab.role!==a.principal.role||!equalSecret(tab.proofDigest,hash(proof)))throw new Error('CONTEXT_TAB_DENIED');if(clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');return {a,tab};}
  function issueReadback(a,tab,s){const at=clock();if(at>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');return validateWorkspaceContextReadbackV1({schemaVersion:'pansphaira.workspace-context/readback/v1',contextHandle:'context:'+randomBytes(32).toString('hex'),binding:{origin:sessions.origin,tenantId:a.principal.tenantId,subjectId:a.principal.subjectId,sessionId:a.sessionId,instanceId:a.principal.instanceId,generation:a.principal.generation,tabId:tab.id,epoch:tab.epoch},moduleId:tab.moduleId,viewId:tab.viewId,primaryObject:s.primaryObject,revisions:s.revisions,selection:tab.selection,lease:{issuedAtMs:at,expiresAtMs:Math.min(at+60000,tab.expiresAtMs)},capabilityIds:['ui.context.read','ui.selection.read'],sourceMap:null,executionAuthorityGranted:false,effectsProduced:false});}
@@ -69,7 +77,7 @@ export function createNativeWorkspaceContextSelectionV1(options){
    const navigation=tab.moduleId!==claim.moduleId||tab.viewId!==claim.viewId||tab.primaryObjectId!==claim.primaryObjectId,selectionChange=navigation||!same(tab.selection,claim.selection);
    if(navigation)tab.epoch=next(tab.epoch);if(selectionChange)tab.selectionRevision=next(tab.selectionRevision);Object.assign(tab,{moduleId:claim.moduleId,viewId:claim.viewId,primaryObjectId:claim.primaryObjectId,selection:claim.selection});tab.context=null;return snapshot(a,tab);
   },
-  verify(headers,value){const{a,tab}=tabFor(headers),v=validateWorkspaceContextVerifyV1(value);if(v.tabId!==tab.id)throw new Error('CONTEXT_TAB_DENIED');const current=tab.context;if(!current||!equalSecret(current.contextHandle,v.contextHandle))throw new Error('CONTEXT_REVISION_STALE');if(clock()>=current.lease.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');const s=state(a,tab);if(clock()>=current.lease.expiresAtMs||clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');if(tab.context!==current||!same(current.revisions,s.revisions)||current.binding.epoch!==tab.epoch||!same(current.selection,tab.selection))throw new Error('CONTEXT_REVISION_STALE');return current;
+  verify(headers,value){const{a,tab}=tabFor(headers),v=validateWorkspaceContextVerifyV1(value);if(v.tabId!==tab.id)throw new Error('CONTEXT_TAB_DENIED');const current=tab.context;if(!current||!equalSecret(current.contextHandle,v.contextHandle))throw new Error('CONTEXT_REVISION_STALE');if(clock()>=current.lease.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');const s=state(a,tab);if(clock()>=current.lease.expiresAtMs||clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');if(tab.context!==current||!same(current.revisions,s.revisions)||current.binding.epoch!==tab.epoch||!same(current.selection,tab.selection)||(current.selection!==null&&!s.selections.some(e=>e.elementId===current.selection.elementId&&e.rowId===current.selection.rowId)))throw new Error('CONTEXT_REVISION_STALE');return current;
   },
   retire(headers,value){const{tab}=tabFor(headers),v=validateWorkspaceContextVerifyV1(value);if(v.tabId!==tab.id)throw new Error('CONTEXT_TAB_DENIED');if(!tab.context||!equalSecret(v.contextHandle,tab.context.contextHandle))throw new Error('CONTEXT_REVISION_STALE');tab.epoch=next(tab.epoch);tab.selectionRevision=next(tab.selectionRevision);tab.context=null;tab.selection=null;return {outcome:'CONTEXT_RETIRED',executionAuthorityGranted:false,effectsProduced:false};},
   close(){if(closed)return;closed=true;tabs.clear();},
