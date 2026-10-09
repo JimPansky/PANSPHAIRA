@@ -10,7 +10,7 @@ test('optional origin/session surface has one additive source owner and real bro
   const graph = load('verification/verification-dag-v2.json');
   const owners = graph.nodes.filter(n => n.id === 'pan527-origin-session-v1');
   assert.equal(owners.length, 1, 'new optional executable surface must be registered, not merely published');
-  assert.equal(graph.graphVersion, 97);
+  assert.equal(graph.graphVersion, 98);
   const owner = owners[0];
   assert.deepEqual(owner.dependsOn, ['pan526-portable-runtime-v1']);
   assert.deepEqual(owner.ownedTests, ['npm run pan527:test']);
@@ -27,8 +27,8 @@ test('optional origin/session surface has one additive source owner and real bro
     assert.equal(manifest.has(row.path), false, 'legacy runnable payload remains unchanged; new surface is source evidence');
     assert.ok(builder.includes(JSON.stringify(row.path)), row.path);
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: 'verification/verification-dag-v2.json', baseSha: '1'.repeat(40), headSha: '2'.repeat(40), changedPaths: [row.path], observedInputDigests });
-    assert.deepEqual(plan.selectedNodes, [owner.id, 'pan528-guided-native-browser-v1', "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]);
-    assert.deepEqual(plan.selectedTests, ['npm run pan527:test', 'npm run pan528:test', "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan549:test", "npm run pan563:test"]);
+    assert.deepEqual(plan.selectedNodes, [owner.id, 'pan528-guided-native-browser-v1', "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan548-authentic-context-selection-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]);
+    assert.deepEqual(plan.selectedTests, ['npm run pan527:test', 'npm run pan528:test', "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan548:test", "npm run pan549:test", "npm run pan563:test"]);
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a,b) => a.localeCompare(b,'en')));
   }
   const pkg = load('package.json');

@@ -76,3 +76,9 @@ footer { color: #425b6b; border-top: 1px solid #cbd6de; padding: 1rem 1.5rem; fo
   .notification-row, [data-notification="read-diff"] { border-left-width: 2px; }
   .notification-controls button, [data-notification="read-diff"] button, .notification-preferences button { padding-inline: .5rem; margin-inline: 0; }
 }
+[id="shell.context-selection"] { margin: 0 1.5rem 1.5rem; padding: 1rem; min-width: 0; max-width: calc(100% - 3rem); border: 1px solid #cbd6de; border-left: 4px solid #456c83; border-radius: .5rem; background: #fff; }
+[id="shell.context-selection"] fieldset { min-width: 0; max-width: 100%; display: flex; flex-wrap: wrap; gap: .75rem; padding: .5rem; }
+[id="shell.context-selection"] legend { max-width: 100%; hyphens: auto; }
+[id="shell.context-selection"] button { max-width: 100%; min-width: 0; flex: 1 1 16rem; }
+[id="shell.context-selection"] button[aria-pressed="true"] { background: #dbeaf2; border-color: #173b51; }
+@media (max-width: 680px) { [id="shell.context-selection"] { margin: 0 1rem 1rem; max-width: calc(100% - 2rem); padding: .75rem; } }

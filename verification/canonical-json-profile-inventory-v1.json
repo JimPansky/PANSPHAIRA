@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "fe535264d8d8fb1030123bb319a15a0019c4e190253e957731336f6200a56aef"
+        "sha256": "e1e40fa3617276c2ca754a8c3c878cb5abc94b9e47d5aa1bc6ecd2d695b7a2f3"
       }
     ]
   },
@@ -683,6 +683,14 @@
       "fromSha256": "2866ad96c9f3e8818e2f460ef21e389251f2904d671e7e1770572b58d62c96d8",
       "toSha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644",
       "reason": "Advance graph97 with one bounded read-only native STOCK/result owner consuming existing PAN520, local Usage Insights and shared shell. Preserve all101 prior owner semantics, every hard gate, immutable base obligations, all historical migrations and the unchanged mechanical scanner. Register only fourteen source-only members and one fixed native/cohort/protected/browser entry; no legacy payload expansion, query engine, consent/transport or execution authority. Early counterpart descriptor bytes remain historical; local measurements do not imply frozen canonical, CI, paired KS, release or closure acceptance."
+    },
+    {
+      "migrationId": "PAN548-EARLY-AUTHENTIC-CONTEXT-SELECTION/INTEGRITY-GENERATOR/V75",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 75,
+      "fromSha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644",
+      "toSha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa",
+      "reason": "Advance graph98 with exactly one additive early DUI-02 authentic native context/selection owner. Preserve all102 previous owners and hard gates, immutable base obligations, every historical migration, unchanged scanner/validator and legacy runnable payload membership. Bind the fixed complete contract/native/expiry/reentrancy/browser/registration entry and narrow source-only members. No inference, task/view mutation, second registry, production or whole548/546 delivery authority; actual review, canonical CI, protected merge and exact release readback remain separate gates."
     }
   ],
   "scanScope": {
@@ -725,15 +733,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1064,
+    "filesScanned": 1075,
     "declarationSites": 37,
     "declarationFiles": 37,
     "importSites": 306,
     "importFiles": 305,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2560,
-    "ledgerUniquePaths": 2560
+    "ledgerEntries": 2572,
+    "ledgerUniquePaths": 2572
   },
   "profiles": [
     {
@@ -806,7 +814,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644"
+      "sha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1572,7 +1580,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644",
+      "sha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa",
       "basis": "profile-version-migration"
     },
     {

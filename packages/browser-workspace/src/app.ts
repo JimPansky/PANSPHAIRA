@@ -11,6 +11,7 @@ import { createWorkspaceProfileEditorV1 } from "./profile-editor-v1.js";
 import type { BrowserProfileReadV1 } from "../../contracts/src/browser-profile-v1.js";
 import { createWorkspaceNotificationsV1 } from "./notifications-v1.js";
 import { analysisPluginV1, createAnalysisViewV1 } from "./plugin-analysis-v1.js";
+import { createWorkspaceContextSelectionV1 } from "./context-selection-v1.js";
 const element = (id: string): HTMLElement => { const node = document.getElementById(id); if (!node) throw new Error("SHELL_SLOT_MISSING"); return node; };
 async function start() {
   const scope = /^\/t\/([a-z0-9][a-z0-9-]{0,63})\/workspace$/.exec(location.pathname); if (!scope) throw new Error("WORKSPACE_ROUTE_DENIED");
@@ -39,7 +40,15 @@ async function start() {
       if (item) node.classList.add("profile-" + item.size);
       node.hidden = !item?.visible || (id === "pan.erv.information" && !invoice);
     }
-    for (const item of value.profile.items) { const card = cards.get(item.id); if (card) canvas.append(card); }
+    // MAIN is the stable native analysis attachment. Reorder the other cards
+    // around it, and do not manufacture removal/reinsert records for an
+    // unchanged profile. Permanent retirement of genuinely removed roots stays.
+    let next: ChildNode | null = null;
+    for (const item of [...value.profile.items].reverse()) {
+      const card = cards.get(item.id); if (!card) continue;
+      if (card !== main && (card.parentNode !== canvas || card.nextSibling !== next)) canvas.insertBefore(card, next);
+      next = card;
+    }
     const size = value.effectiveItems.find(i => i.id === "pan.erv.information")?.size ?? "regular";
     canvas.classList.remove("panel-compact", "panel-regular", "panel-large"); canvas.classList.add("panel-" + size);
     canvas.classList.toggle("panel-open", !panel.hidden);
@@ -63,6 +72,8 @@ async function start() {
     if (after.status !== 200 || binding?.tenantId !== context.tenantId || binding.sessionId !== context.sessionId) return { status: 401, value: null };
     return response;
   } });
+  const contextSelection = document.body.dataset.ownerContextSelection === "true"
+    ? createWorkspaceContextSelectionV1({ root: element("shell.context-selection"), base, context: owner.context, signal: lifetime.signal }) : null;
   let registry: ReturnType<typeof createBrowserShellRegistryV1<HTMLElement>>;
   const api: WorkspaceViewApiV1 = Object.freeze({ context: owner.context, read: owner.read, invoice: () => invoice,
     rememberInvoice(value: BrowserErvReadV1) { invoice = value; document.body.dataset.nativeRevision = String(value.revision); },
@@ -121,42 +132,67 @@ async function start() {
       const c = owner.context(); location.hash = buildBrowserDeepLinkV1({ path: "/workspace/erv", tenantId: c.tenantId, sessionId: c.sessionId, objectId: value.invoice.invoiceId, revision: value.invoice.revision });
     },
   });
-  function disposal() { owner.onDispose(() => { panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
+  function disposal() { owner.onDispose(() => { contextSelection?.retire(); panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
+  let latestActivation: object | null = null;
+  function captureActivation(invocation: object) {
+    const binding = owner.context(), nativeContextEpoch = contextSelection?.epoch();
+    return { binding, nativeContextEpoch, live: () => latestActivation === invocation && !lifetime.signal.aborted
+      && owner.context() === binding && contextSelection?.epoch() === nativeContextEpoch };
+  }
   async function activate() {
+    const invocation = Object.freeze({}); latestActivation = invocation;
+    contextSelection?.retire();
     const current = owner.context(); let selected: BrowserDeepLinkV1;
     try { selected = parseBrowserDeepLinkV1(location.hash || "#/workspace/setup", current, registry.routes().filter(r => r.state === "REGISTERED").map(r => r.path!)); }
     catch {
       owner.switchContext({ ...current, objectId: null, revision: current.revision + 1 }); disposal();
+      const activation = captureActivation(invocation); if (!activation.live()) return;
       void notifications?.refresh();
       main.hidden = false;
       main.append(text("h1", "Deep Link verweigert"), text("p", "Route, Tenant, Session, Objektparameter oder Version sind nicht gültig. Keine Anfrage an einen fremden Tenant."));
       showStates("Deep Link verweigert — terminaler Zustand. Persönliche Hinweise werden unabhängig mit der aktuellen Session geprüft.");
-      for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
+      for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
+        const rendered = await registry.render(c.id, nav); if (!activation.live() || rendered.outcome === "STALE_RENDER") return;
+      }
       return;
     }
     link = selected;
     owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : selected.path === "/workspace/analysis" ? selected.objectId ?? "analysis:common-trade-01:stock" : null, revision: current.revision + 1 }); disposal();
+    const activation = captureActivation(invocation); if (!activation.live()) return;
     document.body.dataset.contextRevision = String(owner.context().revision); document.body.dataset.nativeRevision = "unknown";
     void notifications?.refresh();
     showStates("Lesender Arbeitsplatz. Pluginmetadaten gewähren keine Backendrechte.");
-    for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
+    for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
+      const rendered = await registry.render(c.id, nav); if (!activation.live() || rendered.outcome === "STALE_RENDER") return;
+    }
     const plugin = plugins.find(p => p.contributions.some(c => c.kind === "ROUTE" && c.path === selected.path));
     const view = plugin?.contributions.find(c => c.kind === "VIEW"); if (!view) throw new Error("WORKSPACE_VIEW_MISSING");
+    const nativeContextEpoch = activation.nativeContextEpoch;
     const target = document.createElement("section"); main.append(target); const result = await registry.render(view.id, target);
-    if (result.outcome !== "RENDERED") { if (result.outcome !== "STALE_RENDER") target.append(text("p", "Pluginansicht konnte nicht gerendert werden.")); return; }
-    if (invoice && owner.context().objectId === invoice.invoiceId) {
-      await registry.render("pan.erv.action", actions);
-      const anchor = text("a", "Deep Link zum aktuellen Rechnungsvorgang") as HTMLAnchorElement;
-      anchor.href = buildBrowserDeepLinkV1({ path: selected.path, tenantId: current.tenantId, sessionId: current.sessionId, objectId: invoice.invoiceId, revision: invoice.revision }); actions.append(anchor);
+    if (!activation.live()) return;
+    if (result.outcome !== "RENDERED") { if (result.outcome !== "STALE_RENDER") { target.append(text("p", "Pluginansicht konnte nicht gerendert werden.")); if (nativeContextEpoch !== undefined) contextSelection?.unavailable(nativeContextEpoch); } return; }
+    // Optional context transport must not hold the existing native actions,
+    // deep link, navigation or logout hostage to a slow/failed context request.
+    const readback = invoice;
+    const nativeInvoice = readback && selected.path === "/workspace/erv" && activation.binding.objectId === readback.invoiceId
+      ? { objectId: readback.invoiceId, revision: readback.revision } : null;
+    if (contextSelection && nativeContextEpoch !== undefined) void contextSelection.bind({ localEpoch: nativeContextEpoch, moduleId: plugin!.id, viewId: view.id,
+      primaryObjectId: nativeInvoice?.objectId ?? null, domainRevision: nativeInvoice?.revision ?? null });
+    if (nativeInvoice) {
+      const action = await registry.render("pan.erv.action", actions); if (!activation.live()) return;
+      if (action.outcome === "RENDERED") {
+        const anchor = text("a", "Deep Link zum aktuellen Rechnungsvorgang") as HTMLAnchorElement;
+        anchor.href = buildBrowserDeepLinkV1({ path: selected.path, tenantId: activation.binding.tenantId, sessionId: activation.binding.sessionId, objectId: nativeInvoice.objectId, revision: nativeInvoice.revision }); actions.append(anchor);
+      }
     }
     if (presentation) applyPresentation(presentation);
-    if (target.isConnected && !main.hidden && !element("shell.notifications").contains(document.activeElement)) main.focus();
+    if (activation.live() && target.isConnected && !main.hidden && !element("shell.notifications").contains(document.activeElement)) main.focus();
   }
   disposal(); window.addEventListener("hashchange", () => { void activate(); }, { signal: lifetime.signal });
   element("shell.logout").addEventListener("click", async () => {
     const response = await fetch(base + "/workspace/logout", { method: "POST", credentials: "same-origin" });
     if (response.status !== 200) { widget.textContent = "Abmelden nicht bestätigt. Keine Erfolgsmeldung."; return; }
-    owner.close(); registry.close(); lifetime.abort(); invoice = null; nav.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true;
+    contextSelection?.close(); owner.close(); registry.close(); lifetime.abort(); invoice = null; nav.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true;
     main.hidden = false;
     main.replaceChildren(text("h1", "Abgemeldet"), text("p", "Die aktuelle Session wurde serverseitig widerrufen."));
     (element("shell.logout") as HTMLButtonElement).disabled = true; widget.textContent = "Session beendet.";

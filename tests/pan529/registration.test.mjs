@@ -11,7 +11,7 @@ test("PAN529 native template and budget have one additive owner in authoritative
   const owners = graph.nodes.filter((node) => node.id === "pan529-runtime-budget-v1");
   assert.equal(owners.length, 1, "Native H05 executable source must have its actual canonical owner");
   const owner = owners[0];
-  assert.equal(graph.graphVersion, 97);
+  assert.equal(graph.graphVersion, 98);
   assert.deepEqual(owner.dependsOn, ["pan526-portable-runtime-v1"]);
   assert.deepEqual(owner.ownedTests, ["npm run pan529:test"]);
   assert.equal(owner.riskClass, "HIGH"); assert.equal(owner.globalInvalidation, false);

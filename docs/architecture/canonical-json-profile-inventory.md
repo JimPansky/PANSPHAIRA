@@ -140,6 +140,22 @@ current renderer/build pins. Registration and local native/browser measurements
 are not frozen canonical/CI, actual KS composition, release/archive/event or
 original closure acceptance, nor new consent, transport or execution authority.
 
+## DUI-02 early authentic context registration (profile75)
+
+PAN548 adds exactly one context-selection owner at graph98, retaining all102
+previous owners and every hard gate. The unchanged scanner measures1075 source
+files; the complete fixed reentrancy fixture adds the2572nd unique checksum member.
+Declaration/import/reexport/similar-shape dimensions remain37/306-in305/7/30,
+with21 immutable base obligations and13 admitted pinned profiles. Explicit
+integrity-generator migration V75 preserves all earlier migrations and digests.
+The legacy runnable manifest remains1792 paths; new context members are exact
+SOURCE_EVIDENCE_ONLY entries, not a turnkey package or inference/view-write grant.
+Registry oracles retain strict exact generation/count and required-selection
+assertions, extended additively for the new owner. Updating the mandatory video
+registry oracle is not resuming the paused video project. These measured local
+bindings are neither whole548/546 delivery nor review, canonical CI, merge,
+release or human/device acceptance.
+
 ## Fresh census vs historical hints
 
 Historical lexical counts (81 declarations / 80 files; 172 import sites /

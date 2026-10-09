@@ -37,12 +37,14 @@ export function createBrowserContextOwnerV1(options: {
   if (!options || typeof options.readBackend !== "function") throw new Error("CONTEXT_BACKEND_OWNER_REQUIRED");
   let current = checkedContext(options.initialContext);
   let epoch = 0; let closed = false;
-  const pending = new Set<AbortController>(); const disposals = new Set<() => void>();
+  const pending = new Set<AbortController>(); const disposals = new Map<() => void, object>();
   function ensureOpen() { if (closed) throw new Error("CONTEXT_OWNER_CLOSED"); }
   function retire() {
-    for (const controller of pending) controller.abort();
-    pending.clear();
-    const owned = [...disposals]; disposals.clear();
+    const controllers = [...pending]; pending.clear();
+    const owned = [...disposals.keys()]; disposals.clear();
+    // Snapshot and clear both collections before callbacks. New-context reads
+    // and listener registrations created by retirement are not old work.
+    for (const controller of controllers) controller.abort();
     let failures = 0;
     for (const dispose of owned) { try { dispose(); } catch { failures++; } }
     return Object.freeze({ disposedListeners: owned.length, disposalFailures: failures });
@@ -52,8 +54,11 @@ export function createBrowserContextOwnerV1(options: {
     onDispose(dispose: () => void) {
       ensureOpen();
       if (typeof dispose !== "function" || disposals.size >= 64) throw new Error("CONTEXT_DISPOSAL_DENIED");
-      disposals.add(dispose);
-      return () => { disposals.delete(dispose); };
+      // Preserve per-lifetime callback deduplication, but a retired unregister
+      // closure must never delete the same callback registered for a new life.
+      const registration = disposals.get(dispose) ?? Object.freeze({});
+      disposals.set(dispose, registration);
+      return () => { if (disposals.get(dispose) === registration) disposals.delete(dispose); };
     },
     switchContext(next: unknown) {
       ensureOpen();
@@ -71,10 +76,16 @@ export function createBrowserContextOwnerV1(options: {
       try {
         const response = await options.readBackend(binding, controller.signal);
         if (closed || controller.signal.aborted || requestEpoch !== epoch) return { outcome: "STALE_CONTEXT", value: null };
-        if (response.status === 401 || response.status === 403) return { outcome: "DENIED", value: null };
-        if (response.status !== 200) return { outcome: "BACKEND_UNAVAILABLE", value: null };
+        // The adapter is trusted, but lazy status/value access can reenter the
+        // owner. Sample each field once and check lifetime after each access.
+        const status = response.status;
+        if (closed || controller.signal.aborted || requestEpoch !== epoch) return { outcome: "STALE_CONTEXT", value: null };
+        if (status === 401 || status === 403) return { outcome: "DENIED", value: null };
+        if (status !== 200) return { outcome: "BACKEND_UNAVAILABLE", value: null };
+        const value = response.value;
+        if (closed || controller.signal.aborted || requestEpoch !== epoch) return { outcome: "STALE_CONTEXT", value: null };
         // Receiving JSON is not Ready, mutation completion, permission or a proposal apply.
-        return { outcome: "READBACK_RECEIVED", context: binding, value: response.value, grantedRights: Object.freeze([]) };
+        return { outcome: "READBACK_RECEIVED", context: binding, value, grantedRights: Object.freeze([]) };
       } catch {
         return { outcome: closed || controller.signal.aborted || requestEpoch !== epoch ? "STALE_CONTEXT" : "BACKEND_UNAVAILABLE", value: null };
       } finally { pending.delete(controller); }
