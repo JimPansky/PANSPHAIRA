@@ -24,6 +24,17 @@ try{
   // sharding, output destinations or setup hooks. Ordinary runtime flags are
   // not denied merely because their values contain a similar substring.
   const nodeOptions=nodeOptionTokens(process.env.NODE_OPTIONS??'');
+  // Only closed non-executable runtime options reach build/test children.
+  // Startup hooks can exit a test worker before it registers any assertions.
+  for(let i=0;i<nodeOptions.length;i++){
+   const token=nodeOptions[i],equal=token.indexOf('='),name=(equal<0?token:token.slice(0,equal)).replaceAll('_','-');
+   if(['--trace-warnings','--no-trace-warnings','--warnings','--no-warnings'].includes(name)){
+    if(equal>=0)throw new Error('PAN549_TEST_ARGUMENT_DENIED');continue;
+   }
+   if(!['--conditions','-C','--max-old-space-size','--max-semi-space-size'].includes(name))throw new Error('PAN549_TEST_ARGUMENT_DENIED');
+   const value=equal<0?nodeOptions[++i]:token.slice(equal+1);
+   if(typeof value!=='string'||!value.length||(!['--conditions','-C'].includes(name)&&!/^[1-9][0-9]*$/.test(value)))throw new Error('PAN549_TEST_ARGUMENT_DENIED');
+  }
   // Node24 suppresses nested runners when this internal marker is present,
   // including an empty value; never accept a successful zero-file invocation.
   if(args.length||process.env.NODE_TEST_CONTEXT!==undefined||nodeOptions.some(token=>/^--(?:no-)?(?:experimental-)?test(?:-|$)/.test(token.replaceAll('_','-'))))throw new Error('PAN549_TEST_ARGUMENT_DENIED');

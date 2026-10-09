@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdtempSync,writeFileSync,rmSync} from 'node:fs';
 import {spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const entry='scripts/run-pan549-native-analysis-tests.mjs';
@@ -24,8 +24,20 @@ test('PUI-08 registration: selection, skip and missing owned scratch deny before
   const denied=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:markerEnv});assert.equal(denied.error,undefined);assert.notEqual(denied.status,0,JSON.stringify(marker));assert.match(denied.stderr,/PAN549_TEST_ARGUMENT_DENIED/,JSON.stringify(marker));assert.equal(denied.stdout,'',JSON.stringify(marker));
   const list=spawnSync(process.execPath,[entry,'--list'],{encoding:'utf8',timeout:45000,env:markerEnv});assert.equal(list.error,undefined);assert.equal(list.status,0,list.stderr);assert.deepEqual(JSON.parse(list.stdout),files);assert.equal(list.stderr,'');
  }
+ const scratch=probeEnv.TMPDIR||probeEnv.RUNNER_TEMP;assert.ok(scratch,'PAN549_OWNED_SCRATCH_REQUIRED');const hooks=mkdtempSync(scratch+'/pan549-admission-hooks-');
+ try{
+  const esm=hooks+'/exit-test-worker.mjs',cjs=hooks+'/exit-test-worker.cjs';const code="if(process.argv.slice(1).some(path=>path.endsWith('.test.mjs')))process.exit(0);\n";writeFileSync(esm,code);writeFileSync(cjs,code);
+  for(const options of ['--import='+esm,'--im"port"='+esm,'--require='+cjs,'--re"quire"='+cjs,'-r '+cjs,'--loader='+esm,'--experimental-loader='+esm,'--experimental_loader='+esm,'--trace-require-module=all']){
+   const denied=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...probeEnv,NODE_OPTIONS:options}});assert.equal(denied.error,undefined,options);assert.notEqual(denied.status,0,options);assert.match(denied.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.equal(denied.stdout,'',options);
+  }
+  // This attached short spelling is rejected by Node24 itself, before JS entry.
+  const unsupported=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...probeEnv,NODE_OPTIONS:'-r'+cjs}});assert.equal(unsupported.error,undefined);assert.notEqual(unsupported.status,0);assert.ok(unsupported.stderr.includes('-r'+cjs));assert.match(unsupported.stderr,/is not allowed in NODE_OPTIONS/);assert.equal(unsupported.stdout,'');
+ }finally{rmSync(hooks,{recursive:true});}
  const env={...probeEnv};delete env.TMPDIR;delete env.RUNNER_TEMP;const r=spawnSync(process.execPath,[entry],{encoding:'utf8',env});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/);
- const ordinary=spawnSync(process.execPath,[entry],{encoding:'utf8',env:{...env,NODE_OPTIONS:'--conditions=--test-not-a-control'}});assert.notEqual(ordinary.status,0);assert.match(ordinary.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/);assert.doesNotMatch(ordinary.stderr,/PAN549_TEST_ARGUMENT_DENIED/);assert.equal(ordinary.stdout,'');
+ for(const options of ['--conditions=--test-not-a-control','--conditions ordinary-runtime-condition','--conditions=--test-not-a-control --max_old_space_size=256 --trace-warnings']){
+  const ordinary=spawnSync(process.execPath,[entry],{encoding:'utf8',env:{...env,NODE_OPTIONS:options}});assert.notEqual(ordinary.status,0);assert.match(ordinary.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/,options);assert.doesNotMatch(ordinary.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.equal(ordinary.stdout,'');
+ }
+ const missingValue=spawnSync(process.execPath,[entry],{encoding:'utf8',env:{...env,NODE_OPTIONS:'--conditions --test-not-a-control'}});assert.notEqual(missingValue.status,0);assert.match(missingValue.stderr,/--conditions requires an argument/);assert.equal(missingValue.stdout,'');
 });
 test('PUI-08 registration: additive owner reuses actual native projection, existing cohort and shared shell without old owner or gate removal',()=>{
  const graph=JSON.parse(readFileSync('verification/verification-dag-v2.json','utf8')),owners=graph.nodes.filter(n=>n.id==='pan549-native-analysis-result-v1');assert.equal(owners.length,1,'PAN549_DERIVED_DAG_OWNER_MISSING');const owner=owners[0];

@@ -143,6 +143,12 @@ normalization, so embedded split quotes or escapes cannot select a partial suite
 An inherited NODE_TEST_CONTEXT is denied in execution mode even when its value
 is empty: Node24 checks its presence and otherwise suppresses all test files.
 The explicit --list mode remains a side-effect-free fixed-file enumeration.
+Execution admits only closed non-executable NODE_OPTIONS: conditions, positive
+integer old-/semi-space limits and warning-display switches, including their
+supported underscore spelling. Import/require/loader hooks and unknown options
+are denied before evidence, preparation or child work. A trusted Node/npm parent
+is required: this entry is not a hostile-host sandbox and cannot undo code that
+an adversarial preload already ran before JavaScript admission.
 The owned scratch is TMPDIR or an explicitly supplied RUNNER_TEMP, never an
 implicit system-temp fallback. A direct development browser invocation must
 also supply PAN527_BROWSER_MODULE, PAN527_CERTUTIL, PLAYWRIGHT_BROWSERS_PATH and
