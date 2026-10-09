@@ -137,7 +137,9 @@ export function createNativeErvHumanBackendV1(options){
           receipt:confirmed?event:null,readback,newDecisionEffect:false,executionAuthorityGranted:false});
       });
     },
-    decide(headers,command){
+    decide(headers,command,verifyAtCommit){
+      // An optional code-owner restriction, never a JSON authority/grant.
+      if(verifyAtCommit!==undefined&&typeof verifyAtCommit!=='function')fail('ERV_HUMAN_COMMIT_GUARD_DENIED');
       closed(command,['schemaVersion','invoiceId','effectId','transportId','expectedNativeRevision','expectedProposalRevision','proposalDigest','action'],'ERV_HUMAN_COMMAND_SHAPE_DENIED');
       if(command.schemaVersion!=='pansphaira.erv-human/decision/v1'||!['effectId','transportId'].every(k=>typeof command[k]==='string'&&/^synthetic:[a-z0-9-]{3,64}$/.test(command[k])))fail('ERV_HUMAN_COMMAND_SHAPE_DENIED');
       const principal=sessions.authorizeMutation(headers);
@@ -166,6 +168,11 @@ export function createNativeErvHumanBackendV1(options){
           tenantId:principal.tenantId,subjectId:principal.subjectId,invoiceId:command.invoiceId,proposalDigest:before.proposalDigest,action:command.action});
         const journalRoot=join(root,'pan453-owned-v2');
         if(readLocalJournalTaskIdentity(journalRoot).identities[taskIdentityDigest])fail('ERV_HUMAN_TASK_FENCED_RECONCILE_REQUIRED');
+        // BEGIN IMMEDIATE can wait for another REAL SQLite writer. The initial
+        // check is not current consent/session authority after that wait.
+        const atCommitPrincipal=sessions.authorizeMutation(headers);
+        if(canonicalJson(atCommitPrincipal)!==canonicalJson(principal))fail('ERV_HUMAN_PRINCIPAL_BINDING_DENIED');
+        verifyAtCommit?.(before);
         const taskBinding=recordLocalJournalTaskIdentity(journalRoot,{taskIdentityDigest,
           operationKey:'admin-ai:poc:erv-human:pan542:'+command.effectId,handleDigest:digest({taskIdentityDigest,effectId:command.effectId}),boundAtMs:Date.now()});
         const core={schemaVersion:'pansphaira.erv-human/event/v1',ordinal:h.ordinal+1,bindingDigest:record.bindingDigest,taskBinding,

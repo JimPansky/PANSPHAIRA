@@ -3075,6 +3075,40 @@ pan548Node.inputs = pan548Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan548:test")) repositoryIntegrityNode.ownedTests.push("npm run pan548:test");
 dag.graphVersion = 98;
 
+// PAN546: additive personal module views + connected native Human browser use
+// the existing shell/profile owner. No duplicate node, payload or global gate.
+const pan546Inputs = [
+  ["docs/architecture/native-module-view-human-browser-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/contracts/src/workspace-module-view-v1.ts", "CONTRACT"],
+  ["packages/contracts/src/workspace-erv-human-v1.ts", "CONTRACT"],
+  ["packages/browser-workspace/src/module-view-native-v1.ts", "SOURCE"],
+  ["packages/browser-workspace/src/module-view-editor-v1.ts", "SOURCE"],
+  ["packages/browser-workspace/src/module-view-v1.css", "SOURCE"],
+  ["packages/browser-workspace/src/erv-human-v1.ts", "SOURCE"],
+  ["src/pan546/native-data-catalog.mjs", "SECURITY"],
+  ["src/pan546/native-view-owner.mjs", "SECURITY"],
+  ["src/pan546/native-human-workspace.mjs", "SECURITY"],
+  ["scripts/run-pan546-native-view-human-tests.mjs", "VALIDATOR"],
+  ["tests/pan546/module-view.test.mjs", "VALIDATOR"],
+  ["tests/pan546/native-view.test.mjs", "VALIDATOR"],
+  ["tests/pan546/transport.test.mjs", "VALIDATOR"],
+  ["tests/pan546/native-association.test.mjs", "VALIDATOR"],
+  ["tests/pan546/reservation-native.test.mjs", "VALIDATOR"],
+  ["tests/pan546/native-human-workspace.test.mjs", "VALIDATOR"],
+  ["tests/pan546/native-references.test.mjs", "VALIDATOR"],
+  ["tests/pan546/browser-view.test.mjs", "VALIDATOR"],
+  ["tests/pan546/browser-human.test.mjs", "VALIDATOR"],
+  ["tests/pan546/browser-human-combined.test.mjs", "VALIDATOR"],
+  ["tests/pan546/registration.test.mjs", "VALIDATOR"],
+  ["tests/pan546/native-fixture.mjs", "VALIDATOR"],
+  ["tests/pan546/browser-fixture.mjs", "VALIDATOR"],
+  ["tests/pan546/native-profile-reservation-probe.mjs", "VALIDATOR"],
+  ["tests/pan546/native-human-reservation-probe.mjs", "VALIDATOR"],
+];
+pan541Node.inputs.push(...pan546Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)})));
+pan541Node.ownedTests.push("npm run pan546:test");
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan546:test")) repositoryIntegrityNode.ownedTests.push("npm run pan546:test");
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -3139,6 +3173,7 @@ for (const [inputPath] of pan542Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan544Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan549Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan548Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan546Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

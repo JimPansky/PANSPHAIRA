@@ -351,3 +351,23 @@ original admitted bytes and the non-equivalence stance are unchanged.
 
 This metadata refresh does not waive any tests, native boundary checks,
 review, whole-canonical, CI, release or anonymous product-readback gates.
+
+## PAN546 additive personal view and connected Human registration (profile76)
+
+Profile76 retains graph98 and all103 existing owners and hard gates. The fixed
+complete native/shared-contract/browser entry and26 exact source-only members
+are additive to the existing shell/profile owner; the legacy runnable manifest
+is unchanged. Every old selected test remains selected, including the newly
+required pan546:test command in affected dependency closures.
+
+The actual unchanged mechanical scanner observes1099 source files,
+37 declaration sites/files,307 import sites/306 import files,7 reexports,
+30 similar-shape sites and2598 unique checksum paths. All21 byte obligations,
+13 pinned-profile files, immutable base obligations, historical migrations,
+scanner/validator and negative tests remain unchanged; only the explicit
+current generator migration and observed census bindings advance.
+
+This is mechanical inventory, not a runtime, native/browser, image, CI,
+WholeCanonical, real-model, KS-composition, merge, release or delivery PASS.
+The actual425 stale-census/selection failures remain historical evidence;
+the required current metadata tests must exercise these new exact bytes.

@@ -48,7 +48,7 @@ test('portable runtime owns its actual opt-in product bytes without replacing le
     assert(builder.includes(JSON.stringify(row.path)), row.path);
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: 'verification/verification-dag-v2.json', baseSha: '1'.repeat(40), headSha: '2'.repeat(40), changedPaths: [row.path], observedInputDigests });
     assert.deepEqual(plan.selectedNodes, [node.id, "pan527-origin-session-v1", "pan528-guided-native-browser-v1", "pan529-runtime-budget-v1", "pan541-shared-browser-shell-v1", "pan542-native-erv-human-v1", "pan544-native-notifications-v1", "pan548-authentic-context-selection-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]);
-    assert.deepEqual(plan.selectedTests, ['npm run pan526:test', 'npm run pan527:test', 'npm run pan528:test', 'npm run pan529:test', "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan548:test", "npm run pan549:test", "npm run pan563:test"]);
+    assert.deepEqual(plan.selectedTests, ['npm run pan526:test', 'npm run pan527:test', 'npm run pan528:test', 'npm run pan529:test', "npm run pan541:test", "npm run pan542:test", "npm run pan543:test", "npm run pan544:test", "npm run pan546:test", "npm run pan548:test", "npm run pan549:test", "npm run pan563:test"]);
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a,b) => a.localeCompare(b,'en')));
   }
   const pkg = load('package.json');

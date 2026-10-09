@@ -12,6 +12,8 @@ import type { BrowserProfileReadV1 } from "../../contracts/src/browser-profile-v
 import { createWorkspaceNotificationsV1 } from "./notifications-v1.js";
 import { analysisPluginV1, createAnalysisViewV1 } from "./plugin-analysis-v1.js";
 import { createWorkspaceContextSelectionV1 } from "./context-selection-v1.js";
+import { createWorkspaceModuleViewEditorV1 } from "./module-view-editor-v1.js";
+
 const element = (id: string): HTMLElement => { const node = document.getElementById(id); if (!node) throw new Error("SHELL_SLOT_MISSING"); return node; };
 async function start() {
   const scope = /^\/t\/([a-z0-9][a-z0-9-]{0,63})\/workspace$/.exec(location.pathname); if (!scope) throw new Error("WORKSPACE_ROUTE_DENIED");
@@ -74,6 +76,11 @@ async function start() {
   } });
   const contextSelection = document.body.dataset.ownerContextSelection === "true"
     ? createWorkspaceContextSelectionV1({ root: element("shell.context-selection"), base, context: owner.context, signal: lifetime.signal }) : null;
+  const moduleViewEditor = document.body.dataset.ownerModuleViews === "true" && contextSelection
+    ? createWorkspaceModuleViewEditorV1({ main, context: contextSelection, signal: lifetime.signal }) : null;
+  if (document.body.dataset.ownerHumanDecisions === "true" && contextSelection) void import(base+"/workspace/erv-human/app.js")
+    .then(module=>{if(!lifetime.signal.aborted)module.createWorkspaceErvHumanV1({main,context:contextSelection,signal:lifetime.signal,refreshNativeSources:()=>moduleViewEditor?.refreshNativeSources()??Promise.resolve(true)});})
+    .catch(()=>{if(!lifetime.signal.aborted)main.append(text('p','Native Human-Browserkontrollen nicht verfügbar. Keine Fachentscheidung bestätigt; andere Module und Abmelden bleiben unabhängig.'));});
   let registry: ReturnType<typeof createBrowserShellRegistryV1<HTMLElement>>;
   const api: WorkspaceViewApiV1 = Object.freeze({ context: owner.context, read: owner.read, invoice: () => invoice,
     rememberInvoice(value: BrowserErvReadV1) { invoice = value; document.body.dataset.nativeRevision = String(value.revision); },

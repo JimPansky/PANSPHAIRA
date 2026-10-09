@@ -1,0 +1,30 @@
+/* Notebook/Prism: scoped cards, explicit editing and Before/After. Existing
+   retained shell/tokens stay; no concept autosave, framework or fake capability. */
+.module-view-editor { container: module-view / inline-size; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px solid #456c83; min-width: 0; }
+.module-view-boundary { padding: .75rem; background: #edf4f1; border-left: 3px solid #3c7464; }
+.module-view-editor > [role="status"] { padding: .75rem; background: #e5edf2; border-left: 4px solid #456c83; }
+.module-view-editor[data-state="WRITE_OUTCOME_UNCONFIRMED"] > [role="status"], .module-view-editor[data-state="SAVE_DENIED"] > [role="status"], .module-view-editor[data-state="NATIVE_VIEW_UNAVAILABLE"] > [role="status"] { background: #fff8ee; border-color: #9c4718; }
+.module-view-toolbar { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem; }
+.module-view-toolbar > button { max-width: 100%; }
+[id="shell.erv-human"] > select { width: 100%; min-width: 0; max-width: 100%; min-height: 44px; font: inherit; padding: .5rem; }
+[id="shell.erv-human"] > button { max-width: 100%; }
+.module-view-content, .module-view-before-after { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; min-width: 0; align-items: start; }
+.module-view-cards { display: flex; flex-direction: column; gap: .75rem; min-width: 0; }
+.module-view-card { border: 1px solid #cbd6de; border-radius: .6rem; padding: 1rem; background: #fff; min-width: 0; }
+.module-view-card[data-selected="true"] { border: 2px solid #164f7c; background: #f4f8fb; }
+.module-view-card > button { text-align: left; max-width: 100%; font-weight: 650; }
+.module-view-card[data-size="compact"] { padding: .75rem; }
+.module-view-card[data-size="large"] { padding: 1.5rem; min-height: 12rem; }
+.module-view-card p { font-size: .95rem; overflow-wrap: anywhere; }
+.module-view-properties { display: flex; flex-wrap: wrap; gap: .75rem; border: 1px solid #cbd6de; border-radius: .6rem; padding: 1rem; min-width: 0; }
+.module-view-properties legend { font-weight: 650; max-width: 100%; }
+.module-view-properties label, .module-view-properties select { flex-basis: 100%; min-width: 0; max-width: 100%; }
+.module-view-properties select { font: inherit; padding: .5rem; min-height: 44px; width: 100%; border: 1px solid #587b91; background: white; color: #182b3a; }
+.module-view-properties input[type="checkbox"] { width: 1.25rem; height: 1.25rem; }
+.module-view-properties button { max-width: 100%; flex: 1 1 10rem; }
+.module-view-comparison { margin-top: 1rem; padding: 1rem; border-left: 4px solid #9c4718; background: #fff8ee; }
+.module-view-comparison > button { margin: .5rem .5rem 0 0; max-width: 100%; }
+.module-view-before-after > section { padding: .75rem; border: 1px solid #cbd6de; background: white; min-width: 0; }
+.module-view-before-after ol { padding-left: 1.25rem; }
+.module-view-before-after li { margin-block: .5rem; overflow-wrap: anywhere; }
+@container module-view (min-width: 43rem) { .module-view-content { grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr); } .module-view-before-after { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
