@@ -10332,7 +10332,7 @@
         {
           "path": "docs/architecture/pan549-workspace-analysis-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "d9353debcd8a0b8abcdddf0f9f73dc3d3bb0b6e5a7e50ec4d386f505d3f9d97d"
+          "sha256": "454280131f3c5b9cb4cb34a1437ac0f7e28e02beb25a4d384f5be793a5f9aad9"
         },
         {
           "path": "packages/browser-workspace/src/analysis-v1.css",
@@ -10342,7 +10342,7 @@
         {
           "path": "packages/browser-workspace/src/plugin-analysis-v1.ts",
           "role": "SOURCE",
-          "sha256": "a07e969da5cb53d77b85e7662d4bb1ceb320a77cef5464e151bf98321da7eeb1"
+          "sha256": "cb59d573a6f9a86dc7d17594b86e280e832490cd4c7707ff906e774d88437805"
         },
         {
           "path": "packages/contracts/src/workspace-analysis-v1.ts",
@@ -10352,7 +10352,7 @@
         {
           "path": "scripts/run-pan549-native-analysis-tests.mjs",
           "role": "VALIDATOR",
-          "sha256": "823029e40fa00b41d03cda1e7ce86825250dd1b4b8c8027251486b0534a31c18"
+          "sha256": "95e15919565576781658aed8148d562d667b1e4e916e7678e0c5af4d13809151"
         },
         {
           "path": "src/pan549/native-analysis-read.mjs",
@@ -10372,7 +10372,7 @@
         {
           "path": "tests/pan549/browser-lifecycle-analysis.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "629032db00fdd3ba3f424ff913caedcd6ad416e69e83f66ae96ac5d8b91963c9"
+          "sha256": "9021f6f5d06697a795183f2196cfbbca84afc90b26566e27cfc050ffea38de67"
         },
         {
           "path": "tests/pan549/cohort-analysis.test.mjs",
@@ -10392,7 +10392,7 @@
         {
           "path": "tests/pan549/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "f13da75fb858beded639aa1fd354dda72aca7780d656a9a3342c9b814141bf48"
+          "sha256": "fd3cd739bbe3d5c9234270f5096f900a0d8eb62e4e5a3b8bad1c8cdad85f882f"
         }
       ],
       "ownedTests": [

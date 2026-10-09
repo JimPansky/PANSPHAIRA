@@ -11,18 +11,19 @@ const targetOwners=new WeakMap<HTMLElement,AnalysisTransactionV1>();
 // retires the captured attachment permanently, including detach/reattach within
 // one task. takeRecords closes the gap before observer callback delivery.
 function beginAnalysisTransactionV1(target:HTMLElement,externalCurrent:()=>boolean,signal?:AbortSignal):AnalysisTransactionV1{
- if(!target.isConnected||!externalCurrent()||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
+ if(typeof externalCurrent!=='function'||!target.isConnected||externalCurrent()!==true||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
  targetOwners.get(target)?.retire();
  const doc=target.ownerDocument,root=target.getRootNode(),ancestors=new Set<Node>();
- for(let node:Node|null=target;node;node=node.parentNode??(node instanceof ShadowRoot?node.host:null))ancestors.add(node);
+ for(let node:Node|null=target;node;node=node.parentNode??(node.nodeType===Node.DOCUMENT_FRAGMENT_NODE&&'host' in node?(node as ShadowRoot).host:null))ancestors.add(node);
+ const roots=new Set<Node>([doc,...Array.from(ancestors,node=>node.getRootNode())]);
  let retired=false;
  const removed=(records:MutationRecord[])=>{if(records.some(record=>Array.from(record.removedNodes).some(node=>ancestors.has(node))))owner.retire();};
  const observer=new MutationObserver(removed);
  const owner:AnalysisTransactionV1={
-  current(){removed(observer.takeRecords());return !retired&&targetOwners.get(target)===owner&&target.isConnected&&target.ownerDocument===doc&&target.getRootNode()===root&&!signal?.aborted&&externalCurrent();},
+  current(){removed(observer.takeRecords());return !retired&&targetOwners.get(target)===owner&&target.isConnected&&target.ownerDocument===doc&&target.getRootNode()===root&&!signal?.aborted&&externalCurrent()===true;},
   retire(){retired=true;observer.disconnect();signal?.removeEventListener('abort',owner.retire);if(targetOwners.get(target)===owner)targetOwners.delete(target);}
  };
- targetOwners.set(target,owner);observer.observe(doc,{childList:true,subtree:true});if(root!==doc)observer.observe(root,{childList:true,subtree:true});signal?.addEventListener('abort',owner.retire,{once:true});return owner;
+ targetOwners.set(target,owner);for(const capturedRoot of roots)observer.observe(capturedRoot,{childList:true,subtree:true});signal?.addEventListener('abort',owner.retire,{once:true});return owner;
 }
 function pendingAnalysisV1(target:HTMLElement,message:string){
  delete document.body.dataset.analysisResultRevision;target.classList.add('workspace-analysis');target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis','LOADING',message);
@@ -61,7 +62,7 @@ function commitAnalysisResultV1(target:HTMLElement,result:Awaited<ReturnType<typ
 
 // A read-backed direct consumer must supply its admitted selector. Integrity
 // alone is never enough to label unrelated native bytes as this read response.
-export async function renderWorkspaceAnalysisResultV1(target:HTMLElement,value:unknown,expected:WorkspaceAnalysisBindingV1,isCurrent:()=>boolean=()=>target.isConnected,selector:WorkspaceAnalysisReadV1){
+export async function renderWorkspaceAnalysisResultV1(target:HTMLElement,value:unknown,expected:WorkspaceAnalysisBindingV1,isCurrent:()=>boolean,selector:WorkspaceAnalysisReadV1){
  const owner=beginAnalysisTransactionV1(target,isCurrent);pendingAnalysisV1(target,'Ergebnisintegrität und aktuelle Bindung werden geprüft …');
  try{
   const result=await verifyWorkspaceAnalysisReadResultV1(value,expected,selector);if(!owner.current())throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');commitAnalysisResultV1(target,result);return result;

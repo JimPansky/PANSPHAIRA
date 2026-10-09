@@ -12,7 +12,7 @@ test('PUI-08 registration: complete fixed native, real cohort, protected ingress
 });
 test('PUI-08 registration: selection, skip and missing owned scratch deny before product work',()=>{
  for(const args of [['--skip-native'],[files[0]],['--list','--skip-browser']]){const r=spawnSync(process.execPath,[entry,...args],{encoding:'utf8'});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_TEST_ARGUMENT_DENIED/);}
- for(const options of ['--test-name-pattern=never','--test_name_pattern=never','--test_skip_pattern=.*','--test_only','--test-shard=1/6','--test_shard=1/6','"--test_name_pattern=never"']){
+ for(const options of ['--test-name-pattern=never','--test_name_pattern=never','--test_skip_pattern=.*','--test_only','--test-shard=1/6','--test_shard=1/6','"--test_name_pattern=never"','--test-"name-pattern"=(?!)','--test-"skip-pattern"=.*','--test-"shard"=1/6','--test-na"me"_pattern=(?!)','--test-"na\\me-pattern"=(?!)','--test-"only"','--test-rerun-failures=pan549-not-admitted-history','--test-global-setup=./pan549-not-admitted-hook.mjs','--test-isolation=none','--test-reporter=spec']){
   const filtered=spawnSync(process.execPath,[entry],{encoding:'utf8',timeout:45000,env:{...process.env,NODE_OPTIONS:options}});assert.equal(filtered.error,undefined);assert.notEqual(filtered.status,0,options);assert.match(filtered.stderr,/PAN549_TEST_ARGUMENT_DENIED/,options);assert.doesNotMatch(filtered.stdout,/PAN549_BROWSER_EVIDENCE_DIR=|TAP version|Subtest:/,options);
  }
  const env={...process.env};delete env.TMPDIR;delete env.RUNNER_TEMP;const r=spawnSync(process.execPath,[entry],{encoding:'utf8',env});assert.notEqual(r.status,0);assert.match(r.stderr,/PAN549_OWNED_SCRATCH_REQUIRED/);

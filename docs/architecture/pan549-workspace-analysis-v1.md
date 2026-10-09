@@ -18,8 +18,11 @@ branch names, matching shapes and similarly named fields are not selectors.
 - Browser-safe types and runtime checks:
   `packages/contracts/src/workspace-analysis-v1.ts`.
 - Renderer: `packages/browser-workspace/src/plugin-analysis-v1.ts#renderWorkspaceAnalysisResultV1`.
-  It returns a Promise; await it, supply the expected protected binding, a live
-  context predicate and the mandatory admitted selector as the fifth argument.
+  It returns a Promise; await it, supply the expected protected binding, an
+  explicit synchronous boolean live-context predicate as the fourth argument
+  and the mandatory admitted selector as the fifth argument. There is no
+  connectivity-only fallback; missing, Promise or other nonboolean predicates
+  cannot confirm a read.
   Omitted or malformed selectors and mismatched revisions/literal nullable
   cutoffs are denied; integrity-only bytes are not a confirmed read response.
   It verifies the complete bytes before displaying plain text in code-owned DOM
@@ -52,6 +55,8 @@ The direct renderer and integrated view share one target transaction owner.
 Every loading, terminal, fact and revision-marker update belongs to that owner.
 Captured target/ancestor removal permanently retires a pending transaction,
 even when the same DOM node is reattached before observer callback delivery.
+Every captured ancestor root is observed, including intermediate open/closed
+shadow roots; a nested host detach/reattach cannot revive the old transaction.
 The integrated view stages and verifies frozen result bytes first, then obtains
 the final live protected session confirmation. No asynchronous work remains
 between its last ownership/context checks and the synchronous fact commit.
@@ -128,8 +133,10 @@ Reproduce the complete fixed profile with the repository's locked dependencies,
 supported Linux x86-64 Node 24.14.1 / npm 11.16.0, invocation-owned scratch and
 the existing Playwright browser and certutil: `npm run pan549:test`.
 The public entry compiles TypeScript, builds the actual browser bundle and runs
-all six fixed test files; caller filters, browser/native skips and sharding are
-denied, including Node's underscore aliases and quoted NODE_OPTIONS selectors.
+all six fixed test files; caller filters, browser/native skips and test controls
+are denied, including sharding, rerun histories, setup hooks and output controls.
+NODE_OPTIONS uses the declared Node quote/escape grammar before underscore-alias
+normalization, so embedded split quotes or escapes cannot select a partial suite.
 The owned scratch is TMPDIR or an explicitly supplied RUNNER_TEMP, never an
 implicit system-temp fallback. A direct development browser invocation must
 also supply PAN527_BROWSER_MODULE, PAN527_CERTUTIL, PLAYWRIGHT_BROWSERS_PATH and

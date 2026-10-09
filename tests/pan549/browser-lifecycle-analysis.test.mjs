@@ -114,16 +114,16 @@ test('PUI-08 exported direct renderer clears prior facts on bad integrity and an
   const observed=await page.evaluate(async ({value,selector})=>{
    const {renderWorkspaceAnalysisResultV1:render}=await import('/owned-direct-analysis.js');
    const target=document.createElement('section');target.id='owned-direct-renderer';document.querySelector('main').append(target);
-   await render(target,value,value.binding,undefined,selector);const first=target.querySelectorAll('[data-analysis-value]').length;
+   await render(target,value,value.binding,()=>target.isConnected,selector);const first=target.querySelectorAll('[data-analysis-value]').length;
    const bad=structuredClone(value);bad.rows[0].value++;let rejected=false;
-   try{await render(target,bad,value.binding,undefined,selector);}catch{rejected=true;}
+   try{await render(target,bad,value.binding,()=>target.isConnected,selector);}catch{rejected=true;}
    const afterBad={cells:target.querySelectorAll('[data-analysis-value]').length,state:target.getAttribute('data-outcome')};
    const digest=crypto.subtle.digest.bind(crypto.subtle);let entered,release,firstDigest=true;
    const began=new Promise(resolve=>{entered=resolve;}),held=new Promise(resolve=>{release=resolve;});
    crypto.subtle.digest=async(...args)=>{const bytes=await digest(...args);if(firstDigest){firstDigest=false;entered();await held;}return bytes;};
    try{
-    const older=render(target,bad,value.binding,undefined,selector).then(()=>false,()=>true);await began;
-    await render(target,value,value.binding,undefined,selector);release();const oldRejected=await older;
+    const older=render(target,bad,value.binding,()=>target.isConnected,selector).then(()=>false,()=>true);await began;
+    await render(target,value,value.binding,()=>target.isConnected,selector);release();const oldRejected=await older;
     return {first,rejected,afterBad,oldRejected,finalCells:target.querySelectorAll('[data-analysis-value]').length,finalState:target.getAttribute('data-outcome')};
    }finally{release();crypto.subtle.digest=digest;}
   },{value:actual,selector});
@@ -156,10 +156,10 @@ test('PUI-08 exported read-backed renderer requires a complete matching selector
   const observed=await page.evaluate(async ({value,current,selector})=>{
    const {renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');const target=document.createElement('section');document.querySelector('main').append(target);const negatives=[];
    for(const admitted of [undefined,{}, {...selector,asOf:null},{...selector,asOf:'2026-07-01T00:00:00Z'},{...selector,expectedNativeRevision:999},{...selector,expectedResultRevision:'0'.repeat(64)}]){
-    await render(target,value,value.binding,undefined,selector);let denied=false;try{await render(target,value,value.binding,undefined,admitted);}catch{denied=true;}
+    await render(target,value,value.binding,()=>target.isConnected,selector);let denied=false;try{await render(target,value,value.binding,()=>target.isConnected,admitted);}catch{denied=true;}
     negatives.push({denied,cells:target.querySelectorAll('[data-analysis-value]').length,state:target.getAttribute('data-outcome')});
    }
-   await render(target,current,current.binding,undefined,{...selector,asOf:null});return {negatives,positive:target.getAttribute('data-outcome'),cells:target.querySelectorAll('[data-analysis-value]').length};
+   await render(target,current,current.binding,()=>target.isConnected,{...selector,asOf:null});return {negatives,positive:target.getAttribute('data-outcome'),cells:target.querySelectorAll('[data-analysis-value]').length};
   },{value,current,selector:directSelector549});
   assert.equal(observed.negatives.length,6);assert.ok(observed.negatives.every(x=>x.denied&&x.cells===0&&x.state==='UNKNOWN'));assert.equal(observed.positive,'READBACK_RECEIVED');assert.equal(observed.cells,6);f.unchanged();
  }finally{await live?.context.close();await f.close();}
@@ -174,7 +174,7 @@ test('PUI-08 direct and view entry points share one owner across older success a
    const {renderWorkspaceAnalysisResultV1:render,createAnalysisViewV1:create}=await import('/owned-reviewed-direct-analysis.js');const c=await (await fetch('/t/tenant-a/workspace/context')).json(),captured={...c,objectId:selector.objectId};const target=document.createElement('section');document.querySelector('main').append(target);
    const digest=crypto.subtle.digest.bind(crypto.subtle);let entered,release,first=true;const began=new Promise(r=>{entered=r;}),held=new Promise(r=>{release=r;});crypto.subtle.digest=async(...args)=>{const bytes=await digest(...args);if(first){first=false;entered();await held;}return bytes;};
    try{
-    const old=render(target,value,value.binding,undefined,selector).then(()=>false,()=>true);await began;const logout=await fetch('/t/tenant-a/workspace/logout',{method:'POST'});if(logout.status!==200)throw new Error('ACTUAL_NATIVE_LOGOUT_NOT_CONFIRMED');
+    const old=render(target,value,value.binding,()=>target.isConnected,selector).then(()=>false,()=>true);await began;const logout=await fetch('/t/tenant-a/workspace/logout',{method:'POST'});if(logout.status!==200)throw new Error('ACTUAL_NATIVE_LOGOUT_NOT_CONFIRMED');
     await create({base:'/t/tenant-a',context:()=>captured,selected:()=>null}).render({target,signal:new AbortController().signal});release();const rejected=await old;
     return {rejected,state:target.getAttribute('data-outcome'),cells:target.querySelectorAll('[data-analysis-value]').length};
    }finally{release();crypto.subtle.digest=digest;}
@@ -182,7 +182,7 @@ test('PUI-08 direct and view entry points share one owner across older success a
   const who=await live.login(f.issue());const fresh=f.reader.read({cookie:who.cookieHeader,origin:f.tls.origin},directSelector549);
   await page.route('**/workspace/analysis',async route=>{try{const actual=await forward549(f,route,s=>{s.sql='SELECT * FROM objects';});assert.equal(actual.status,400);read.resolve();await release.promise;await route.fulfill({status:actual.status,contentType:'application/json',body:actual.body});}catch(e){read.reject(e);throw e;}finally{done.resolve();}});
   await page.evaluate(async selector=>{const {createAnalysisViewV1:create}=await import('/owned-reviewed-direct-analysis.js');const c=await (await fetch('/t/tenant-a/workspace/context')).json();window.reviewedTarget=document.createElement('section');document.querySelector('main').append(window.reviewedTarget);window.reviewedView=create({base:'/t/tenant-a',context:()=>({...c,objectId:selector.objectId}),selected:()=>null}).render({target:window.reviewedTarget,signal:new AbortController().signal});},directSelector549);
-  await read.promise;await page.evaluate(async ({value,selector})=>{const {renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');await render(window.reviewedTarget,value,value.binding,undefined,selector);},{value:fresh,selector:directSelector549});release.resolve();await done.promise;
+  await read.promise;await page.evaluate(async ({value,selector})=>{const {renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');await render(window.reviewedTarget,value,value.binding,()=>window.reviewedTarget.isConnected,selector);},{value:fresh,selector:directSelector549});release.resolve();await done.promise;
   const final=await page.evaluate(async()=>{await window.reviewedView;return {state:window.reviewedTarget.getAttribute('data-outcome'),cells:window.reviewedTarget.querySelectorAll('[data-analysis-value]').length};});assert.deepEqual(final,{state:'READBACK_RECEIVED',cells:6});f.unchanged();
  }finally{release.resolve();await live?.context.close();await f.close();}
 });
@@ -196,7 +196,7 @@ test('UIDOD direct hash admission cannot revive a detached and reattached target
    for(const ancestor of [false,true]){
     const parent=document.createElement('div'),target=document.createElement('section');parent.append(target);document.querySelector('main').append(parent);
     const digest=crypto.subtle.digest.bind(crypto.subtle);let entered,release,first=true;const began=new Promise(r=>{entered=r;}),held=new Promise(r=>{release=r;});crypto.subtle.digest=async(...args)=>{const bytes=await digest(...args);if(first){first=false;entered();await held;}return bytes;};
-    try{const old=render(target,value,value.binding,undefined,selector).then(()=>false,()=>true);await began;const removed=ancestor?parent:target;removed.remove();document.querySelector('main').append(removed);release();const rejected=await old;results.push({rejected,cells:target.querySelectorAll('[data-analysis-value]').length});await render(target,value,value.binding,undefined,selector);results.at(-1).newCells=target.querySelectorAll('[data-analysis-value]').length;}finally{release();crypto.subtle.digest=digest;parent.remove();target.remove();}
+    try{const old=render(target,value,value.binding,()=>target.isConnected,selector).then(()=>false,()=>true);await began;const removed=ancestor?parent:target;removed.remove();document.querySelector('main').append(removed);release();const rejected=await old;results.push({rejected,cells:target.querySelectorAll('[data-analysis-value]').length});await render(target,value,value.binding,()=>target.isConnected,selector);results.at(-1).newCells=target.querySelectorAll('[data-analysis-value]').length;}finally{release();crypto.subtle.digest=digest;parent.remove();target.remove();}
    }return results;
   },{value,selector:directSelector549});assert.deepEqual(observed,[{rejected:true,cells:0,newCells:6},{rejected:true,cells:0,newCells:6}]);f.unchanged();
  }finally{await live?.context.close();await f.close();}
@@ -219,6 +219,40 @@ test('UIDOD native revocation during actual browser digest delivery is rechecked
   await page.evaluate(()=>{const digest=crypto.subtle.digest.bind(crypto.subtle);let first=true;window.actualDigestEntered=false;const held=new Promise(resolve=>{window.releaseActualDigest=resolve;});crypto.subtle.digest=async(...args)=>{const bytes=await digest(...args);if(first){first=false;window.actualDigestEntered=true;await held;}return bytes;};window.restoreActualDigest=()=>{crypto.subtle.digest=digest;};});
   await enter549(page);await page.waitForFunction(()=>window.actualDigestEntered);const cached=await page.locator('body').getAttribute('data-context-revision');assert.equal((await request527(f.tls,'/t/tenant-a/workspace/logout',{cookie:live.who.cookieHeader,origin:f.tls.origin},'POST')).status,200);assert.equal((await request527(f.tls,'/t/tenant-a/workspace/context',{cookie:live.who.cookieHeader})).status,401);
   await page.evaluate(()=>window.releaseActualDigest());await page.waitForFunction(()=>document.querySelector('[data-backend="analysis"]')?.getAttribute('data-outcome')!=='LOADING');assert.equal(await page.locator('[data-backend="analysis"]').getAttribute('data-outcome'),'DENIED');await noFacts(page);assert.equal(await page.locator('body').getAttribute('data-context-revision'),cached);await responsive549(page,'native-revoke-after-real-digest-denied',f,live.browser,{observerFault:'Held actual WebCrypto output only; real server logout revoked the native session while cached browser context stayed unchanged'});await page.evaluate(()=>window.restoreActualDigest());f.unchanged();
+ }finally{await live?.context.close();await f.close();}
+});
+
+test('UIDOD actual revoked native read without an explicit synchronous live predicate must not commit direct facts',async()=>{
+ const f=await browserFixture549();let live;
+ try{
+  live=await launch549(f);const page=await live.context.newPage();await start549(page,f);await directModule549(f,page);const value=f.reader.read({cookie:live.who.cookieHeader,origin:f.tls.origin},directSelector549);
+  assert.equal((await request527(f.tls,'/t/tenant-a/workspace/logout',{cookie:live.who.cookieHeader,origin:f.tls.origin},'POST')).status,200);assert.equal((await request527(f.tls,'/t/tenant-a/workspace/context',{cookie:live.who.cookieHeader})).status,401);
+  const observed=await page.evaluate(async({value,selector})=>{
+   const{renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');const results=[];
+   for(const predicate of [undefined,null,()=>false,async()=>false,()=>1]){
+    const target=document.createElement('section');document.querySelector('main').append(target);let denied=false;try{await render(target,value,value.binding,predicate,selector);}catch{denied=true;}results.push({denied,cells:target.querySelectorAll('[data-analysis-value]').length,state:target.getAttribute('data-outcome')});target.remove();
+   }return results;
+  },{value,selector:directSelector549});assert.equal(observed.length,5);assert.ok(observed.every(x=>x.denied&&x.cells===0&&x.state!=='READBACK_RECEIVED'));
+  const freshSession=await live.login(f.issue()),fresh=f.reader.read({cookie:freshSession.cookieHeader,origin:f.tls.origin},directSelector549);
+  const positive=await page.evaluate(async({value,selector})=>{
+   const{renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');const admission=await fetch('/t/tenant-a/workspace/context');if(admission.status!==200)throw new Error('ACTUAL_DIRECT_NATIVE_CONTEXT_NOT_CONFIRMED');const current=await admission.json();const target=document.createElement('section');document.querySelector('main').append(target);const capturedHash=location.hash;let liveRead=current.tenantId===value.binding.tenantId;
+   const predicate=()=>liveRead&&target.isConnected&&location.hash===capturedHash;await render(target,value,value.binding,predicate,selector);const row={state:target.getAttribute('data-outcome'),cells:target.querySelectorAll('[data-analysis-value]').length};liveRead=false;return row;
+  },{value:fresh,selector:directSelector549});assert.deepEqual(positive,{state:'READBACK_RECEIVED',cells:6});f.unchanged();
+ }finally{await live?.context.close();await f.close();}
+});
+
+test('UIDOD nested open or closed shadow-root attachment removal and reattachment retires held direct digest ownership',async()=>{
+ const f=await browserFixture549();let live;
+ try{
+  live=await launch549(f);const page=await live.context.newPage();await start549(page,f);await directModule549(f,page);const value=f.reader.read({cookie:live.who.cookieHeader,origin:f.tls.origin},directSelector549);
+  const observed=await page.evaluate(async({value,selector})=>{
+   const{renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');const results=[];
+   for(const mode of ['open','closed']){
+    const outer=document.createElement('div');document.querySelector('main').append(outer);const outerRoot=outer.attachShadow({mode}),inner=document.createElement('div');outerRoot.append(inner);const innerRoot=inner.attachShadow({mode}),target=document.createElement('section');innerRoot.append(target);const capturedHash=location.hash,isCurrent=()=>target.isConnected&&location.hash===capturedHash;
+    const digest=crypto.subtle.digest.bind(crypto.subtle);let entered,release,first=true;const began=new Promise(r=>{entered=r;}),held=new Promise(r=>{release=r;});crypto.subtle.digest=async(...args)=>{const bytes=await digest(...args);if(first){first=false;entered();await held;}return bytes;};
+    try{const old=render(target,value,value.binding,isCurrent,selector).then(()=>false,()=>true);await began;inner.remove();outerRoot.append(inner);release();const rejected=await old;const row={mode,rejected,cells:target.querySelectorAll('[data-analysis-value]').length};await render(target,value,value.binding,isCurrent,selector);row.newCells=target.querySelectorAll('[data-analysis-value]').length;results.push(row);}finally{release();crypto.subtle.digest=digest;outer.remove();}
+   }return results;
+  },{value,selector:directSelector549});assert.deepEqual(observed,[{mode:'open',rejected:true,cells:0,newCells:6},{mode:'closed',rejected:true,cells:0,newCells:6}]);f.unchanged();
  }finally{await live?.context.close();await f.close();}
 });
 
