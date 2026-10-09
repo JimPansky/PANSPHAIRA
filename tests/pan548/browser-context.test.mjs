@@ -54,13 +54,30 @@ test('DUI-02 actual context snapshot network stall cannot block the existing nat
 // Instrument only returned existing registry promises. No replacement registry,
 // backend payload, native handle, membership or authority is fabricated.
 const {build}=await import('esbuild');
-async function controllerProbe(f){
+async function controllerProbe(f,initialize=true){
  const input='import {createWorkspaceContextSelectionV1} from "./context-selection-v1.ts"; globalThis.__pan548CreateController=createWorkspaceContextSelectionV1;';
  const output=await build({stdin:{contents:input,resolveDir:join(process.cwd(),'packages/browser-workspace/src'),sourcefile:'context-controller-probe.ts',loader:'ts'},bundle:true,format:'iife',target:'es2022',write:false,minify:false});
  await f.page.goto(f.tls.origin+'/t/tenant-a/workspace');await waitModule(f.page,'pan.setup');
  const scriptURL=f.tls.origin+'/t/tenant-a/workspace/app.js?actual-pan548-controller-probe=1';await f.context.route(scriptURL,route=>route.fulfill({status:200,contentType:'text/javascript',body:output.outputFiles[0].text}));await f.page.addScriptTag({url:scriptURL});
- await f.page.evaluate(async()=>{const response=await fetch('/t/tenant-a/workspace/context',{credentials:'same-origin',cache:'no-store'});if(response.status!==200)throw Error('ACTUAL_CONTROLLER_SESSION_NOT_CONFIRMED');const binding=await response.json();const root=document.createElement('section');root.id='actual-controller-probe';document.body.append(root);const life=new AbortController();const api=globalThis.__pan548CreateController({root,base:'/t/tenant-a',context:()=>binding,signal:life.signal});globalThis.__pan548Controller={api,root,life};await api.bind({localEpoch:api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});if(root.dataset.state!=='CURRENT_CONTEXT')throw Error('ACTUAL_CONTROLLER_INITIAL_BIND_NOT_CONFIRMED');});
+ await f.page.evaluate(async initialize=>{const response=await fetch('/t/tenant-a/workspace/context',{credentials:'same-origin',cache:'no-store'});if(response.status!==200)throw Error('ACTUAL_CONTROLLER_SESSION_NOT_CONFIRMED');const binding=await response.json();const root=document.createElement('section');root.id='actual-controller-probe';document.body.append(root);const life=new AbortController();const api=globalThis.__pan548CreateController({root,base:'/t/tenant-a',context:()=>binding,signal:life.signal});globalThis.__pan548Controller={api,root,life};if(initialize){await api.bind({localEpoch:api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});if(root.dataset.state!=='CURRENT_CONTEXT')throw Error('ACTUAL_CONTROLLER_INITIAL_BIND_NOT_CONFIRMED');}},initialize);
 }
+test('DUI-02 authentic cancelled first tab bootstrap cannot poison explicit same-epoch successor binding',async()=>{
+ const f=await fixture();let cdp,release,retired=false;
+ try{
+  const before=history(f);await controllerProbe(f,false);const errors=[];let captured,held=false;let tabRequests=0;
+  f.page.on('request',r=>{if(r.url().endsWith('/workspace/context-selection/tab'))tabRequests++;});
+  const actual=new Promise(resolve=>{captured=resolve;}),gate=new Promise(resolve=>{release=resolve;});cdp=await f.context.newCDPSession(f.page);
+  await cdp.send('Fetch.enable',{patterns:[{urlPattern:f.tls.origin+'*/workspace/context-selection/tab',requestStage:'Response'}]});
+  cdp.on('Fetch.requestPaused',async event=>{try{if(!held){held=true;assert.equal(event.request.method,'POST');assert.equal(event.responseStatusCode,200);const body=await cdp.send('Fetch.getResponseBody',{requestId:event.requestId});const issued=JSON.parse(Buffer.from(body.body,body.base64Encoded?'base64':'utf8').toString());assert.equal(typeof issued.tabProof,'string');assert.equal(typeof issued.snapshot.context.contextHandle,'string');assert.equal(issued.snapshot.context.effectsProduced,false);captured(issued);await gate;}await cdp.send('Fetch.continueResponse',{requestId:event.requestId});}catch(e){if(!retired)errors.push(e.message);}});
+  await f.page.evaluate(()=>{const p=globalThis.__pan548Controller;globalThis.__pan548FirstBind=p.api.bind({localEpoch:p.api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});});
+  const issued=await Promise.race([actual,new Promise((_,reject)=>{const timer=setTimeout(()=>reject(Error('NO_AUTHENTIC_INITIAL_TAB_BOOTSTRAP_CAPTURED')),10000);timer.unref();})]);assert.equal(issued.snapshot.context.binding.subjectId,'synthetic-context-browser-reader');retired=true;
+  const state=await f.page.evaluate(async()=>{const p=globalThis.__pan548Controller;await p.api.bind({localEpoch:p.api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});await globalThis.__pan548FirstBind;return p.root.dataset.state;});release();await cdp.send('Fetch.disable');
+  assert.equal(state,'CURRENT_CONTEXT','ABORTED_FIRST_NATIVE_BOOTSTRAP_POISONED_EXPLICIT_SUCCESSOR');assert.equal(tabRequests,2,'ONLY_EXPLICIT_SUCCESSOR_MAY_START_SECOND_NATIVE_BOOTSTRAP');
+  await f.page.locator('#actual-controller-probe button').first().click();await f.page.locator('#actual-controller-probe[data-state="CURRENT_CONTEXT"][data-selection]:not([data-selection=""])').waitFor();
+  await f.page.evaluate(()=>{const p=globalThis.__pan548Controller;return p.api.bind({localEpoch:p.api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});});
+  assert.equal(await f.page.locator('#actual-controller-probe').getAttribute('data-state'),'CURRENT_CONTEXT');assert.equal(tabRequests,2,'CONFIRMED_NATIVE_BOOTSTRAP_MUST_STAY_CACHED');assert.deepEqual(errors,[]);assert.equal(history(f),before);
+ }finally{retired=true;release?.();await cdp?.send('Fetch.disable').catch(()=>{});await f.close();}
+});
 async function holdActualContextResponse(f,predicate){
  const cdp=await f.context.newCDPSession(f.page);let release,received,held=false,retired=false;const gate=new Promise(resolve=>{release=resolve;});const captured=new Promise(resolve=>{received=resolve;});const errors=[];
  await cdp.send('Fetch.enable',{patterns:[{urlPattern:f.tls.origin+'*/workspace/context-selection*',requestStage:'Response'}]});

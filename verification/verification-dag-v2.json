@@ -10420,7 +10420,7 @@
         {
           "path": "docs/architecture/workspace-context-selection-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "df6d5f33c494ccad9e679531ddb8fc34bf7cfc8c924ef39cc8a0add82541ed26"
+          "sha256": "929d52c286f4156ae2e93858a8ce9da94fb8ab5d0538ccbb2128ec52006b3dc7"
         },
         {
           "path": "packages/browser-shell/src/extended-context-owner-v1.ts",
@@ -10430,7 +10430,7 @@
         {
           "path": "packages/browser-workspace/src/context-selection-v1.ts",
           "role": "SOURCE",
-          "sha256": "8c7cdeea4fefea894661b25bf45e844e3b2125d19887a2e02b7d7f8c9fc7037d"
+          "sha256": "24f9d25cc2772b3afd18a5a1990989e3a7110cfbf27f701daca3e334597156ea"
         },
         {
           "path": "packages/contracts/src/workspace-context-selection-v1.ts",
@@ -10470,12 +10470,12 @@
         {
           "path": "tests/pan548/browser-context.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "ff495ec3078305cae5ac89b745c009bd3259b8a0b51d038d0254f541d6c99688"
+          "sha256": "7731a3dd90a13c8d220fb11ba654c281174f923d04fb925eb51fe474785b24fd"
         },
         {
           "path": "tests/pan548/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "a403a8117489bece258fbe423f12f26404c3c348af522adbdd045820b366016d"
+          "sha256": "ec36ea884b580a6a768967cd2f7cf68d6a8cb53b5c97cd6dffd892a4c1f0c1f3"
         }
       ],
       "ownedTests": [

@@ -14,7 +14,8 @@ export function createWorkspaceContextSelectionV1(options: {
   if (!/^\/t\/[a-z0-9][a-z0-9-]{0,63}$/.test(base)) throw new Error("CONTEXT_BROWSER_SCOPE_DENIED");
   const initial = options.context();
   let closed = false, epoch = 0, proof: string | null = null, tabId: string | null = null;
-  let bootstrap: Promise<void> | null = null, queue: Promise<unknown> = Promise.resolve();
+  let bootstrap: { readonly token: object; readonly signal: AbortSignal; readonly promise: Promise<void>; ready: boolean } | null = null;
+  let queue: Promise<unknown> = Promise.resolve();
   let current: WorkspaceContextSnapshotV1 | null = null;
   let bindingRequest: AbortController | null = null;
   let lifetime: object = Object.freeze({});
@@ -61,11 +62,17 @@ export function createWorkspaceContextSelectionV1(options: {
       || (tabId !== null && c.binding.tabId !== tabId)) throw new Error("CONTEXT_BROWSER_BINDING_DENIED");
   }
   async function boot(signal: AbortSignal) {
-    if (!bootstrap) bootstrap = (async () => {
-      const b = validateWorkspaceContextTabBootstrapV1(await request("/tab", {}, signal)); open(); check(b.snapshot.context);
-      proof = b.tabProof; tabId = b.snapshot.context.binding.tabId;
-    })();
-    await bootstrap;
+    if (!bootstrap || (!bootstrap.ready && bootstrap.signal.aborted)) {
+      const token = Object.freeze({});
+      const promise: Promise<void> = (async () => {
+        const b = validateWorkspaceContextTabBootstrapV1(await request("/tab", {}, signal)); open();
+        if (signal.aborted || bootstrap?.token !== token) throw new Error("CONTEXT_BOOTSTRAP_SUPERSEDED");
+        check(b.snapshot.context); proof = b.tabProof; tabId = b.snapshot.context.binding.tabId;
+      })();
+      const attempt = { token, signal, promise, ready: false }; bootstrap = attempt;
+      void promise.then(() => { attempt.ready = true; }, () => { if (bootstrap === attempt) bootstrap = null; });
+    }
+    await bootstrap.promise;
   }
   function serialized<T>(operation: () => Promise<T>): Promise<T> {
     const result = queue.then(operation); queue = result.catch(() => {}); return result;

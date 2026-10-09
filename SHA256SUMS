@@ -413,7 +413,7 @@ d9f142154a9684591abc1f73e7ab5c52634565e043cd731321cd5085ab5d52e1  ./docs/archite
 cbf1ed6a03e936dd74b4cd66d9328a2318999212eb63c589934202a652b815c0  ./docs/architecture/rks-01-real-source-utility-result-v1.md
 8c5df07f13c5fb706d45ebac88e616244d2122548099b7c7fd107df8117924a8  ./docs/architecture/rks-01-source-governance-v1.md
 bdf3fbfa63b2f549fa827a5a81eaa3876a7c813b02368c7441c62f37bac2ffd2  ./docs/architecture/rks-02-core-small-vs-raw-result-v1.md
-df6d5f33c494ccad9e679531ddb8fc34bf7cfc8c924ef39cc8a0add82541ed26  ./docs/architecture/workspace-context-selection-v1.md
+929d52c286f4156ae2e93858a8ce9da94fb8ab5d0538ccbb2128ec52006b3dc7  ./docs/architecture/workspace-context-selection-v1.md
 e260999399a4e024054ea967d0ba836d9bfc2c381613a4c510c4bc9ffb69d2b6  ./docs/asf-lifecycle-recovery-guide.md
 9d58a7c84f6c45f1cd1cac9dadb3f802d80e7fb76f10e168eda5c903d1691122  ./docs/asf-lifecycle-synthetic-proof.md
 a652a843a0e6c83661cab3883ac25db52eb6037cb90f3f78f02a1fd54ca0b7e1  ./docs/benchmarks/cks-05-falsification-report-template-v1.md
@@ -753,7 +753,7 @@ e7d68a928312f3ae8d7261518da183d5cd2e3db6928a6ef0dd36466676aad946  ./packages/bro
 5c801df98d0b4e9fba23085d4a606a88c8943ab53f7fc62424aa7ff3965714bb  ./packages/browser-workspace/src/api-v1.ts
 93e850aea32bd9755d0f2bea572cf55a2bfd25f4e49777fb0624bb50b0fb6899  ./packages/browser-workspace/src/app.ts
 3d2bbddb579b90b53eec378aa9f06b1094b3024a7259753b5859d5b31ac608f0  ./packages/browser-workspace/src/configuration-draft-v1.css
-8c7cdeea4fefea894661b25bf45e844e3b2125d19887a2e02b7d7f8c9fc7037d  ./packages/browser-workspace/src/context-selection-v1.ts
+24f9d25cc2772b3afd18a5a1990989e3a7110cfbf27f701daca3e334597156ea  ./packages/browser-workspace/src/context-selection-v1.ts
 d43b81ff1a8be20b29732fb1e7980fbadf74dba26467368cfda5248c1c062c5c  ./packages/browser-workspace/src/notifications-v1.ts
 4d7899f535ef2118e3ab144d6882aefdc734f1ff2db7f21caae9bd0a828a7e1c  ./packages/browser-workspace/src/plugin-analysis-v1.ts
 f91eba88352ca24990ed8d025a946858a897d93b1dd1f92eea63cceb7cd2f260  ./packages/browser-workspace/src/plugin-configuration-draft-v1.ts
@@ -2283,12 +2283,12 @@ cd0e9f47076a8f3fdd02562c01feef42c7402d7475a9b398ce5cfcf6f97472fb  ./tests/pan543
 12a6136052d6d77b1cc7058225131ea533bf3eee809f50fca9f59d9158e6911c  ./tests/pan544/native-notifications.test.mjs
 4af00d3e427945ee400e99122c44f4f5e3b5f4552efd63f5961d00683f5ed8c2  ./tests/pan544/registration.test.mjs
 fd288832e262cb222e256fb3aa4c56651f2f11bce6848b5b034b141acca22170  ./tests/pan544/restart-reader.mjs
-ff495ec3078305cae5ac89b745c009bd3259b8a0b51d038d0254f541d6c99688  ./tests/pan548/browser-context.test.mjs
+7731a3dd90a13c8d220fb11ba654c281174f923d04fb925eb51fe474785b24fd  ./tests/pan548/browser-context.test.mjs
 3aee8250d0a32756eeb0c36c90a0d95afcf16f5f97d682f3e8095e3056c201ef  ./tests/pan548/context-contract.test.mjs
 2773aba4d302c8c1ece891df46706eb8ed553f5c06b541403379545f75bac80c  ./tests/pan548/native-context.test.mjs
 cf15d3a99223807224a533fee64f218f08ab818fe1151a527120820542a6de41  ./tests/pan548/native-expiry.test.mjs
 6c5587a49a0c2711dcd19e1ce51b232f16dc64bb1530f493459b1463484fcf1f  ./tests/pan548/native-reentrant.test.mjs
-a403a8117489bece258fbe423f12f26404c3c348af522adbdd045820b366016d  ./tests/pan548/registration.test.mjs
+ec36ea884b580a6a768967cd2f7cf68d6a8cb53b5c97cd6dffd892a4c1f0c1f3  ./tests/pan548/registration.test.mjs
 33e068b5f322552e43a52f1a7bc339973594534f3dac9cd188d032dccf1ce7da  ./tests/pan549/browser-analysis.test.mjs
 6aa8c3a5adcb7039fbf156c177994e27d6b7c5a211b5206a8f1786ecaa8160b2  ./tests/pan549/browser-fixture.mjs
 29ee1f2bb34b268ae0905889d1349de998fed6ed36c6e355be0255ab3a223846  ./tests/pan549/browser-lifecycle-analysis.test.mjs
@@ -2568,5 +2568,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-366aee09c9e10da2776461530c65ba8f0eb28d69bc868a804ec4c0c70dee3e6f  ./verification/verification-dag-v2.json
+a53c0a86439104d3001200ea42f60356a10c4b2fe6061067ee87e3e1e35956e0  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
