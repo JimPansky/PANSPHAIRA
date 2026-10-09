@@ -33,7 +33,14 @@ function array(value:unknown,max:number):readonly unknown[]{
 const integer=(v:unknown):boolean=>Number.isSafeInteger(v)&&(v as number)>=0;
 const hex=(v:unknown):boolean=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const token=(v:unknown):boolean=>typeof v==='string'&&/^[A-Z0-9_]{1,100}$/.test(v);
-function instant(v:unknown):boolean{return v===null||typeof v==='string'&&/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:Z|[+-]\d{2}:\d{2})$/.test(v)&&Number.isFinite(Date.parse(v));}
+function instant(v:unknown):boolean{
+ if(v===null)return true;if(typeof v!=='string')return false;
+ const match=/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|([+-])(\d{2}):(\d{2}))$/.exec(v);if(!match)return false;
+ const year=Number(match[1]),month=Number(match[2]),day=Number(match[3]),hour=Number(match[4]),minute=Number(match[5]),second=Number(match[6]);
+ const leap=year%4===0&&(year%100!==0||year%400===0),days=[31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+ if(month<1||month>12||day<1||day>(days[month-1]??0)||hour>23||minute>59||second>59||match[7]!=='Z'&&(Number(match[9])>23||Number(match[10])>59))return false;
+ return Number.isFinite(Date.parse(v));
+}
 function freeze<T>(v:T):T{if(v&&typeof v==='object'){Object.values(v).forEach(freeze);Object.freeze(v);}return v;}
 const clone=<T>(v:unknown):T=>freeze(structuredClone(v)) as T;
 function binding(value:unknown):WorkspaceAnalysisBindingV1{

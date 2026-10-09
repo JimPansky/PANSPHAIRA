@@ -10347,7 +10347,7 @@
         {
           "path": "packages/contracts/src/workspace-analysis-v1.ts",
           "role": "CONTRACT",
-          "sha256": "cc2fb8bc93070fad83a96f729491342efcad3ab42fcfc59de6a8d12c9343d6d0"
+          "sha256": "b13bede2b269e84c377fe89485c03d14071756f4fd69002f6c8cfff6a8acfce3"
         },
         {
           "path": "scripts/run-pan549-native-analysis-tests.mjs",
@@ -10377,12 +10377,12 @@
         {
           "path": "tests/pan549/cohort-analysis.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "87f2458bcb43814f06e6f30b43ef7d022d635548383fbce01c1c21b8bccf6d00"
+          "sha256": "7c13c7f5c57e5ff686668072b54e439827ca92f24a4ed3698cdd67180ce8724b"
         },
         {
           "path": "tests/pan549/native-analysis-read.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "197b110f7933bb851420b54144340711d0fd7116aa1421b63beeaabf24581230"
+          "sha256": "e0627946422808c762b95e9f85fe48b808ebe6d7446b070215174315629330a3"
         },
         {
           "path": "tests/pan549/protected-analysis.test.mjs",

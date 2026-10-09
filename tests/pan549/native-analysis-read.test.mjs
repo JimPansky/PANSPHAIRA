@@ -37,7 +37,7 @@ export async function analysisFixture(){
  }catch(error){f.close();throw error;}
 }
 
-test('PUI-08-AC01/04 bounded native analysis reads real leading stock and independently agrees with persisted receipt-minus-issue, preserving missing facts',async()=>{
+test('PUI-08-AC01/04 bounded native analysis reads real leading stock and independently agrees with persisted receipt-minus-issue, preserving missing facts',async(t)=>{
  const f=await analysisFixture();
  try{
   const before=nativeRows(f.root,'SELECT revision,command,event FROM pan515_events ORDER BY revision');
@@ -61,6 +61,26 @@ test('PUI-08-AC01/04 bounded native analysis reads real leading stock and indepe
   assert.equal(rows.stockValueMinor.state,'UNAVAILABLE');assert.equal(rows.stockValueMinor.value,null);
   assert.equal(result.availability,'PARTIAL');assert.equal(result.proposalOnly,false);assert.equal(result.effectsProduced,false);assert.equal(result.executionAuthorityGranted,false);
   assert.equal(result.consentChanged,false);assert.equal(result.transportEnabled,false);
+  assert.throws(()=>reader.read({origin:f.sessions.origin},f.selector),/HOSTED_SESSION_DENIED/);
+  assert.throws(()=>reader.read({...f.headers,origin:'https://outside.invalid'},f.selector),/ANALYSIS_ORIGIN_OR_ROLE_DENIED/);
+  for(const selector of [{...f.selector,schemaVersion:'unsupported'},{...f.selector,objectId:'foreign-object'}])assert.throws(()=>reader.read(f.headers,selector),/ANALYSIS_OBJECT_BINDING_DENIED/);
+  assert.throws(()=>reader.read(f.headers,{...f.selector,expectedNativeRevision:result.source.snapshot.nativeRevision+1}),/ANALYSIS_NATIVE_REVISION_STALE/);
+  assert.throws(()=>reader.read(f.headers,{...f.selector,expectedResultRevision:'0'.repeat(64)}),/ANALYSIS_RESULT_REVISION_STALE/);
+  const foreignRoot=join(f.parent,'analysis-foreign-session');mkdirSync(foreignRoot,{mode:0o700});
+  const foreign=createProtectedSessionAdapterV1({optIn:true,origin:f.sessions.origin,identity:{...identity,tenantId:'tenant-b'},stateRoot:foreignRoot});
+  assert.throws(()=>reader.read({...f.headers,cookie:issued(foreign).cookie},f.selector),/HOSTED_SESSION_DENIED/,'genuinely issued foreign-tenant session is not a structural authority stub');
+  // Test-process-only clock control around a real branded/HMAC-backed session
+  // and the real synchronous SQLite projection; no source or adapter substitute.
+  const now=Date.now(),expiresAtMs=now+60000,clock=t.mock.method(Date,'now',()=>now);
+  try{
+   const expiring=f.sessions.issueOwnerSession({subjectId:'synthetic:analysis-post-read-expiry',role:'reader',expiresAtMs});
+   const headers={cookie:expiring.cookieHeader,origin:f.sessions.origin};let checks=0;
+   clock.mock.mockImplementation(()=>++checks<=2?now:expiresAtMs+1);
+   assert.throws(()=>reader.read(headers,f.selector),/HOSTED_SESSION_DENIED/,'actual session expires between its live pre-read and post-source authentication');
+   assert.equal(checks,4,'two genuine checks before native source consumption and two rejecting post-source checks');
+   clock.mock.mockImplementation(()=>expiresAtMs+1);
+   assert.throws(()=>reader.read(headers,f.selector),/HOSTED_SESSION_DENIED/,'same genuinely expired cookie stays denied on a later read');
+  }finally{clock.mock.restore();}
   assert.deepEqual(nativeRows(f.root,'SELECT revision,command,event FROM pan515_events ORDER BY revision'),before,'analysis read is not a second stock or event writer');
  }finally{f.close();}
 });
@@ -75,6 +95,14 @@ test('PUI-08-AC02/03 actual stock result has a closed versioned runtime contract
   assert.equal(typeof contract?.validateWorkspaceAnalysisResultV1,'function','PAN549_CLOSED_VERSIONED_RESULT_RUNTIME_TYPES_NOT_IMPLEMENTED');
   const bound=contract.validateWorkspaceAnalysisResultV1(result,result.binding);
   assert.deepEqual(bound,result);assert.notEqual(bound,result);assert.equal(Object.isFrozen(bound),true);assert.equal(Object.isFrozen(bound.rows),true);
+  for(const asOf of [null,'2028-02-29T00:00:00Z','2000-02-29T23:59:59+02:00','2026-06-30T23:59:59+02:00']){
+   assert.deepEqual(contract.validateWorkspaceAnalysisReadV1({...f.selector,asOf}),{...f.selector,asOf});
+   const control=structuredClone(result);control.source.snapshot.asOf=asOf;assert.equal(contract.validateWorkspaceAnalysisResultV1(control,result.binding).source.snapshot.asOf,asOf);
+  }
+  for(const asOf of ['2026-02-30T00:00:00Z','2025-02-29T00:00:00Z','1900-02-29T00:00:00Z','2026-04-31T00:00:00Z','2026-06-30T24:00:00Z','2026-06-30T23:60:00Z','2026-06-30T23:59:60Z','2026-06-30T23:59:59+24:00','2026-06-30T23:59:59+02:60']){
+   assert.throws(()=>contract.validateWorkspaceAnalysisReadV1({...f.selector,asOf}),/ANALYSIS_RESULT_CONTRACT_DENIED/);
+   const hostile=structuredClone(result);hostile.source.snapshot.asOf=asOf;assert.throws(()=>contract.validateWorkspaceAnalysisResultV1(hostile,result.binding),/ANALYSIS_RESULT_CONTRACT_DENIED/);
+  }
   for(const mutate of [v=>{v.rows[4].state='UNKNOWN';v.rows[4].value=0;},v=>{v.rows[4].value=0;},v=>{v.effectsProduced=true;},v=>{v.executionAuthorityGranted=true;},v=>{v.consentChanged=true;},v=>{v.transportEnabled=true;},v=>{v.resultRevision='0'.repeat(64);},v=>{v.source.grain.tenantId='SYN-TENANT-99';},v=>{v.binding.tenantId='tenant-b';},v=>{v.sql='SELECT * FROM objects';}]){
    const hostile=structuredClone(result);mutate(hostile);await assert.rejects(contract.verifyWorkspaceAnalysisResultIntegrityV1(hostile,result.binding),/ANALYSIS_RESULT_CONTRACT_DENIED/);
   }

@@ -6,7 +6,9 @@ import {nativeFixture527} from '../pan527/helpers.mjs';
 import {financeFixture} from '../pan519/native-fixture.mjs';
 import {UsageInsightsLocalServiceV1,validateUsageInsightsReportV1} from '../../dist/packages/usage-insights/src/index.js';
 import {createNativeAnalysisReadAdapterV1} from '../../src/pan549/native-analysis-read.mjs';
-import {validateWorkspaceAnalysisResultV1} from '../../dist/packages/contracts/src/workspace-analysis-v1.js';
+import {validateWorkspaceAnalysisResultV1,verifyWorkspaceAnalysisResultIntegrityV1} from '../../dist/packages/contracts/src/workspace-analysis-v1.js';
+import {createHash} from 'node:crypto';
+import {canonicalJson} from '../../dist/packages/contracts/src/canonical-json.js';
 const selector={schemaVersion:'pansphaira.workspace-analysis/read/v1',objectId:'analysis:common-trade-01:stock',expectedNativeRevision:null,expectedResultRevision:null,asOf:'2026-06-30T23:59:59+02:00'};
 
 for(const enabled of [false,true])test('PUI-08-AC02/03 actual existing local Usage Insights '+(enabled?'single-cohort suppression':'default-off empty report')+' remains distinct from stock; no denominator/adoption or implicit consent/transport',async()=>{
@@ -29,6 +31,13 @@ for(const enabled of [false,true])test('PUI-08-AC02/03 actual existing local Usa
   const actualConsent=usage.consentStatus();assert.equal(actualConsent.state,enabled?'GRANTED':'DISABLED');assert.equal(actualConsent.networkMode,'OFF');
   assert.equal(existsSync(store),enabled);if(enabled)assert.deepEqual(readFileSync(store),before);
   const checked=validateWorkspaceAnalysisResultV1(result,result.binding);assert.deepEqual(checked,result);assert.equal(Object.isFrozen(checked.cohort.report),true);
+  assert.deepEqual(await verifyWorkspaceAnalysisResultIntegrityV1(result,result.binding),result,'real EMPTY/SUPPRESSED attached report digest verifies');
+  const staleReport=structuredClone(result);staleReport.cohort.report.generatedAtMs++;
+  staleReport.resultRevision=createHash('sha256').update(canonicalJson(Object.fromEntries(Object.entries(staleReport).filter(([key])=>key!=='resultRevision')))).digest('hex');
+  assert.equal(staleReport.resultRevision,createHash('sha256').update(canonicalJson(Object.fromEntries(Object.entries(staleReport).filter(([key])=>key!=='resultRevision')))).digest('hex'),'negative has a genuinely recomputed valid outer result digest');
+  assert.equal(staleReport.cohort.report.reportDigest,result.cohort.report.reportDigest,'negative retains the stale separate attached report digest');
+  await assert.rejects(verifyWorkspaceAnalysisResultIntegrityV1(staleReport,result.binding),/ANALYSIS_RESULT_CONTRACT_DENIED/,'valid outer digest cannot hide stale nested report bytes');
+  if(enabled)assert.deepEqual(readFileSync(store),before,'integrity checks do not change the actual consent/report store');
   for(const change of [v=>{v.cohort.populationDenominator=0;},v=>{v.cohort.report.metrics={adoption:0};},v=>{v.cohort.report.installationsSeen=enabled?1:null;},v=>{v.cohort.report.coverageLabel='ALL_INSTALLATIONS';},v=>{v.effectsProduced=true;}]){
    const hostile=structuredClone(result);change(hostile);assert.throws(()=>validateWorkspaceAnalysisResultV1(hostile,result.binding),/ANALYSIS_RESULT_CONTRACT_DENIED/);
   }
