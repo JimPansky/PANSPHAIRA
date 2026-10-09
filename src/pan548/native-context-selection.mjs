@@ -22,7 +22,7 @@ export function createNativeWorkspaceContextSelectionV1(options){
  const {sessions,nativeReader,readSetup,readProfile}=options,identity=validateRuntimeIdentityV1(options.identity);
  if(!isProtectedSessionAdapterV1(sessions,identity?.tenantId)||!isNativeErvReadAdapterV1(nativeReader,identity.tenantId)||typeof readSetup!=='function'||typeof readProfile!=='function'||sessions.binding.instanceId!==identity.instanceId||sessions.binding.generation!==identity.generation)throw new Error('CONTEXT_NATIVE_OWNER_DENIED');
  if(runtimeIdentityDigestV1(identity)!==sessions.binding.identityDigest)throw new Error('CONTEXT_NATIVE_OWNER_DENIED');
- const tabs=new Map();let closed=false,hostDigest=null,hostRevision=1;
+ const tabs=new Map();let closed=false,hostDigest=null,hostRevision=1,nativeReadSequence=1;
  function authorize(headers){
   if(closed)throw new Error('CONTEXT_ATTACHMENT_RETIRED');
   const principal=sessions.authenticate(headers),pair=headers.cookie.split(';').map(v=>v.trim()).find(v=>v.startsWith('__Host-pan527-session='));
@@ -34,11 +34,14 @@ export function createNativeWorkspaceContextSelectionV1(options){
  }
  function state(a,tab,target=tab){
   registered(target.moduleId,target.viewId);
+  // Owner-local sequence fences nested observations on ANY tab, before the
+  // first native callback. It is not a public revision axis or authority grant.
+  nativeReadSequence=next(nativeReadSequence);const capturedReadSequence=nativeReadSequence;
   // Trusted native readers may re-enter this owner. Keep data paired with its
   // captured revision, and never resurrect a tab retired during a leading read.
   const keys=['moduleId','viewId','primaryObjectId','epoch','selectionRevision','selection','catalogRevision','catalogDigest','context'];
   const before=keys.map(key=>tab[key]);
-  const stableTab=()=>{const fresh=authorize(a.headers??{});if(fresh.sessionId!==a.sessionId||fresh.principal.subjectId!==a.principal.subjectId||fresh.principal.role!==a.principal.role||keys.some((key,i)=>tab[key]!==before[i]))throw new Error('CONTEXT_REVISION_STALE');if(clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');};
+  const stableTab=()=>{const fresh=authorize(a.headers??{});if(nativeReadSequence!==capturedReadSequence||fresh.sessionId!==a.sessionId||fresh.principal.subjectId!==a.principal.subjectId||fresh.principal.role!==a.principal.role||keys.some((key,i)=>tab[key]!==before[i]))throw new Error('CONTEXT_REVISION_STALE');if(clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');};
   const setupBytes=JSON.stringify(readSetup(a.principal));let setup;try{setup=JSON.parse(setupBytes);}catch{throw new Error('CONTEXT_NATIVE_RIGHTS_DENIED');}stableTab();
   if(setup?.apiVersion!=='chimpmaera.dev/poc-early-admin-status/v1'||setup.kind!=='PocEarlyAdminStatus'||setup.authority?.profile?.profileId!=='SAFE_GUIDED'||!Array.isArray(setup.stages)||setup.stages.length>16)throw new Error('CONTEXT_NATIVE_RIGHTS_DENIED');
   const digest=hash(setupBytes);if(hostDigest!==null&&hostDigest!==digest)hostRevision=next(hostRevision);hostDigest=digest;const capturedHostRevision=hostRevision;

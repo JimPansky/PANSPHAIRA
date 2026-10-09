@@ -3829,7 +3829,7 @@
         {
           "path": "tools/video-production-reference/SHA256SUMS",
           "role": "CONTRACT",
-          "sha256": "d5bd2960604b5e271dd44a409e367dbd91f0d1dadd0e20a9c60785a7fa2ef03e"
+          "sha256": "3fa2d5dbe618f913afd6c47506d55936fc27dd8d4ac733862ae5fae5345364db"
         },
         {
           "path": "tools/video-production-reference/assets/synthetic/frame-s01.png",
@@ -10420,7 +10420,7 @@
         {
           "path": "docs/architecture/workspace-context-selection-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "80e955ad4255a4fd749820bd313cbdb6df39fbe7c49c00daf84fbf2dd38e5042"
+          "sha256": "49ad31ba3d31799bde56ffa943eb67647365454e7dcaf2ba651d20675f643661"
         },
         {
           "path": "packages/browser-shell/src/extended-context-owner-v1.ts",
@@ -10445,7 +10445,7 @@
         {
           "path": "src/pan548/native-context-selection.mjs",
           "role": "SECURITY",
-          "sha256": "46ec28e1d15c371c7357e86a21d7f131afb6d091450263f458153f9a467472b9"
+          "sha256": "a7ef52af07bba4115f5d253e8f1a8083b6706b0144faa55730df0d826da666e0"
         },
         {
           "path": "tests/pan548/context-contract.test.mjs",
@@ -10465,7 +10465,7 @@
         {
           "path": "tests/pan548/native-reentrant.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "b170b5d4c6d8f217be7979ac41a27389ce948d66b75bafa3e82aba5c3937bc84"
+          "sha256": "6c5587a49a0c2711dcd19e1ce51b232f16dc64bb1530f493459b1463484fcf1f"
         },
         {
           "path": "tests/pan548/browser-context.test.mjs",
