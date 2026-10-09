@@ -6,7 +6,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { DatabaseSync } from "node:sqlite";
 import test from "node:test";
-import { EventEmitter } from "node:events";
+import { EventEmitter, once } from "node:events";
 import { createNativeBudgetControllerV1 } from "../../src/pan529/native-budget-controller.mjs";
 import { deliveredIdentity, planCommand, modelCommand } from "./native-fixture.mjs";
 
@@ -30,6 +30,7 @@ async function fixture(limits) {
   adapter.owner.activate({ operationId: planned.operationId, planDigest: planned.planDigest });
   adapter.owner.close();
   const pending = []; const observations = []; const firstHttp = deferred();
+  const httpObserved = new EventEmitter();
   const server = createServer((request, response) => {
     let body = ""; request.setEncoding("utf8");
     request.on("data", (chunk) => { body += chunk; });
@@ -39,6 +40,7 @@ async function fixture(limits) {
       assert.equal(observed.route.provider, "provider:synthetic-model");
       assert.equal(observed.route.credentialHandle, "credential-handle:synthetic-model-v1");
       observations.push({ operationId: request.headers["x-operation-id"], requestDigest: observed.requestDigest });
+      httpObserved.emit("observed");
       pending.push(response); firstHttp.resolve();
     });
   });
@@ -65,7 +67,11 @@ async function fixture(limits) {
     server.closeAllConnections(); await new Promise((resolve) => server.close(resolve));
     rmSync(stateRoot, { recursive: true, force: true });
   };
-  return { stateRoot, options, observations, pending, spawn, firstHttp, cleanup };
+  return { stateRoot, options, observations, pending, spawn, firstHttp, cleanup,
+    waitForHttpCount: async (count, signal) => {
+      while (observations.length < count) await once(httpObserved, "observed", { signal });
+    }
+  };
 }
 
 test("PAN529 synthetic observer ordering accepts DONE notification after exit but before channel close", async () => {
@@ -97,6 +103,7 @@ test("PAN529 100 separate native controllers cannot overrun held budget before 1
     for (const worker of workers) worker.done.promise.then((value) => { if (!value.allowed) { denied += 1; if (denied === 90) denialBarrier.resolve(); } }, denialBarrier.reject);
     for (const worker of workers) worker.child.send("GO");
     await denialBarrier.promise;
+    await f.waitForHttpCount(10, t.signal);
     assert.equal(f.observations.length, 10);
     const db = new DatabaseSync(join(f.stateRoot, "resource-budget.sqlite"), { readOnly: true });
     try {

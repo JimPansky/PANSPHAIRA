@@ -9229,7 +9229,7 @@
         {
           "path": "tests/pan529/native-process-integration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "a3ab97f79a344d1f8f291b3917895d617abcdb7ff7ea916240b921357ad94e91"
+          "sha256": "e403dc48c2a05d71156098aab6446c8b2fbb519413674f493f16de8649b225e4"
         },
         {
           "path": "tests/pan529/native-provider-worker.mjs",
