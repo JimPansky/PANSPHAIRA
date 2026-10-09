@@ -2296,7 +2296,7 @@ ec36ea884b580a6a768967cd2f7cf68d6a8cb53b5c97cd6dffd892a4c1f0c1f3  ./tests/pan548
 4552da296047a8729002f8e11e919c3a7719800c50fb1874fb550c78c0083192  ./tests/pan549/native-analysis-read.test.mjs
 dedf739d8ff62acf186eea044ca0340cb231adb47f053e2996ea2564e980d62e  ./tests/pan549/protected-analysis.test.mjs
 df2edb14696c251600177277655d735d08ff6568ad130bd390470e048184ad23  ./tests/pan549/registration.test.mjs
-5c94586c8f2185d49c8775c2acaa9c9eb20bbe7a970d4d99e9765a6d7ab5f062  ./tests/pan563/browser-draft.test.mjs
+8e34e0531f1495589e1bf46ef9255e2ff66dfbe3ad30f186c25825401250d918  ./tests/pan563/browser-draft.test.mjs
 6683fd0facd75de3454b742efaeb72af1ed6dc8a3ea7072258f591b8f39501b5  ./tests/pan563/capture-coverage.mjs
 c1eb349ed32f5e374b2b08774021580cd4b465036d700557052e2e4f05b6eb7f  ./tests/pan563/compatibility.test.mjs
 bfc11831e93e84c0ab9ebca000b58573ac548389a86b4c43335b09f9045ce1d8  ./tests/pan563/configuration-contract.test.mjs
@@ -2568,5 +2568,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-eab28bbd2b9743f07b937e3a62679947e66d7b74d4156ee20e05a8345f464683  ./verification/verification-dag-v2.json
+ed038ee3920701a138f247703fa1727933f056a3ff6661f7f79b30fc9d98948f  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json

@@ -10088,7 +10088,7 @@
         {
           "path": "tests/pan563/browser-draft.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "5c94586c8f2185d49c8775c2acaa9c9eb20bbe7a970d4d99e9765a6d7ab5f062"
+          "sha256": "8e34e0531f1495589e1bf46ef9255e2ff66dfbe3ad30f186c25825401250d918"
         },
         {
           "path": "tests/pan563/capture-coverage.mjs",

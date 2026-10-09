@@ -110,13 +110,18 @@ test('A2 browser action -> actual protected backend -> persisted identical readb
     writeFileSync(join(evidence,'configuration-save-focus-pin.json'),JSON.stringify(focusPin,null,2)+'\n');
     assert.equal(focusPin.active.type,'checkbox');
     // Programmatic DOM focus event -> unchanged Main authority GET/context
-    // revalidation -> actual presentation projection. No fake backend receipt.
-    const projected=await page.evaluate(()=>new Promise(resolve=>{
-      const canvas=document.getElementById('profile.canvas');const observer=new MutationObserver(()=>{
-        observer.disconnect();resolve({focusType:document.activeElement?.getAttribute('type'),focusInConfiguration:!!document.activeElement?.closest('.configuration-draft')});
-      });observer.observe(canvas,{childList:true});window.dispatchEvent(new Event('focus'));
+    // revalidation -> actual presentation projection. Stable MAIN must not be
+    // removed/reinserted just to make the test observe a childList mutation.
+    const profileReply=page.waitForResponse(response=>response.request().method()==='GET'&&new URL(response.url()).pathname===new URL(page.url()).pathname+'/profile',{timeout:10000});
+    const projected=await page.evaluate(()=>new Promise((resolve,reject)=>{
+      const canvas=document.getElementById('profile.canvas');const observer=new MutationObserver(records=>{
+        if(!records.some(record=>record.type==='attributes'&&record.target===canvas&&record.attributeName==='class'))return;
+        clearTimeout(deadline);observer.disconnect();resolve({focusType:document.activeElement?.getAttribute('type'),focusInConfiguration:!!document.activeElement?.closest('.configuration-draft')});
+      });const deadline=setTimeout(()=>{observer.disconnect();reject(new Error('PAN563_PROFILE_PRESENTATION_NOT_OBSERVED'));},10000);
+      observer.observe(canvas,{attributes:true,attributeFilter:['class']});window.dispatchEvent(new Event('focus'));
     }));
-    writeFileSync(join(evidence,'profile-projection-focus-observation.json'),JSON.stringify({path:'DOM focus event -> real Main profile/context GET -> presentation projection',...projected},null,2)+'\n');
+    const actualProfileReply=await profileReply;assert.equal(actualProfileReply.status(),200);assert.equal((await actualProfileReply.json()).schemaVersion,'pansphaira.browser-profile-read/v1');
+    writeFileSync(join(evidence,'profile-projection-focus-observation.json'),JSON.stringify({path:'DOM focus event -> real Main profile/context GET -> presentation projection',actualProfileStatus:actualProfileReply.status(),projectionWitness:'profile.canvas class attribute mutation, not MAIN removal/reinsert',...projected},null,2)+'\n');
     assert.deepEqual(projected,{focusType:'checkbox',focusInConfiguration:true},'Main presentation authority read must not discard focus in the live configuration answer');
     await page.getByRole('button',{name:'Bestätigen und Entwurf speichern',exact:true}).click();
     await page.getByRole('heading',{name:'Keine fehlenden Pflichtfragen'}).waitFor();
