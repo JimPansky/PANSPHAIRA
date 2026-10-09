@@ -256,6 +256,28 @@ test('UIDOD nested open or closed shadow-root attachment removal and reattachmen
  }finally{await live?.context.close();await f.close();}
 });
 
+test('UIDOD live predicate transitions cannot revive removed attachments or supersede a newer renderer owner',async()=>{
+ const f=await browserFixture549();let live;
+ try{
+  live=await launch549(f);const page=await live.context.newPage();await start549(page,f);await directModule549(f,page);const value=f.reader.read({cookie:live.who.cookieHeader,origin:f.tls.origin},directSelector549),latest=f.reader.read({cookie:live.who.cookieHeader,origin:f.tls.origin},{...directSelector549,asOf:null});
+  const observed=await page.evaluate(async({value,latest,selector})=>{
+   const{renderWorkspaceAnalysisResultV1:render}=await import('/owned-reviewed-direct-analysis.js');const results=[];
+   for(const transition of ['detach-on-final-check','new-owner-on-final-check','new-owner-on-initial-check']){
+    const parent=document.createElement('div'),target=document.createElement('section');parent.append(target);document.querySelector('main').append(parent);let calls=0,newer;const predicate=()=>{
+     if(++calls===(transition==='new-owner-on-initial-check'?1:2)){
+      if(transition==='detach-on-final-check'){parent.remove();document.querySelector('main').append(parent);}
+      else newer=render(target,latest,latest.binding,()=>target.isConnected,{...selector,asOf:null}).then(()=>true,()=>false);
+     }return true;
+    };
+    let rejected=false;try{await render(target,value,value.binding,predicate,selector);}catch{rejected=true;}
+    const row={transition,rejected,cells:target.querySelectorAll('[data-analysis-value]').length};
+    if(newer){row.newerSucceeded=await newer;row.newCells=target.querySelectorAll('[data-analysis-value]').length;row.currentCutoffShown=target.innerText.includes('Aktueller nativer Stand');}
+    results.push(row);parent.remove();
+   }return results;
+  },{value,latest,selector:directSelector549});assert.deepEqual(observed,[{transition:'detach-on-final-check',rejected:true,cells:0},{transition:'new-owner-on-final-check',rejected:true,cells:0,newerSucceeded:true,newCells:6,currentCutoffShown:true},{transition:'new-owner-on-initial-check',rejected:true,cells:0,newerSucceeded:true,newCells:6,currentCutoffShown:true}]);f.unchanged();
+ }finally{await live?.context.close();await f.close();}
+});
+
 test('UIDOD focused skip link remains readable without obstructing the workspace heading at desktop and390',async()=>{
  const f=await browserFixture549();let live;
  try{

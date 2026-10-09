@@ -10332,7 +10332,7 @@
         {
           "path": "docs/architecture/pan549-workspace-analysis-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "454280131f3c5b9cb4cb34a1437ac0f7e28e02beb25a4d384f5be793a5f9aad9"
+          "sha256": "942042a2e8790c22a6c3e40d1055ff2f35b8a9b785a960459b4092bde2afb89a"
         },
         {
           "path": "packages/browser-workspace/src/analysis-v1.css",
@@ -10342,7 +10342,7 @@
         {
           "path": "packages/browser-workspace/src/plugin-analysis-v1.ts",
           "role": "SOURCE",
-          "sha256": "cb59d573a6f9a86dc7d17594b86e280e832490cd4c7707ff906e774d88437805"
+          "sha256": "86dbd21c2a364a6f07c2a05d4f7f240f982755f982c16e8b62b854e6f2454c17"
         },
         {
           "path": "packages/contracts/src/workspace-analysis-v1.ts",
@@ -10372,7 +10372,7 @@
         {
           "path": "tests/pan549/browser-lifecycle-analysis.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "9021f6f5d06697a795183f2196cfbbca84afc90b26566e27cfc050ffea38de67"
+          "sha256": "1ce2112de8cebc3c8c94b0efc8c63500582aa346dfe555f3f521634fa0a30b39"
         },
         {
           "path": "tests/pan549/cohort-analysis.test.mjs",

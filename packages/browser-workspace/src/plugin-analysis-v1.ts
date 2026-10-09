@@ -11,16 +11,22 @@ const targetOwners=new WeakMap<HTMLElement,AnalysisTransactionV1>();
 // retires the captured attachment permanently, including detach/reattach within
 // one task. takeRecords closes the gap before observer callback delivery.
 function beginAnalysisTransactionV1(target:HTMLElement,externalCurrent:()=>boolean,signal?:AbortSignal):AnalysisTransactionV1{
- if(typeof externalCurrent!=='function'||!target.isConnected||externalCurrent()!==true||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
- targetOwners.get(target)?.retire();
- const doc=target.ownerDocument,root=target.getRootNode(),ancestors=new Set<Node>();
+ if(typeof externalCurrent!=='function'||!target.isConnected||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
+ const previous=targetOwners.get(target),doc=target.ownerDocument,root=target.getRootNode(),ancestors=new Set<Node>();
+ if(externalCurrent()!==true||!target.isConnected||target.ownerDocument!==doc||target.getRootNode()!==root||targetOwners.get(target)!==previous||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
+ previous?.retire();
  for(let node:Node|null=target;node;node=node.parentNode??(node.nodeType===Node.DOCUMENT_FRAGMENT_NODE&&'host' in node?(node as ShadowRoot).host:null))ancestors.add(node);
  const roots=new Set<Node>([doc,...Array.from(ancestors,node=>node.getRootNode())]);
  let retired=false;
  const removed=(records:MutationRecord[])=>{if(records.some(record=>Array.from(record.removedNodes).some(node=>ancestors.has(node))))owner.retire();};
  const observer=new MutationObserver(removed);
  const owner:AnalysisTransactionV1={
-  current(){removed(observer.takeRecords());return !retired&&targetOwners.get(target)===owner&&target.isConnected&&target.ownerDocument===doc&&target.getRootNode()===root&&!signal?.aborted&&externalCurrent()===true;},
+  current(){
+   if(retired||targetOwners.get(target)!==owner)return false;
+   // The supplied synchronous predicate may itself deliver a context/DOM
+   // transition. Drain records and recheck ownership only after it returns.
+   const live=externalCurrent()===true;removed(observer.takeRecords());return live&&!retired&&targetOwners.get(target)===owner&&target.isConnected&&target.ownerDocument===doc&&target.getRootNode()===root&&!signal?.aborted;
+  },
   retire(){retired=true;observer.disconnect();signal?.removeEventListener('abort',owner.retire);if(targetOwners.get(target)===owner)targetOwners.delete(target);}
  };
  targetOwners.set(target,owner);for(const capturedRoot of roots)observer.observe(capturedRoot,{childList:true,subtree:true});signal?.addEventListener('abort',owner.retire,{once:true});return owner;

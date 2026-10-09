@@ -57,6 +57,9 @@ Captured target/ancestor removal permanently retires a pending transaction,
 even when the same DOM node is reattached before observer callback delivery.
 Every captured ancestor root is observed, including intermediate open/closed
 shadow roots; a nested host detach/reattach cannot revive the old transaction.
+The synchronous external liveness callback runs before the final observer drain
+and ownership/attachment checks. Context transitions delivered by that callback
+cannot revive an old attachment or let an outer call displace a newer owner.
 The integrated view stages and verifies frozen result bytes first, then obtains
 the final live protected session confirmation. No asynchronous work remains
 between its last ownership/context checks and the synchronous fact commit.
