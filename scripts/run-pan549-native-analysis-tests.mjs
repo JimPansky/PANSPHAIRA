@@ -6,7 +6,10 @@ try{
  const args=process.argv.slice(2);
  if(args.length===1&&args[0]==='--list')process.stdout.write(JSON.stringify(files)+'\n');
  else{
-  if(args.length||/--test-(?:name-pattern|skip-pattern|only)/.test(process.env.NODE_OPTIONS??''))throw new Error('PAN549_TEST_ARGUMENT_DENIED');
+  // Node accepts underscore aliases and quoted NODE_OPTIONS tokens as well as
+  // hyphen spellings. Neither aliases nor sharding may select a partial suite.
+  const nodeOptions=(process.env.NODE_OPTIONS??'').replaceAll('_','-');
+  if(args.length||/--test-(?:name-pattern|skip-pattern|only|shard)\b/.test(nodeOptions))throw new Error('PAN549_TEST_ARGUMENT_DENIED');
   if(process.platform!=='linux'||process.arch!=='x64')throw new Error('PAN549_TEST_REQUIRES_SUPPORTED_LINUX_X86_64');
   const env={...process.env,TMPDIR:process.env.TMPDIR||process.env.RUNNER_TEMP};
   if(!env.TMPDIR)throw new Error('PAN549_OWNED_SCRATCH_REQUIRED');

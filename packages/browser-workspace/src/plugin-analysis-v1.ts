@@ -2,9 +2,34 @@ import type {BrowserShellPluginV1} from '../../contracts/src/browser-shell-plugi
 import type {BrowserShellFactoryV1} from '../../browser-shell/src/registry-v1.js';
 import type {BrowserContextV1} from '../../browser-shell/src/context-owner-v1.js';
 import type {BrowserDeepLinkV1} from '../../browser-shell/src/deep-link-v1.js';
-import {validateWorkspaceAnalysisReadV1,verifyWorkspaceAnalysisResultIntegrityV1,verifyWorkspaceAnalysisReadResultV1,type WorkspaceAnalysisBindingV1,type WorkspaceAnalysisReadV1} from '../../contracts/src/workspace-analysis-v1.js';
+import {validateWorkspaceAnalysisReadV1,verifyWorkspaceAnalysisReadResultV1,type WorkspaceAnalysisBindingV1,type WorkspaceAnalysisReadV1} from '../../contracts/src/workspace-analysis-v1.js';
 import {text,facts,readState} from './api-v1.js';
-const renderOwners=new WeakMap<HTMLElement,object>(),viewOwners=new WeakMap<HTMLElement,object>();
+
+type AnalysisTransactionV1={current:()=>boolean;retire:()=>void};
+const targetOwners=new WeakMap<HTMLElement,AnalysisTransactionV1>();
+// Both public entries acquire the same owner before asynchronous work. Removal
+// retires the captured attachment permanently, including detach/reattach within
+// one task. takeRecords closes the gap before observer callback delivery.
+function beginAnalysisTransactionV1(target:HTMLElement,externalCurrent:()=>boolean,signal?:AbortSignal):AnalysisTransactionV1{
+ if(!target.isConnected||!externalCurrent()||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
+ targetOwners.get(target)?.retire();
+ const doc=target.ownerDocument,root=target.getRootNode(),ancestors=new Set<Node>();
+ for(let node:Node|null=target;node;node=node.parentNode??(node instanceof ShadowRoot?node.host:null))ancestors.add(node);
+ let retired=false;
+ const removed=(records:MutationRecord[])=>{if(records.some(record=>Array.from(record.removedNodes).some(node=>ancestors.has(node))))owner.retire();};
+ const observer=new MutationObserver(removed);
+ const owner:AnalysisTransactionV1={
+  current(){removed(observer.takeRecords());return !retired&&targetOwners.get(target)===owner&&target.isConnected&&target.ownerDocument===doc&&target.getRootNode()===root&&!signal?.aborted&&externalCurrent();},
+  retire(){retired=true;observer.disconnect();signal?.removeEventListener('abort',owner.retire);if(targetOwners.get(target)===owner)targetOwners.delete(target);}
+ };
+ targetOwners.set(target,owner);observer.observe(doc,{childList:true,subtree:true});if(root!==doc)observer.observe(root,{childList:true,subtree:true});signal?.addEventListener('abort',owner.retire,{once:true});return owner;
+}
+function pendingAnalysisV1(target:HTMLElement,message:string){
+ delete document.body.dataset.analysisResultRevision;target.classList.add('workspace-analysis');target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis','LOADING',message);
+}
+function terminalAnalysisV1(target:HTMLElement,owner:AnalysisTransactionV1,state:string,message:string){
+ if(!owner.current())return;delete document.body.dataset.analysisResultRevision;target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis',state,state+' — '+message);
+}
 
 export const analysisPluginV1:BrowserShellPluginV1={schemaVersion:'pansphaira.browser-plugin/v1',id:'pan.analysis',version:'1.0.0',shellVersion:'1.0.0',enabled:true,trustBoundary:'TRUSTED_IN_PROCESS_CODE_OWNED_FACTORIES',needs:{data:['analysis.read'],context:['tenantId','sessionId','objectId','revision'],rights:['analysis.read'],dependencies:[]},contributions:[
  {id:'pan.analysis.route',kind:'ROUTE',slot:'shell.routes',factoryId:null,routeId:'pan.analysis.route',path:'/workspace/analysis',label:'Gebundene Bestandsanalyse — nur lesen'},
@@ -12,15 +37,10 @@ export const analysisPluginV1:BrowserShellPluginV1={schemaVersion:'pansphaira.br
  {id:'pan.analysis.view',kind:'VIEW',slot:'shell.main',factoryId:'pan.analysis.view',routeId:'pan.analysis.route',path:null,label:'Gebundene Bestandsanalyse'},
 ]};
 
-// Thin display of the admitted source bytes; no SQL, percentages, new metrics,
-// URL/iframe/HTML interpretation, consent/transport switch or applied proposal.
-export async function renderWorkspaceAnalysisResultV1(target:HTMLElement,value:unknown,expected:WorkspaceAnalysisBindingV1,isCurrent:()=>boolean=()=>target.isConnected,selector?:WorkspaceAnalysisReadV1){
- if(!isCurrent())throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
- const owner={};renderOwners.set(target,owner);const current=()=>renderOwners.get(target)===owner&&isCurrent();
- target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));target.classList.add('workspace-analysis');readState(target,'analysis','LOADING','Ergebnisintegrität und aktuelle Bindung werden geprüft …');
- try{
- const result=await (selector===undefined?verifyWorkspaceAnalysisResultIntegrityV1(value,expected):verifyWorkspaceAnalysisReadResultV1(value,expected,selector));if(!current())throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');target.replaceChildren();
- target.append(text('h1','Gebundene Bestandsanalyse'));
+// Synchronous text-only commit of already frozen, request-matched result bytes.
+// No SQL, percentages, URL/iframe/HTML, consent/transport or applied proposal.
+function commitAnalysisResultV1(target:HTMLElement,result:Awaited<ReturnType<typeof verifyWorkspaceAnalysisReadResultV1>>){
+ target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));
  readState(target,'analysis','READBACK_RECEIVED','Echter nativer Readback empfangen — ausschließlich lesen, keine angewendete Änderung.');
  facts(target,[['Verfügbarkeit',result.availability],['Quelladapter',result.source.entrypoint],['Quellvertrag',result.source.schemaVersion],['Ergebnisrevision',result.resultRevision],['Native Quellrevision',String(result.source.snapshot.nativeRevision)],['Cutoff',result.source.snapshot.asOf??'Aktueller nativer Stand — kein historischer Cutoff'],['Quellscope / Grain',Object.entries(result.source.grain).map(([k,v])=>k+'='+v).join(' · ')],['Quellabdeckung',result.source.coverage]]);
  const scroll=text('div','');scroll.className='analysis-table-scroll';scroll.tabIndex=0;scroll.setAttribute('role','region');scroll.setAttribute('aria-label','Bestandswerte — Tabelle lokal horizontal scrollbar');
@@ -37,33 +57,41 @@ export async function renderWorkspaceAnalysisResultV1(target:HTMLElement,value:u
   cohort.append(text('p','Nenner unbekannt (UNKNOWN) — keine Adoptionsrate. Die Bestandswerte oben sind keine Kohortenstatistik.'));
   facts(cohort,[['Quelle',result.cohort.entrypoint],['Quellrevision',result.cohort.report.reportDigest],['Eigener Berichtscutoff (Millisekunden)',String(result.cohort.report.generatedAtMs)],['Kohorte',result.cohort.report.cohortLabel],['Abdeckung',result.cohort.report.coverageLabel],['Unterdrückung',result.cohort.report.suppressionReason??'Keine Metriken verfügbar'],['Nichtbehauptungen',result.cohort.report.coverageNonclaims.join(' · ')]]);target.append(cohort);
  }else target.append(text('p','Kein Usage-Insights-Snapshot angebunden — keine Kohortenstatistik aus Bestandsdaten ableiten.'));
- return result;
- }catch(error){
-  if(current()){target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis','UNKNOWN','UNKNOWN — Ergebnis oder Bindung nicht bestätigt. Keine früheren Fachwerte; unbekannt ist keine Null.');}
-  throw error;
- }
+}
+
+// A read-backed direct consumer must supply its admitted selector. Integrity
+// alone is never enough to label unrelated native bytes as this read response.
+export async function renderWorkspaceAnalysisResultV1(target:HTMLElement,value:unknown,expected:WorkspaceAnalysisBindingV1,isCurrent:()=>boolean=()=>target.isConnected,selector:WorkspaceAnalysisReadV1){
+ const owner=beginAnalysisTransactionV1(target,isCurrent);pendingAnalysisV1(target,'Ergebnisintegrität und aktuelle Bindung werden geprüft …');
+ try{
+  const result=await verifyWorkspaceAnalysisReadResultV1(value,expected,selector);if(!owner.current())throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');commitAnalysisResultV1(target,result);return result;
+ }catch(error){terminalAnalysisV1(target,owner,'UNKNOWN','Ergebnis oder Bindung nicht bestätigt. Keine früheren Fachwerte; unbekannt ist keine Null.');throw error;}
+ finally{owner.retire();}
 }
 
 export function createAnalysisViewV1(api:{readonly base:string;readonly context:()=>BrowserContextV1;readonly selected:()=>BrowserDeepLinkV1|null}):BrowserShellFactoryV1<HTMLElement>{
  return {kind:'VIEW',async render({target,signal}){
-  if(signal.aborted)return;const owner={};viewOwners.set(target,owner);
-  const captured=api.context(),selected=api.selected();delete document.body.dataset.analysisResultRevision;target.classList.add('workspace-analysis');target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis','LOADING','Aktuelle Session und native Ergebnisquelle werden geprüft …');
-  const current=()=>viewOwners.get(target)===owner&&!signal.aborted&&api.context().sessionId===captured.sessionId&&api.context().tenantId===captured.tenantId&&api.context().objectId===captured.objectId&&api.context().revision===captured.revision;
+  if(signal.aborted||!target.isConnected)return;
+  const captured=api.context(),selected=api.selected();
+  const sameContext=()=>api.context().sessionId===captured.sessionId&&api.context().tenantId===captured.tenantId&&api.context().objectId===captured.objectId&&api.context().revision===captured.revision;
+  const owner=beginAnalysisTransactionV1(target,sameContext,signal);pendingAnalysisV1(target,'Aktuelle Session und native Ergebnisquelle werden geprüft …');
   const confirmed=async()=>{const r=await fetch(api.base+'/workspace/context',{credentials:'same-origin',cache:'no-store',signal});if(r.status!==200)return false;const c=await r.json() as BrowserContextV1;return c.sessionId===captured.sessionId&&c.tenantId===captured.tenantId;};
-  const terminal=(state:string,message:string)=>{delete document.body.dataset.analysisResultRevision;target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis',state,state+' — '+message);};
   try{
-   if(!await confirmed()){if(current())terminal('DENIED','Aktuelle Session nicht bestätigt. Keine früheren Fachwerte.');return;}if(!current())return;
+   if(!await confirmed()){terminalAnalysisV1(target,owner,'DENIED','Aktuelle Session nicht bestätigt. Keine früheren Fachwerte.');return;}if(!owner.current())return;
    const selector=validateWorkspaceAnalysisReadV1({schemaVersion:'pansphaira.workspace-analysis/read/v1',objectId:captured.objectId,expectedNativeRevision:selected?.revision??null,expectedResultRevision:null,asOf:'2026-06-30T23:59:59+02:00'});
    const response=await fetch(api.base+'/workspace/analysis',{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'content-type':'application/json','x-pan549-context':captured.sessionId},body:JSON.stringify(selector),signal});
-   if(!current())return;
-   if(response.status!==200){terminal(response.status===409?'STALE':response.status===401||response.status===403?'DENIED':'UNAVAILABLE','Kein bestätigtes aktuelles Ergebnis. Stale, verweigerte oder nicht verfügbare Daten werden nicht als Null oder Erfolg angezeigt.');return;}
-   const value=await response.json() as {binding:WorkspaceAnalysisBindingV1};
-   if(!await confirmed()){if(current())terminal('DENIED','Session während des Readbacks gewechselt oder entzogen. Keine Fachwerte übernommen.');return;}if(!current())return;
-   // Remaining instance/identity fields are read from this authenticated owned
-   // backend, not proof minted by the plugin. Origin/tenant are independently
-   // constrained by the live protected workspace and checked before/after use.
+   if(!owner.current())return;
+   if(response.status!==200){terminalAnalysisV1(target,owner,response.status===409?'STALE':response.status===401||response.status===403?'DENIED':'UNAVAILABLE','Kein bestätigtes aktuelles Ergebnis. Stale, verweigerte oder nicht verfügbare Daten werden nicht als Null oder Erfolg angezeigt.');return;}
+   const value=await response.json() as {binding:WorkspaceAnalysisBindingV1};if(!owner.current())return;
+   // Identity fields are supplied by the authenticated owned backend, not proof
+   // minted by the plugin. Unkeyed digests check bytes, never source authority.
    const expected={...value.binding,origin:location.origin,tenantId:captured.tenantId};
-   const result=await renderWorkspaceAnalysisResultV1(target,value,expected,current,selector);if(current())document.body.dataset.analysisResultRevision=result.resultRevision;
-  }catch{if(current())terminal('UNKNOWN','Readback oder Bindung nicht bestätigt. Unbekannt ist keine Null; kein angewendeter Effekt und kein automatischer Wiederholungswrite.');}
+   const result=await verifyWorkspaceAnalysisReadResultV1(value,expected,selector);if(!owner.current())return;
+   // All asynchronous digest work finishes before this final live protected
+   // confirmation. No await remains between current checks and the DOM commit.
+   if(!await confirmed()){terminalAnalysisV1(target,owner,'DENIED','Session während des Readbacks gewechselt oder entzogen. Keine Fachwerte übernommen.');return;}if(!owner.current())return;
+   commitAnalysisResultV1(target,result);document.body.dataset.analysisResultRevision=result.resultRevision;
+  }catch{terminalAnalysisV1(target,owner,'UNKNOWN','Readback oder Bindung nicht bestätigt. Unbekannt ist keine Null; kein angewendeter Effekt und kein automatischer Wiederholungswrite.');}
+  finally{owner.retire();}
  }};
 }

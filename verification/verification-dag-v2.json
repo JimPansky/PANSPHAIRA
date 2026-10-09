@@ -9874,7 +9874,7 @@
         {
           "path": "packages/browser-workspace/src/workspace.css",
           "role": "SOURCE",
-          "sha256": "e6e8ee84cdcaab0680e593dd4d69f8751b7a18c41c3c3a0d7b3af0ff699b27b4"
+          "sha256": "110096bd749136d5533dea7d4ae7e347c7e8c9b6fba67a395a1c4c0af1c08c0f"
         },
         {
           "path": "packages/browser-workspace/src/workspace.html",
@@ -10332,7 +10332,7 @@
         {
           "path": "docs/architecture/pan549-workspace-analysis-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "dd21081d62a082b9218841466ffbb7bdb97bcefa1c2752124863dabd60a2666c"
+          "sha256": "d9353debcd8a0b8abcdddf0f9f73dc3d3bb0b6e5a7e50ec4d386f505d3f9d97d"
         },
         {
           "path": "packages/browser-workspace/src/analysis-v1.css",
@@ -10342,7 +10342,7 @@
         {
           "path": "packages/browser-workspace/src/plugin-analysis-v1.ts",
           "role": "SOURCE",
-          "sha256": "71c2e74d521bff4f07ac891a055230ea377daf1724892f857dd5b931e3c795ff"
+          "sha256": "a07e969da5cb53d77b85e7662d4bb1ceb320a77cef5464e151bf98321da7eeb1"
         },
         {
           "path": "packages/contracts/src/workspace-analysis-v1.ts",
@@ -10352,7 +10352,7 @@
         {
           "path": "scripts/run-pan549-native-analysis-tests.mjs",
           "role": "VALIDATOR",
-          "sha256": "a78fa1f98f03919549a17a0beac62e3714d84175c579233a7d403339e32f4e60"
+          "sha256": "823029e40fa00b41d03cda1e7ce86825250dd1b4b8c8027251486b0534a31c18"
         },
         {
           "path": "src/pan549/native-analysis-read.mjs",
@@ -10372,7 +10372,7 @@
         {
           "path": "tests/pan549/browser-lifecycle-analysis.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "26272aa142fcbb57aeee53ce6f464bcc24e992dd01338513474a619e78abe35d"
+          "sha256": "629032db00fdd3ba3f424ff913caedcd6ad416e69e83f66ae96ac5d8b91963c9"
         },
         {
           "path": "tests/pan549/cohort-analysis.test.mjs",
@@ -10392,7 +10392,7 @@
         {
           "path": "tests/pan549/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "ed963be3b32261051de1dff5cd64fc99f91ee998b7375dabf1cece631068b5ce"
+          "sha256": "f13da75fb858beded639aa1fd354dda72aca7780d656a9a3342c9b814141bf48"
         }
       ],
       "ownedTests": [

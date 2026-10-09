@@ -18,9 +18,13 @@ branch names, matching shapes and similarly named fields are not selectors.
 - Browser-safe types and runtime checks:
   `packages/contracts/src/workspace-analysis-v1.ts`.
 - Renderer: `packages/browser-workspace/src/plugin-analysis-v1.ts#renderWorkspaceAnalysisResultV1`.
-  It returns a Promise; await it, supply the expected protected binding and a
-  live context predicate. It verifies the complete bytes before displaying
-  plain text in code-owned DOM elements. No arbitrary URL, iframe, HTML or SQL.
+  It returns a Promise; await it, supply the expected protected binding, a live
+  context predicate and the mandatory admitted selector as the fifth argument.
+  Omitted or malformed selectors and mismatched revisions/literal nullable
+  cutoffs are denied; integrity-only bytes are not a confirmed read response.
+  It verifies the complete bytes before displaying plain text in code-owned DOM
+  elements. No arbitrary URL, iframe, HTML or SQL. The direct consumer remains
+  responsible for its own live protected source/context admission.
 - Integrated view: `createAnalysisViewV1` and `analysisPluginV1`, route
   `/workspace/analysis`, code-owner opt-in only.
 - Existing protected HTTPS attachment:
@@ -37,12 +41,20 @@ Exports are `WORKSPACE_ANALYSIS_READ_V1`, `WORKSPACE_ANALYSIS_RESULT_V1`,
 `WorkspaceAnalysisReadV1`, `WorkspaceAnalysisStockKeyV1`,
 `WorkspaceAnalysisStockRowV1`, `WorkspaceAnalysisStockResultV1`,
 `WorkspaceAnalysisLocalCohortV1`, `validateWorkspaceAnalysisReadV1`,
-`validateWorkspaceAnalysisResultV1` and
-`verifyWorkspaceAnalysisResultIntegrityV1`.
+`validateWorkspaceAnalysisResultV1`, `verifyWorkspaceAnalysisResultIntegrityV1`
+and `verifyWorkspaceAnalysisReadResultV1`.
 The synchronous validator checks closed shape/policy and returns a deeply
 frozen defensive copy. The asynchronous integrity consumer additionally
 checks result and optional report SHA-256. Digests are unkeyed consistency
 checks, never authentication, provenance or a rights grant.
+
+The direct renderer and integrated view share one target transaction owner.
+Every loading, terminal, fact and revision-marker update belongs to that owner.
+Captured target/ancestor removal permanently retires a pending transaction,
+even when the same DOM node is reattached before observer callback delivery.
+The integrated view stages and verifies frozen result bytes first, then obtains
+the final live protected session confirmation. No asynchronous work remains
+between its last ownership/context checks and the synchronous fact commit.
 
 ## Identity, scope, revisions and missing facts
 
@@ -116,7 +128,8 @@ Reproduce the complete fixed profile with the repository's locked dependencies,
 supported Linux x86-64 Node 24.14.1 / npm 11.16.0, invocation-owned scratch and
 the existing Playwright browser and certutil: `npm run pan549:test`.
 The public entry compiles TypeScript, builds the actual browser bundle and runs
-all six fixed test files; caller filters and browser/native skips are denied.
+all six fixed test files; caller filters, browser/native skips and sharding are
+denied, including Node's underscore aliases and quoted NODE_OPTIONS selectors.
 The owned scratch is TMPDIR or an explicitly supplied RUNNER_TEMP, never an
 implicit system-temp fallback. A direct development browser invocation must
 also supply PAN527_BROWSER_MODULE, PAN527_CERTUTIL, PLAYWRIGHT_BROWSERS_PATH and
@@ -151,7 +164,9 @@ PAN549_BROWSER_EVIDENCE. There is no fake TLS backend.
   fixture also applies CSS layout zoom and wider-font/content stress. These are
   not physical-device, browser-chrome zoom or localization-study acceptance.
   Known terminal states are visible text, not only dataset tokens; desktop
-  unit/state/header tokens remain whole. Actual image inspection is a separate
+  unit/state/header tokens remain whole. A focused skip link has stable reserved
+  space instead of covering the heading or moving pointer targets on blur. Image
+  inspection is a separate
   required observation, not inferred from DOM assertions or capture success.
 - UIDOD-06: trusted code-owned optional attachment, current protected
   session/context/deep-link boundaries, lifecycle retirement and independent
