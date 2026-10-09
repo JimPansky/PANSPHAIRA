@@ -19,11 +19,11 @@ export function createExtendedBrowserContextOwnerV1(options: {
   let current = validateWorkspaceContextReadbackV1(options.initialContext);
   const initialBinding = current.binding;
   let sequence = 0, closed = false;
-  const pending = new Set<AbortController>(), disposals = new Set<() => void>();
+  const pending = new Set<AbortController>(), disposals = new Map<() => void, object>();
   function open() { if (closed) throw new Error("CONTEXT_OWNER_CLOSED"); }
   function retire() {
     const controllers = [...pending]; pending.clear();
-    const owned = [...disposals]; disposals.clear();
+    const owned = [...disposals.keys()]; disposals.clear();
     // Clear ownership before untrusted callbacks. Reentrant new registrations
     // cannot accidentally become old-lifetime work or be wiped after callback.
     for (const controller of controllers) controller.abort();
@@ -48,7 +48,10 @@ export function createExtendedBrowserContextOwnerV1(options: {
     context() { open(); return current; },
     onDispose(dispose: () => void) {
       open(); if (typeof dispose !== "function" || disposals.size >= 64) throw new Error("CONTEXT_DISPOSAL_DENIED");
-      disposals.add(dispose); return () => { disposals.delete(dispose); };
+      const registration = disposals.get(dispose) ?? Object.freeze({});
+      disposals.set(dispose, registration);
+      // A stale lifetime unregister cannot remove a newer same-callback owner.
+      return () => { if (disposals.get(dispose) === registration) disposals.delete(dispose); };
     },
     replace(value: unknown) {
       open(); const next = validateWorkspaceContextReadbackV1(value);

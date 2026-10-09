@@ -50,3 +50,53 @@ test('DUI-02 actual context snapshot network stall cannot block the existing nat
   release();await cdp.send('Fetch.disable');assert.equal(history(f),before);
  }finally{retired=true;release?.();await cdp?.send('Fetch.disable').catch(()=>{});await f.close();}
 });
+
+// Instrument only returned existing registry promises. No replacement registry,
+// backend payload, native handle, membership or authority is fabricated.
+const {build}=await import('esbuild');
+async function controllerProbe(f){
+ const input='import {createWorkspaceContextSelectionV1} from "./context-selection-v1.ts"; globalThis.__pan548CreateController=createWorkspaceContextSelectionV1;';
+ const output=await build({stdin:{contents:input,resolveDir:join(process.cwd(),'packages/browser-workspace/src'),sourcefile:'context-controller-probe.ts',loader:'ts'},bundle:true,format:'iife',target:'es2022',write:false,minify:false});
+ await f.page.goto(f.tls.origin+'/t/tenant-a/workspace');await waitModule(f.page,'pan.setup');
+ const scriptURL=f.tls.origin+'/t/tenant-a/workspace/app.js?actual-pan548-controller-probe=1';await f.context.route(scriptURL,route=>route.fulfill({status:200,contentType:'text/javascript',body:output.outputFiles[0].text}));await f.page.addScriptTag({url:scriptURL});
+ await f.page.evaluate(async()=>{const response=await fetch('/t/tenant-a/workspace/context',{credentials:'same-origin',cache:'no-store'});if(response.status!==200)throw Error('ACTUAL_CONTROLLER_SESSION_NOT_CONFIRMED');const binding=await response.json();const root=document.createElement('section');root.id='actual-controller-probe';document.body.append(root);const life=new AbortController();const api=globalThis.__pan548CreateController({root,base:'/t/tenant-a',context:()=>binding,signal:life.signal});globalThis.__pan548Controller={api,root,life};await api.bind({localEpoch:api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});if(root.dataset.state!=='CURRENT_CONTEXT')throw Error('ACTUAL_CONTROLLER_INITIAL_BIND_NOT_CONFIRMED');});
+}
+async function holdActualContextResponse(f,predicate){
+ const cdp=await f.context.newCDPSession(f.page);let release,received,held=false,retired=false;const gate=new Promise(resolve=>{release=resolve;});const captured=new Promise(resolve=>{received=resolve;});const errors=[];
+ await cdp.send('Fetch.enable',{patterns:[{urlPattern:f.tls.origin+'*/workspace/context-selection*',requestStage:'Response'}]});
+ cdp.on('Fetch.requestPaused',async event=>{try{const body=event.request.method==='POST'?JSON.parse(event.request.postData??'null'):null;if(!held&&predicate(event,body)){held=true;assert.equal(event.responseStatusCode,200);const actual=await cdp.send('Fetch.getResponseBody',{requestId:event.requestId});const snapshot=JSON.parse(Buffer.from(actual.body,actual.base64Encoded?'base64':'utf8').toString());assert.ok(snapshot.contextHandle||snapshot.context?.contextHandle,'ACTUAL_NATIVE_RESPONSE_HANDLE_REQUIRED');received(snapshot);await gate;}await cdp.send('Fetch.continueResponse',{requestId:event.requestId});}catch(error){if(!retired)errors.push(error.message);}});
+ return{captured:()=>Promise.race([captured,new Promise((_,reject)=>{const t=setTimeout(()=>reject(Error('ACTUAL_NATIVE_RESPONSE_NOT_CAPTURED')),10000);t.unref();})]),release,errors,async close(){retired=true;release();await cdp.send('Fetch.disable').catch(()=>{});}};
+}
+test('DUI-02 same-epoch replacement discards retained old selection without clearing the authenticated successor',async()=>{
+ const f=await fixture();let held;try{const before=history(f);await controllerProbe(f);held=await holdActualContextResponse(f,(event,body)=>event.request.url.endsWith('/context-selection')&&body?.selection===null&&body?.moduleId==='pan.setup');
+ await f.page.evaluate(()=>{const p=globalThis.__pan548Controller;globalThis.__pan548OldButton=p.root.querySelector('button');globalThis.__pan548Bind=p.api.bind({localEpoch:p.api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});});
+ const actual=await held.captured();assert.equal(actual.context.moduleId,'pan.setup');assert.equal(actual.context.effectsProduced,false);await f.page.evaluate(()=>globalThis.__pan548OldButton.click());held.release();await f.page.evaluate(async()=>{await globalThis.__pan548Bind;await new Promise(resolve=>setTimeout(resolve,0));});
+ assert.equal(await f.page.locator('#actual-controller-probe').getAttribute('data-state'),'CURRENT_CONTEXT','SAME_EPOCH_OLD_SELECTION_CLEARED_AUTHENTICATED_SUCCESSOR');assert.equal(await f.page.locator('#actual-controller-probe').getAttribute('data-module'),'pan.setup');assert.deepEqual(held.errors,[]);assert.equal(history(f),before);
+ }finally{await held?.close();await f.close();}
+});
+test('DUI-02 unavailable invalidates a held authentic same-epoch verify and cannot revive the retired surface',async()=>{
+ const f=await fixture();let held;try{const before=history(f);await controllerProbe(f);held=await holdActualContextResponse(f,event=>event.request.url.endsWith('/context-selection/verify'));
+ await f.page.evaluate(()=>{const p=globalThis.__pan548Controller;globalThis.__pan548Bind=p.api.bind({localEpoch:p.api.epoch(),moduleId:'pan.setup',viewId:'pan.setup.view',primaryObjectId:null,domainRevision:null});});const actual=await held.captured();assert.equal(actual.moduleId,'pan.setup');assert.equal(actual.executionAuthorityGranted,false);
+ await f.page.evaluate(()=>{const p=globalThis.__pan548Controller;p.api.unavailable(p.api.epoch());});assert.equal(await f.page.locator('#actual-controller-probe').getAttribute('data-state'),'CONTEXT_UNAVAILABLE');held.release();await f.page.evaluate(async()=>{await globalThis.__pan548Bind;await new Promise(resolve=>setTimeout(resolve,0));});
+ assert.equal(await f.page.locator('#actual-controller-probe').getAttribute('data-state'),'CONTEXT_UNAVAILABLE','HELD_AUTHENTIC_VERIFY_REVIVED_UNAVAILABLE_CONTEXT');assert.equal(history(f),before);
+ }finally{await held?.close();await f.close();}
+});
+async function activationProbe(f,stage){
+ const path='packages/browser-workspace/src/app.ts',original=readFileSync(path,'utf8'),marker='  await activate();';assert.equal(original.split(marker).length,2,'ACTUAL_APP_ACTIVATION_SEAM_NOT_UNIQUE');
+ const seam=`  const actualRegistry=registry;let stage=null,releaseGate=null;const calls=[];let held=false;
+  registry=Object.freeze({...actualRegistry,async render(...args){calls.push(args[0]);const result=await actualRegistry.render(...args);if(stage!==null&&(stage==='navigation'?args[0]==='pan.setup.navigation':args[0]==='pan.erv.action')){stage=null;held=true;await new Promise(resolve=>{releaseGate=resolve;});}return result;}});
+  globalThis.__pan548Activation={arm(value){stage=value;held=false;calls.length=0;},held(){return held;},release(){releaseGate?.();releaseGate=null;},calls(){return [...calls];},activateAt(hash){history.replaceState(null,'',hash);return activate();}};
+`;
+ const output=await build({stdin:{contents:original.replace(marker,seam+marker),resolveDir:join(process.cwd(),'packages/browser-workspace/src'),sourcefile:'actual-app-timing-probe.ts',loader:'ts'},bundle:true,format:'iife',target:'es2022',write:false,minify:false});
+ await f.context.route('**/workspace/app.js',route=>route.fulfill({status:200,contentType:'text/javascript',body:output.outputFiles[0].text}));
+ await f.page.goto(f.tls.origin+'/t/tenant-a/workspace');await waitModule(f.page,'pan.setup');await f.page.evaluate(value=>{const p=globalThis.__pan548Activation;p.arm(value);globalThis.__pan548OldActivation=p.activateAt('#/workspace/erv').then(()=>null,error=>error.message);},stage);await f.page.waitForFunction(()=>globalThis.__pan548Activation.held());
+ if(stage==='action')await waitModule(f.page,'pan.erv');
+ await f.page.evaluate(async()=>{await globalThis.__pan548Activation.activateAt('#/workspace/setup');});await waitModule(f.page,'pan.setup');
+ const before=await f.page.evaluate(()=>({calls:globalThis.__pan548Activation.calls(),actions:document.getElementById('shell.actions').innerHTML,main:document.getElementById('shell.main').innerHTML}));
+ await f.page.evaluate(()=>globalThis.__pan548Activation.release());const error=await f.page.evaluate(()=>globalThis.__pan548OldActivation);const after=await f.page.evaluate(()=>({calls:globalThis.__pan548Activation.calls(),actions:document.getElementById('shell.actions').innerHTML,main:document.getElementById('shell.main').innerHTML,state:document.getElementById('shell.context-selection').dataset.state,module:document.getElementById('shell.context-selection').dataset.module}));
+ return{before,after,error};
+}
+for(const stage of ['navigation','action'])test('DUI-02 superseded '+stage+' activation cannot render or bind an old route or append a stale deep link',async()=>{
+ const f=await fixture();try{const beforeHistory=history(f),result=await activationProbe(f,stage);assert.equal(result.error,null,'OBSOLETE_ACTIVATION_THROW_AFTER_SUCCESSOR');assert.deepEqual(result.after.calls,result.before.calls,'OBSOLETE_ACTIVATION_STARTED_NEW_REGISTRY_RENDER');assert.equal(result.after.actions,result.before.actions,'OBSOLETE_ACTIVATION_CHANGED_SUCCESSOR_ACTIONS');assert.equal(result.after.main,result.before.main,'OBSOLETE_ACTIVATION_CHANGED_SUCCESSOR_VIEW');assert.equal(result.after.state,'CURRENT_CONTEXT');assert.equal(result.after.module,'pan.setup');assert.equal(history(f),beforeHistory);
+ }finally{await f.close();}
+});

@@ -17,6 +17,7 @@ export function createWorkspaceContextSelectionV1(options: {
   let bootstrap: Promise<void> | null = null, queue: Promise<unknown> = Promise.resolve();
   let current: WorkspaceContextSnapshotV1 | null = null;
   let bindingRequest: AbortController | null = null;
+  let lifetime: object = Object.freeze({});
   let owner: ReturnType<typeof createExtendedBrowserContextOwnerV1> | null = null;
   let controls = new Map<string, HTMLButtonElement>(), fieldset: HTMLFieldSetElement | null = null;
   const heading = text("h2", "Aktueller nativer Seitenkontext"), scope = text("p", ""), status = text("p", "");
@@ -35,8 +36,13 @@ export function createWorkspaceContextSelectionV1(options: {
     // while this context operation is pending, without dispatching again.
     status.textContent = message; for (const b of controls.values()) b.setAttribute("aria-disabled", "true");
   }
+  function invalidate() {
+    lifetime = Object.freeze({});
+    const request = bindingRequest, previous = owner; bindingRequest = null; owner = null;
+    request?.abort(); previous?.close();
+  }
   function failure() {
-    owner?.close(); owner = null; pending("Aktueller Kontext nicht bestätigt. Alte Auswahl wurde verworfen; keine automatische Wiederholung. Fachliche Navigation und Abmelden bleiben verfügbar.", true);
+    invalidate(); pending("Aktueller Kontext nicht bestätigt. Alte Auswahl wurde verworfen; keine automatische Wiederholung. Fachliche Navigation und Abmelden bleiben verfügbar.", true);
     root.dataset.state = "CONTEXT_UNAVAILABLE";
   }
   async function request(suffix: string, body?: unknown, signal?: AbortSignal): Promise<unknown> {
@@ -54,9 +60,9 @@ export function createWorkspaceContextSelectionV1(options: {
     if (c.binding.tenantId !== initial.tenantId || c.binding.sessionId !== initial.sessionId || c.binding.origin !== location.origin
       || (tabId !== null && c.binding.tabId !== tabId)) throw new Error("CONTEXT_BROWSER_BINDING_DENIED");
   }
-  async function boot() {
+  async function boot(signal: AbortSignal) {
     if (!bootstrap) bootstrap = (async () => {
-      const b = validateWorkspaceContextTabBootstrapV1(await request("/tab", {})); open(); check(b.snapshot.context);
+      const b = validateWorkspaceContextTabBootstrapV1(await request("/tab", {}, signal)); open(); check(b.snapshot.context);
       proof = b.tabProof; tabId = b.snapshot.context.binding.tabId;
     })();
     await bootstrap;
@@ -94,26 +100,31 @@ export function createWorkspaceContextSelectionV1(options: {
   }
   async function select(entry: WorkspaceContextSelectionEntryV1, capturedEpoch: number) {
     const issued = owner, snapshot = current; if (!issued || !snapshot || capturedEpoch !== epoch || closed || root.dataset.state !== "CURRENT_CONTEXT") return;
+    // Local lifecycle membership only; the native server still resolves authority.
+    if (!snapshot.selections.some(s => s.elementId === entry.elementId && s.rowId === entry.rowId)) return;
+    const capturedLifetime = lifetime;
+    const live = () => !closed && epoch === capturedEpoch && lifetime === capturedLifetime && owner === issued && current === snapshot;
     pending("Semantische Auswahl wird vom aktuellen nativen Kontextowner geprüft …", false);
     try {
       await serialized(async () => {
-        if (epoch !== capturedEpoch || closed) return;
+        if (!live()) return;
         const result = await issued.run("read", async (c, signal) => {
           await verify(c, signal);
+          if (!live()) throw new Error("CONTEXT_SELECTION_RETIRED");
           const updated = validateWorkspaceContextSnapshotV1(await request("", { schemaVersion: "pansphaira.workspace-context/claim/v1", tabId: c.binding.tabId,
             moduleId: c.moduleId, viewId: c.viewId, primaryObjectId: c.primaryObject?.objectId ?? null, expected: { ...c.revisions, epoch: c.binding.epoch },
             selection: { elementId: entry.elementId, rowId: entry.rowId } }, signal));
           await verify(updated.context, signal); return updated;
         });
-        if (epoch !== capturedEpoch || closed) return;
+        if (!live()) return;
         if (result.outcome === "CURRENT_CONTEXT_RESPONSE") show(result.value, capturedEpoch); else failure();
       });
-    } catch { if (epoch === capturedEpoch && !closed) failure(); }
+    } catch { if (live()) failure(); }
   }
   function retire() {
     if (closed) return epoch;
-    epoch++; const old = current?.context; bindingRequest?.abort(); bindingRequest = null;
-    owner?.close(); owner = null; pending("Kontextwechsel: Alte Auswahl und ausstehende Antworten werden verworfen …", true);
+    epoch++; const old = current?.context; invalidate();
+    pending("Kontextwechsel: Alte Auswahl und ausstehende Antworten werden verworfen …", true);
     if (old) void serialized(async () => { try { await request("/retire", { schemaVersion: "pansphaira.workspace-context/verify/v1", tabId: old.binding.tabId, contextHandle: old.contextHandle }); } catch { /* No false retirement success or blind replay; subsequent binding revalidates. */ } });
     return epoch;
   }
@@ -124,26 +135,31 @@ export function createWorkspaceContextSelectionV1(options: {
       const capturedEpoch = value.localEpoch;
       if (closed || capturedEpoch !== epoch) return;
       if (!["pan.setup", "pan.erv"].includes(value.moduleId)) { failure(); return; }
+      // Replacement within the same navigation epoch owns a distinct lifetime.
+      // Retained controls and queued outcomes cannot clear its successor.
+      invalidate(); pending("Aktueller nativer Seitenkontext wird serverseitig geprüft …", true);
+      const capturedLifetime = lifetime, controller = new AbortController(); bindingRequest = controller;
+      const live = () => !closed && capturedEpoch === epoch && lifetime === capturedLifetime && !controller.signal.aborted;
       try {
         await serialized(async () => {
-          await boot(); if (capturedEpoch !== epoch || closed) return;
-          const controller = new AbortController(); bindingRequest = controller;
           try {
+            if (!live()) return;
+            await boot(controller.signal); if (!live()) return;
             const fresh = validateWorkspaceContextSnapshotV1(await request("", undefined, controller.signal)); check(fresh.context);
-            if (capturedEpoch !== epoch || closed || controller.signal.aborted) return;
+            if (!live()) return;
             const updated = validateWorkspaceContextSnapshotV1(await request("", { schemaVersion: "pansphaira.workspace-context/claim/v1", tabId: fresh.context.binding.tabId,
               moduleId: value.moduleId, viewId: value.viewId, primaryObjectId: value.primaryObjectId,
               expected: { ...fresh.context.revisions, domainRevision: value.domainRevision, epoch: fresh.context.binding.epoch }, selection: null }, controller.signal));
             check(updated.context);
-            if (capturedEpoch !== epoch || closed || controller.signal.aborted) return;
+            if (!live()) return;
             if (updated.context.moduleId !== value.moduleId || updated.context.viewId !== value.viewId || updated.context.primaryObject?.objectId !== (value.primaryObjectId ?? undefined)
               || updated.context.revisions.domainRevision !== value.domainRevision) throw new Error("CONTEXT_BROWSER_NATIVE_VIEW_DENIED");
-            await verify(updated.context, controller.signal); if (capturedEpoch === epoch && !closed && !controller.signal.aborted) show(updated, capturedEpoch);
+            await verify(updated.context, controller.signal); if (live()) show(updated, capturedEpoch);
           } finally { if (bindingRequest === controller) bindingRequest = null; }
         });
-      } catch { if (capturedEpoch === epoch && !closed) failure(); }
+      } catch { if (live()) failure(); }
     },
-    close() { if (closed) return; closed = true; epoch++; bindingRequest?.abort(); bindingRequest = null; owner?.close(); owner = null; current = null; proof = null; tabId = null; controls.clear(); root.replaceChildren(); root.hidden = true; root.dataset.state = "CONTEXT_OWNER_CLOSED"; root.dataset.module = ""; root.dataset.selection = ""; },
+    close() { if (closed) return; closed = true; epoch++; invalidate(); current = null; proof = null; tabId = null; controls.clear(); root.replaceChildren(); root.hidden = true; root.dataset.state = "CONTEXT_OWNER_CLOSED"; root.dataset.module = ""; root.dataset.selection = ""; },
   });
   options.signal.addEventListener("abort", api.close, { once: true });
   return api;

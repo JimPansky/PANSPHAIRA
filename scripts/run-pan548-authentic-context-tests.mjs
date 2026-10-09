@@ -29,7 +29,9 @@ try{
    const value=equal<0?nodeOptions[++i]:token.slice(equal+1);
    if(typeof value!=='string'||!value.length||(!['--conditions','-C'].includes(name)&&!/^[1-9][0-9]*$/.test(value)))throw new Error('PAN548_TEST_ARGUMENT_DENIED');
   }
-  if(args.length||process.env.NODE_TEST_CONTEXT!==undefined||nodeOptions.some(token=>/^--(?:no-)?(?:experimental-)?test(?:-|$)/.test(token.replaceAll('_','-'))))throw new Error('PAN548_TEST_ARGUMENT_DENIED');
+  // Only the consuming loop classifies option names. Ordinary condition values
+  // (including underscores) cannot become test controls through a second scan.
+  if(args.length||process.env.NODE_TEST_CONTEXT!==undefined)throw new Error('PAN548_TEST_ARGUMENT_DENIED');
   if(process.platform!=='linux'||process.arch!=='x64')throw new Error('PAN548_TEST_REQUIRES_SUPPORTED_LINUX_X86_64');
   const env={...process.env,TMPDIR:process.env.TMPDIR||process.env.RUNNER_TEMP};
   if(!env.TMPDIR)throw new Error('PAN548_OWNED_SCRATCH_REQUIRED');

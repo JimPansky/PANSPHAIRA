@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync} from 'node:fs';
+import {createBrowserContextOwnerV1} from '../../dist/packages/browser-shell/src/context-owner-v1.js';
 const contractURL=new URL('../../dist/packages/contracts/src/workspace-context-selection-v1.js',import.meta.url);
 const ownerURL=new URL('../../dist/packages/browser-shell/src/extended-context-owner-v1.js',import.meta.url);
 const contract=existsSync(contractURL)?await import(contractURL):null;
@@ -54,4 +55,26 @@ test('DUI-02 lifecycle fixture: expiry during the synchronous live predicate den
   const owner=create({initialContext:initial,isContextLive:()=>{clock.mock.mockImplementation(()=>now+2);return true;}});
   assert.deepEqual(await owner.run('read',()=>{invoked=true;return 'not admitted';}),{outcome:'STALE_CONTEXT',phase:'read',value:null});assert.equal(invoked,false,'expired in live predicate must not start a read/model/preview');owner.close();
  }finally{clock.mock.restore();}
+});
+
+// Trusted structural callback fixtures, not native/server-issued authority.
+const callbackLegacyContext=revision=>({schemaVersion:'pansphaira.browser-context/v1',tenantId:'tenant-a',sessionId:'synthetic:callback-reader',objectId:null,revision});
+const callbackExtendedContext=epoch=>({...readback(),binding:{...binding,epoch}});
+test('DUI-02 legacy abort callback retains a new-context read and its new cleanup',async()=>{
+ const a=deferred(),b=deferred();let owner,second,secondSignal,disposedB=0;
+ owner=createBrowserContextOwnerV1({initialContext:callbackLegacyContext(1),readBackend:async(context,signal)=>{if(context.revision===1){signal.addEventListener('abort',()=>{second=owner.read();owner.onDispose(()=>{disposedB++;});},{once:true});return a.promise;}secondSignal=signal;return b.promise;}});
+ const first=owner.read();owner.switchContext(callbackLegacyContext(2));const observations={secondAborted:secondSignal.aborted,disposedB};a.resolve({status:200,value:'old'});b.resolve({status:200,value:'current'});const old=await first,current=await second;owner.close();assert.deepEqual(observations,{secondAborted:false,disposedB:0});assert.equal(old.outcome,'STALE_CONTEXT');assert.equal(current.outcome,'READBACK_RECEIVED');assert.equal(disposedB,1);
+});
+for(const kind of ['legacy','extended'])test('DUI-02 '+kind+' old unregister cannot remove a same-callback newer registration',()=>{
+ const owner=kind==='legacy'?createBrowserContextOwnerV1({initialContext:callbackLegacyContext(1),readBackend:async()=>({status:200,value:null})}):requireOwner()({initialContext:callbackExtendedContext(1),isContextLive:()=>true});let called=0,currentUnregister;
+ const callback=()=>{called++;if(called===1)currentUnregister=owner.onDispose(callback);};const oldUnregister=owner.onDispose(callback);if(kind==='legacy')owner.switchContext(callbackLegacyContext(2));else owner.replace(callbackExtendedContext(2));oldUnregister();if(kind==='legacy')owner.switchContext(callbackLegacyContext(3));else owner.replace(callbackExtendedContext(3));const observed=called;owner.close();assert.equal(typeof currentUnregister,'function');assert.equal(observed,2);
+});
+for(const change of ['switch','close'])test('DUI-02 legacy trusted value accessor '+change+' returns stale, never an old readback',async()=>{
+ let owner;const response={status:200,get value(){if(change==='switch')owner.switchContext(callbackLegacyContext(2));else owner.close();return 'old-lazy-payload';}};owner=createBrowserContextOwnerV1({initialContext:callbackLegacyContext(1),readBackend:async()=>response});const actual=await owner.read();owner.close();assert.deepEqual(actual,{outcome:'STALE_CONTEXT',value:null});
+});
+for(const change of ['switch','close'])test('DUI-02 legacy trusted status accessor '+change+' is sampled once and retires its read',async()=>{
+ let owner,accesses=0;const response={get status(){accesses++;if(change==='switch')owner.switchContext(callbackLegacyContext(2));else owner.close();return 200;},value:'old-status-payload'};owner=createBrowserContextOwnerV1({initialContext:callbackLegacyContext(1),readBackend:async()=>response});const actual=await owner.read();owner.close();assert.deepEqual(actual,{outcome:'STALE_CONTEXT',value:null});assert.equal(accesses,1);
+});
+for(const kind of ['legacy','extended'])test('DUI-02 '+kind+' current unregister still removes its own deduplicated registration',()=>{
+ const owner=kind==='legacy'?createBrowserContextOwnerV1({initialContext:callbackLegacyContext(1),readBackend:async()=>({status:200,value:null})}):requireOwner()({initialContext:callbackExtendedContext(1),isContextLive:()=>true});let calls=0;const callback=()=>{calls++;};const old=owner.onDispose(callback),current=owner.onDispose(callback);current();owner.onDispose(callback);old();owner.close();assert.equal(calls,1);
 });

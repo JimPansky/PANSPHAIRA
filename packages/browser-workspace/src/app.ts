@@ -125,41 +125,60 @@ async function start() {
     },
   });
   function disposal() { owner.onDispose(() => { contextSelection?.retire(); panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
+  let latestActivation: object | null = null;
+  function captureActivation(invocation: object) {
+    const binding = owner.context(), nativeContextEpoch = contextSelection?.epoch();
+    return { binding, nativeContextEpoch, live: () => latestActivation === invocation && !lifetime.signal.aborted
+      && owner.context() === binding && contextSelection?.epoch() === nativeContextEpoch };
+  }
   async function activate() {
+    const invocation = Object.freeze({}); latestActivation = invocation;
     contextSelection?.retire();
     const current = owner.context(); let selected: BrowserDeepLinkV1;
     try { selected = parseBrowserDeepLinkV1(location.hash || "#/workspace/setup", current, registry.routes().filter(r => r.state === "REGISTERED").map(r => r.path!)); }
     catch {
       owner.switchContext({ ...current, objectId: null, revision: current.revision + 1 }); disposal();
+      const activation = captureActivation(invocation); if (!activation.live()) return;
       void notifications?.refresh();
       main.hidden = false;
       main.append(text("h1", "Deep Link verweigert"), text("p", "Route, Tenant, Session, Objektparameter oder Version sind nicht gültig. Keine Anfrage an einen fremden Tenant."));
       showStates("Deep Link verweigert — terminaler Zustand. Persönliche Hinweise werden unabhängig mit der aktuellen Session geprüft.");
-      for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
+      for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
+        const rendered = await registry.render(c.id, nav); if (!activation.live() || rendered.outcome === "STALE_RENDER") return;
+      }
       return;
     }
     link = selected;
     owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : selected.path === "/workspace/analysis" ? selected.objectId ?? "analysis:common-trade-01:stock" : null, revision: current.revision + 1 }); disposal();
+    const activation = captureActivation(invocation); if (!activation.live()) return;
     document.body.dataset.contextRevision = String(owner.context().revision); document.body.dataset.nativeRevision = "unknown";
     void notifications?.refresh();
     showStates("Lesender Arbeitsplatz. Pluginmetadaten gewähren keine Backendrechte.");
-    for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
+    for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
+      const rendered = await registry.render(c.id, nav); if (!activation.live() || rendered.outcome === "STALE_RENDER") return;
+    }
     const plugin = plugins.find(p => p.contributions.some(c => c.kind === "ROUTE" && c.path === selected.path));
     const view = plugin?.contributions.find(c => c.kind === "VIEW"); if (!view) throw new Error("WORKSPACE_VIEW_MISSING");
-    const nativeContextEpoch = contextSelection?.epoch();
+    const nativeContextEpoch = activation.nativeContextEpoch;
     const target = document.createElement("section"); main.append(target); const result = await registry.render(view.id, target);
+    if (!activation.live()) return;
     if (result.outcome !== "RENDERED") { if (result.outcome !== "STALE_RENDER") { target.append(text("p", "Pluginansicht konnte nicht gerendert werden.")); if (nativeContextEpoch !== undefined) contextSelection?.unavailable(nativeContextEpoch); } return; }
     // Optional context transport must not hold the existing native actions,
     // deep link, navigation or logout hostage to a slow/failed context request.
+    const readback = invoice;
+    const nativeInvoice = readback && selected.path === "/workspace/erv" && activation.binding.objectId === readback.invoiceId
+      ? { objectId: readback.invoiceId, revision: readback.revision } : null;
     if (contextSelection && nativeContextEpoch !== undefined) void contextSelection.bind({ localEpoch: nativeContextEpoch, moduleId: plugin!.id, viewId: view.id,
-      primaryObjectId: plugin!.id === "pan.erv" ? invoice?.invoiceId ?? null : null, domainRevision: plugin!.id === "pan.erv" ? invoice?.revision ?? null : null });
-    if (invoice && owner.context().objectId === invoice.invoiceId) {
-      await registry.render("pan.erv.action", actions);
-      const anchor = text("a", "Deep Link zum aktuellen Rechnungsvorgang") as HTMLAnchorElement;
-      anchor.href = buildBrowserDeepLinkV1({ path: selected.path, tenantId: current.tenantId, sessionId: current.sessionId, objectId: invoice.invoiceId, revision: invoice.revision }); actions.append(anchor);
+      primaryObjectId: nativeInvoice?.objectId ?? null, domainRevision: nativeInvoice?.revision ?? null });
+    if (nativeInvoice) {
+      const action = await registry.render("pan.erv.action", actions); if (!activation.live()) return;
+      if (action.outcome === "RENDERED") {
+        const anchor = text("a", "Deep Link zum aktuellen Rechnungsvorgang") as HTMLAnchorElement;
+        anchor.href = buildBrowserDeepLinkV1({ path: selected.path, tenantId: activation.binding.tenantId, sessionId: activation.binding.sessionId, objectId: nativeInvoice.objectId, revision: nativeInvoice.revision }); actions.append(anchor);
+      }
     }
     if (presentation) applyPresentation(presentation);
-    if (target.isConnected && !main.hidden && !element("shell.notifications").contains(document.activeElement)) main.focus();
+    if (activation.live() && target.isConnected && !main.hidden && !element("shell.notifications").contains(document.activeElement)) main.focus();
   }
   disposal(); window.addEventListener("hashchange", () => { void activate(); }, { signal: lifetime.signal });
   element("shell.logout").addEventListener("click", async () => {
