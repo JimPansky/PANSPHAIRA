@@ -24,7 +24,7 @@ try{
   // sharding, output destinations or setup hooks. Ordinary runtime flags are
   // not denied merely because their values contain a similar substring.
   const nodeOptions=nodeOptionTokens(process.env.NODE_OPTIONS??'');
-  if(args.length||nodeOptions.some(token=>/^--test(?:-|$)/.test(token.replaceAll('_','-'))))throw new Error('PAN549_TEST_ARGUMENT_DENIED');
+  if(args.length||nodeOptions.some(token=>/^--(?:no-)?(?:experimental-)?test(?:-|$)/.test(token.replaceAll('_','-'))))throw new Error('PAN549_TEST_ARGUMENT_DENIED');
   if(process.platform!=='linux'||process.arch!=='x64')throw new Error('PAN549_TEST_REQUIRES_SUPPORTED_LINUX_X86_64');
   const env={...process.env,TMPDIR:process.env.TMPDIR||process.env.RUNNER_TEMP};
   if(!env.TMPDIR)throw new Error('PAN549_OWNED_SCRATCH_REQUIRED');

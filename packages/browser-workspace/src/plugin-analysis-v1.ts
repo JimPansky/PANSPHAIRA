@@ -13,8 +13,6 @@ const targetOwners=new WeakMap<HTMLElement,AnalysisTransactionV1>();
 function beginAnalysisTransactionV1(target:HTMLElement,externalCurrent:()=>boolean,signal?:AbortSignal):AnalysisTransactionV1{
  if(typeof externalCurrent!=='function'||!target.isConnected||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
  const previous=targetOwners.get(target),doc=target.ownerDocument,root=target.getRootNode(),ancestors=new Set<Node>();
- if(externalCurrent()!==true||!target.isConnected||target.ownerDocument!==doc||target.getRootNode()!==root||targetOwners.get(target)!==previous||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
- previous?.retire();
  for(let node:Node|null=target;node;node=node.parentNode??(node.nodeType===Node.DOCUMENT_FRAGMENT_NODE&&'host' in node?(node as ShadowRoot).host:null))ancestors.add(node);
  const roots=new Set<Node>([doc,...Array.from(ancestors,node=>node.getRootNode())]);
  let retired=false;
@@ -29,7 +27,14 @@ function beginAnalysisTransactionV1(target:HTMLElement,externalCurrent:()=>boole
   },
   retire(){retired=true;observer.disconnect();signal?.removeEventListener('abort',owner.retire);if(targetOwners.get(target)===owner)targetOwners.delete(target);}
  };
- targetOwners.set(target,owner);for(const capturedRoot of roots)observer.observe(capturedRoot,{childList:true,subtree:true});signal?.addEventListener('abort',owner.retire,{once:true});return owner;
+ // Provisional observation precedes the first caller callback as well. Failed
+ // admission cleans only this observer, never a newer reentrant target owner.
+ try{
+  for(const capturedRoot of roots)observer.observe(capturedRoot,{childList:true,subtree:true});
+  const live=externalCurrent()===true;removed(observer.takeRecords());
+  if(!live||retired||!target.isConnected||target.ownerDocument!==doc||target.getRootNode()!==root||targetOwners.get(target)!==previous||signal?.aborted)throw new Error('ANALYSIS_RESULT_CONTEXT_RETIRED');
+ }catch(error){owner.retire();throw error;}
+ previous?.retire();targetOwners.set(target,owner);signal?.addEventListener('abort',owner.retire,{once:true});return owner;
 }
 function pendingAnalysisV1(target:HTMLElement,message:string){
  delete document.body.dataset.analysisResultRevision;target.classList.add('workspace-analysis');target.replaceChildren(text('h1','Gebundene Bestandsanalyse'));readState(target,'analysis','LOADING',message);
