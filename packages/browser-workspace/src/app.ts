@@ -11,6 +11,7 @@ import { createWorkspaceProfileEditorV1 } from "./profile-editor-v1.js";
 import type { BrowserProfileReadV1 } from "../../contracts/src/browser-profile-v1.js";
 import { createWorkspaceNotificationsV1 } from "./notifications-v1.js";
 import { analysisPluginV1, createAnalysisViewV1 } from "./plugin-analysis-v1.js";
+import { createWorkspaceContextSelectionV1 } from "./context-selection-v1.js";
 const element = (id: string): HTMLElement => { const node = document.getElementById(id); if (!node) throw new Error("SHELL_SLOT_MISSING"); return node; };
 async function start() {
   const scope = /^\/t\/([a-z0-9][a-z0-9-]{0,63})\/workspace$/.exec(location.pathname); if (!scope) throw new Error("WORKSPACE_ROUTE_DENIED");
@@ -63,6 +64,8 @@ async function start() {
     if (after.status !== 200 || binding?.tenantId !== context.tenantId || binding.sessionId !== context.sessionId) return { status: 401, value: null };
     return response;
   } });
+  const contextSelection = document.body.dataset.ownerContextSelection === "true"
+    ? createWorkspaceContextSelectionV1({ root: element("shell.context-selection"), base, context: owner.context, signal: lifetime.signal }) : null;
   let registry: ReturnType<typeof createBrowserShellRegistryV1<HTMLElement>>;
   const api: WorkspaceViewApiV1 = Object.freeze({ context: owner.context, read: owner.read, invoice: () => invoice,
     rememberInvoice(value: BrowserErvReadV1) { invoice = value; document.body.dataset.nativeRevision = String(value.revision); },
@@ -121,8 +124,9 @@ async function start() {
       const c = owner.context(); location.hash = buildBrowserDeepLinkV1({ path: "/workspace/erv", tenantId: c.tenantId, sessionId: c.sessionId, objectId: value.invoice.invoiceId, revision: value.invoice.revision });
     },
   });
-  function disposal() { owner.onDispose(() => { panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
+  function disposal() { owner.onDispose(() => { contextSelection?.retire(); panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
   async function activate() {
+    contextSelection?.retire();
     const current = owner.context(); let selected: BrowserDeepLinkV1;
     try { selected = parseBrowserDeepLinkV1(location.hash || "#/workspace/setup", current, registry.routes().filter(r => r.state === "REGISTERED").map(r => r.path!)); }
     catch {
@@ -142,8 +146,13 @@ async function start() {
     for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") await registry.render(c.id, nav);
     const plugin = plugins.find(p => p.contributions.some(c => c.kind === "ROUTE" && c.path === selected.path));
     const view = plugin?.contributions.find(c => c.kind === "VIEW"); if (!view) throw new Error("WORKSPACE_VIEW_MISSING");
+    const nativeContextEpoch = contextSelection?.epoch();
     const target = document.createElement("section"); main.append(target); const result = await registry.render(view.id, target);
-    if (result.outcome !== "RENDERED") { if (result.outcome !== "STALE_RENDER") target.append(text("p", "Pluginansicht konnte nicht gerendert werden.")); return; }
+    if (result.outcome !== "RENDERED") { if (result.outcome !== "STALE_RENDER") { target.append(text("p", "Pluginansicht konnte nicht gerendert werden.")); if (nativeContextEpoch !== undefined) contextSelection?.unavailable(nativeContextEpoch); } return; }
+    // Optional context transport must not hold the existing native actions,
+    // deep link, navigation or logout hostage to a slow/failed context request.
+    if (contextSelection && nativeContextEpoch !== undefined) void contextSelection.bind({ localEpoch: nativeContextEpoch, moduleId: plugin!.id, viewId: view.id,
+      primaryObjectId: plugin!.id === "pan.erv" ? invoice?.invoiceId ?? null : null, domainRevision: plugin!.id === "pan.erv" ? invoice?.revision ?? null : null });
     if (invoice && owner.context().objectId === invoice.invoiceId) {
       await registry.render("pan.erv.action", actions);
       const anchor = text("a", "Deep Link zum aktuellen Rechnungsvorgang") as HTMLAnchorElement;
@@ -156,7 +165,7 @@ async function start() {
   element("shell.logout").addEventListener("click", async () => {
     const response = await fetch(base + "/workspace/logout", { method: "POST", credentials: "same-origin" });
     if (response.status !== 200) { widget.textContent = "Abmelden nicht bestätigt. Keine Erfolgsmeldung."; return; }
-    owner.close(); registry.close(); lifetime.abort(); invoice = null; nav.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true;
+    contextSelection?.close(); owner.close(); registry.close(); lifetime.abort(); invoice = null; nav.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true;
     main.hidden = false;
     main.replaceChildren(text("h1", "Abgemeldet"), text("p", "Die aktuelle Session wurde serverseitig widerrufen."));
     (element("shell.logout") as HTMLButtonElement).disabled = true; widget.textContent = "Session beendet.";

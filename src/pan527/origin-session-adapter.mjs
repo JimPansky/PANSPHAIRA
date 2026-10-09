@@ -11,6 +11,7 @@ import { runtimeIdentityDigestV1, validateRuntimeIdentityV1 } from "../pan526/ru
 import { validateBrowserErvReadV1 } from "../../dist/packages/contracts/src/browser-erv-read-v1.js";
 import { validateWorkspaceNotificationsFeedV1, validateWorkspaceNotificationSelectorV1, validateWorkspaceNotificationPreferencesV1, validateWorkspaceNotificationPreferencesWriteV1 } from "../../dist/packages/contracts/src/workspace-notifications-v1.js";
 import { validateWorkspaceAnalysisReadV1, verifyWorkspaceAnalysisReadResultV1 } from "../../dist/packages/contracts/src/workspace-analysis-v1.js";
+import { isNativeWorkspaceContextSelectionV1 } from "../pan548/native-context-selection.mjs";
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
 export function validateHostedOriginV1(value) {
@@ -236,6 +237,13 @@ export function protectedGuidedOwnerContextV1(gateway, options) {
   return Object.freeze({ identity: product.identity, productRoot: product.productRoot });
 }
 
+export function protectedWorkspaceSetupStatusV1(gateway, options) {
+  exactData(options, ["tenantId", "identityDigest", "origin"], "CONTEXT_NATIVE_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (!product?.workspaceDocument || product.sessions.origin !== options.origin || product.sessions.binding.identityDigest !== options.identityDigest) throw new Error("CONTEXT_NATIVE_OWNER_DENIED");
+  return product.coordinator.status();
+}
+
 // Optional shared browser document on the same protected ingress. These assets
 // and the bounded reader are process-owner code, never HTTP plugin installation.
 export function mountProtectedWorkspaceDocumentV1(gateway, options) {
@@ -294,6 +302,17 @@ export function mountProtectedWorkspaceAnalysisV1(gateway, options) {
 }
 
 // Closed existing native product handlers, not a general-purpose reverse proxy.
+// Optional additive native context attachment on this same protected ingress.
+export function mountProtectedWorkspaceContextSelectionV1(gateway, options) {
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "adapterVersion", "owner"], "CONTEXT_NATIVE_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product?.workspaceDocument || product.workspaceContextSelection
+    || options.origin !== product.sessions.origin || options.identityDigest !== product.sessions.binding.identityDigest
+    || options.adapterVersion !== "pan548-native-context-selection/v1" || !isNativeWorkspaceContextSelectionV1(options.owner, product.sessions.binding)) throw new Error("CONTEXT_NATIVE_OWNER_DENIED");
+  const owner = options.owner; product.workspaceContextSelection = owner;
+  return Object.freeze({ close() { if (product.workspaceContextSelection === owner) delete product.workspaceContextSelection; owner.close(); } });
+}
+
 // This optional local test ingress neither implements OIDC nor creates a portal.
 export function createOptionalHttpsProductIngressV1(options) {
   if (!options || Object.getOwnPropertyDescriptor(options, "optIn")?.value !== true) throw new Error("HOSTED_OPT_IN_REQUIRED");
@@ -330,13 +349,32 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/context-selection(?:\/(?:tab|verify|retire))?|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (!["/workspace/profile", "/workspace/configuration"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (!["/workspace/profile", "/workspace/configuration", "/workspace/context-selection"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences", "/workspace/context-selection/tab", "/workspace/context-selection/verify", "/workspace/context-selection/retire"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if (match[2]?.startsWith("/workspace/context-selection")) {
+          const workspace = product.workspaceDocument, owner = product.workspaceContextSelection;
+          if (!owner) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+          const check = () => { product.sessions.authenticate(request.headers); if (workspace !== product.workspaceDocument || owner !== product.workspaceContextSelection) throw new Error("CONTEXT_ATTACHMENT_RETIRED"); };
+          check(); let result;
+          if (request.method === "GET") {
+            if ((request.headers["content-length"] !== undefined && request.headers["content-length"] !== "0") || request.headers["transfer-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            result = owner.snapshot(request.headers);
+          } else {
+            if (request.headers.origin !== origin) return reply(response, 403, "HOSTED_CSRF_DENIED");
+            if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+            const chunks = []; let bytes = 0;
+            for await (const chunk of request) { bytes += chunk.length; if (bytes > 4096) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+            let body; try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); } catch { return reply(response, 400, "HOSTED_BODY_DENIED"); }
+            check(); const suffix = match[2].slice("/workspace/context-selection".length);
+            result = owner[suffix === "/tab" ? "bootstrap" : suffix === "/verify" ? "verify" : suffix === "/retire" ? "retire" : "claim"](request.headers, body);
+          }
+          check(); response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(result) + "\n"); return;
+        }
         if (match[2] === "/workspace/analysis") {
           const workspace = product.workspaceDocument, adapter = product.workspaceAnalysis; if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
           const checkAnalysisContext = () => {
@@ -549,6 +587,10 @@ export function createOptionalHttpsProductIngressV1(options) {
       else if (["ANALYSIS_OBJECT_BINDING_DENIED", "ANALYSIS_ORIGIN_OR_ROLE_DENIED", "ANALYSIS_NATIVE_BINDING_DRIFT_DENIED"].includes(code)) reply(response, 403, code);
       else if (["ANALYSIS_RESULT_CONTRACT_DENIED", "ANALYSIS_READ_REQUEST_DENIED"].includes(code)) reply(response, 400, code);
       else if (["ERV_TENANT_BINDING_DENIED", "ERV_OBJECT_BINDING_DENIED"].includes(code)) reply(response, 403, code);
+      else if (["CONTEXT_NATIVE_RIGHTS_DENIED", "CONTEXT_NATIVE_VIEW_DENIED", "CONTEXT_NATIVE_OBJECT_DENIED", "CONTEXT_NATIVE_SELECTION_DENIED", "CONTEXT_TAB_DENIED"].includes(code)) reply(response, 403, code);
+      else if (["CONTEXT_REVISION_STALE", "CONTEXT_ATTACHMENT_RETIRED", "CONTEXT_TAB_CAPACITY_DENIED"].includes(code)) reply(response, 409, code);
+      else if (code === "CONTEXT_LEASE_EXPIRED") reply(response, 410, code);
+      else if (/^CONTEXT_(?:CLAIM|VERIFY|READBACK|SNAPSHOT|TAB_BOOTSTRAP)_DENIED$/.test(code)) reply(response, 400, code);
       else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
     }
   });

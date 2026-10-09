@@ -679,6 +679,20 @@ repository_only_files = {
     "tests/pan549/protected-analysis.test.mjs",
     "tests/pan549/registration.test.mjs",
 
+    # PAN548 early authentic native context: exact source-only members, no broad
+    # prefix, runnable manifest expansion, second shell or execution authority.
+    "docs/architecture/workspace-context-selection-v1.md",
+    "packages/browser-shell/src/extended-context-owner-v1.ts",
+    "packages/browser-workspace/src/context-selection-v1.ts",
+    "packages/contracts/src/workspace-context-selection-v1.ts",
+    "scripts/run-pan548-authentic-context-tests.mjs",
+    "src/pan548/native-context-selection.mjs",
+    "tests/pan548/context-contract.test.mjs",
+    "tests/pan548/native-context.test.mjs",
+    "tests/pan548/native-expiry.test.mjs",
+    "tests/pan548/browser-context.test.mjs",
+    "tests/pan548/registration.test.mjs",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

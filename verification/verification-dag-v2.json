@@ -1,7 +1,7 @@
 {
   "schemaVersion": "chimpmaera.verification/evidence-dag/v2",
   "graphId": "verification-fabric-shadow",
-  "graphVersion": 97,
+  "graphVersion": 98,
   "environment": {
     "node": "24.14.1",
     "os": "linux",
@@ -4906,7 +4906,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "be42404ad8facfdcc0e7ab1aa1282bc9137c69b93d39cba34461694a7f830a04"
+          "sha256": "e315b08a1db2638f9e283deba40d3df314dc4484f273b5dbd9a8006b7ba7e953"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -5183,7 +5183,8 @@
         "npm run pan563:test",
         "npm run pan542:test",
         "npm run pan544:test",
-        "npm run pan549:test"
+        "npm run pan549:test",
+        "npm run pan548:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5738,7 +5739,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "f4c21a37435a85e56ef64c7d39692d5995d7227ccc191cf956777b9e0f9a0043"
+          "sha256": "d1426e7e33dac9c9f7b2d2ea722888545b85cd73330408aa0658283c03ea85f8"
         },
         {
           "path": "package-lock.json",
@@ -9034,7 +9035,7 @@
         {
           "path": "src/pan527/origin-session-adapter.mjs",
           "role": "SOURCE",
-          "sha256": "715770097b18a0c4633d0d26da3485219ef0c7dfd9208e11db9498b463d59491"
+          "sha256": "cb670b7e42e6918d974c0fe94739562118df2163e720672ac0cf2f692a98c722"
         },
         {
           "path": "scripts/run-pan527-origin-session-tests.mjs",
@@ -9854,7 +9855,7 @@
         {
           "path": "packages/browser-workspace/src/app.ts",
           "role": "SOURCE",
-          "sha256": "5cc10d0bf9920aee657b7d33753f829a2a86b8cb4c1033a1a9158ae8a303a1f4"
+          "sha256": "c957350af0e5986075693615c73e421d56387c19d58794f19e92301af65d37f4"
         },
         {
           "path": "packages/browser-workspace/src/plugin-diagnostics-v1.ts",
@@ -9874,12 +9875,12 @@
         {
           "path": "packages/browser-workspace/src/workspace.css",
           "role": "SOURCE",
-          "sha256": "110096bd749136d5533dea7d4ae7e347c7e8c9b6fba67a395a1c4c0af1c08c0f"
+          "sha256": "4045a7014eed371096985272389cd89685971aafd9b25c2aa6caa500679c13bd"
         },
         {
           "path": "packages/browser-workspace/src/workspace.html",
           "role": "SOURCE",
-          "sha256": "22de8c55a69e7b4642691aef75f559c744a5c1f7bb1b55264ee358846eade25f"
+          "sha256": "1893a4781941c3c2045da5115d54092467b8577d9debebdb07d99f3ad67bb4fd"
         },
         {
           "path": "packages/contracts/src/browser-erv-read-v1.ts",
@@ -9894,7 +9895,7 @@
         {
           "path": "scripts/build-pan541-browser.mjs",
           "role": "SOURCE",
-          "sha256": "69c088d3fe7d318427a446a16d4336796f2e25820cde06213e0d010ecc8e9604"
+          "sha256": "f6f3abca103eb0bb600d3a2d86483254810e861207de95c8a56252dd9d361910"
         },
         {
           "path": "scripts/run-pan541-shared-browser-shell-tests.mjs",
@@ -9909,7 +9910,7 @@
         {
           "path": "src/pan541/workspace-browser.mjs",
           "role": "SOURCE",
-          "sha256": "10feb217a88c6b989273553e839af2680f4f802b12a5e790eb846d2f115ce498"
+          "sha256": "2ee2104bcfcf9d636f2b19287e540de3bd856b29a6a12f84bde1e425e61aa528"
         },
         {
           "path": "tests/pan541/browser-context-safety.test.mjs",
@@ -10407,6 +10408,82 @@
         "Plain-text asynchronous rendering rechecks complete result bytes and live context; actual native logout, expiry, replaced/foreign session, stale source/result, tampered/lost delivery and retired view never expose old facts or authorize retries.",
         "Proposal, effect and execution authority remain absent; unchanged shared shell/rights/deep links and other modules survive optional analysis absence or failure. Early counterpart descriptor bytes remain historical, not current runtime pins.",
         "Fixed complete native/cohort/TLS/browser/registration entry, actual desktop390/CSS-layout/font/keyboard measurements and source-bound images remain distinct from human/device, paired KS and canonical/CI/release/closure acceptance."
+      ]
+    },
+    {
+      "id": "pan548-authentic-context-selection-v1",
+      "dependsOn": [
+        "pan527-origin-session-v1",
+        "pan541-shared-browser-shell-v1"
+      ],
+      "inputs": [
+        {
+          "path": "docs/architecture/workspace-context-selection-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "157ba37057d1ee4ba9170ab3b60e849f09e5f1b647444f89e84472a1095827fa"
+        },
+        {
+          "path": "packages/browser-shell/src/extended-context-owner-v1.ts",
+          "role": "SOURCE",
+          "sha256": "19864c459cf83daa62f78f328acd7337e735ddc7ee09e18cf08103f9a23a99f1"
+        },
+        {
+          "path": "packages/browser-workspace/src/context-selection-v1.ts",
+          "role": "SOURCE",
+          "sha256": "5737a2bcb25cc284d2395b7d0f2abd3f5e69c1ef6bceeb6dcab09f7df3e68535"
+        },
+        {
+          "path": "packages/contracts/src/workspace-context-selection-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "7263efbfc1a6fde0aea6ddfe5e9824c98253b3de2195f67f1f5323f8abc07ca8"
+        },
+        {
+          "path": "scripts/run-pan548-authentic-context-tests.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7ff13aa79cb90028869c36c9db4ace2c430aba3b26909c9fb0ecab183cc08c24"
+        },
+        {
+          "path": "src/pan548/native-context-selection.mjs",
+          "role": "SECURITY",
+          "sha256": "1dc059fbfd4ad587c19ec527a24afa4dfae8eaf9240feacaf0e98654aa1b8ae8"
+        },
+        {
+          "path": "tests/pan548/context-contract.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "7d49cd319a2202e3b884a33774b3ff8f10f8a23b07486dfe7e3679015248b79b"
+        },
+        {
+          "path": "tests/pan548/native-context.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "2773aba4d302c8c1ece891df46706eb8ed553f5c06b541403379545f75bac80c"
+        },
+        {
+          "path": "tests/pan548/native-expiry.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "cf15d3a99223807224a533fee64f218f08ab818fe1151a527120820542a6de41"
+        },
+        {
+          "path": "tests/pan548/browser-context.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "5957dee4bb1340c6049af2f7197b2f93a181222de72ffab34bbc1bb67242b29a"
+        },
+        {
+          "path": "tests/pan548/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "37ce3dd83b27d9faa076944a0eec97f2f1a61d6aff62ef16127348dfbb3d7eed"
+        }
+      ],
+      "ownedTests": [
+        "npm run pan548:test"
+      ],
+      "riskClass": "HIGH",
+      "globalInvalidation": false,
+      "invariants": [
+        "Server-issued opaque handles bind current protected origin/session/tenant/subject/role/instance/generation/tab/epoch; claims resolve against existing registered native Setup and ERV descriptors, not CSS, DOM, widget or model authority.",
+        "Independent host/domain/view/catalog/selection revisions and nullable primary objects remain exact native projections; copied foreign handles, invented rows, stale leases and post-leading-read expiry deny without leading effects.",
+        "One additive shared lifetime primitive retires pending read/STT/model/render/preview responses, without implementing inference, voice, task execution or a second registry/shell/store.",
+        "SourceMap is null and ui.context.read/ui.selection.read are descriptive only; executionAuthorityGranted and effectsProduced are false. Native rights remain server-owned and no mutation retries or false Cancel/Retire success are inferred.",
+        "Complete fixed contract/native/TLS/expiry/real-Chromium/registration suite, actual keyboard/module retirement and bounded desktop390/CSS-zoom evidence preserve existing gates and direct consumer contracts; early context is not whole original548 delivery."
       ]
     }
   ]

@@ -3040,6 +3040,40 @@ pan549Node.inputs = pan549Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan549:test")) repositoryIntegrityNode.ownedTests.push("npm run pan549:test");
 dag.graphVersion = 97;
 
+// PAN548 early DUI-02: additive authentic session/native context, no task engine.
+const pan548Inputs = [
+  ["docs/architecture/workspace-context-selection-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/browser-shell/src/extended-context-owner-v1.ts", "SOURCE"],
+  ["packages/browser-workspace/src/context-selection-v1.ts", "SOURCE"],
+  ["packages/contracts/src/workspace-context-selection-v1.ts", "CONTRACT"],
+  ["scripts/run-pan548-authentic-context-tests.mjs", "VALIDATOR"],
+  ["src/pan548/native-context-selection.mjs", "SECURITY"],
+  ["tests/pan548/context-contract.test.mjs", "VALIDATOR"],
+  ["tests/pan548/native-context.test.mjs", "VALIDATOR"],
+  ["tests/pan548/native-expiry.test.mjs", "VALIDATOR"],
+  ["tests/pan548/browser-context.test.mjs", "VALIDATOR"],
+  ["tests/pan548/registration.test.mjs", "VALIDATOR"]
+];
+let pan548Node = dag.nodes.find(({id}) => id === "pan548-authentic-context-selection-v1");
+if (pan548Node === undefined) {
+  pan548Node = {
+    id: "pan548-authentic-context-selection-v1",
+    dependsOn: ["pan527-origin-session-v1", "pan541-shared-browser-shell-v1"],
+    inputs: [], ownedTests: ["npm run pan548:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "Server-issued opaque handles bind current protected origin/session/tenant/subject/role/instance/generation/tab/epoch; claims resolve against existing registered native Setup and ERV descriptors, not CSS, DOM, widget or model authority.",
+      "Independent host/domain/view/catalog/selection revisions and nullable primary objects remain exact native projections; copied foreign handles, invented rows, stale leases and post-leading-read expiry deny without leading effects.",
+      "One additive shared lifetime primitive retires pending read/STT/model/render/preview responses, without implementing inference, voice, task execution or a second registry/shell/store.",
+      "SourceMap is null and ui.context.read/ui.selection.read are descriptive only; executionAuthorityGranted and effectsProduced are false. Native rights remain server-owned and no mutation retries or false Cancel/Retire success are inferred.",
+      "Complete fixed contract/native/TLS/expiry/real-Chromium/registration suite, actual keyboard/module retirement and bounded desktop390/CSS-zoom evidence preserve existing gates and direct consumer contracts; early context is not whole original548 delivery."
+    ]
+  };
+  dag.nodes.push(pan548Node);
+}
+pan548Node.inputs = pan548Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan548:test")) repositoryIntegrityNode.ownedTests.push("npm run pan548:test");
+dag.graphVersion = 98;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -3103,6 +3137,7 @@ for (const [inputPath] of pan563Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan542Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan544Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan549Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan548Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [
