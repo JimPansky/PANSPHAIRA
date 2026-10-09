@@ -40,7 +40,15 @@ async function start() {
       if (item) node.classList.add("profile-" + item.size);
       node.hidden = !item?.visible || (id === "pan.erv.information" && !invoice);
     }
-    for (const item of value.profile.items) { const card = cards.get(item.id); if (card) canvas.append(card); }
+    // MAIN is the stable native analysis attachment. Reorder the other cards
+    // around it, and do not manufacture removal/reinsert records for an
+    // unchanged profile. Permanent retirement of genuinely removed roots stays.
+    let next: ChildNode | null = null;
+    for (const item of [...value.profile.items].reverse()) {
+      const card = cards.get(item.id); if (!card) continue;
+      if (card !== main && (card.parentNode !== canvas || card.nextSibling !== next)) canvas.insertBefore(card, next);
+      next = card;
+    }
     const size = value.effectiveItems.find(i => i.id === "pan.erv.information")?.size ?? "regular";
     canvas.classList.remove("panel-compact", "panel-regular", "panel-large"); canvas.classList.add("panel-" + size);
     canvas.classList.toggle("panel-open", !panel.hidden);

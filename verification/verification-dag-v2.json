@@ -9855,7 +9855,7 @@
         {
           "path": "packages/browser-workspace/src/app.ts",
           "role": "SOURCE",
-          "sha256": "93e850aea32bd9755d0f2bea572cf55a2bfd25f4e49777fb0624bb50b0fb6899"
+          "sha256": "2a365062bca3c6bc847d12390d435de6c6a56c28b38644f6ad63d448c2502ae6"
         },
         {
           "path": "packages/browser-workspace/src/plugin-diagnostics-v1.ts",
@@ -9975,7 +9975,7 @@
         {
           "path": "docs/architecture/browser-profile-v1.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "b821573c4289f71fac338b101107633aebb91b2f09d79f8965546aa0a81c9e16"
+          "sha256": "0adce62010e57f56ee9115aa98bac188d17d91e9d1fdd5bbc62bb3d3d1545834"
         },
         {
           "path": "packages/browser-workspace/src/profile-editor-v1.ts",
@@ -10373,7 +10373,7 @@
         {
           "path": "tests/pan549/browser-lifecycle-analysis.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "29ee1f2bb34b268ae0905889d1349de998fed6ed36c6e355be0255ab3a223846"
+          "sha256": "9bae7775fe4fb4a5e48b5cea2bbc96620151a82833643319996a6c6e81eb6de6"
         },
         {
           "path": "tests/pan549/cohort-analysis.test.mjs",

@@ -342,7 +342,7 @@ dbcd3ac598aa743f8a7e4a95cc8c88eb1c5a27672eadced284b72bea74fd3265  ./docs/VISIBIL
 550fb5e5ab7120450f1a3aa8f94da0249f37421211be39c2a96eecb54c70b4da  ./docs/VOICE-LOCAL-PTT.md
 06077133bcdcaf8388aeb9c5c0477c973ca116e657621077845d9be6cd29dc1e  ./docs/alternatives.md
 e0a9107c308047d680bacb2b5026b3b4a7554d4c0395e915992cd19f7986a2e6  ./docs/architecture/agent-configuration-draft-v1.md
-b821573c4289f71fac338b101107633aebb91b2f09d79f8965546aa0a81c9e16  ./docs/architecture/browser-profile-v1.md
+0adce62010e57f56ee9115aa98bac188d17d91e9d1fdd5bbc62bb3d3d1545834  ./docs/architecture/browser-profile-v1.md
 d9fd55f9cda9c00735a5facf7f78fb89c00461a3050c12fa9bdff5d1ed380a2f  ./docs/architecture/browser-shell-plugin-v1.md
 3d91010fcc4e15c85f4f00f96cda5c972dcffe803cb42311ccd007b09d903348  ./docs/architecture/canonical-json-profile-inventory.md
 65629f8e98d827eb40782090b741661a271f30e83c3d400ad339b6141a85177c  ./docs/architecture/cks-10-analytics-bridge-decision-v1.md
@@ -751,7 +751,7 @@ d1426e7e33dac9c9f7b2d2ea722888545b85cd73330408aa0658283c03ea85f8  ./package.json
 d38bfac66906e07da947d7cc6dd9bd5ad381a3e95ff891c8d973dbfe1aac28be  ./packages/browser-shell/src/registry-v1.ts
 e7d68a928312f3ae8d7261518da183d5cd2e3db6928a6ef0dd36466676aad946  ./packages/browser-workspace/src/analysis-v1.css
 5c801df98d0b4e9fba23085d4a606a88c8943ab53f7fc62424aa7ff3965714bb  ./packages/browser-workspace/src/api-v1.ts
-93e850aea32bd9755d0f2bea572cf55a2bfd25f4e49777fb0624bb50b0fb6899  ./packages/browser-workspace/src/app.ts
+2a365062bca3c6bc847d12390d435de6c6a56c28b38644f6ad63d448c2502ae6  ./packages/browser-workspace/src/app.ts
 3d2bbddb579b90b53eec378aa9f06b1094b3024a7259753b5859d5b31ac608f0  ./packages/browser-workspace/src/configuration-draft-v1.css
 24f9d25cc2772b3afd18a5a1990989e3a7110cfbf27f701daca3e334597156ea  ./packages/browser-workspace/src/context-selection-v1.ts
 d43b81ff1a8be20b29732fb1e7980fbadf74dba26467368cfda5248c1c062c5c  ./packages/browser-workspace/src/notifications-v1.ts
@@ -2291,7 +2291,7 @@ cf15d3a99223807224a533fee64f218f08ab818fe1151a527120820542a6de41  ./tests/pan548
 ec36ea884b580a6a768967cd2f7cf68d6a8cb53b5c97cd6dffd892a4c1f0c1f3  ./tests/pan548/registration.test.mjs
 33e068b5f322552e43a52f1a7bc339973594534f3dac9cd188d032dccf1ce7da  ./tests/pan549/browser-analysis.test.mjs
 6aa8c3a5adcb7039fbf156c177994e27d6b7c5a211b5206a8f1786ecaa8160b2  ./tests/pan549/browser-fixture.mjs
-29ee1f2bb34b268ae0905889d1349de998fed6ed36c6e355be0255ab3a223846  ./tests/pan549/browser-lifecycle-analysis.test.mjs
+9bae7775fe4fb4a5e48b5cea2bbc96620151a82833643319996a6c6e81eb6de6  ./tests/pan549/browser-lifecycle-analysis.test.mjs
 7c13c7f5c57e5ff686668072b54e439827ca92f24a4ed3698cdd67180ce8724b  ./tests/pan549/cohort-analysis.test.mjs
 4552da296047a8729002f8e11e919c3a7719800c50fb1874fb550c78c0083192  ./tests/pan549/native-analysis-read.test.mjs
 dedf739d8ff62acf186eea044ca0340cb231adb47f053e2996ea2564e980d62e  ./tests/pan549/protected-analysis.test.mjs
@@ -2568,5 +2568,5 @@ bbbe24fa998be7227241509e8dfd98b9f8a273d8dd0fa9de55763ddae3320301  ./verification
 c96d8176e5303faad02c363871f2b86e0b1219aa589d0dbce80325ef15a1e3bf  ./verification/rks-01-source-capture-receipt-v1.json
 e65896e711d88ae357d138f03914c1909270ba57218691ef9f9b0e2778e34f8f  ./verification/rks-02-falsification-report-v1.json
 9a39365b3feeb3e0dd56f0551294492969ca2bb32b321695b9ef9dd396bdaee9  ./verification/trust-compatibility-foundation-closure-v1.json
-a53c0a86439104d3001200ea42f60356a10c4b2fe6061067ee87e3e1e35956e0  ./verification/verification-dag-v2.json
+eab28bbd2b9743f07b937e3a62679947e66d7b74d4156ee20e05a8345f464683  ./verification/verification-dag-v2.json
 bbfedced8b1f5e4af0feb6d72564f7f292c56d5e7eb686f8f5f4a05d7a5310a3  ./verification/wikimedia-m0-evidence-v1.json
