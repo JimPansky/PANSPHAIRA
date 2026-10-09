@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {join} from 'node:path';
 import {browserFixture549,launch549,start549,enter549,forward549,responsive549,screenshot549} from './browser-fixture.mjs';
 import {request527} from '../pan527/helpers.mjs';
 // Observe rejection immediately without replacing the promise awaited by the case.
@@ -85,6 +88,47 @@ test('PUI-08 actual default-off EMPTY cohort, positive stock, keyboard focus and
   await page.locator('.skip-link').focus();await page.locator('.skip-link').press('Enter');await page.waitForFunction(()=>document.activeElement?.id==='shell.main');assert.match(await page.locator('main').innerText(),/Gebundene Bestandsanalyse/);assert.match(await page.evaluate(()=>location.hash),/^#\/workspace\/analysis/);
   await page.evaluate(()=>{document.documentElement.style.zoom='2';});let d=await screenshot549(page,'390-empty-css-layout-zoom-2',f,live.browser,{stressNotBrowserChromePhysicalDeviceOrLocalizationAcceptance:true});assert.ok(d.document.width<=d.viewport.width);assert.ok(d.controls.every(c=>c.width>0&&c.height>0&&c.x>=0&&c.right<=d.viewport.width));
   await page.evaluate(()=>{document.documentElement.style.zoom='1';document.querySelector('main').style.fontFamily='monospace';document.querySelector('main').style.fontSize='22px';});d=await screenshot549(page,'390-empty-wide-font-content-stress',f,live.browser,{stressNotHostedFontReplayOrLocalizationAcceptance:true});assert.ok(d.document.width<=d.viewport.width);assert.ok(d.controls.every(c=>c.width>0&&c.height>0&&c.x>=0&&c.right<=d.viewport.width));f.unchanged();
+ }finally{await live?.context.close();await f.close();}
+});
+
+test('PUI-08 browser refuses correctly hashed genuine native bytes for a different requested cutoff',async()=>{
+ const f=await browserFixture549();let live;
+ try{
+  live=await launch549(f);const page=await live.context.newPage();await start549(page,f);
+  await page.route('**/workspace/analysis',async route=>{const actual=await forward549(f,route,selector=>{selector.asOf='2026-07-01T00:00:00Z';});assert.equal(actual.status,200);await route.fulfill({status:200,contentType:'application/json',body:actual.body});});
+  await enter549(page);await page.waitForFunction(()=>{const state=document.querySelector('[data-backend="analysis"]')?.getAttribute('data-outcome');return state&&state!=='LOADING';});
+  assert.equal(await page.locator('[data-backend="analysis"]').getAttribute('data-outcome'),'UNKNOWN');await noFacts(page);
+  await responsive549(page,'genuine-native-wrong-cutoff-denied',f,live.browser,{observerFault:'Changed only forwarded read cutoff; delivered unchanged correctly hashed genuine native result bytes to the original requesting renderer'});f.unchanged();
+ }finally{await live?.context.close();await f.close();}
+});
+
+test('PUI-08 exported direct renderer clears prior facts on bad integrity and an older rejection cannot erase a newer valid render',async()=>{
+ const f=await browserFixture549();let live;
+ try{
+  live=await launch549(f);const page=await live.context.newPage();await start549(page,f);
+  const bundle=join(f.tls.root,'owned-direct-analysis.mjs');
+  execFileSync(process.execPath,['--input-type=module','-e','import{buildSync}from "esbuild";buildSync({entryPoints:["packages/browser-workspace/src/plugin-analysis-v1.ts"],bundle:true,format:"esm",platform:"browser",outfile:process.argv[1]});',bundle],{stdio:'pipe'});
+  const source=readFileSync(bundle,'utf8');await page.route('**/owned-direct-analysis.js',route=>route.fulfill({contentType:'application/javascript',body:source}));
+  const selector={schemaVersion:'pansphaira.workspace-analysis/read/v1',objectId:'analysis:common-trade-01:stock',expectedNativeRevision:null,expectedResultRevision:null,asOf:'2026-06-30T23:59:59+02:00'};
+  const actual=f.reader.read({cookie:live.who.cookieHeader,origin:f.tls.origin},selector);
+  const observed=await page.evaluate(async value=>{
+   const {renderWorkspaceAnalysisResultV1:render}=await import('/owned-direct-analysis.js');
+   const target=document.createElement('section');target.id='owned-direct-renderer';document.querySelector('main').append(target);
+   await render(target,value,value.binding);const first=target.querySelectorAll('[data-analysis-value]').length;
+   const bad=structuredClone(value);bad.rows[0].value++;let rejected=false;
+   try{await render(target,bad,value.binding);}catch{rejected=true;}
+   const afterBad={cells:target.querySelectorAll('[data-analysis-value]').length,state:target.getAttribute('data-outcome')};
+   const digest=crypto.subtle.digest.bind(crypto.subtle);let entered,release,firstDigest=true;
+   const began=new Promise(resolve=>{entered=resolve;}),held=new Promise(resolve=>{release=resolve;});
+   crypto.subtle.digest=async(...args)=>{const bytes=await digest(...args);if(firstDigest){firstDigest=false;entered();await held;}return bytes;};
+   try{
+    const older=render(target,bad,value.binding).then(()=>false,()=>true);await began;
+    await render(target,value,value.binding);release();const oldRejected=await older;
+    return {first,rejected,afterBad,oldRejected,finalCells:target.querySelectorAll('[data-analysis-value]').length,finalState:target.getAttribute('data-outcome')};
+   }finally{release();crypto.subtle.digest=digest;}
+  },actual);
+  assert.equal(observed.first,6);assert.equal(observed.rejected,true);assert.equal(observed.afterBad.cells,0);assert.equal(observed.afterBad.state,'UNKNOWN');assert.equal(observed.oldRejected,true);assert.equal(observed.finalCells,6);assert.equal(observed.finalState,'READBACK_RECEIVED');
+  await screenshot549(page,'direct-renderer-newer-success-survives-older-rejection',f,live.browser,{observerFault:'Real exported production renderer compiled in an owned test bundle; only delivery of the actual browser cryptographic digest was held, no fabricated native values or digest bytes'});f.unchanged();
  }finally{await live?.context.close();await f.close();}
 });
 

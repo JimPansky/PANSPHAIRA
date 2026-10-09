@@ -90,6 +90,16 @@ async function digestWithout(value:Record<string,unknown>,key:string):Promise<st
  const bytes=await globalThis.crypto.subtle.digest('SHA-256',new TextEncoder().encode(canonicalJson(unsigned)));
  return Array.from(new Uint8Array(bytes),b=>b.toString(16).padStart(2,'0')).join('');
 }
+export async function verifyWorkspaceAnalysisReadResultV1(value:unknown,expectedBinding:WorkspaceAnalysisBindingV1,selector:unknown):Promise<WorkspaceAnalysisStockResultV1>{
+ const read=validateWorkspaceAnalysisReadV1(selector),result=await verifyWorkspaceAnalysisResultIntegrityV1(value,expectedBinding);
+ if(read.expectedNativeRevision!==null&&read.expectedNativeRevision!==result.source.snapshot.nativeRevision)throw new Error('ANALYSIS_NATIVE_REVISION_STALE');
+ if(read.expectedResultRevision!==null&&read.expectedResultRevision!==result.resultRevision)throw new Error('ANALYSIS_RESULT_REVISION_STALE');
+ // Compare the admitted literal selector, including explicit current/null. Do
+ // not normalize a caller token or admit a historical read as the current one.
+ if(read.asOf!==result.source.snapshot.asOf)throw new Error('ANALYSIS_RESULT_CUTOFF_STALE');
+ return result;
+}
+
 export async function verifyWorkspaceAnalysisResultIntegrityV1(value:unknown,expectedBinding:WorkspaceAnalysisBindingV1):Promise<WorkspaceAnalysisStockResultV1>{
  const result=validateWorkspaceAnalysisResultV1(value,expectedBinding);
  if(await digestWithout(result as unknown as Record<string,unknown>,'resultRevision')!==result.resultRevision)return denied();

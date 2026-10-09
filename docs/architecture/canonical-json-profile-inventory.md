@@ -321,3 +321,17 @@ Recorded Fake-Docker interactions and new exclusively owned no-network native
 stop/data-retention/purge with a live independent control are separate evidence.
 Neither proves a fresh full installer, ERP/model outcome, hostile same-user
 sandbox, independent person review or canonical/CI/release/closure completion.
+
+## PAN549 direct cohort integrity regression: measured consumer refresh
+
+The genuine nested-report integrity regression imports the existing
+canonicalJson function once in tests/pan549/cohort-analysis.test.mjs. The
+unchanged scanner now observes1064 source files,37 declaration sites/files,
+306 import sites/305 import files,7 reexports,30 similar-shape sites and2560
+unique checksum entries. The tests consumer family is69 sites/68 files.
+Only these measured current import anchors advance. Scanner logic, strict
+validator, historical migrations,21 byte obligations,13 pinned-profile files,
+original admitted bytes and the non-equivalence stance are unchanged.
+
+This metadata refresh does not waive any tests, native boundary checks,
+review, whole-canonical, CI, release or anonymous product-readback gates.

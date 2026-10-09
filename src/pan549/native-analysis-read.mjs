@@ -3,7 +3,7 @@ import {createHash} from 'node:crypto';
 import {canonicalJson} from '../../dist/packages/contracts/src/canonical-json.js';
 import {readPan515TradeState} from '../pan515/trade-state.mjs';
 import {isProtectedSessionAdapterV1} from '../pan527/origin-session-adapter.mjs';
-import {validateWorkspaceAnalysisResultV1} from '../../dist/packages/contracts/src/workspace-analysis-v1.js';
+import {validateWorkspaceAnalysisReadV1,validateWorkspaceAnalysisResultV1} from '../../dist/packages/contracts/src/workspace-analysis-v1.js';
 import {UsageInsightsLocalServiceV1,validateUsageInsightsReportV1} from '../../dist/packages/usage-insights/src/index.js';
 
 const owned=new WeakMap();
@@ -36,6 +36,7 @@ export function createNativeAnalysisReadAdapterV1(options){
   if(headers.origin!==sessions.origin||!['reader','reviewer'].includes(principal.role))throw new Error('ANALYSIS_ORIGIN_OR_ROLE_DENIED');
   if(selector.expectedNativeRevision!==null&&(!Number.isSafeInteger(selector.expectedNativeRevision)||selector.expectedNativeRevision<0))throw new Error('ANALYSIS_NATIVE_REVISION_STALE');
   if(selector.expectedResultRevision!==null&&(typeof selector.expectedResultRevision!=='string'||!/^[a-f0-9]{64}$/.test(selector.expectedResultRevision)))throw new Error('ANALYSIS_RESULT_REVISION_STALE');
+  try{selector=validateWorkspaceAnalysisReadV1(selector);}catch{throw new Error('ANALYSIS_READ_REQUEST_DENIED');}
   const projection=readPan515TradeState({root,asOf:selector.asOf,projection:request});
   if(projection.snapshot.bindingDigest!==initialBinding)throw new Error('ANALYSIS_NATIVE_BINDING_DRIFT_DENIED');
   if(selector.expectedNativeRevision!==null&&selector.expectedNativeRevision!==projection.snapshot.nativeRevision)throw new Error('ANALYSIS_NATIVE_REVISION_STALE');

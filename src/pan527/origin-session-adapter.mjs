@@ -10,7 +10,7 @@ import { validateBrowserProfileReadV1, validateBrowserProfileWriteV1 } from "../
 import { runtimeIdentityDigestV1, validateRuntimeIdentityV1 } from "../pan526/runtime-contract.mjs";
 import { validateBrowserErvReadV1 } from "../../dist/packages/contracts/src/browser-erv-read-v1.js";
 import { validateWorkspaceNotificationsFeedV1, validateWorkspaceNotificationSelectorV1, validateWorkspaceNotificationPreferencesV1, validateWorkspaceNotificationPreferencesWriteV1 } from "../../dist/packages/contracts/src/workspace-notifications-v1.js";
-import { validateWorkspaceAnalysisReadV1, verifyWorkspaceAnalysisResultIntegrityV1 } from "../../dist/packages/contracts/src/workspace-analysis-v1.js";
+import { validateWorkspaceAnalysisReadV1, verifyWorkspaceAnalysisReadResultV1 } from "../../dist/packages/contracts/src/workspace-analysis-v1.js";
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
 export function validateHostedOriginV1(value) {
@@ -338,8 +338,9 @@ export function createOptionalHttpsProductIngressV1(options) {
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
         if (match[2] === "/workspace/analysis") {
-          const adapter = product.workspaceAnalysis; if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+          const workspace = product.workspaceDocument, adapter = product.workspaceAnalysis; if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
           const checkAnalysisContext = () => {
+            if (product.workspaceDocument !== workspace || product.workspaceAnalysis !== adapter) throw new Error("ANALYSIS_ATTACHMENT_RETIRED_DENIED");
             product.sessions.authenticate(request.headers);
             const pair = request.headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
             if (request.headers["x-pan549-context"] !== "session:" + hash(pair)) throw new Error("HOSTED_SESSION_DENIED");
@@ -353,7 +354,7 @@ export function createOptionalHttpsProductIngressV1(options) {
           catch { return reply(response, 400, "ANALYSIS_READ_REQUEST_DENIED"); }
           checkAnalysisContext(); const value = await adapter.read(request.headers, selector); checkAnalysisContext();
           const b = product.sessions.binding;
-          const result = await verifyWorkspaceAnalysisResultIntegrityV1(value, { origin: b.origin, tenantId: b.tenantId, instanceId: b.instanceId, generation: b.generation, identityDigest: b.identityDigest });
+          const result = await verifyWorkspaceAnalysisReadResultV1(value, { origin: b.origin, tenantId: b.tenantId, instanceId: b.instanceId, generation: b.generation, identityDigest: b.identityDigest }, selector);
           checkAnalysisContext();
           // Read-only POST supplies a bounded selector, not an effect. Never renew
           // cookies here: delayed results cannot resurrect a retired session.
@@ -544,7 +545,7 @@ export function createOptionalHttpsProductIngressV1(options) {
       else if (["PROFILE_SCHEMA_DENIED", "PROFILE_CONTRIBUTION_DENIED"].includes(code)) reply(response, 400, code);
       else if (code === "PROFILE_REVISION_CONFLICT") reply(response, 409, code);
       else if (code === "ERV_OBJECT_REVISION_STALE") reply(response, 409, code);
-      else if (["ANALYSIS_NATIVE_REVISION_STALE", "ANALYSIS_RESULT_REVISION_STALE"].includes(code)) reply(response, 409, code);
+      else if (["ANALYSIS_NATIVE_REVISION_STALE", "ANALYSIS_RESULT_REVISION_STALE", "ANALYSIS_RESULT_CUTOFF_STALE", "ANALYSIS_ATTACHMENT_RETIRED_DENIED"].includes(code)) reply(response, 409, code);
       else if (["ANALYSIS_OBJECT_BINDING_DENIED", "ANALYSIS_ORIGIN_OR_ROLE_DENIED", "ANALYSIS_NATIVE_BINDING_DRIFT_DENIED"].includes(code)) reply(response, 403, code);
       else if (["ANALYSIS_RESULT_CONTRACT_DENIED", "ANALYSIS_READ_REQUEST_DENIED"].includes(code)) reply(response, 400, code);
       else if (["ERV_TENANT_BINDING_DENIED", "ERV_OBJECT_BINDING_DENIED"].includes(code)) reply(response, 403, code);

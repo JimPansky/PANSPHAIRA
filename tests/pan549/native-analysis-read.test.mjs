@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {createHash} from 'node:crypto';
+import {DatabaseSync} from 'node:sqlite';
 import {canonicalJson} from '../../dist/packages/contracts/src/canonical-json.js';
 import {existsSync,mkdirSync} from 'node:fs';
 import {join} from 'node:path';
@@ -108,6 +109,23 @@ test('PUI-08-AC02/03 actual stock result has a closed versioned runtime contract
   }
   let calls=0;const getter=structuredClone(result);Object.defineProperty(getter.rows[0],'value',{enumerable:true,get(){calls++;return 2;}});
   assert.throws(()=>contract.validateWorkspaceAnalysisResultV1(getter,result.binding),/ANALYSIS_RESULT_CONTRACT_DENIED/);assert.equal(calls,0);
+ }finally{f.close();}
+});
+
+test('PUI-08 direct selector admission rejects malformed cutoffs before any native SQLite query and preserves explicit null',async(t)=>{
+ const f=await analysisFixture();
+ try{
+  const reader=analysis.createNativeAnalysisReadAdapterV1({optIn:true,root:f.root,sessions:f.sessions});
+  const prepare=DatabaseSync.prototype.prepare;let reads=0;
+  const observer=t.mock.method(DatabaseSync.prototype,'prepare',function(...args){reads++;return prepare.apply(this,args);});
+  try{
+   for(const asOf of [undefined,1,{},'2026-06-30','2026-02-30T00:00:00Z']){
+    assert.throws(()=>reader.read(f.headers,{...f.selector,asOf}),/ANALYSIS_READ_REQUEST_DENIED/);
+    assert.equal(reads,0,'invalid selector must not reach the unchanged actual SQLite provider');
+   }
+   for(const asOf of [null,cutoff])assert.equal(reader.read(f.headers,{...f.selector,asOf}).source.snapshot.asOf,asOf);
+   assert.ok(reads>0,'valid selectors still consume the genuine native SQLite provider');
+  }finally{observer.mock.restore();}
  }finally{f.close();}
 });
 
