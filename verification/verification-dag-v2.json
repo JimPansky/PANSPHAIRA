@@ -4781,7 +4781,7 @@
         {
           "path": "docs/architecture/canonical-json-profile-inventory.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "3d91010fcc4e15c85f4f00f96cda5c972dcffe803cb42311ccd007b09d903348"
+          "sha256": "956bdcae5f062d00c0f7744ee08df878dadb9dd064a24ad22fd54560701465cb"
         },
         {
           "path": "docs/architecture/pan574-composition-bindings-v1.md",
@@ -4906,7 +4906,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "3e44359c944d2bebd9927d04c82a6a3c3903c46e2a9099914187a14b0b20fd37"
+          "sha256": "2a6e5ce176a142cd6e4983bdf21897bc103f38f3dde88b6c2f7b96f728bb1d6f"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4966,7 +4966,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e1e40fa3617276c2ca754a8c3c878cb5abc94b9e47d5aa1bc6ecd2d695b7a2f3"
+          "sha256": "e9a132cd23621393bd4d497794da9057e161de5f4a8c6b7203405f9c96dae3f9"
         },
         {
           "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
@@ -5086,7 +5086,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "601638a4a11109874a2ca2524041d104ad0e36fd9b68998adbb9917a0e50c2cb"
+          "sha256": "7bae91ed80b03371d5c7e2e8b6b813643fa917360e109c1325933672fca97aeb"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -5184,7 +5184,8 @@
         "npm run pan542:test",
         "npm run pan544:test",
         "npm run pan549:test",
-        "npm run pan548:test"
+        "npm run pan548:test",
+        "npm run pan546:test"
       ],
       "invariants": [
         "Public staging is manifest closed and secret/privacy scanned.",
@@ -5739,7 +5740,7 @@
         {
           "path": "package.json",
           "role": "TOOLCHAIN",
-          "sha256": "d1426e7e33dac9c9f7b2d2ea722888545b85cd73330408aa0658283c03ea85f8"
+          "sha256": "ecb2e0b1f2e621c510977d5e98af2d480f4e77c53dd5f963187744650b103ee4"
         },
         {
           "path": "package-lock.json",
@@ -6099,7 +6100,7 @@
         {
           "path": "tests/verification-fabric-v2.test.ts",
           "role": "VALIDATOR",
-          "sha256": "96bf2df21afe1df383b0f082b62ac7145d863361b7d5303434b9b912d3a794ec"
+          "sha256": "3803abd5b9a88d4dc6d45ae80396b710040d39db7b67737e40edcd0bac3b6440"
         },
         {
           "path": "docs/VERIFICATION-FABRIC-SHADOW.md",
@@ -8559,7 +8560,7 @@
         {
           "path": "tests/pan515/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "b6f4196a52fa92242a64afd9d0b625b83c16935aa878189d19b8ca152945adcd"
+          "sha256": "62ade783c260343408c48739832f3e760777376eebe1ba91871affca479e22ba"
         },
         {
           "path": "docs/architecture/pan515-native-trade-state-v1.md",
@@ -8625,7 +8626,7 @@
         {
           "path": "tests/procurement-434/procurement-registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "4537956a26f592f6e84a954b7bf11f90b21e89632ccda9a08777be69ad77aae6"
+          "sha256": "ff54e368dc8046ffc4f98b7d6963a2179cfd87973ab20defffee31466880995e"
         },
         {
           "path": "docs/architecture/pan516-native-procurement-v1.md",
@@ -8960,7 +8961,7 @@
         {
           "path": "tests/pan526/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "c107badc543a17e416cc96e0aede3fd73e205df2e8ef226770439190f14df704"
+          "sha256": "00a5b29a494ee9e25170a2e073ce386fc3782251b694adcda3ff0ec69fcf2627"
         },
         {
           "path": "docs/architecture/pan526-runtime-identity-development-v1.md",
@@ -9035,7 +9036,7 @@
         {
           "path": "src/pan527/origin-session-adapter.mjs",
           "role": "SOURCE",
-          "sha256": "cb670b7e42e6918d974c0fe94739562118df2163e720672ac0cf2f692a98c722"
+          "sha256": "1f9cb22fa94d838568ae49e59f633d8da4bd74021cc7dc32b1a3ac36d4fd179f"
         },
         {
           "path": "scripts/run-pan527-origin-session-tests.mjs",
@@ -9095,7 +9096,7 @@
         {
           "path": "tests/pan527/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "c744b4033b7e0adf18b9d9aa0086bd86bb04b8bd71282199df4fad1bc6899afd"
+          "sha256": "92514587e511d7452bb19f3fea122af07454db63bd503fa81dc67615cddf50cb"
         },
         {
           "path": "tests/pan527/test-runner.test.mjs",
@@ -9855,7 +9856,7 @@
         {
           "path": "packages/browser-workspace/src/app.ts",
           "role": "SOURCE",
-          "sha256": "2a365062bca3c6bc847d12390d435de6c6a56c28b38644f6ad63d448c2502ae6"
+          "sha256": "26938131fd23b428b0b7e58ed7a3241c46d84cb0a4c4d6c4de85fee30f07a925"
         },
         {
           "path": "packages/browser-workspace/src/plugin-diagnostics-v1.ts",
@@ -9895,7 +9896,7 @@
         {
           "path": "scripts/build-pan541-browser.mjs",
           "role": "SOURCE",
-          "sha256": "f6f3abca103eb0bb600d3a2d86483254810e861207de95c8a56252dd9d361910"
+          "sha256": "80b45966d4ea7bd5f0c6fe46a31b0e2c65f69ff5b2074455c9eaceb0104c94c9"
         },
         {
           "path": "scripts/run-pan541-shared-browser-shell-tests.mjs",
@@ -9910,7 +9911,7 @@
         {
           "path": "src/pan541/workspace-browser.mjs",
           "role": "SOURCE",
-          "sha256": "2ee2104bcfcf9d636f2b19287e540de3bd856b29a6a12f84bde1e425e61aa528"
+          "sha256": "fcd63ad4cfba2ffdc0c14347e03e4091caa97b7ae1cf9504ad669021971452da"
         },
         {
           "path": "tests/pan541/browser-context-safety.test.mjs",
@@ -9955,7 +9956,7 @@
         {
           "path": "tests/pan541/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "7e9aa9e874eec04e3b259c886cbed6133b6190e39b20bda29d241e7b27a30ad3"
+          "sha256": "003311b64af5cc99ad61335fbabce45b0c869decd1e33bb8bbee2c88f92f2141"
         },
         {
           "path": "tests/pan541/registry.test.mjs",
@@ -9995,12 +9996,12 @@
         {
           "path": "scripts/refresh-pan543-integrity.mjs",
           "role": "SOURCE",
-          "sha256": "a8ee8a485d2c058603e697f79ecd7f57f0c3700ba46d04bc29ed9bcd217858a8"
+          "sha256": "661660aba2a6ac0d6634f91ddbf05d44a79ab4dbaf0a5f6c235aeae8fcd6046b"
         },
         {
           "path": "src/pan543/profile-store.mjs",
           "role": "SECURITY",
-          "sha256": "0036a9653d6305e1fb409edd136e4da7944bbaeb8b08a57fdc1d4a76800ca4a9"
+          "sha256": "12698e96a0073bb5f178672895f084377b081fd94b03221762428d6a1b08bdc6"
         },
         {
           "path": "tests/pan543/backend-fixture.mjs",
@@ -10025,17 +10026,148 @@
         {
           "path": "tests/pan543/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "8e064d2d711da2c08458573925bba30e7a4fe214c032606fa2462cbaabb097db"
+          "sha256": "348ec48b2c38a92cc1d4786f41002c545f8a35748deab6afad815521a1babd9b"
         },
         {
           "path": "tests/pan543/transport.test.mjs",
           "role": "VALIDATOR",
           "sha256": "cd0e9f47076a8f3fdd02562c01feef42c7402d7475a9b398ce5cfcf6f97472fb"
+        },
+        {
+          "path": "docs/architecture/native-module-view-human-browser-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "4618fc2c23811ba1774cacb3253c60b2e1e198c1872b5e97c4746030d5d0d365"
+        },
+        {
+          "path": "packages/contracts/src/workspace-module-view-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "2529b090f7b3e2a5fa464922be6c1e70642cc7241a704e65b733929ea01707b6"
+        },
+        {
+          "path": "packages/contracts/src/workspace-erv-human-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "498eac7d22ebd1148033562259ded73f542e036edfa38faede47299c2ad4ee6d"
+        },
+        {
+          "path": "packages/browser-workspace/src/module-view-native-v1.ts",
+          "role": "SOURCE",
+          "sha256": "be2c51bff65083f2121a1843f7528adc506cee6f9febea3b023e3b5c082bac11"
+        },
+        {
+          "path": "packages/browser-workspace/src/module-view-editor-v1.ts",
+          "role": "SOURCE",
+          "sha256": "ddf8a00295dcf8e2ea61a1b7b44fb842660f0be6ac8fd758fca3c7ca53800725"
+        },
+        {
+          "path": "packages/browser-workspace/src/module-view-v1.css",
+          "role": "SOURCE",
+          "sha256": "be74f88cc2762f70a68234063c2d663756957ab2869b1941bd41b5cfd025446f"
+        },
+        {
+          "path": "packages/browser-workspace/src/erv-human-v1.ts",
+          "role": "SOURCE",
+          "sha256": "130a79c6ffa2a58761a2349f502c3b677df983c436c667f34880197be3e906bb"
+        },
+        {
+          "path": "src/pan546/native-data-catalog.mjs",
+          "role": "SECURITY",
+          "sha256": "cf2d8e8794bfac87fd707f2e3a3439445f1c08e2b5d324a8521643bc4fbb25ab"
+        },
+        {
+          "path": "src/pan546/native-view-owner.mjs",
+          "role": "SECURITY",
+          "sha256": "2725f77aea189f9c97921903e97b2e8b8d5b6e86334120db20273261d3ca9053"
+        },
+        {
+          "path": "src/pan546/native-human-workspace.mjs",
+          "role": "SECURITY",
+          "sha256": "f380aeff69b113cc434f72ba048c17a5c04ba0e149b7025d40566835799053a7"
+        },
+        {
+          "path": "scripts/run-pan546-native-view-human-tests.mjs",
+          "role": "VALIDATOR",
+          "sha256": "817388baa3314f57aa2f8c881ad3215825e4140cb60235669648ba26b00fcc46"
+        },
+        {
+          "path": "tests/pan546/module-view.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "5002e1cf01f45e5fc6b2ea638e7c211324fd69301fee3b050c56a2f293762ab1"
+        },
+        {
+          "path": "tests/pan546/native-view.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "1a7dd3bc414642246f35ee607145a93575e92c354f588fc958e73189101b92d5"
+        },
+        {
+          "path": "tests/pan546/transport.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "4aef0db74e01ff814fcda44b7ba477caf364929215093193882283e95de790d4"
+        },
+        {
+          "path": "tests/pan546/native-association.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "76faadef8d3fde1173d6c4243f2035a5fd28f4fa73a34f256d92ac2e02fac5ed"
+        },
+        {
+          "path": "tests/pan546/reservation-native.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "ca02796f18e6e5be89408b00df9acf4338720113b3d33ced2c88755514cd9801"
+        },
+        {
+          "path": "tests/pan546/native-human-workspace.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "b34bbc364d1b8090d34a90b541a36efeb4e1fa8d6949763720ff1b3b77e40708"
+        },
+        {
+          "path": "tests/pan546/native-references.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "a9a73d5371c6372eb5729364ffe878fd1c2e5fc7053a2c106f963c7029845af8"
+        },
+        {
+          "path": "tests/pan546/browser-view.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "1c186d7054641b620e54cd72c9169fee858eb47ef928aaa0491b90930e0e00f8"
+        },
+        {
+          "path": "tests/pan546/browser-human.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "f5f2d0aea71e367af2f042561952852b3d4bb8792113ac83c3b1a4357ff296fd"
+        },
+        {
+          "path": "tests/pan546/browser-human-combined.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "d4f6c55b811fbcdea3e7733254319e8ee2c276b0de464b9a5570bb213f66cec2"
+        },
+        {
+          "path": "tests/pan546/registration.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "667119adf37f269a5da27f3264c47752cb8831665b02e0bf2ce17b5552d8500e"
+        },
+        {
+          "path": "tests/pan546/native-fixture.mjs",
+          "role": "VALIDATOR",
+          "sha256": "f9e130d33b355a0d502b977bec7b02f163a81b9318a948d62057d75405e0dce3"
+        },
+        {
+          "path": "tests/pan546/browser-fixture.mjs",
+          "role": "VALIDATOR",
+          "sha256": "b5dfa317b82e4f36de67a3bc1474e8f2ef3cb5661242955fda91f5c85d933ace"
+        },
+        {
+          "path": "tests/pan546/native-profile-reservation-probe.mjs",
+          "role": "VALIDATOR",
+          "sha256": "370a03d85841d44469308b40b9b636e8c83c3585b2bca00d9aaa1042770e6ede"
+        },
+        {
+          "path": "tests/pan546/native-human-reservation-probe.mjs",
+          "role": "VALIDATOR",
+          "sha256": "8806ec9aef2d5aeda3895e53f54ce0a61d96f03c86acba6a8b346536672be04c"
         }
       ],
       "ownedTests": [
         "npm run pan541:test",
-        "npm run pan543:test"
+        "npm run pan543:test",
+        "npm run pan546:test"
       ],
       "riskClass": "HIGH",
       "globalInvalidation": false,
@@ -10205,7 +10337,7 @@
         {
           "path": "src/pan542/native-human-backend.mjs",
           "role": "SECURITY",
-          "sha256": "439422b88477452025c2272b5cad152022291de5d6306962a66d2820ade97bde"
+          "sha256": "6ee9e19bc65dc3e5a1ba5d14a451803fec6aed9c59df84ebdb73f00312e74745"
         },
         {
           "path": "tests/pan542/native-human-backend.test.mjs",
@@ -10251,7 +10383,7 @@
         {
           "path": "packages/browser-workspace/src/notifications-v1.ts",
           "role": "SOURCE",
-          "sha256": "d43b81ff1a8be20b29732fb1e7980fbadf74dba26467368cfda5248c1c062c5c"
+          "sha256": "a6e804f40c1cc686cae45b93a71633cf93f9670205c16c09b7e5a1d2eed6706d"
         },
         {
           "path": "packages/contracts/src/workspace-notifications-v1.ts",
@@ -10430,7 +10562,7 @@
         {
           "path": "packages/browser-workspace/src/context-selection-v1.ts",
           "role": "SOURCE",
-          "sha256": "24f9d25cc2772b3afd18a5a1990989e3a7110cfbf27f701daca3e334597156ea"
+          "sha256": "7b8539ff102babbb1f7246f210dc518f63015121c53c127c05a360615df2dc54"
         },
         {
           "path": "packages/contracts/src/workspace-context-selection-v1.ts",
@@ -10445,7 +10577,7 @@
         {
           "path": "src/pan548/native-context-selection.mjs",
           "role": "SECURITY",
-          "sha256": "a7ef52af07bba4115f5d253e8f1a8083b6706b0144faa55730df0d826da666e0"
+          "sha256": "38927d10694f345a8443bcaa28f50fc5bed9bfb0eed108d6a4aeccb4a2358dc4"
         },
         {
           "path": "tests/pan548/context-contract.test.mjs",

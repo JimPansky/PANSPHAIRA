@@ -1,6 +1,7 @@
 import {createHash,randomBytes,timingSafeEqual} from 'node:crypto';
 import {isProtectedSessionAdapterV1} from '../pan527/origin-session-adapter.mjs';
 import {isNativeErvReadAdapterV1} from '../pan541/native-erv-read-adapter.mjs';
+import {isWorkspaceModuleViewStoreV1,sameWorkspaceModuleViewStoreV1} from '../pan543/profile-store.mjs';
 import {runtimeIdentityDigestV1,validateRuntimeIdentityV1} from '../pan526/runtime-contract.mjs';
 import {setupPluginV1} from '../../dist/packages/browser-workspace/src/plugin-setup-v1.js';
 import {ervPluginV1} from '../../dist/packages/browser-workspace/src/plugin-erv-v1.js';
@@ -18,8 +19,11 @@ function equalSecret(a,b){return typeof a==='string'&&typeof b==='string'&&a.len
 const nativeFactoryIds=new Set(['pan.setup.navigation','pan.setup.view','pan.erv.navigation','pan.erv.view','pan.erv.information','pan.erv.action']);
 function registered(moduleId,viewId){const source=moduleId==='pan.setup'?setupPluginV1:moduleId==='pan.erv'?ervPluginV1:null;if(!source)throw new Error('CONTEXT_NATIVE_VIEW_DENIED');const result=validateBrowserShellPluginV1(source,nativeFactoryIds);if(result.outcome!=='DESCRIPTOR_VALID')throw new Error('CONTEXT_NATIVE_VIEW_DENIED');const p=result.descriptor;if(!p.enabled||p.needs.dependencies.length!==0||!p.contributions.some(x=>x.kind==='VIEW'&&x.id===viewId))throw new Error('CONTEXT_NATIVE_VIEW_DENIED');return p;}
 export function createNativeWorkspaceContextSelectionV1(options){
- exact(options,['sessions','identity','nativeReader','readSetup','readProfile'],'CONTEXT_NATIVE_OWNER_DENIED');
+ const extra=options&&Object.hasOwn(options,'moduleViewStore');
+ exact(options,['sessions','identity','nativeReader','readSetup','readProfile',...(extra?['moduleViewStore']:[])],'CONTEXT_NATIVE_OWNER_DENIED');
  const {sessions,nativeReader,readSetup,readProfile}=options,identity=validateRuntimeIdentityV1(options.identity);
+ const moduleViewStore=extra?options.moduleViewStore:null;
+ if(extra&&!isWorkspaceModuleViewStoreV1(moduleViewStore))throw new Error('CONTEXT_NATIVE_OWNER_DENIED');
  if(!isProtectedSessionAdapterV1(sessions,identity?.tenantId)||!isNativeErvReadAdapterV1(nativeReader,identity.tenantId)||typeof readSetup!=='function'||typeof readProfile!=='function'||sessions.binding.instanceId!==identity.instanceId||sessions.binding.generation!==identity.generation)throw new Error('CONTEXT_NATIVE_OWNER_DENIED');
  if(runtimeIdentityDigestV1(identity)!==sessions.binding.identityDigest)throw new Error('CONTEXT_NATIVE_OWNER_DENIED');
  const tabs=new Map();let closed=false,hostDigest=null,hostRevision=1,nativeReadSequence=1;
@@ -47,6 +51,10 @@ export function createNativeWorkspaceContextSelectionV1(options){
   const digest=hash(setupBytes);if(hostDigest!==null&&hostDigest!==digest)hostRevision=next(hostRevision);hostDigest=digest;const capturedHostRevision=hostRevision;
   const profile=validateBrowserProfileReadV1(readProfile(a.principal)),main=profile.catalog.find(x=>x.id==='shell.main');
   stableTab();
+  const personalModuleView=moduleViewStore===null?null:moduleViewStore.read(a.principal);
+  const personalModuleRevision=personalModuleView?.revision??0;
+  stableTab();
+  if(!Number.isSafeInteger(personalModuleRevision)||personalModuleRevision<0||!Number.isSafeInteger(profile.revision+1+personalModuleRevision))throw new Error('CONTEXT_REVISION_LIMIT');
   if(main?.state!=='AVAILABLE'||!profile.effectiveItems.some(x=>x.id==='shell.main'&&x.visible))throw new Error('CONTEXT_NATIVE_VIEW_DENIED');
   const catalog=hash(JSON.stringify([setupPluginV1,ervPluginV1,profile.catalog]));
   let primaryObject=null,selections=[];
@@ -57,12 +65,16 @@ export function createNativeWorkspaceContextSelectionV1(options){
    const invoice=nativeReader.read({tenantId:a.principal.tenantId,objectId:target.primaryObjectId,expectedRevision:null});
    primaryObject={objectId:invoice.invoiceId,revision:invoice.revision};
    selections=[{elementId:'pan.erv.amount',rowId:null,label:'Rechnungsbetrag in EUR'},{elementId:'pan.erv.status',rowId:null,label:'Aktueller fachlicher Rechnungsstatus'},{elementId:'pan.erv.summary',rowId:invoice.invoiceId,label:'Zusammenfassung der Rechnung '+invoice.invoiceId}];
+   // Membership comes from the SAME authenticated, validated native personal
+   // view store, never CSS/widget/source-map names. Hidden personal instances
+   // remain editable: presentation visibility is not field-read authorization.
+   if(personalModuleView)selections.push(...personalModuleView.view.instances.map(i=>({elementId:'pan.erv.module-card',rowId:i.instanceId,label:'Persönliches Viewelement: '+i.instanceId})));
   }
   stableTab(); // Fresh same-session rights and tab lifetime after native reads.
   if(hostDigest!==digest||hostRevision!==capturedHostRevision)throw new Error('CONTEXT_REVISION_STALE');
   const catalogRevision=tab.catalogDigest!==null&&tab.catalogDigest!==catalog?next(tab.catalogRevision):tab.catalogRevision;
   tab.catalogDigest=catalog;tab.catalogRevision=catalogRevision;
-  return {primaryObject,selections,revisions:{hostRevision:capturedHostRevision,domainRevision:primaryObject?.revision??null,viewRevision:profile.revision+1,catalogRevision,selectionRevision:tab.selectionRevision}};
+  return {primaryObject,selections,revisions:{hostRevision:capturedHostRevision,domainRevision:primaryObject?.revision??null,viewRevision:profile.revision+1+personalModuleRevision,catalogRevision,selectionRevision:tab.selectionRevision}};
  }
  function tabFor(headers){const a=authorize(headers);a.headers=headers;const id=headers['x-pan548-tab-id'],proof=headers['x-pan548-tab'];if(typeof id!=='string'||!/^tab:[a-f0-9]{32}$/.test(id)||typeof proof!=='string'||!/^[a-f0-9]{64}$/.test(proof))throw new Error('CONTEXT_TAB_DENIED');const tab=tabs.get(id);if(!tab||tab.sessionId!==a.sessionId||tab.subjectId!==a.principal.subjectId||tab.role!==a.principal.role||!equalSecret(tab.proofDigest,hash(proof)))throw new Error('CONTEXT_TAB_DENIED');if(clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');return {a,tab};}
  function issueReadback(a,tab,s){const at=clock();if(at>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');return validateWorkspaceContextReadbackV1({schemaVersion:'pansphaira.workspace-context/readback/v1',contextHandle:'context:'+randomBytes(32).toString('hex'),binding:{origin:sessions.origin,tenantId:a.principal.tenantId,subjectId:a.principal.subjectId,sessionId:a.sessionId,instanceId:a.principal.instanceId,generation:a.principal.generation,tabId:tab.id,epoch:tab.epoch},moduleId:tab.moduleId,viewId:tab.viewId,primaryObject:s.primaryObject,revisions:s.revisions,selection:tab.selection,lease:{issuedAtMs:at,expiresAtMs:Math.min(at+60000,tab.expiresAtMs)},capabilityIds:['ui.context.read','ui.selection.read'],sourceMap:null,executionAuthorityGranted:false,effectsProduced:false});}
@@ -82,8 +94,24 @@ export function createNativeWorkspaceContextSelectionV1(options){
   },
   verify(headers,value){const{a,tab}=tabFor(headers),v=validateWorkspaceContextVerifyV1(value);if(v.tabId!==tab.id)throw new Error('CONTEXT_TAB_DENIED');const current=tab.context;if(!current||!equalSecret(current.contextHandle,v.contextHandle))throw new Error('CONTEXT_REVISION_STALE');if(clock()>=current.lease.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');const s=state(a,tab);if(clock()>=current.lease.expiresAtMs||clock()>=tab.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');if(tab.context!==current||!same(current.revisions,s.revisions)||current.binding.epoch!==tab.epoch||!same(current.selection,tab.selection)||(current.selection!==null&&!s.selections.some(e=>e.elementId===current.selection.elementId&&e.rowId===current.selection.rowId)))throw new Error('CONTEXT_REVISION_STALE');return current;
   },
+  // Owner-only restriction for the EXISTING native writer after its SQLite
+  // reservation. Capture the genuine reader basis first; do not re-enter that
+  // writer's leading journal lease from inside its transaction.
+  nativeMutationGuard(headers,value){
+   const current=owner.verify(headers,value),originalTab=tabFor(headers).tab;
+   if(current.moduleId!=='pan.erv'||!current.primaryObject)throw new Error('CONTEXT_NATIVE_OBJECT_DENIED');
+   const leading=nativeReader.read({tenantId:current.binding.tenantId,objectId:current.primaryObject.objectId,expectedRevision:current.primaryObject.revision}),capturedHostDigest=hostDigest;
+   const stable=()=>{const{a,tab}=tabFor(headers);if(tab!==originalTab||tab.context!==current||tab.epoch!==current.binding.epoch)throw new Error('CONTEXT_REVISION_STALE');if(clock()>=current.lease.expiresAtMs)throw new Error('CONTEXT_LEASE_EXPIRED');return a;};
+   stable();return before=>{
+    const a=stable();if(before.invoiceId!==leading.invoiceId||before.nativeRevision!==leading.revision||before.basisDigest!==leading.basisDigest)throw new Error('CONTEXT_NATIVE_OBJECT_DENIED');
+    if(hash(JSON.stringify(readSetup(a.principal)))!==capturedHostDigest||hostRevision!==current.revisions.hostRevision)throw new Error('CONTEXT_REVISION_STALE');
+    const profile=validateBrowserProfileReadV1(readProfile(a.principal)),main=profile.catalog.find(x=>x.id==='shell.main'),personalRevision=moduleViewStore?.read(a.principal).revision??0;
+    if(main?.state!=='AVAILABLE'||!profile.effectiveItems.some(x=>x.id==='shell.main'&&x.visible)||profile.revision+1+personalRevision!==current.revisions.viewRevision||hash(JSON.stringify([setupPluginV1,ervPluginV1,profile.catalog]))!==originalTab.catalogDigest)throw new Error('CONTEXT_REVISION_STALE');stable();
+   };
+  },
   retire(headers,value){const{tab}=tabFor(headers),v=validateWorkspaceContextVerifyV1(value);if(v.tabId!==tab.id)throw new Error('CONTEXT_TAB_DENIED');if(!tab.context||!equalSecret(v.contextHandle,tab.context.contextHandle))throw new Error('CONTEXT_REVISION_STALE');tab.epoch=next(tab.epoch);tab.selectionRevision=next(tab.selectionRevision);tab.context=null;tab.selection=null;return {outcome:'CONTEXT_RETIRED',executionAuthorityGranted:false,effectsProduced:false};},
   close(){if(closed)return;closed=true;tabs.clear();},
- });owned.set(owner,sessions.binding);return owner;
+ });owned.set(owner,{binding:sessions.binding,moduleViewStore});return owner;
 }
-export const isNativeWorkspaceContextSelectionV1=(owner,binding)=>owned.has(owner)&&same(owned.get(owner),binding);
+export const isNativeWorkspaceContextSelectionV1=(owner,binding)=>owned.has(owner)&&same(owned.get(owner).binding,binding);
+export const isNativeWorkspaceModuleViewContextSelectionV1=(owner,binding,store)=>isNativeWorkspaceContextSelectionV1(owner,binding)&&sameWorkspaceModuleViewStoreV1(owned.get(owner).moduleViewStore,store);

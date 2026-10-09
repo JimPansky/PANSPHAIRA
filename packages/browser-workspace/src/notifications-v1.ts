@@ -21,13 +21,15 @@ export function createWorkspaceNotificationsV1({root,base,context,signal,openTar
     await sessionStillCurrent(c);
     const r=await fetch(base+'/workspace/notifications'+path,{method:body===undefined?'GET':'POST',credentials:'same-origin',cache:'no-store',headers:{'x-pan544-context':c.sessionId,...(body===undefined?{}:{'content-type':'application/json'})},...(body===undefined?{}:{body:JSON.stringify(body)}),signal:requestAbort.signal});
     const raw=await r.text();if(raw.length>131072)throw new Error('NOTIFICATION_RESPONSE_DENIED');
-    await sessionStillCurrent(c);if(r.status!==200)throw new Error(r.status===401||r.status===403?'NOTIFICATION_SESSION_DENIED':path==='/open'&&(r.status===409||r.status===410)?'NOTIFICATION_TARGET_RETIRED':'NOTIFICATION_RESPONSE_UNCONFIRMED');
+    await sessionStillCurrent(c);
+    if(r.status===403){let denial:unknown;try{denial=JSON.parse(raw);}catch{/* Unknown denial retains the session-wide fail-closed path. */}if(denial&&typeof denial==='object'&&Object.hasOwn(denial,'error')&&(denial as {error:unknown}).error==='NOTIFICATION_NATIVE_ROLE_DENIED')throw new Error('NOTIFICATION_PERMISSION_DENIED');}
+    if(r.status!==200)throw new Error(r.status===401||r.status===403?'NOTIFICATION_SESSION_DENIED':path==='/open'&&(r.status===409||r.status===410)?'NOTIFICATION_TARGET_RETIRED':'NOTIFICATION_RESPONSE_UNCONFIRMED');
     return JSON.parse(raw) as unknown;
   }
   const selector=(e:WorkspaceNotificationEventV1,operation:'open'|'mark-read'|'reconcile-read')=>validateWorkspaceNotificationSelectorV1({schemaVersion:'pansphaira.workspace-notifications/'+operation+'/v1',eventId:e.eventId,eventRevision:e.eventRevision},operation);
   function failRead(error:unknown,c:BrowserContextV1){
     if(!same(c))return;
-    const denied=error instanceof Error&&error.message==='NOTIFICATION_SESSION_DENIED';feed=null;if(denied||(error instanceof Error&&error.message==='NOTIFICATION_TARGET_RETIRED'))onSessionDenied();state(denied?'DENIED':'ERROR','Hinweise nicht verfügbar oder Zugriff verweigert. Keine fachlichen Daten oder erfolgreiche Aktion bestätigt.');
+    const denied=error instanceof Error&&error.message==='NOTIFICATION_SESSION_DENIED',permission=error instanceof Error&&error.message==='NOTIFICATION_PERMISSION_DENIED';feed=null;if(denied||(error instanceof Error&&error.message==='NOTIFICATION_TARGET_RETIRED'))onSessionDenied();state(denied?'DENIED':permission?'PERMISSION_DENIED':'ERROR',permission?'Diese native Rolle hat keinen Zugriff auf den Hinweisfeed. Keine Hinweise oder Fachaktion bestätigt; andere aktuell berechtigte Module bleiben unabhängig.':'Hinweise nicht verfügbar oder Zugriff verweigert. Keine fachlichen Daten oder erfolgreiche Aktion bestätigt.');
     if(root.dataset.outcome!=='DENIED')root.append(button('Hinweise neu lesen',()=>{void refresh();}));
   }
   async function open(e:WorkspaceNotificationEventV1){

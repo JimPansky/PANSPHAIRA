@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "e1e40fa3617276c2ca754a8c3c878cb5abc94b9e47d5aa1bc6ecd2d695b7a2f3"
+        "sha256": "e9a132cd23621393bd4d497794da9057e161de5f4a8c6b7203405f9c96dae3f9"
       }
     ]
   },
@@ -691,6 +691,14 @@
       "fromSha256": "5f606e84c08917d650496f9989ba87d493ce836eda02405e1226096481c58644",
       "toSha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa",
       "reason": "Advance graph98 with exactly one additive early DUI-02 authentic native context/selection owner. Preserve all102 previous owners and hard gates, immutable base obligations, every historical migration, unchanged scanner/validator and legacy runnable payload membership. Bind the fixed complete contract/native/expiry/reentrancy/browser/registration entry and narrow source-only members. No inference, task/view mutation, second registry, production or whole548/546 delivery authority; actual review, canonical CI, protected merge and exact release readback remain separate gates."
+    },
+    {
+      "migrationId": "PAN546-ADDITIVE-NATIVE-VIEW-HUMAN/INTEGRITY-GENERATOR/V76",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 76,
+      "fromSha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa",
+      "toSha256": "0c9befb9a1e5ef9b19009cfd5b48c40561fd33a3e39a899a7e85ceddc6af360c",
+      "reason": "Keep graph98 and all103 existing owner semantics and hard gates; add the fixed native view/Human/browser suite and26 source-only members to the existing shell/profile owner. Preserve every admitted byte obligation and all prior immutable migrations, unchanged mechanical scanner/validator, canonical no-skip entry and legacy runnable payload. Registration is not test, CI, real model, KS composition, release or original546/whole548 acceptance."
     }
   ],
   "scanScope": {
@@ -733,15 +741,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1075,
+    "filesScanned": 1099,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 306,
-    "importFiles": 305,
+    "importSites": 307,
+    "importFiles": 306,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2572,
-    "ledgerUniquePaths": 2572
+    "ledgerEntries": 2598,
+    "ledgerUniquePaths": 2598
   },
   "profiles": [
     {
@@ -814,7 +822,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa"
+      "sha256": "0c9befb9a1e5ef9b19009cfd5b48c40561fd33a3e39a899a7e85ceddc6af360c"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1286,8 +1294,8 @@
     },
     {
       "owner": "tests",
-      "importSites": 69,
-      "importFiles": 68
+      "importSites": 70,
+      "importFiles": 69
     },
     {
       "owner": "usage-insights",
@@ -1580,7 +1588,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "dfa1f1b4a561e7d8f2f02544e054e86c64e0059149224a00f1d6b6d0368ee3fa",
+      "sha256": "0c9befb9a1e5ef9b19009cfd5b48c40561fd33a3e39a899a7e85ceddc6af360c",
       "basis": "profile-version-migration"
     },
     {

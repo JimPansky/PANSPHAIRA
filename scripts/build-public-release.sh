@@ -694,6 +694,35 @@ repository_only_files = {
     "tests/pan548/browser-context.test.mjs",
     "tests/pan548/registration.test.mjs",
 
+    # PAN546 additive personal views and connected native Human browser: exact
+    # source-only members; existing runnable manifest and ingress bound unchanged.
+    "docs/architecture/native-module-view-human-browser-v1.md",
+    "packages/contracts/src/workspace-module-view-v1.ts",
+    "packages/contracts/src/workspace-erv-human-v1.ts",
+    "packages/browser-workspace/src/module-view-native-v1.ts",
+    "packages/browser-workspace/src/module-view-editor-v1.ts",
+    "packages/browser-workspace/src/module-view-v1.css",
+    "packages/browser-workspace/src/erv-human-v1.ts",
+    "src/pan546/native-data-catalog.mjs",
+    "src/pan546/native-view-owner.mjs",
+    "src/pan546/native-human-workspace.mjs",
+    "scripts/run-pan546-native-view-human-tests.mjs",
+    "tests/pan546/module-view.test.mjs",
+    "tests/pan546/native-view.test.mjs",
+    "tests/pan546/transport.test.mjs",
+    "tests/pan546/native-association.test.mjs",
+    "tests/pan546/reservation-native.test.mjs",
+    "tests/pan546/native-human-workspace.test.mjs",
+    "tests/pan546/native-references.test.mjs",
+    "tests/pan546/browser-view.test.mjs",
+    "tests/pan546/browser-human.test.mjs",
+    "tests/pan546/browser-human-combined.test.mjs",
+    "tests/pan546/registration.test.mjs",
+    "tests/pan546/native-fixture.mjs",
+    "tests/pan546/browser-fixture.mjs",
+    "tests/pan546/native-profile-reservation-probe.mjs",
+    "tests/pan546/native-human-reservation-probe.mjs",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real
