@@ -10,6 +10,7 @@ import { validateBrowserProfileReadV1, validateBrowserProfileWriteV1 } from "../
 import { runtimeIdentityDigestV1, validateRuntimeIdentityV1 } from "../pan526/runtime-contract.mjs";
 import { validateBrowserErvReadV1 } from "../../dist/packages/contracts/src/browser-erv-read-v1.js";
 import { validateWorkspaceNotificationsFeedV1, validateWorkspaceNotificationSelectorV1, validateWorkspaceNotificationPreferencesV1, validateWorkspaceNotificationPreferencesWriteV1 } from "../../dist/packages/contracts/src/workspace-notifications-v1.js";
+import { validateWorkspaceAnalysisReadV1, verifyWorkspaceAnalysisReadResultV1 } from "../../dist/packages/contracts/src/workspace-analysis-v1.js";
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
 export function validateHostedOriginV1(value) {
@@ -281,6 +282,17 @@ export function mountProtectedWorkspaceNotificationsV1(gateway, options) {
   return Object.freeze({ close() { if (product.workspaceNotifications === attachment) delete product.workspaceNotifications; } });
 }
 
+// Closed code-owner native result attachment. No query/plugin/transport writer.
+export function mountProtectedWorkspaceAnalysisV1(gateway, options) {
+  exactData(options, ["optIn", "tenantId", "identityDigest", "origin", "adapterVersion", "read"], "HOSTED_ANALYSIS_OWNER_DENIED");
+  const product = ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if (options.optIn !== true || !product?.workspaceDocument || product.workspaceAnalysis
+    || options.identityDigest !== product.sessions.binding.identityDigest || options.origin !== product.sessions.origin
+    || options.adapterVersion !== "pan520-stock-analysis/v1" || typeof options.read !== "function") throw new Error("HOSTED_ANALYSIS_OWNER_DENIED");
+  const attachment = Object.freeze({ read: options.read }); product.workspaceAnalysis = attachment;
+  return Object.freeze({ close() { if (product.workspaceAnalysis === attachment) delete product.workspaceAnalysis; } });
+}
+
 // Closed existing native product handlers, not a general-purpose reverse proxy.
 // This optional local test ingress neither implements OIDC nor creates a portal.
 export function createOptionalHttpsProductIngressV1(options) {
@@ -318,13 +330,36 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile|\/configuration|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (!["/workspace/profile", "/workspace/configuration"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (!["/workspace/profile", "/workspace/configuration"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if (match[2] === "/workspace/analysis") {
+          const workspace = product.workspaceDocument, adapter = product.workspaceAnalysis; if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+          const checkAnalysisContext = () => {
+            if (product.workspaceDocument !== workspace || product.workspaceAnalysis !== adapter) throw new Error("ANALYSIS_ATTACHMENT_RETIRED_DENIED");
+            product.sessions.authenticate(request.headers);
+            const pair = request.headers.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(cookieName + "="));
+            if (request.headers["x-pan549-context"] !== "session:" + hash(pair)) throw new Error("HOSTED_SESSION_DENIED");
+            if (request.headers.origin !== origin) throw new Error("HOSTED_CSRF_DENIED");
+          };
+          checkAnalysisContext();
+          if (request.headers["content-type"] !== "application/json" || request.headers["content-encoding"] !== undefined) return reply(response, 400, "HOSTED_BODY_DENIED");
+          const chunks = []; let bytes = 0;
+          for await (const chunk of request) { bytes += chunk.length; if (bytes > 4096) return reply(response, 413, "HOSTED_BODY_DENIED"); chunks.push(chunk); }
+          let selector; try { selector = validateWorkspaceAnalysisReadV1(JSON.parse(Buffer.concat(chunks).toString("utf8"))); }
+          catch { return reply(response, 400, "ANALYSIS_READ_REQUEST_DENIED"); }
+          checkAnalysisContext(); const value = await adapter.read(request.headers, selector); checkAnalysisContext();
+          const b = product.sessions.binding;
+          const result = await verifyWorkspaceAnalysisReadResultV1(value, { origin: b.origin, tenantId: b.tenantId, instanceId: b.instanceId, generation: b.generation, identityDigest: b.identityDigest }, selector);
+          checkAnalysisContext();
+          // Read-only POST supplies a bounded selector, not an effect. Never renew
+          // cookies here: delayed results cannot resurrect a retired session.
+          response.writeHead(200, { "content-type": "application/json; charset=utf-8" }); response.end(JSON.stringify(result) + "\n"); return;
+        }
         if (match[2]?.startsWith("/workspace/notifications")) {
           const adapter = product.workspaceNotifications;
           if (!adapter) return reply(response, 404, "HOSTED_ROUTE_DENIED");
@@ -510,6 +545,9 @@ export function createOptionalHttpsProductIngressV1(options) {
       else if (["PROFILE_SCHEMA_DENIED", "PROFILE_CONTRIBUTION_DENIED"].includes(code)) reply(response, 400, code);
       else if (code === "PROFILE_REVISION_CONFLICT") reply(response, 409, code);
       else if (code === "ERV_OBJECT_REVISION_STALE") reply(response, 409, code);
+      else if (["ANALYSIS_NATIVE_REVISION_STALE", "ANALYSIS_RESULT_REVISION_STALE", "ANALYSIS_RESULT_CUTOFF_STALE", "ANALYSIS_ATTACHMENT_RETIRED_DENIED"].includes(code)) reply(response, 409, code);
+      else if (["ANALYSIS_OBJECT_BINDING_DENIED", "ANALYSIS_ORIGIN_OR_ROLE_DENIED", "ANALYSIS_NATIVE_BINDING_DRIFT_DENIED"].includes(code)) reply(response, 403, code);
+      else if (["ANALYSIS_RESULT_CONTRACT_DENIED", "ANALYSIS_READ_REQUEST_DENIED"].includes(code)) reply(response, 400, code);
       else if (["ERV_TENANT_BINDING_DENIED", "ERV_OBJECT_BINDING_DENIED"].includes(code)) reply(response, 403, code);
       else reply(response, 503, "HOSTED_AUTH_UNAVAILABLE");
     }

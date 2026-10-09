@@ -3002,6 +3002,44 @@ pan544Node.inputs = pan544Inputs.map(([inputPath, role]) => ({path: inputPath, r
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan544:test")) repositoryIntegrityNode.ownedTests.push("npm run pan544:test");
 dag.graphVersion = 96;
 
+// PAN549 bounded read/result view: existing native STOCK, local cohort and shell.
+const pan549Inputs = [
+  ["contracts/workspace-analysis/pan549-early-candidate-v1.json", "CONTRACT"],
+  ["docs/architecture/pan549-workspace-analysis-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/browser-workspace/src/analysis-v1.css", "SOURCE"],
+  ["packages/browser-workspace/src/plugin-analysis-v1.ts", "SOURCE"],
+  ["packages/contracts/src/workspace-analysis-v1.ts", "CONTRACT"],
+  ["scripts/run-pan549-native-analysis-tests.mjs", "VALIDATOR"],
+  ["src/pan549/native-analysis-read.mjs", "SECURITY"],
+  ["tests/pan549/browser-analysis.test.mjs", "VALIDATOR"],
+  ["tests/pan549/browser-fixture.mjs", "VALIDATOR"],
+  ["tests/pan549/browser-lifecycle-analysis.test.mjs", "VALIDATOR"],
+  ["tests/pan549/cohort-analysis.test.mjs", "VALIDATOR"],
+  ["tests/pan549/native-analysis-read.test.mjs", "VALIDATOR"],
+  ["tests/pan549/protected-analysis.test.mjs", "VALIDATOR"],
+  ["tests/pan549/registration.test.mjs", "VALIDATOR"]
+];
+let pan549Node = dag.nodes.find(({id}) => id === "pan549-native-analysis-result-v1");
+if (pan549Node === undefined) {
+  pan549Node = {
+    id: "pan549-native-analysis-result-v1",
+    dependsOn: ["awi-insights-1-usage-insights-v1", "pan520-native-projections-v1", "pan541-shared-browser-shell-v1"],
+    inputs: [], ownedTests: ["npm run pan549:test"], riskClass: "HIGH", globalInvalidation: false,
+    invariants: [
+      "One finite read-only STOCK mapping consumes actual leading native PAN515/PAN520 data; source revision, cutoff, grain and units remain separate from complete result-byte integrity and protected origin/session/scope authority.",
+      "Missing history or qualified valuation remains UNAVAILABLE/null and the stock view PARTIAL; no unknown-to-zero, implicit denominator, adoption or completeness claims.",
+      "The separately owner-selected existing local Usage Insights report admits only EMPTY/SUPPRESSED partial cohorts with null metrics, original small-cell policy and UNKNOWN population denominator; no collector, consent or transport activation.",
+      "Plain-text asynchronous rendering rechecks complete result bytes and live context; actual native logout, expiry, replaced/foreign session, stale source/result, tampered/lost delivery and retired view never expose old facts or authorize retries.",
+      "Proposal, effect and execution authority remain absent; unchanged shared shell/rights/deep links and other modules survive optional analysis absence or failure. Early counterpart descriptor bytes remain historical, not current runtime pins.",
+      "Fixed complete native/cohort/TLS/browser/registration entry, actual desktop390/CSS-layout/font/keyboard measurements and source-bound images remain distinct from human/device, paired KS and canonical/CI/release/closure acceptance."
+    ]
+  };
+  dag.nodes.push(pan549Node);
+}
+pan549Node.inputs = pan549Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan549:test")) repositoryIntegrityNode.ownedTests.push("npm run pan549:test");
+dag.graphVersion = 97;
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -3064,6 +3102,7 @@ for (const [inputPath] of pan543Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan563Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan542Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan544Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan549Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "pansphaira.workspace-analysis/candidate/v1",
+  "state": "EARLY_UNREGISTERED_DEVELOPMENT_NOT_RELEASED",
+  "sourceSelector": "EXACT_CONTAINING_GIT_COMMIT_AND_ITS_PRIMARY_TREE",
+  "readSchema": "pansphaira.workspace-analysis/read/v1",
+  "resultSchema": "pansphaira.workspace-analysis/result/v1",
+  "objectId": "analysis:common-trade-01:stock",
+  "contractSource": {"path": "packages/contracts/src/workspace-analysis-v1.ts", "sha256": "cc2fb8bc93070fad83a96f729491342efcad3ab42fcfc59de6a8d12c9343d6d0"},
+  "compiledContract": {"path": "dist/packages/contracts/src/workspace-analysis-v1.js", "sha256": "0b5a00e5fa620b3dba26501a5e17214dbba8e63e1f4d1564c77be26a34d6e725", "distribution": "BUILD_FROM_EXACT_SOURCE_NOT_TRACKED"},
+  "rendererSource": {"path": "packages/browser-workspace/src/plugin-analysis-v1.ts", "sha256": "0f1cdb7e9327b31e422f119ebe01ef8db1ae8606a6ca80799d2080da486765f2"},
+  "compiledRenderer": {"path": "dist/packages/browser-workspace/src/plugin-analysis-v1.js", "sha256": "7fdcd1afb324adc4bcdd4522a88d79a31bd55771ec0ee82117a662db37352c5a", "distribution": "BUILD_FROM_EXACT_SOURCE_NOT_TRACKED"},
+  "nativeAdapter": {"path": "src/pan549/native-analysis-read.mjs", "sha256": "ee085e6f2fcc649c59e6b3a220e88b49a8acb52b4c59f80d4053d2e32c81aaa7"},
+  "protectedIngress": {"path": "src/pan527/origin-session-adapter.mjs", "sha256": "054645056d6ad5b9437b7fccae854cdf2e84ce0d5076ffc2cdfdc924e9413c2c"},
+  "workspaceAssembly": {"path": "src/pan541/workspace-browser.mjs", "sha256": "10feb217a88c6b989273553e839af2680f4f802b12a5e790eb846d2f115ce498"},
+  "implementedProfiles": ["PAN520_NATIVE_STOCK_KNOWN_AND_UNAVAILABLE_PARTIAL", "LOCAL_USAGE_INSIGHTS_EMPTY_DEFAULT_OFF", "LOCAL_USAGE_INSIGHTS_SUPPRESSED_NULL_METRICS", "UNKNOWN_NULL_POPULATION_DENOMINATOR", "PROTECTED_SESSION_ORIGIN_SCOPE_READ_ONLY", "COMPLETE_RESULT_BYTE_INTEGRITY", "TRUSTED_CODE_OWNED_TEXT_RENDERER"],
+  "syntheticPairingTests": ["tests/pan549/native-analysis-read.test.mjs", "tests/pan549/cohort-analysis.test.mjs", "tests/pan549/protected-analysis.test.mjs", "tests/pan549/browser-analysis.test.mjs"],
+  "build": {"node": "24.14.1", "npm": "11.16.0", "commands": ["npm run build", "node scripts/build-pan541-browser.mjs"]},
+  "remainingGates": ["COMPLETE_ORIGINAL_BROWSER_LIFECYCLE_LAYOUT_AND_ACTUAL_IMAGE_SIGHTING", "FROZEN_FOCUSED_QUALIFICATION", "PUBLIC_REGISTRATION_AND_WHOLE_CANONICAL", "ALL_REQUIRED_SOURCE_AND_MAIN_CI_RAW_ARTIFACTS", "PROTECTED_MERGE_NEW_FUNCTIONAL_RELEASE_ANONYMOUS_ARCHIVED_PRODUCT_RELEASE_EVENT", "EXPLICIT_ORIGINAL_CLOSURE"],
+  "ks303ActualComposition": "NOT_RUN_EXISTING_CONSUMER_OWNER",
+  "fullOriginal549Done": false,
+  "releaseOrProductionOrNewSourceRights": false
+}

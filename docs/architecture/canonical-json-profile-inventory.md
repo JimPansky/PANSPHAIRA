@@ -123,6 +123,23 @@ families, non-equivalence classifications, runnable manifest and every hard gate
 remain intact. This is source/inventory integration, not UI, canonical-CI, native
 installer, publication or human acceptance.
 
+## PUI-08 bounded native analysis registration (profile74)
+
+PAN549 advances the graph to97 with one additional read-only result-view owner,
+retaining all101 previous owners and every hard gate. The unchanged scanner
+observes1064 source files,2560 unique checksum paths,37 declaration sites/files,
+305 import sites in304 files,7 reexports and30 similar-shape sites. The21 immutable
+base byte obligations,13 admitted pinned profiles and all historical migrations
+remain intact. Only the exact generator migration V74 advances its current pin.
+The fourteen source-only members do not expand the legacy runnable manifest.
+
+The native STOCK projection and separately attached local Usage Insights cohort
+retain their distinct cutoffs, provenance, revisions, units and availability.
+The early counterpart descriptor remains immutable historical provenance, not
+current renderer/build pins. Registration and local native/browser measurements
+are not frozen canonical/CI, actual KS composition, release/archive/event or
+original closure acceptance, nor new consent, transport or execution authority.
+
 ## Fresh census vs historical hints
 
 Historical lexical counts (81 declarations / 80 files; 172 import sites /
@@ -304,3 +321,17 @@ Recorded Fake-Docker interactions and new exclusively owned no-network native
 stop/data-retention/purge with a live independent control are separate evidence.
 Neither proves a fresh full installer, ERP/model outcome, hostile same-user
 sandbox, independent person review or canonical/CI/release/closure completion.
+
+## PAN549 direct cohort integrity regression: measured consumer refresh
+
+The genuine nested-report integrity regression imports the existing
+canonicalJson function once in tests/pan549/cohort-analysis.test.mjs. The
+unchanged scanner now observes1064 source files,37 declaration sites/files,
+306 import sites/305 import files,7 reexports,30 similar-shape sites and2560
+unique checksum entries. The tests consumer family is69 sites/68 files.
+Only these measured current import anchors advance. Scanner logic, strict
+validator, historical migrations,21 byte obligations,13 pinned-profile files,
+original admitted bytes and the non-equivalence stance are unchanged.
+
+This metadata refresh does not waive any tests, native boundary checks,
+review, whole-canonical, CI, release or anonymous product-readback gates.
