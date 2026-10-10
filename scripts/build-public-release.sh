@@ -744,6 +744,21 @@ repository_only_files = {
     "tests/pan546/native-profile-reservation-probe.mjs",
     "tests/pan546/native-human-reservation-probe.mjs",
 
+    # PAN565 smallest existing connection: source-only, no new credentialstore,
+    # controller, provider activation or runnable payload classification.
+    "docs/architecture/workspace-model-connection-v1.md",
+    "packages/contracts/src/workspace-model-connection-v1.ts",
+    "packages/browser-workspace/src/workspace-model-connection-v1.ts",
+    "packages/browser-workspace/src/workspace-model-connection-v1.css",
+    "src/pan565/native-model-connection.mjs",
+    "src/pan565/connection-transport.mjs",
+    "scripts/run-pan565-model-connection-tests.mjs",
+    "tests/pan565/native-fixture.mjs",
+    "tests/pan565/native-model-connection.test.mjs",
+    "tests/pan565/transport-price-bound.test.mjs",
+    "tests/pan565/browser-model-connection.test.mjs",
+    "tests/pan565/registration.test.mjs",
+
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
     # historical path-scan work; delivered via the SOURCE_EVIDENCE_ONLY real

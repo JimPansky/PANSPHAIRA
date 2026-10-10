@@ -413,3 +413,26 @@ not introduce another reader, engine, inference route, owner, global/provider/
 harness change, business effect or lease/rights relaxation. Registration alone
 is not native/browser/image/review, current CI/WholeCanonical, protected merge,
 release/public readback, whole546548 or KS acceptance.
+
+## Minimal existing PAN565 connection registration (V79)
+
+The unchanged mechanical scanner observes 1123 source files, 37 declaration
+sites/files, 309 import sites in 308 files, 7 reexports, 30 similar-shape
+sites and 2628 unique checksum paths. Twelve source-only connection contract/UI/native transport/fixture/test/
+document members attach to the existing541 shell owner and its fixed complete
+native/browser entry. Graph98/all103 owners, every old test, original hard gates,
+1792 legacy runnable paths, immutable21 obligations and13 pinned profiles remain.
+The append-only V79 binds the actual generator bytes without changing the scanner,
+validator, base fixture or negative cases, apart from the required version-list
+addition and fresh measured counters.
+
+Protected session, personal-profile metadata, owner-private secret reads,
+ModelAccessBroker and the existing native resource budget remain their owners.
+There is no new credentialstore/controller, provider/harness configuration,
+product inference consent, real-model PASS, 575 loop or 548 DUI09 acceptance.
+UNKNOWN_USAGE on an actual billable route stays fully reserved without an
+independent qualified usage oracle; a caller cannot settle it with an amount
+or evidence digest. Product route/identities/suitable secret reference/currency
+and explicit capped consent remain missing, separately from implementable
+internal work. Registration alone is not review, CI/WholeCanonical, protected
+merge, release, anonymous readback or original issue closure.

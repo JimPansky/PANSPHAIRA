@@ -350,7 +350,7 @@ export function adaptCanonicalRequestV1(
       ...common,
       messages: [{ role: "user", content: request.text }],
       tools,
-      response_format: request.structuredOutput === null ? undefined : { type: "json_schema", json_schema: request.structuredOutput },
+      ...(request.structuredOutput === null ? {} : { response_format: { type: "json_schema", json_schema: request.structuredOutput } }),
       attachments: request.attachments,
     };
   }
