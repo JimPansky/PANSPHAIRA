@@ -1,6 +1,6 @@
 import { spawnSync } from "node:child_process";
 // One authoritative closed suite; concurrent process barriers are inside tests.
-const files = ["tests/pan529/runtime-template.test.mjs", "tests/pan529/broker-equal-key.test.mjs", "tests/pan529/atomic-resource-budget.test.mjs", "tests/pan529/native-receipt-cache.test.mjs", "tests/pan529/native-controller.test.mjs", "tests/pan529/native-process-integration.test.mjs", "tests/pan529/registration.test.mjs", "tests/pan529/test-runner.test.mjs", "dist/tests/model-access-broker.test.js", "dist/tests/ccp-cost-budget.test.js"];
+const files = ["tests/pan529/runtime-template.test.mjs", "tests/pan529/broker-equal-key.test.mjs", "tests/pan529/atomic-resource-budget.test.mjs", "tests/pan529/native-receipt-cache.test.mjs", "tests/pan529/native-controller.test.mjs", "tests/pan529/native-process-integration.test.mjs", "tests/pan529/registration.test.mjs", "tests/pan529/test-runner.test.mjs", "dist/tests/model-access-broker.test.js", "dist/tests/ccp-cost-budget.test.js", "tests/pan575/tool-transcript.test.mjs", "tests/pan575/broker-feedback-native.test.mjs", "tests/pan575/native-ui-consumer.test.mjs", "tests/pan575/registration.test.mjs"];
 try {
   const args = process.argv.slice(2);
   if (args.length === 1 && args[0] === "--list") process.stdout.write(JSON.stringify(files) + "\n");

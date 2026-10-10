@@ -33,8 +33,16 @@ test("PAN529 native template and budget have one additive owner in authoritative
       assert.ok(builder.includes(JSON.stringify(input.path)), input.path);
     }
     const plan = buildVerificationImpactPlanV2({ graph, graphPath: "verification/verification-dag-v2.json", baseSha: "1".repeat(40), headSha: "2".repeat(40), changedPaths: [input.path], observedInputDigests });
-    assert.deepEqual(plan.selectedNodes, ["pan528-guided-native-browser-v1", owner.id, "pan563-configuration-draft-v1"]);
-    assert.deepEqual(plan.selectedTests, ["npm run pan528:test", "npm run pan529:test", "npm run pan563:test"]);
+    if (input.path === "src/pan575/broker-tool-feedback.mjs" || input.path === "src/pan575/native-composition-tools.mjs") {
+      // Newly registered SECURITY inputs retain the EXISTING central-input
+      // semantics: all owners/tests, not a narrowed false-impact assertion.
+      assert.ok(plan.reasons.includes("CENTRAL_INPUT_CHANGED"));
+      assert.deepEqual(plan.selectedNodes, graph.nodes.map((node) => node.id).sort((a, b) => a.localeCompare(b, "en")));
+      assert.deepEqual(plan.selectedTests, [...new Set(graph.nodes.flatMap((node) => node.ownedTests))].sort((a, b) => a.localeCompare(b, "en")));
+    } else {
+      assert.deepEqual(plan.selectedNodes, ["pan528-guided-native-browser-v1", owner.id, "pan563-configuration-draft-v1"]);
+      assert.deepEqual(plan.selectedTests, ["npm run pan528:test", "npm run pan529:test", "npm run pan563:test"]);
+    }
     assert.deepEqual(plan.hardGates, [...graph.hardGates].sort((a, b) => a.localeCompare(b, "en")));
   }
   const pkg = load("package.json");

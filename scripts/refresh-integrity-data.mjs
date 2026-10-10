@@ -2096,6 +2096,20 @@ const pan529Inputs = [
     "VALIDATOR"
   ]
 ];
+// PAN575 is an additive source-only feedback seam on the EXISTING529 owner.
+// Its cases append to the existing closed pan529:test; no new gate or owner.
+const pan575Inputs = [
+  ["docs/architecture/broker-tool-feedback-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/contracts/src/model-tool-transcript-v1.ts", "CONTRACT"],
+  ["src/pan575/broker-tool-feedback.mjs", "SECURITY"],
+  ["src/pan575/native-composition-tools.mjs", "SECURITY"],
+  ["tests/pan575/protocol-fixture.mjs", "VALIDATOR"],
+  ["tests/pan575/tool-transcript.test.mjs", "VALIDATOR"],
+  ["tests/pan575/broker-feedback-native.test.mjs", "VALIDATOR"],
+  ["tests/pan575/native-ui-consumer.test.mjs", "VALIDATOR"],
+  ["tests/pan575/registration.test.mjs", "VALIDATOR"],
+];
+pan529Inputs.push(...pan575Inputs);
 let pan529Node = dag.nodes.find(({id}) => id === "pan529-runtime-budget-v1");
 if (pan529Node === undefined) {
   pan529Node = {

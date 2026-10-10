@@ -1,5 +1,63 @@
 import { createHash } from "node:crypto";
 import { canonicalJson } from "./canonical-json.js";
+import {types} from 'node:util';
+
+// Additive data-only chat transcript lives in this already shipped broker so
+// the unchanged legacy1792 payload keeps a closed compiled import graph.
+export const MODEL_TOOL_TRANSCRIPT_SCHEMA_V1='chimpmaera.model/tool-transcript/v1' as const;
+export interface ChatToolCallV1 {readonly id:string;readonly type:'function';readonly function:{readonly name:string;readonly arguments:string};}
+export type ModelChatMessageV1 = {readonly role:'user';readonly content:string}
+  | {readonly role:'assistant';readonly content:string|null;readonly tool_calls:readonly ChatToolCallV1[]}
+  | {readonly role:'tool';readonly tool_call_id:string;readonly content:string};
+export interface ModelToolTranscriptV1 {readonly schemaVersion:typeof MODEL_TOOL_TRANSCRIPT_SCHEMA_V1;readonly messages:readonly ModelChatMessageV1[];}
+export const isModelChatCallIdV1=(v:unknown):v is string=>typeof v==='string'&&/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/.test(v);
+const deny=()=>{throw Error('MODEL_TOOL_TRANSCRIPT_DENIED');};
+const secret=/(?:sk-[A-Za-z0-9_-]{12,}|AKIA[A-Z0-9]{16}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|(?:password|api[_-]?key|access[_-]?token)\s*[:=]\s*\S{8,})/i;
+export function snapshotModelToolDataV1(value:unknown):unknown {
+ const active=new Set<object>();let count=0;
+ function visit(v:unknown,depth=0):unknown {
+  if(++count>8192||depth>16)deny();
+  if(v===null||typeof v==='string'||typeof v==='boolean')return v;
+  if(typeof v==='number'&&Number.isFinite(v)&&!Object.is(v,-0))return v;
+  if(typeof v!=='object'||v===null||types.isProxy(v)||active.has(v))return deny();
+  const array=Array.isArray(v);if(Object.getPrototypeOf(v)!==(array?Array.prototype:Object.prototype))deny();
+  const ds=Object.getOwnPropertyDescriptors(v),keys=Reflect.ownKeys(ds);
+  for(const k of keys){const d=ds[k as string]!;if(typeof k!=='string'||!('value'in d)||d.get||d.set||(!d.enumerable&&!(array&&k==='length')))deny();}
+  active.add(v);let result:unknown;
+  if(array){const n=ds.length!.value as number;if(n>256||keys.length!==n+1)deny();result=Array.from({length:n},(_,i)=>{if(!Object.hasOwn(ds,String(i)))deny();return visit(ds[String(i)]!.value,depth+1);});}
+  else result=Object.fromEntries(keys.map(k=>[k,visit(ds[k as string]!.value,depth+1)]));
+  active.delete(v);return result;
+ }
+ const copy=visit(value);if(Buffer.byteLength(canonicalJson(copy))>262144)deny();return copy;
+}
+const exact=(v:unknown,keys:readonly string[]):v is Record<string,unknown>=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&canonicalJson(Object.keys(v).sort())===canonicalJson([...keys].sort());
+// History is data, not proof of tool authority. Native owners retain grants
+// and revalidate each invocation; raw ID bijection/order is checked here.
+export function validateModelToolTranscriptV1(value:unknown,request:CanonicalModelRequestV1):ModelToolTranscriptV1 {
+ const t=snapshotModelToolDataV1(value);
+ if(request.protocol!=='OPENAI_CHAT_COMPLETIONS'||!exact(t,['schemaVersion','messages'])||t.schemaVersion!==MODEL_TOOL_TRANSCRIPT_SCHEMA_V1||!Array.isArray(t.messages)||t.messages.length<1||t.messages.length>65)deny();
+ const transcript=t as unknown as ModelToolTranscriptV1;
+ if(Buffer.byteLength(canonicalJson(transcript.messages))>request.budget.maxInputBytes||secret.test(canonicalJson(transcript)))deny();
+ const seen=new Set<string>(),pending=new Set<string>();let expectAssistant=true;
+ for(let i=0;i<transcript.messages.length;i++){
+  const m=transcript.messages[i]!;
+  if(i===0){if(!exact(m,['role','content'])||m.role!=='user'||m.content!==request.text)deny();continue;}
+  if(m.role==='assistant'){
+   if(!expectAssistant||pending.size||!exact(m,['role','content','tool_calls'])||(m.content!==null&&typeof m.content!=='string')||!Array.isArray(m.tool_calls)||m.tool_calls.length<1||m.tool_calls.length>32)deny();
+   for(const c of m.tool_calls){
+    if(!exact(c,['id','type','function'])||!isModelChatCallIdV1(c.id)||seen.has(c.id)||c.type!=='function'||!exact(c.function,['name','arguments'])||typeof c.function.name!=='string'||!request.tools.some(x=>x.name===c.function.name)||typeof c.function.arguments!=='string')deny();
+    let args:unknown;try{args=snapshotModelToolDataV1(JSON.parse(c.function.arguments));}catch{return deny();}
+    if(args===null||typeof args!=='object'||Array.isArray(args)||['authority','approval','credentialHandle','execute','tenant','userIdentity'].some(k=>Object.hasOwn(args as object,k)))deny();
+    seen.add(c.id);pending.add(c.id);
+   }
+   expectAssistant=false;
+  }else if(m.role==='tool'){
+   if(expectAssistant||!exact(m,['role','tool_call_id','content'])||!isModelChatCallIdV1(m.tool_call_id)||!pending.has(m.tool_call_id)||typeof m.content!=='string')deny();
+   pending.delete(m.tool_call_id);if(pending.size===0)expectAssistant=true;
+  }else deny();
+ }
+ if(pending.size||!expectAssistant)deny();return transcript;
+}
 
 export const MODEL_REQUEST_SCHEMA_V1 = "chimpmaera.model/model-request/v1" as const;
 export const MODEL_RESPONSE_SCHEMA_V1 = "chimpmaera.model/model-response/v1" as const;
@@ -381,6 +439,7 @@ export function guardModelResponseV1(
   route: ModelRouteV1,
   providerRequestDigest: string,
   value: ProviderResponseV1,
+  toolStep = false,
 ): { readonly outcome: "ALLOW"; readonly response: CanonicalModelResponseV1; readonly redactions: number }
   | { readonly outcome: "QUARANTINE"; readonly issues: readonly string[] } {
   if (!["text/plain", "application/json"].includes(value.contentType)) {
@@ -395,9 +454,10 @@ export function guardModelResponseV1(
     return { outcome: "QUARANTINE", issues: ["MODEL_RESPONSE_BUDGET_QUARANTINED"] };
   }
   const toolCallCandidates: ToolCallCandidateV1[] = [];
+  const ids = new Set<string>();
   for (const tool of value.toolCalls ?? []) {
     if (!request.tools.some((allowed) => allowed.name === tool.name)
-        || typeof tool.id !== "string" || !/^tool:[a-z0-9._-]{3,80}$/.test(tool.id)
+        || typeof tool.id !== "string" || (toolStep ? !isModelChatCallIdV1(tool.id) || ids.has(tool.id) : !/^tool:[a-z0-9._-]{3,80}$/.test(tool.id))
         || tool.arguments === null || typeof tool.arguments !== "object" || Array.isArray(tool.arguments)) {
       return { outcome: "QUARANTINE", issues: ["MODEL_TOOL_CANDIDATE_QUARANTINED"] };
     }
@@ -406,6 +466,7 @@ export function guardModelResponseV1(
       return { outcome: "QUARANTINE", issues: ["MODEL_TOOL_AUTHORITY_SMUGGLING_QUARANTINED"] };
     }
     toolCallCandidates.push({ id: tool.id, name: tool.name, arguments: args, trust: "UNTRUSTED_MODEL_OUTPUT", authority: "NONE" });
+    ids.add(tool.id);
   }
   let redactions = 0;
   const text = value.text
@@ -492,9 +553,35 @@ export class ModelAccessBrokerV1 {
     value: unknown,
     providerCall: (request: ProviderRequestV1, signal: AbortSignal) => Promise<ProviderResponseV1>,
   ): Promise<ModelBrokerResultV1> {
+    return this.#invokeBound(value, providerCall, null);
+  }
+
+  // Additive host-only transcript seam. Same policy/replay/request-budget/
+  // provider/response guards, not a second harness or caller tool authority.
+  async invokeToolStep(
+    value: unknown,
+    history: unknown,
+    providerCall: (request: ProviderRequestV1, signal: AbortSignal) => Promise<ProviderResponseV1>,
+  ): Promise<ModelBrokerResultV1> {
+    let safe: unknown;
+    try { safe = snapshotModelToolDataV1(value); }
+    catch { return issueResult({}, "DENY", ["MODEL_TOOL_TRANSCRIPT_DENIED"]); }
+    const guarded = guardModelRequestV1(safe, this.#policy);
+    if (guarded.outcome !== "ALLOW") return issueResult(safe, guarded.outcome, guarded.issues);
+    let transcript: ModelToolTranscriptV1;
+    try { transcript = validateModelToolTranscriptV1(history, guarded.request); }
+    catch { return issueResult(safe, "DENY", ["MODEL_TOOL_TRANSCRIPT_DENIED"]); }
+    return this.#invokeBound(guarded.request, providerCall, transcript);
+  }
+
+  async #invokeBound(
+    value: unknown,
+    providerCall: (request: ProviderRequestV1, signal: AbortSignal) => Promise<ProviderResponseV1>,
+    transcript: ModelToolTranscriptV1 | null,
+  ): Promise<ModelBrokerResultV1> {
     const guarded = guardModelRequestV1(value, this.#policy);
     if (guarded.outcome !== "ALLOW") return issueResult(value, guarded.outcome, guarded.issues);
-    const requestDigest = digest(guarded.request);
+    const requestDigest = digest(transcript === null ? guarded.request : {request:guarded.request, transcript});
     const operationId = guarded.request.operationId;
     const pending = this.#inFlight.get(operationId);
     if (pending !== undefined) {
@@ -505,7 +592,7 @@ export class ModelAccessBrokerV1 {
     // This fence is process-local; persistent unknown-usage custody remains
     // the responsibility of the native budget adapter, not this pure broker.
     const bound = structuredClone(value);
-    const result = Promise.resolve().then(() => this.#invokeFirst(bound, providerCall));
+    const result = Promise.resolve().then(() => this.#invokeFirst(bound, providerCall, transcript));
     this.#inFlight.set(operationId, { requestDigest, result });
     try { return await result; }
     finally { this.#inFlight.delete(operationId); }
@@ -514,10 +601,11 @@ export class ModelAccessBrokerV1 {
   async #invokeFirst(
     value: unknown,
     providerCall: (request: ProviderRequestV1, signal: AbortSignal) => Promise<ProviderResponseV1>,
+    transcript: ModelToolTranscriptV1 | null,
   ): Promise<ModelBrokerResultV1> {
     const guarded = guardModelRequestV1(value, this.#policy);
     if (guarded.outcome !== "ALLOW") return issueResult(value, guarded.outcome, guarded.issues);
-    const requestDigest = digest(guarded.request);
+    const requestDigest = digest(transcript === null ? guarded.request : {request:guarded.request, transcript});
     const prior = this.#receipts.get(guarded.request.operationId);
     if (prior !== undefined) {
       if (prior.requestDigest !== requestDigest) return issueResult(value, "DENY", ["MODEL_REPLAY_CONFLICT_DENIED"]);
@@ -527,7 +615,15 @@ export class ModelAccessBrokerV1 {
     const used = this.#reserved.get(budgetKey) ?? 0;
     if (used >= guarded.request.budget.maxRequests) return issueResult(value, "THROTTLE", ["MODEL_REQUEST_BUDGET_THROTTLED"]);
     this.#reserved.set(budgetKey, used + 1);
-    const adapted = adaptCanonicalRequestV1(guarded.request, guarded.route);
+    const plain = adaptCanonicalRequestV1(guarded.request, guarded.route);
+    if (transcript !== null && guarded.request.attachments.length !== 0) {
+      return issueResult(value, "DENY", ["MODEL_TOOL_TRANSCRIPT_ATTACHMENTS_DENIED"]);
+    }
+    const {attachments: _chatAttachments, ...chatPlain} = plain;
+    const adapted = transcript === null ? plain : {...chatPlain, messages: transcript.messages};
+    if (transcript !== null && Buffer.byteLength(canonicalJson(adapted)) > guarded.request.budget.maxInputBytes) {
+      return issueResult(value, "DENY", ["MODEL_TOOL_TRANSCRIPT_INPUT_LIMIT_DENIED"]);
+    }
     const providerRequest: ProviderRequestV1 = {
       route: guarded.route,
       credentialHandle: guarded.route.credentialHandle,
@@ -545,7 +641,11 @@ export class ModelAccessBrokerV1 {
       return issueResult(value, "QUARANTINE", ["MODEL_PROVIDER_UNAVAILABLE_QUARANTINED"]);
     }
     clearTimeout(timer);
-    const responseGuard = guardModelResponseV1(guarded.request, guarded.route, providerRequest.requestDigest, providerResponse);
+    if (transcript !== null) {
+      try { providerResponse = snapshotModelToolDataV1(providerResponse) as ProviderResponseV1; }
+      catch { return issueResult(value, "QUARANTINE", ["MODEL_TOOL_RESPONSE_DATA_ONLY_QUARANTINED"]); }
+    }
+    const responseGuard = guardModelResponseV1(guarded.request, guarded.route, providerRequest.requestDigest, providerResponse, transcript !== null);
     if (responseGuard.outcome !== "ALLOW") return issueResult(value, "QUARANTINE", responseGuard.issues);
     const result: ModelBrokerResultV1 = {
       outcome: "ALLOW",
