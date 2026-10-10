@@ -40,10 +40,10 @@ test("PAN543 optional presentation sources have unique existing shell ownership,
       assert.deepEqual(plan.selectedNodes, graph.nodes.map(n => n.id).sort((a,b) => a.localeCompare(b,"en")));
       assert.deepEqual(plan.selectedTests, [...new Set(graph.nodes.flatMap(n => n.ownedTests))].sort((a,b) => a.localeCompare(b,"en")));
     } else {
-      assert.equal(plan.mode, "IMPACTED_SHADOW"); assert.deepEqual(plan.selectedNodes, [owner.id, "pan544-native-notifications-v1", "pan548-authentic-context-selection-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]); assert.deepEqual(plan.selectedTests, ["npm run pan541:test", "npm run pan543:test", "npm run pan544:test", "npm run pan546:test", "npm run pan548:test", "npm run pan549:test", "npm run pan563:test"]);
+      assert.equal(plan.mode, "IMPACTED_SHADOW"); assert.deepEqual(plan.selectedNodes, [owner.id, "pan544-native-notifications-v1", "pan548-authentic-context-selection-v1", "pan549-native-analysis-result-v1", "pan563-configuration-draft-v1"]); assert.deepEqual(plan.selectedTests, ["npm run pan541:test", "npm run pan543:test", "npm run pan544:test", "npm run pan546:test", "npm run pan548:test", "npm run pan549:test", "npm run pan563:test", "npm run pan565:test"]);
     }
   }
-  assert.deepEqual(owner.ownedTests, ["npm run pan541:test", "npm run pan543:test", "npm run pan546:test"]);
+  assert.deepEqual(owner.ownedTests, ["npm run pan541:test", "npm run pan543:test", "npm run pan546:test", "npm run pan565:test"]);
   const before = ["verification/verification-dag-v2.json", "SHA256SUMS"].map(p => readFileSync(p, "utf8"));
   const unsupportedRefresh = spawnSync(process.execPath, ["scripts/refresh-pan543-integrity.mjs", "--force"], { encoding: "utf8" });
   assert.notEqual(unsupportedRefresh.status, 0); assert.match(unsupportedRefresh.stderr, /PAN543_REFRESH_ARGUMENT_DENIED/);

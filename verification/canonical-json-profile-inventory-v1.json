@@ -23,7 +23,7 @@
       {
         "path": "tests/canonical-json-profile-inventory.test.ts",
         "role": "VALIDATOR",
-        "sha256": "785f2e2616dc695b1109a10880d16b73ba51371833444bacbc3d6799abc7e77b"
+        "sha256": "827caa7fec5c6fd29fd43bc736da5aff1944d30c1fc245eee93952fb6126ad30"
       }
     ]
   },
@@ -715,6 +715,14 @@
       "fromSha256": "d1049880673b46acdad4149fe9c6d1d83c9c8d687464514451b6222c6f29590f",
       "toSha256": "b9125462c8ce8884e1c350970f86ae9eae6615543bacd2347217ffd4d359cbea",
       "reason": "Keep graph98/all103 existing owners, every old test and original hard gates. Add exactly ten source-only native invoice navigation/closed typed transport/browser-three-dirtyguard/test/document members to existing541 shell owner and four test files to the fixed original546 canonical entry. Existing leading source, authentic context, protected ingress and three real draft owners are reused; no second reader/task engine, lease/bundle-limit relaxation, global/provider/harness/rights changes, business writes, real-model proof or prior delivery relabel. Preserve all historical migrations, immutable21 base obligations, mechanical scanner/validator and legacy1792 runnable manifest. Registration is not review, current CI/WholeCanonical, merge, release, whole546548 or KS acceptance."
+    },
+    {
+      "migrationId": "PAN565-MINIMAL-EXISTING-MODEL-CONNECTION/INTEGRITY-GENERATOR/V79",
+      "path": "scripts/refresh-integrity-data.mjs",
+      "profileVersion": 79,
+      "fromSha256": "b9125462c8ce8884e1c350970f86ae9eae6615543bacd2347217ffd4d359cbea",
+      "toSha256": "01832c6a3b4bad4ce90965946f0738588024e7d786eb23ec9e6dfc8075e46e8a",
+      "reason": "Keep graph98/all103 existing owners, all original hard gates and every old test. Add exactly twelve source-only safe model connection contract/UI/native transport/fixture/test/document members to existing541 shell owner and its closed whole native/browser product entry. Reuse existing protected session, personal profile metadata, owner-private secret read, ModelAccessBroker and native resource budget; no new credentialstore, controller, provider/harness configuration, paid inference, rights, public runnable payload or real-model acceptance. Preserve every historical migration, immutable21 base obligations, unchanged scanner/validator and legacy1792 manifest. Registration is not review, CI/WholeCanonical, merge/release, original565 closure,575 loop or548DUI09 acceptance."
     }
   ],
   "scanScope": {
@@ -757,15 +765,15 @@
     "Historical pin state and byte obligations derive only from the immutable admitted-base fixture; candidate-ledger regeneration cannot redefine them."
   ],
   "freshCounts": {
-    "filesScanned": 1113,
+    "filesScanned": 1123,
     "declarationSites": 37,
     "declarationFiles": 37,
-    "importSites": 308,
-    "importFiles": 307,
+    "importSites": 309,
+    "importFiles": 308,
     "reexportSites": 7,
     "similarShapeSites": 30,
-    "ledgerEntries": 2616,
-    "ledgerUniquePaths": 2616
+    "ledgerEntries": 2628,
+    "ledgerUniquePaths": 2628
   },
   "profiles": [
     {
@@ -838,7 +846,7 @@
       "classification": "implementation",
       "owner": "scripts",
       "pinned": true,
-      "sha256": "b9125462c8ce8884e1c350970f86ae9eae6615543bacd2347217ffd4d359cbea"
+      "sha256": "01832c6a3b4bad4ce90965946f0738588024e7d786eb23ec9e6dfc8075e46e8a"
     },
     {
       "file": "scripts/render-asf-public-readback.mjs",
@@ -1294,6 +1302,11 @@
       "importFiles": 1
     },
     {
+      "owner": "pan565",
+      "importSites": 1,
+      "importFiles": 1
+    },
+    {
       "owner": "procurement-434",
       "importSites": 3,
       "importFiles": 3
@@ -1609,7 +1622,7 @@
     },
     {
       "path": "scripts/refresh-integrity-data.mjs",
-      "sha256": "b9125462c8ce8884e1c350970f86ae9eae6615543bacd2347217ffd4d359cbea",
+      "sha256": "01832c6a3b4bad4ce90965946f0738588024e7d786eb23ec9e6dfc8075e46e8a",
       "basis": "profile-version-migration"
     },
     {

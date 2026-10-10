@@ -4,7 +4,10 @@ import { isAbsolute, join, resolve } from "node:path";
 import { createHash } from "node:crypto";
 import { defaultBrowserProfileV1, migrateBrowserProfileV1, resolveBrowserProfileV1, validateBrowserProfileWriteV1 } from "../../dist/packages/contracts/src/browser-profile-v1.js";
 import { defaultWorkspaceModuleViewV1, validateWorkspaceModuleViewV1 } from "../../dist/packages/contracts/src/workspace-module-view-v1.js";
+import { modelConnectionClosedV1, validateModelConnectionLimitsV1, MODEL_CONNECTION_PHASES_V1 } from '../../dist/packages/contracts/src/workspace-model-connection-v1.js';
 const ownedModuleViewStores = new WeakMap();
+const ownedProfileStores = new WeakMap();
+export const isBrowserProfileStoreV1 = (store,root) => ownedProfileStores.get(store) === root;
 // Code-owner local persistence only; the protected ingress supplies the principal.
 // No business ledger, roles registry, browser storage or caller-supplied ownership.
 export function createBrowserProfileStoreV1({ root, catalog }) {
@@ -47,7 +50,43 @@ export function createBrowserProfileStoreV1({ root, catalog }) {
       const target = read(principal); db.exec("COMMIT"); return target;
     } catch (e) { db.exec("ROLLBACK"); throw e; }
   }
-  return Object.freeze({ read, write, close() { if (!closed) { closed = true; db.close(); } } });
+  // Connection metadata attaches to this SAME personal-profile database, not
+  // a credentialstore. No credential contents, target URL or provider payload.
+  let connectionTable = false;
+  function connectionKey(principal) {
+    const pair = identity(principal);
+    if (typeof principal.instanceId !== 'string' || !/^[a-z0-9][a-z0-9:_-]{0,95}$/.test(principal.instanceId) || !Number.isSafeInteger(principal.generation) || principal.generation < 1) throw Error('MODEL_CONNECTION_SCOPE_DENIED');
+    if (!connectionTable) { db.exec('CREATE TABLE IF NOT EXISTS workspace_model_connections (tenant TEXT NOT NULL,subject TEXT NOT NULL,instance TEXT NOT NULL,generation INTEGER NOT NULL,revision INTEGER NOT NULL CHECK(revision>=1),state TEXT NOT NULL,PRIMARY KEY(tenant,subject,instance,generation)) STRICT;'); connectionTable = true; }
+    return [...pair,principal.instanceId,principal.generation];
+  }
+  function validateConnectionState(value) {
+    const s = modelConnectionClosedV1(value,['connectionId','identityDigest','secretFingerprint','checks','grant','lastOperation']);
+    if (typeof s.connectionId !== 'string' || !/^connection:[a-z0-9][a-z0-9._-]{2,63}$/.test(s.connectionId) || !/^[a-f0-9]{64}$/.test(s.identityDigest) || s.secretFingerprint !== null && !/^[a-f0-9]{64}$/.test(s.secretFingerprint) || s.lastOperation !== null && !/^operation:[a-z0-9][a-z0-9._-]{2,63}$/.test(s.lastOperation)) throw Error('MODEL_CONNECTION_INPUT_DENIED');
+    const checks = modelConnectionClosedV1(s.checks,MODEL_CONNECTION_PHASES_V1);
+    for (const phase of MODEL_CONNECTION_PHASES_V1) { const c = modelConnectionClosedV1(checks[phase],['state','checkedAtMs','identityDigest','reason']); if (!['NOT_RUN','PASS','FAILED','STALE','UNKNOWN_USAGE'].includes(c.state) || c.checkedAtMs !== null && (!Number.isSafeInteger(c.checkedAtMs) || c.checkedAtMs < 0) || c.identityDigest !== null && !/^[a-f0-9]{64}$/.test(c.identityDigest) || typeof c.reason !== 'string' || !/^[A-Z_]{3,96}$/.test(c.reason)) throw Error('MODEL_CONNECTION_INPUT_DENIED'); }
+    if (s.grant !== null) { const g = modelConnectionClosedV1(s.grant,['identityDigest','sessionId','ownerGrantDigest','limits','expiresAtMs','consentId','testDataDigest']); if (g.identityDigest !== s.identityDigest || typeof g.sessionId !== 'string' || !/^session:[a-f0-9]{64}$/.test(g.sessionId) || typeof g.ownerGrantDigest !== 'string' || !/^[a-f0-9]{64}$/.test(g.ownerGrantDigest) || !Number.isSafeInteger(g.expiresAtMs) || g.expiresAtMs < 1 || !/^consent:[a-f0-9]{48}$/.test(g.consentId) || !/^[a-f0-9]{64}$/.test(g.testDataDigest)) throw Error('MODEL_CONNECTION_INPUT_DENIED'); validateModelConnectionLimitsV1(g.limits); }
+    return JSON.parse(JSON.stringify(s));
+  }
+  function readModelConnection(principal) {
+    const key = connectionKey(principal);
+    const row = db.prepare('SELECT revision,state FROM workspace_model_connections WHERE tenant=? AND subject=? AND instance=? AND generation=?');
+    const found = row.get(...key);
+    return { revision:found?.revision ?? 0, persisted:!!found, state:found ? validateConnectionState(JSON.parse(found.state)) : null };
+  }
+  function writeModelConnection(principal,expectedRevision,value,verifyAtCommit) {
+    const key = connectionKey(principal),state = validateConnectionState(value);
+    if (!Number.isSafeInteger(expectedRevision) || expectedRevision < 0 || expectedRevision >= Number.MAX_SAFE_INTEGER || typeof verifyAtCommit !== 'function') throw Error('MODEL_CONNECTION_INPUT_DENIED');
+    db.exec('BEGIN IMMEDIATE');
+    try {
+      const before = readModelConnection(principal);
+      if (before.revision !== expectedRevision) throw Error('MODEL_CONNECTION_REVISION_CONFLICT');
+      if (verifyAtCommit() !== true) throw Error('MODEL_CONNECTION_STALE_DENIED');
+      db.prepare('INSERT INTO workspace_model_connections VALUES(?,?,?,?,?,?) ON CONFLICT(tenant,subject,instance,generation) DO UPDATE SET revision=excluded.revision,state=excluded.state').run(...key,before.revision+1,JSON.stringify(state));
+      const target = readModelConnection(principal); db.exec('COMMIT'); return target;
+    } catch (e) { if(db.isTransaction) db.exec('ROLLBACK'); throw e; }
+  }
+  const store = Object.freeze({ read, write, readModelConnection, writeModelConnection, close() { if (!closed) { closed = true; db.close(); ownedProfileStores.delete(store); } } });
+  ownedProfileStores.set(store,root); return store;
 }
 
 // Additive ordinary personal-view state in the SAME existing profile database.

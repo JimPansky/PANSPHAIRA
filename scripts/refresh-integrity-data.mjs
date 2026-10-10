@@ -3132,6 +3132,26 @@ pan541Node.inputs.push(...pan546Inputs.map(([inputPath, role]) => ({path: inputP
 pan541Node.ownedTests.push("npm run pan546:test");
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan546:test")) repositoryIntegrityNode.ownedTests.push("npm run pan546:test");
 
+// PAN565 minimal connection attaches to EXISTING shell/profile, broker and budget.
+// Source evidence only: no new owner/controller, runnable manifest or hard gate.
+const pan565Inputs = [
+  ["docs/architecture/workspace-model-connection-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/contracts/src/workspace-model-connection-v1.ts", "CONTRACT"],
+  ["packages/browser-workspace/src/workspace-model-connection-v1.ts", "SOURCE"],
+  ["packages/browser-workspace/src/workspace-model-connection-v1.css", "SOURCE"],
+  ["src/pan565/native-model-connection.mjs", "SECURITY"],
+  ["src/pan565/connection-transport.mjs", "SECURITY"],
+  ["scripts/run-pan565-model-connection-tests.mjs", "VALIDATOR"],
+  ["tests/pan565/native-fixture.mjs", "VALIDATOR"],
+  ["tests/pan565/native-model-connection.test.mjs", "VALIDATOR"],
+  ["tests/pan565/transport-price-bound.test.mjs", "VALIDATOR"],
+  ["tests/pan565/browser-model-connection.test.mjs", "VALIDATOR"],
+  ["tests/pan565/registration.test.mjs", "VALIDATOR"],
+];
+pan541Node.inputs.push(...pan565Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)})));
+pan541Node.ownedTests.push("npm run pan565:test");
+if (!repositoryIntegrityNode.ownedTests.includes("npm run pan565:test")) repositoryIntegrityNode.ownedTests.push("npm run pan565:test");
+
 // PAN462 canonical CI hard-gate correction: bounded integration ownership.
 // A byte that already has its own bounded task owner is OWNED THERE and must
 // not be duplicated on the integration owner. The integration owner keeps
@@ -3197,6 +3217,7 @@ for (const [inputPath] of pan544Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan549Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan548Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan546Inputs) entries.set(inputPath, null);
+for (const [inputPath] of pan565Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan574Inputs) entries.set(inputPath, null);
 for (const [inputPath] of pan576Inputs) entries.set(inputPath, null);
 for (const relative of [

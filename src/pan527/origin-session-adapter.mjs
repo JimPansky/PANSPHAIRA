@@ -1,6 +1,6 @@
 import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { constants, closeSync, fstatSync, lstatSync, openSync, readFileSync, realpathSync, renameSync, unlinkSync, writeFileSync } from "node:fs";
-import { isAbsolute, join, resolve } from "node:path";
+import { dirname, isAbsolute, join, resolve } from "node:path";
 import { createServer as createHttpsServer } from "node:https";
 import Ajv2020 from "ajv/dist/2020.js";
 import { buildPocGuidedDemoSetupPlanV1, expectedPocGuidedDemoTemplatesV1 } from "../../dist/packages/contracts/src/index.js";
@@ -17,6 +17,8 @@ import { isNativeWorkspaceViewOwnerV1 } from "../pan546/native-view-owner.mjs";
 import { isNativeWorkspaceErvHumanV1 } from "../pan546/native-human-workspace.mjs";
 import {isNativeWorkspaceInvoiceNavigationV1} from '../pan546/native-invoice-navigation.mjs';
 import {validateWorkspaceNavigationInputV1,validateWorkspaceNavigationResultV1} from '../../dist/packages/contracts/src/workspace-invoice-navigation-v1.js';
+import {isNativeModelConnectionV1} from '../pan565/native-model-connection.mjs';
+import {validateModelConnectionReadbackV1} from '../../dist/packages/contracts/src/workspace-model-connection-v1.js';
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
 export function validateHostedOriginV1(value) {
@@ -77,6 +79,13 @@ function privateRoot(path) {
   const stat = lstatSync(path);
   if (!stat.isDirectory() || stat.isSymbolicLink() || (stat.mode & 0o777) !== 0o700 || stat.uid !== process.getuid()) throw new Error("HOSTED_STATE_ROOT_DENIED");
   return path;
+}
+// Existing owner-private file primitive, exposed only for code-owned opaque
+// credential resolution. No write/store API and no HTTP Secret endpoint.
+export function readProtectedOwnerSecretFileV1(path) {
+  if (typeof path !== 'string' || !isAbsolute(path) || resolve(path) !== path) throw Error('HOSTED_AUTH_UNAVAILABLE');
+  privateRoot(dirname(path));
+  return privateBytes(path);
 }
 function atomicPrivate(path, value) {
   const tmp = path + "." + randomBytes(12).toString("hex");
@@ -228,6 +237,13 @@ function createOwnerSessionStoreV1(origin, identity, root, binding, cookieName, 
 }
 
 import {isNativeWorkspaceAgentRunV1} from '../pan548/native-agent-run.mjs';
+export function mountProtectedModelConnectionV1(gateway,options){
+  exactData(options,['optIn','tenantId','origin','identityDigest','owner','script'],'MODEL_CONNECTION_OWNER_DENIED');
+  const product=ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if(options.optIn!==true||!product?.workspaceDocument||product.workspaceModelConnection||options.origin!==product.sessions.origin||options.identityDigest!==product.sessions.binding.identityDigest||!isNativeModelConnectionV1(options.owner,product.sessions.binding)||typeof options.script!=='string'||!options.script.length||Buffer.byteLength(options.script)>131072)throw Error('MODEL_CONNECTION_OWNER_DENIED');
+  const attachment=Object.freeze({owner:options.owner,script:options.script});product.workspaceModelConnection=attachment;
+  return Object.freeze({close(){if(product.workspaceModelConnection===attachment)delete product.workspaceModelConnection;attachment.owner.close();}});
+}
 export function mountProtectedWorkspaceInvoiceNavigationV1(gateway,options){
   exactData(options,['optIn','tenantId','origin','identityDigest','adapterVersion','owner','script'],'NAV_NATIVE_OWNER_DENIED');
   const product=ownedProductIngresses.get(gateway)?.get(options.tenantId);
@@ -397,13 +413,28 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/context-selection(?:\/(?:tab|verify|retire))?|\/module-view(?:\/(?:catalog|data|preview|undo-preview|confirm|cancel))?|\/invoice-navigation\/(?:app\.js|search|request|read|ack)|\/agent-run\/(?:app\.js|plan|start|read)|\/erv-human\/(?:app\.js|read|decide|reconcile)|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/model-connection(?:\/(?:app\.js|select|probe|consent))?|\/context-selection(?:\/(?:tab|verify|retire))?|\/module-view(?:\/(?:catalog|data|preview|undo-preview|confirm|cancel))?|\/invoice-navigation\/(?:app\.js|search|request|read|ack)|\/agent-run\/(?:app\.js|plan|start|read)|\/erv-human\/(?:app\.js|read|decide|reconcile)|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (!["/workspace/profile", "/workspace/configuration", "/workspace/context-selection"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences", "/workspace/context-selection/tab", "/workspace/context-selection/verify", "/workspace/context-selection/retire", "/workspace/module-view/catalog", "/workspace/module-view/data", "/workspace/module-view/preview", "/workspace/module-view/undo-preview", "/workspace/module-view/confirm", "/workspace/module-view/cancel", "/workspace/invoice-navigation/search", "/workspace/invoice-navigation/request", "/workspace/invoice-navigation/read", "/workspace/invoice-navigation/ack", "/workspace/agent-run/plan", "/workspace/agent-run/start", "/workspace/erv-human/read", "/workspace/erv-human/decide", "/workspace/erv-human/reconcile"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (match[2]?.startsWith('/workspace/model-connection') && (request.method==='POST') !== ['/workspace/model-connection/select','/workspace/model-connection/probe','/workspace/model-connection/consent'].includes(match[2]))
+        || (!match[2]?.startsWith('/workspace/model-connection') && !["/workspace/profile", "/workspace/configuration", "/workspace/context-selection"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences", "/workspace/context-selection/tab", "/workspace/context-selection/verify", "/workspace/context-selection/retire", "/workspace/module-view/catalog", "/workspace/module-view/data", "/workspace/module-view/preview", "/workspace/module-view/undo-preview", "/workspace/module-view/confirm", "/workspace/module-view/cancel", "/workspace/invoice-navigation/search", "/workspace/invoice-navigation/request", "/workspace/invoice-navigation/read", "/workspace/invoice-navigation/ack", "/workspace/agent-run/plan", "/workspace/agent-run/start", "/workspace/erv-human/read", "/workspace/erv-human/decide", "/workspace/erv-human/reconcile"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if(match[2]?.startsWith('/workspace/model-connection')){
+          const workspace=product.workspaceDocument,attachment=product.workspaceModelConnection;
+          if(!attachment)return reply(response,404,'HOSTED_ROUTE_DENIED');
+          const check=()=>{product.sessions.authenticate(request.headers);if(workspace!==product.workspaceDocument||attachment!==product.workspaceModelConnection)throw Error('MODEL_CONNECTION_STALE_DENIED');};
+          check();if(match[2]==='/workspace/model-connection/app.js'){if(request.headers['transfer-encoding']!==undefined||request.headers['content-length']!==undefined&&request.headers['content-length']!=='0')return reply(response,400,'HOSTED_BODY_DENIED');response.writeHead(200,{'content-type':'text/javascript; charset=utf-8'});response.end(attachment.script);return;}
+          let result;if(request.method==='GET'){
+            if(request.headers['transfer-encoding']!==undefined||request.headers['content-length']!==undefined&&request.headers['content-length']!=='0')return reply(response,400,'HOSTED_BODY_DENIED');result=attachment.owner.read(request.headers);
+          }else{
+            if(request.headers.origin!==origin)return reply(response,403,'HOSTED_CSRF_DENIED');if(request.headers['content-type']!=='application/json'||request.headers['content-encoding']!==undefined)return reply(response,400,'HOSTED_BODY_DENIED');
+            const chunks=[];let bytes=0;for await(const chunk of request){bytes+=chunk.length;if(bytes>4096)return reply(response,413,'HOSTED_BODY_DENIED');chunks.push(chunk);}let body;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{return reply(response,400,'HOSTED_BODY_DENIED');}
+            check();const operation=match[2].slice('/workspace/model-connection/'.length);result=await attachment.owner[operation](request.headers,body);
+          }
+          check();const target=validateModelConnectionReadbackV1(result);check();response.writeHead(200,{'content-type':'application/json; charset=utf-8'});response.end(JSON.stringify(target)+'\n');return;
+        }
         if(match[2]?.startsWith('/workspace/invoice-navigation/')){
           const workspace=product.workspaceDocument,contextOwner=product.workspaceContextSelection,attachment=product.workspaceInvoiceNavigation;
           if(!attachment||!contextOwner)return reply(response,404,'HOSTED_ROUTE_DENIED');
@@ -672,6 +703,7 @@ export function createOptionalHttpsProductIngressV1(options) {
     } catch (error) {
       if (response.headersSent) { response.destroy(); return; }
       const code = error instanceof Error ? error.message : "HOSTED_AUTH_UNAVAILABLE";
+      if(code.startsWith('MODEL_CONNECTION_')){const status=['MODEL_CONNECTION_SCOPE_DENIED','MODEL_CONNECTION_PRODUCT_CONSENT_DENIED'].includes(code)?403:['MODEL_CONNECTION_REVISION_CONFLICT','MODEL_CONNECTION_STALE_DENIED','MODEL_CONNECTION_BUSY','MODEL_CONNECTION_UNKNOWN_USAGE_RETAINED','MODEL_CONNECTION_OWNER_CLOSED'].includes(code)?409:['MODEL_CONNECTION_CAPACITY_DENIED','MODEL_CONNECTION_LIMIT_DENIED'].includes(code)?429:400;return reply(response,status,code);}
       if (["HOSTED_HEADER_AUTHORITY_DENIED", "HOSTED_ROLE_DENIED", "HOSTED_CSRF_DENIED", "GUIDED_BOUND_PRINCIPAL_DENIED"].includes(code)) reply(response, 403, code);
       else if (["NOTIFICATION_NATIVE_ROLE_DENIED", "ERV_HUMAN_NATIVE_ROLE_REQUIRED_DENIED", "ERV_HUMAN_NATIVE_ROLE_DENIED", "HUMAN_WORKSPACE_SCOPE_DENIED", "NOTIFICATION_ORIGIN_DENIED"].includes(code)) reply(response, 403, code);
       else if (["ERV_HUMAN_PROPOSAL_REVISION_DENIED", "ERV_HUMAN_ALREADY_DECIDED_RECONCILE_REQUIRED", "ERV_HUMAN_TASK_FENCED_RECONCILE_REQUIRED", "ERV_HUMAN_TRANSITION_DENIED", "ERV_HUMAN_SEPARATE_REVIEW_REQUIRED_DENIED", "ERV_HUMAN_NATIVE_UNRESOLVED_APPROVAL_DENIED", "HUMAN_WORKSPACE_ATTACHMENT_RETIRED"].includes(code)) reply(response,409,code);

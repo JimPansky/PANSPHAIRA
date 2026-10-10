@@ -39,7 +39,7 @@ assert.equal(owners.length, 1, "PAN543_EXISTING_SHELL_OWNER_REQUIRED");
 const owner = owners[0];
 assert.deepEqual(owner.dependsOn, ["pan516-native-procurement-v1", "pan527-origin-session-v1"]);
 assert.equal(owner.riskClass, "HIGH"); assert.equal(owner.globalInvalidation, false);
-assert.ok(JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test"]) || JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test", "npm run pan543:test"]) || JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test", "npm run pan543:test", "npm run pan546:test"]), "PAN543_EXISTING_TEST_OWNERSHIP_DENIED");
+assert.ok(JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test"]) || JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test", "npm run pan543:test"]) || JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test", "npm run pan543:test", "npm run pan546:test"]) || JSON.stringify(owner.ownedTests) === JSON.stringify(["npm run pan541:test", "npm run pan543:test", "npm run pan546:test", "npm run pan565:test"]), "PAN543_EXISTING_TEST_OWNERSHIP_DENIED");
 const hash = bytes => createHash("sha256").update(bytes).digest("hex");
 const sha = path => hash(readFileSync(path));
 for (const [path, role] of inputs) {
