@@ -129,5 +129,5 @@ export async function createWorkspaceProfileEditorV1(options: { root: HTMLElemen
   }
   window.addEventListener("focus", () => { void checkBinding(); }, { signal });
   await load();
-  return { refreshAuthority: checkBinding, visible(id: string) { return !!readback && resolved().effectiveItems.some(i => i.id === id && i.visible); }, setVisible(id: string) { if (!readback || (blocked && !legacyOnly) || busy || !readback.catalog.some(i => i.id === id && i.state === "AVAILABLE")) return false; const item = draft.items.find(i => i.id === id); if (!item) return false; item.visible = true; if (legacyOnly) apply(); else changed(); renderRows(); return true; } };
+  return { refreshAuthority: checkBinding, isDirty(){return !!readback&&(!!proposal||JSON.stringify(draft)!==JSON.stringify(readback.profile));},async discard(){if(busy||signal.aborted)return false;await load();return status.dataset.profileState==='READY';},visible(id: string) { return !!readback && resolved().effectiveItems.some(i => i.id === id && i.visible); }, setVisible(id: string) { if (!readback || (blocked && !legacyOnly) || busy || !readback.catalog.some(i => i.id === id && i.state === "AVAILABLE")) return false; const item = draft.items.find(i => i.id === id); if (!item) return false; item.visible = true; if (legacyOnly) apply(); else changed(); renderRows(); return true; } };
 }

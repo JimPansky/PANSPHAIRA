@@ -715,6 +715,18 @@ repository_only_files = {
     "src/pan546/native-data-catalog.mjs",
     "src/pan546/native-view-owner.mjs",
     "src/pan546/native-human-workspace.mjs",
+    # Original DUI05: native bounded search, closed typed transport and actual
+    # browser navigation/three existing dirty-draft owners. Source evidence only.
+    "docs/architecture/native-invoice-navigation-browser-v1.md",
+    "packages/contracts/src/workspace-invoice-navigation-v1.ts",
+    "packages/browser-workspace/src/workspace-invoice-navigation-v1.ts",
+    "packages/browser-workspace/src/workspace-invoice-navigation-v1.css",
+    "packages/browser-workspace/src/workspace-dirty-draft-v1.ts",
+    "src/pan546/native-invoice-navigation.mjs",
+    "tests/pan546/native-invoice-navigation.test.mjs",
+    "tests/pan546/navigation-review517.test.mjs",
+    "tests/pan546/navigation-transport.test.mjs",
+    "tests/pan546/browser-navigation.test.mjs",
     "scripts/run-pan546-native-view-human-tests.mjs",
     "tests/pan546/module-view.test.mjs",
     "tests/pan546/native-view.test.mjs",

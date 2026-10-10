@@ -13,6 +13,9 @@ import { createWorkspaceNotificationsV1 } from "./notifications-v1.js";
 import { analysisPluginV1, createAnalysisViewV1 } from "./plugin-analysis-v1.js";
 import { createWorkspaceContextSelectionV1 } from "./context-selection-v1.js";
 import { createWorkspaceModuleViewEditorV1 } from "./module-view-editor-v1.js";
+import type {WorkspaceDirtyDraftV1,WorkspaceNavigationDriverV1} from './workspace-dirty-draft-v1.js';
+import type {WorkspaceNavigationNativeReadbackV1} from '../../contracts/src/workspace-invoice-navigation-v1.js';
+import type {WorkspaceNativeNavigationFrameV1} from './workspace-invoice-navigation-v1.js';
 
 const element = (id: string): HTMLElement => { const node = document.getElementById(id); if (!node) throw new Error("SHELL_SLOT_MISSING"); return node; };
 async function start() {
@@ -22,6 +25,8 @@ async function start() {
   let profileEditor: Awaited<ReturnType<typeof createWorkspaceProfileEditorV1>> | null = null;
   let presentation: BrowserProfileReadV1 | null = null; let panelEpoch = 0;
   let notifications: ReturnType<typeof createWorkspaceNotificationsV1> | null = null;
+  let navigation:WorkspaceNavigationDriverV1|null=null,targetTransition=false,acceptedHash=location.hash||'#/workspace/setup';
+  const draftOwners=new Set<WorkspaceDirtyDraftV1>();
   const canvas = element("profile.canvas"); const boundary = element("pan.workspace.boundary");
   const cards = new Map([["shell.main", main], ["shell.widgets", widget], ["pan.workspace.boundary", boundary], ["pan.erv.information", panel]]);
   async function renderPanel() {
@@ -107,7 +112,7 @@ async function start() {
     ["pan.setup.view", createSetupViewV1(api)], ["pan.erv.view", createErvViewV1(api)], ["pan.erv.information", createErvPanelV1(api)], ["pan.erv.action", createErvActionV1(api)],
   ]);
   if (diagnostic) for (const p of [diagnostic.broken, diagnostic.disabled, diagnostic.missing, diagnostic.incompatible]) factories.set(p.id + ".view", diagnosticFailingViewV1);
-  if (configurationEnabled) factories.set("pan.configuration.view", createConfigurationDraftViewV1(owner.context));
+  if (configurationEnabled) factories.set("pan.configuration.view", createConfigurationDraftViewV1(owner.context,draft=>{draftOwners.add(draft);return()=>draftOwners.delete(draft);}));
   if (analysisEnabled) factories.set("pan.analysis.view", createAnalysisViewV1({ base, context: owner.context, selected: () => link }));
   for (const plugin of plugins) for (const c of plugin.contributions) if (c.kind === "NAVIGATION") {
     const route = plugin.contributions.find(r => r.kind === "ROUTE" && r.id === c.routeId);
@@ -142,16 +147,17 @@ async function start() {
       const c = owner.context(); location.hash = buildBrowserDeepLinkV1({ path: "/workspace/erv", tenantId: c.tenantId, sessionId: c.sessionId, objectId: value.invoice.invoiceId, revision: value.invoice.revision });
     },
   });
-  function disposal() { owner.onDispose(() => { contextSelection?.retire(); panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
+  function disposal() { owner.onDispose(() => { if(!targetTransition)contextSelection?.retire(); panelEpoch++; registry.retireAll(); invoice = null; delete document.body.dataset.analysisResultRevision; main.replaceChildren(); actions.replaceChildren(); panel.replaceChildren(); panel.hidden = true; canvas.classList.remove("panel-open"); nav.replaceChildren(); }); }
   let latestActivation: object | null = null;
   function captureActivation(invocation: object) {
     const binding = owner.context(), nativeContextEpoch = contextSelection?.epoch();
     return { binding, nativeContextEpoch, live: () => latestActivation === invocation && !lifetime.signal.aborted
       && owner.context() === binding && contextSelection?.epoch() === nativeContextEpoch };
   }
-  async function activate() {
+  async function activate(native?:WorkspaceNavigationNativeReadbackV1):Promise<WorkspaceNativeNavigationFrameV1|undefined> {
     const invocation = Object.freeze({}); latestActivation = invocation;
-    contextSelection?.retire();
+    if(native)contextSelection?.beginTarget();else contextSelection?.retire();
+    acceptedHash=location.hash||'#/workspace/setup';
     const current = owner.context(); let selected: BrowserDeepLinkV1;
     try { selected = parseBrowserDeepLinkV1(location.hash || "#/workspace/setup", current, registry.routes().filter(r => r.state === "REGISTERED").map(r => r.path!)); }
     catch {
@@ -167,7 +173,7 @@ async function start() {
       return;
     }
     link = selected;
-    owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : selected.path === "/workspace/analysis" ? selected.objectId ?? "analysis:common-trade-01:stock" : null, revision: current.revision + 1 }); disposal();
+    targetTransition=!!native;try{owner.switchContext({ ...current, objectId: selected.path === "/workspace/erv" ? selected.objectId ?? "AP-PAN516-MATCHED-01" : selected.path === "/workspace/analysis" ? selected.objectId ?? "analysis:common-trade-01:stock" : null, revision: current.revision + 1 });}finally{targetTransition=false;}disposal();
     const activation = captureActivation(invocation); if (!activation.live()) return;
     document.body.dataset.contextRevision = String(owner.context().revision); document.body.dataset.nativeRevision = "unknown";
     void notifications?.refresh();
@@ -186,8 +192,9 @@ async function start() {
     const readback = invoice;
     const nativeInvoice = readback && selected.path === "/workspace/erv" && activation.binding.objectId === readback.invoiceId
       ? { objectId: readback.invoiceId, revision: readback.revision } : null;
-    if (contextSelection && nativeContextEpoch !== undefined) void contextSelection.bind({ localEpoch: nativeContextEpoch, moduleId: plugin!.id, viewId: view.id,
-      primaryObjectId: nativeInvoice?.objectId ?? null, domainRevision: nativeInvoice?.revision ?? null });
+    if (contextSelection && nativeContextEpoch !== undefined){const binding=contextSelection.bind({ localEpoch: nativeContextEpoch, moduleId: plugin!.id, viewId: view.id,
+      primaryObjectId: nativeInvoice?.objectId ?? null, domainRevision: nativeInvoice?.revision ?? null });if(native)await binding;else void binding;}
+    if(!activation.live())return;
     if (nativeInvoice) {
       const action = await registry.render("pan.erv.action", actions); if (!activation.live()) return;
       if (action.outcome === "RENDERED") {
@@ -197,8 +204,9 @@ async function start() {
     }
     if (presentation) applyPresentation(presentation);
     if (activation.live() && target.isConnected && !main.hidden && !element("shell.notifications").contains(document.activeElement)) main.focus();
+    if(native&&readback&&activation.live())return {context:contextSelection!.current(),invoice:readback,root:target,main,isLive:activation.live};
   }
-  disposal(); window.addEventListener("hashchange", () => { void activate(); }, { signal: lifetime.signal });
+  disposal(); window.addEventListener("hashchange", () => {if(navigation)navigation.hashChange(acceptedHash,()=>{latestActivation=Object.freeze({});},()=>{void activate();});else if(document.body.dataset.ownerInvoiceNavigation==='true'&&(moduleViewEditor?.isDirty()||profileEditor?.isDirty()||[...draftOwners].some(d=>d.isDirty()))){history.replaceState(null,'',acceptedHash);widget.textContent='Navigation angehalten: Entwurf behalten. Erst verwerfen oder nativ zurücklesen; kein Retry.';}else void activate();}, { signal: lifetime.signal });
   element("shell.logout").addEventListener("click", async () => {
     const response = await fetch(base + "/workspace/logout", { method: "POST", credentials: "same-origin" });
     if (response.status !== 200) { widget.textContent = "Abmelden nicht bestätigt. Keine Erfolgsmeldung."; return; }
@@ -212,5 +220,6 @@ async function start() {
   });
   await activate();
   profileEditor = await profileReady;
+  if(document.body.dataset.ownerInvoiceNavigation==='true'&&contextSelection&&moduleViewEditor){try{const module=await import(base+'/workspace/invoice-navigation/app.js');if(lifetime.signal.aborted)return;navigation=module.createWorkspaceInvoiceNavigationV1({container:canvas,context:contextSelection,signal:lifetime.signal,drafts:draftOwners,editor:moduleViewEditor,profile:profileEditor,shellContext:owner.context,registry,activate});}catch{canvas.append(text('p','Suche nicht verfügbar.'));}}
 }
 void start().catch(() => { const main = element("shell.main"); main.replaceChildren(text("h1", "Arbeitsplatz nicht verfügbar"), text("p", "Keine gültige aktuelle Session oder kein gültiges Frontendbinding. Es wurde kein fachlicher Erfolg bestätigt.")); });

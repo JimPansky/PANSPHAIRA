@@ -39,6 +39,17 @@ export function createNativeErvReadAdapterV1(options) {
         confirmationDigest: liability.source.confirmationDigest, invoiceSourceSha256: liability.source.invoiceSource.sha256,
         readOnly: true, bookingAuthorityGranted: false, paymentOrderAuthorized: false });
     },
+    search(request) {
+      exact(request, ["tenantId", "query"], "ERV_SEARCH_REQUEST_DENIED");
+      if (request.tenantId !== tenantId) throw new Error("ERV_TENANT_BINDING_DENIED");
+      if (typeof request.query !== "string" || !/^[A-Z0-9][A-Z0-9-]{0,63}$/.test(request.query)) throw new Error("ERV_SEARCH_QUERY_DENIED");
+      // Enumerate only the existing code-owned authorized native invoice IDs,
+      // on the SAME reader/leading state. Search introduces no SQL/filter/URL,
+      // source-right, supplier metadata, second database or fabricated result.
+      const invoices = [...invoiceIds].map(objectId => reader.read({ tenantId, objectId, expectedRevision: null }));
+      if (new Set(invoices.map(value => value.revision)).size !== 1) throw new Error("ERV_OBJECT_REVISION_STALE");
+      return Object.freeze(invoices.filter(value => value.invoiceId.includes(request.query)));
+    },
   });
   owned.set(reader, tenantId); return reader;
 }

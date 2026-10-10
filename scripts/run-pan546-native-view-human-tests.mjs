@@ -1,7 +1,7 @@
 import {spawnSync} from 'node:child_process';
 import {mkdtempSync} from 'node:fs';
 import {join} from 'node:path';
-const files=['tests/pan546/module-view.test.mjs','tests/pan546/native-view.test.mjs','tests/pan546/transport.test.mjs','tests/pan546/native-association.test.mjs','tests/pan546/reservation-native.test.mjs','tests/pan546/native-human-workspace.test.mjs','tests/pan546/native-references.test.mjs','tests/pan546/browser-view.test.mjs','tests/pan546/browser-human.test.mjs','tests/pan546/browser-human-combined.test.mjs','tests/pan546/registration.test.mjs'];
+const files=['tests/pan546/module-view.test.mjs','tests/pan546/native-view.test.mjs','tests/pan546/transport.test.mjs','tests/pan546/native-association.test.mjs','tests/pan546/reservation-native.test.mjs','tests/pan546/native-human-workspace.test.mjs','tests/pan546/native-references.test.mjs','tests/pan546/browser-view.test.mjs','tests/pan546/browser-human.test.mjs','tests/pan546/browser-human-combined.test.mjs','tests/pan546/native-invoice-navigation.test.mjs','tests/pan546/navigation-review517.test.mjs','tests/pan546/navigation-transport.test.mjs','tests/pan546/browser-navigation.test.mjs','tests/pan546/registration.test.mjs'];
 // The existing fixed Node24 admission boundary, not a new runner/provider.
 // A trusted Node/npm parent remains required; no caller test selection.
 function nodeOptionTokens(raw){

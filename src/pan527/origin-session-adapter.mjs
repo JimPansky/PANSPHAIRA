@@ -15,6 +15,8 @@ import { isNativeWorkspaceContextSelectionV1 } from "../pan548/native-context-se
 import { isNativeWorkspaceDataCatalogV1 } from "../pan546/native-data-catalog.mjs";
 import { isNativeWorkspaceViewOwnerV1 } from "../pan546/native-view-owner.mjs";
 import { isNativeWorkspaceErvHumanV1 } from "../pan546/native-human-workspace.mjs";
+import {isNativeWorkspaceInvoiceNavigationV1} from '../pan546/native-invoice-navigation.mjs';
+import {validateWorkspaceNavigationInputV1,validateWorkspaceNavigationResultV1} from '../../dist/packages/contracts/src/workspace-invoice-navigation-v1.js';
 
 // Optional ingress only; the existing local installer/HTTP profile is unchanged.
 export function validateHostedOriginV1(value) {
@@ -226,6 +228,13 @@ function createOwnerSessionStoreV1(origin, identity, root, binding, cookieName, 
 }
 
 import {isNativeWorkspaceAgentRunV1} from '../pan548/native-agent-run.mjs';
+export function mountProtectedWorkspaceInvoiceNavigationV1(gateway,options){
+  exactData(options,['optIn','tenantId','origin','identityDigest','adapterVersion','owner','script'],'NAV_NATIVE_OWNER_DENIED');
+  const product=ownedProductIngresses.get(gateway)?.get(options.tenantId);
+  if(options.optIn!==true||!product?.workspaceDocument||!product.workspaceContextSelection||product.workspaceInvoiceNavigation||options.origin!==product.sessions.origin||options.identityDigest!==product.sessions.binding.identityDigest||options.adapterVersion!=='pan546-native-invoice-navigation/v1'||!isNativeWorkspaceInvoiceNavigationV1(options.owner,product.sessions.binding,product.workspaceContextSelection)||typeof options.script!=='string'||!options.script.length||Buffer.byteLength(options.script,'utf8')>131072)throw Error('NAV_NATIVE_OWNER_DENIED');
+  const attachment=Object.freeze({owner:options.owner,script:options.script});product.workspaceInvoiceNavigation=attachment;
+  return Object.freeze({close(){if(product.workspaceInvoiceNavigation===attachment)delete product.workspaceInvoiceNavigation;attachment.owner.close();}});
+}
 export function mountProtectedWorkspaceAgentRunV1(gateway,options){
   exactData(options,["optIn","tenantId","origin","identityDigest","adapterVersion","owner","script"],"AGENT_NATIVE_OWNER_DENIED");
   const product=ownedProductIngresses.get(gateway)?.get(options.tenantId);
@@ -388,13 +397,25 @@ export function createOptionalHttpsProductIngressV1(options) {
         || (request.headers["sec-fetch-site"] !== undefined && !["same-origin", "none"].includes(request.headers["sec-fetch-site"]))) return reply(response, 403, "HOSTED_ORIGIN_DENIED");
       const rawPath = (request.url ?? "").split("?")[0];
       if ((request.url ?? "").includes("?") && !/\/workspace\/erv$/.test(rawPath)) return reply(response, 404, "HOSTED_ROUTE_DENIED");
-      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/context-selection(?:\/(?:tab|verify|retire))?|\/module-view(?:\/(?:catalog|data|preview|undo-preview|confirm|cancel))?|\/agent-run\/(?:app\.js|plan|start|read)|\/erv-human\/(?:app\.js|read|decide|reconcile)|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
+      const match = /^\/t\/([a-z0-9][a-z0-9-]{0,63})(\/api\/(?:status|effective-rights|ask)|\/guided(?:\/app\.js|\/style\.css|\/status|\/command)?|\/workspace(?:\/app\.js|\/style\.css|\/context|\/context-selection(?:\/(?:tab|verify|retire))?|\/module-view(?:\/(?:catalog|data|preview|undo-preview|confirm|cancel))?|\/invoice-navigation\/(?:app\.js|search|request|read|ack)|\/agent-run\/(?:app\.js|plan|start|read)|\/erv-human\/(?:app\.js|read|decide|reconcile)|\/erv|\/logout|\/profile|\/configuration|\/analysis|\/notifications(?:\/(?:open|read|reconcile|preferences))?)?)?$/.exec(rawPath);
       if (!match || !["GET", "POST"].includes(request.method)
-        || (!["/workspace/profile", "/workspace/configuration", "/workspace/context-selection"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences", "/workspace/context-selection/tab", "/workspace/context-selection/verify", "/workspace/context-selection/retire", "/workspace/module-view/catalog", "/workspace/module-view/data", "/workspace/module-view/preview", "/workspace/module-view/undo-preview", "/workspace/module-view/confirm", "/workspace/module-view/cancel", "/workspace/agent-run/plan", "/workspace/agent-run/start", "/workspace/erv-human/read", "/workspace/erv-human/decide", "/workspace/erv-human/reconcile"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        || (!["/workspace/profile", "/workspace/configuration", "/workspace/context-selection"].includes(match[2]) && (request.method === "POST") !== ["/api/ask", "/guided/command", "/workspace/logout", "/workspace/analysis", "/workspace/notifications/open", "/workspace/notifications/read", "/workspace/notifications/reconcile", "/workspace/notifications/preferences", "/workspace/context-selection/tab", "/workspace/context-selection/verify", "/workspace/context-selection/retire", "/workspace/module-view/catalog", "/workspace/module-view/data", "/workspace/module-view/preview", "/workspace/module-view/undo-preview", "/workspace/module-view/confirm", "/workspace/module-view/cancel", "/workspace/invoice-navigation/search", "/workspace/invoice-navigation/request", "/workspace/invoice-navigation/read", "/workspace/invoice-navigation/ack", "/workspace/agent-run/plan", "/workspace/agent-run/start", "/workspace/erv-human/read", "/workspace/erv-human/decide", "/workspace/erv-human/reconcile"].includes(match[2]))) return reply(response, 404, "HOSTED_ROUTE_DENIED");
       const product = products.get(match[1]); if (!product) return reply(response, 401, "HOSTED_SESSION_DENIED");
       product.sessions.authenticate(request.headers);
       if (match[2]?.startsWith("/workspace")) {
         if (!product.workspaceDocument) return reply(response, 404, "HOSTED_ROUTE_DENIED");
+        if(match[2]?.startsWith('/workspace/invoice-navigation/')){
+          const workspace=product.workspaceDocument,contextOwner=product.workspaceContextSelection,attachment=product.workspaceInvoiceNavigation;
+          if(!attachment||!contextOwner)return reply(response,404,'HOSTED_ROUTE_DENIED');
+          const check=()=>{product.sessions.authenticate(request.headers);if(workspace!==product.workspaceDocument||contextOwner!==product.workspaceContextSelection||attachment!==product.workspaceInvoiceNavigation)throw Error('NAV_ATTACHMENT_RETIRED');};
+          check();if(match[2]==='/workspace/invoice-navigation/app.js'){if(request.headers['transfer-encoding']!==undefined||request.headers['content-length']!==undefined&&request.headers['content-length']!=='0')return reply(response,400,'HOSTED_BODY_DENIED');response.writeHead(200,{'content-type':'text/javascript; charset=utf-8'});response.end(attachment.script);return;}
+          if(request.headers.origin!==origin)return reply(response,403,'HOSTED_CSRF_DENIED');
+          if(request.headers['content-type']!=='application/json'||request.headers['content-encoding']!==undefined)return reply(response,400,'HOSTED_BODY_DENIED');
+          const chunks=[];let bytes=0;for await(const chunk of request){bytes+=chunk.length;if(bytes>4096)return reply(response,413,'HOSTED_BODY_DENIED');chunks.push(chunk);}let body;try{body=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{return reply(response,400,'HOSTED_BODY_DENIED');}
+          check();const operation=match[2].slice('/workspace/invoice-navigation/'.length).toUpperCase(),input=validateWorkspaceNavigationInputV1(operation,body);
+          const result=attachment.owner[operation==='ACK'?'acknowledge':operation.toLowerCase()](request.headers,input);check();
+          const value=validateWorkspaceNavigationResultV1(operation,result);check();response.writeHead(200,{'content-type':'application/json; charset=utf-8'});response.end(JSON.stringify(value)+'\n');return;
+        }
         if(match[2]?.startsWith("/workspace/agent-run/")){
           const workspace=product.workspaceDocument,contextOwner=product.workspaceContextSelection,attachment=product.workspaceAgentRun;
           if(!attachment||!contextOwner)return reply(response,404,"HOSTED_ROUTE_DENIED");
@@ -676,6 +697,11 @@ export function createOptionalHttpsProductIngressV1(options) {
       else if (["ANALYSIS_OBJECT_BINDING_DENIED", "ANALYSIS_ORIGIN_OR_ROLE_DENIED", "ANALYSIS_NATIVE_BINDING_DRIFT_DENIED"].includes(code)) reply(response, 403, code);
       else if (["ANALYSIS_RESULT_CONTRACT_DENIED", "ANALYSIS_READ_REQUEST_DENIED"].includes(code)) reply(response, 400, code);
       else if (["ERV_TENANT_BINDING_DENIED", "ERV_OBJECT_BINDING_DENIED"].includes(code)) reply(response, 403, code);
+      else if(['NAV_INPUT_DENIED','NAV_QUERY_DENIED','NAV_HANDLE_DENIED','NAV_RENDER_RECEIPT_DENIED'].includes(code))reply(response,400,code);
+      else if(['NAV_OWNER_CLOSED','NAV_ATTACHMENT_RETIRED','NAV_TARGET_STALE_DENIED','NAV_TARGET_CONSUMED_DENIED','NAV_REQUEST_CONSUMED_DENIED','NAV_READ_ALREADY_CONSUMED_DENIED','NAV_READ_RECEIPT_DENIED','NAV_RENDER_BINDING_DENIED'].includes(code))reply(response,409,code);
+      else if(['NAV_TARGET_UNKNOWN_DENIED','NAV_REQUEST_UNKNOWN_DENIED'].includes(code))reply(response,404,code);
+      else if(code==='NAV_NATIVE_ROUTE_DENIED')reply(response,403,code);
+      else if(['NAV_TARGET_CAPACITY_DENIED','NAV_REQUEST_CAPACITY_DENIED'].includes(code))reply(response,429,code);
       else if (code === 'AGENT_INPUT_DENIED') reply(response,400,code);
       else if (code === 'AGENT_CONTEXT_DENIED' || code === 'AGENT_REAL_ROUTE_NOT_BOUND_DENIED') reply(response,403,code);
       else if (['AGENT_PLAN_STALE_DENIED','AGENT_PLAN_UNKNOWN_DENIED','AGENT_PLAN_CONSUMED_DENIED','AGENT_SELECTION_CLARIFY_REQUIRED','AGENT_ATTACHMENT_RETIRED','AGENT_OWNER_CLOSED'].includes(code)) reply(response,409,code);

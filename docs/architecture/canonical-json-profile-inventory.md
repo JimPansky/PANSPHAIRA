@@ -392,3 +392,24 @@ This is mechanical inventory, not a runtime, native/browser, image, CI,
 WholeCanonical, real-model, KS-composition, merge, release or delivery PASS.
 The actual425 stale-census/selection failures remain historical evidence;
 the required current metadata tests must exercise these new exact bytes.
+
+## Additive original PAN546 DUI05 navigation registration (V78)
+
+The delivered V76/V77 inventories remain historical evidence. The unchanged
+mechanical scanner observes 1113 source files, 37 declaration sites/files,
+308 import sites in 307 files, 7 reexports, 30 similar-shape sites and 2616
+unique checksum paths. All 21 immutable byte obligations and 13 pinned profiles
+remain; append-only V78 links the exact V77 generator to the current generator.
+Only observed census bindings, the explicit migration and its version-list
+assertion advance. Scanner/validator/negative cases and admitted-base fixture
+are preserved.
+
+Graph98/all103 existing owners and every hard gate remain. Ten new source-only
+original DUI05 native search/navigation, DTO, three-real-draft browser, four test
+and document members belong to the existing541 shell owner. The existing fixed
+546 canonical entry retains all old files and includes these four new files;
+1792 legacy runnable members and per-asset131072 limit are unchanged. This does
+not introduce another reader, engine, inference route, owner, global/provider/
+harness change, business effect or lease/rights relaxation. Registration alone
+is not native/browser/image/review, current CI/WholeCanonical, protected merge,
+release/public readback, whole546548 or KS acceptance.

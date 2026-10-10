@@ -3,6 +3,7 @@ import type { BrowserShellFactoryV1 } from "../../browser-shell/src/registry-v1.
 import type { AgentConfigurationReadbackV1, AgentConfigurationFieldV1, AgentConfigurationValueV1 } from "../../contracts/src/agent-configuration-draft-v1.js";
 import type { BrowserContextV1 } from "../../browser-shell/src/context-owner-v1.js";
 import { text } from "./api-v1.js";
+import type {WorkspaceDirtyDraftV1} from './workspace-dirty-draft-v1.js';
 export const configurationDraftPluginV1: BrowserShellPluginV1 = {
   schemaVersion:"pansphaira.browser-plugin/v1",id:"pan.configuration",version:"1.0.0",shellVersion:"1.0.0",enabled:true,
   trustBoundary:"TRUSTED_IN_PROCESS_CODE_OWNED_FACTORIES",
@@ -28,11 +29,13 @@ function displayValue(value:AgentConfigurationValueV1|null):string {
   if(Array.isArray(value))return value.map(v=>displayValue(v)).join(", ");
   return valueLabels[String(value)] ?? (String(value).startsWith("bounded-") ? "Geprüfte begrenzte Runtimevorlage" : String(value));
 }
-export function createConfigurationDraftViewV1(context:()=>BrowserContextV1): BrowserShellFactoryV1<HTMLElement> {
+export function createConfigurationDraftViewV1(context:()=>BrowserContextV1,registerDraft?:(draft:WorkspaceDirtyDraftV1)=>()=>void): BrowserShellFactoryV1<HTMLElement> {
   return {kind:"VIEW",async render({target,signal}) {
     target.classList.add("configuration-draft"); target.dataset.backend="configuration";
     const captured=context(); const base="/t/"+captured.tenantId;
-    let current:Readback|null=null; let busy=false;let needsReconciliation=false;
+    let current:Readback|null=null; let busy=false;let saveInFlight=false;let needsReconciliation=false;let dirty=false;
+    const unregister=registerDraft?.({id:'AGENT_CONFIGURATION',label:'Konfiguration',isDirty:()=>active()&&(dirty||saveInFlight||needsReconciliation),async discardForNavigation(){if(!active()||busy||needsReconciliation)return false;dirty=false;show();return true;}});
+    signal.addEventListener('abort',()=>unregister?.(),{once:true});
     const heading=text("h1","Versionierter Agentenkonfigurationsentwurf");
     const note=text("p","Nur erlaubte Konfiguration wird dauerhaft gespeichert. Keine Aktivierung, keine Rechtevergabe, keine fachlichen Änderungen und kein kostenpflichtiger Modellaufruf.");
     const status=text("p","");status.className="read-state";status.setAttribute("role","status");status.setAttribute("aria-live","polite");
@@ -72,7 +75,7 @@ export function createConfigurationDraftViewV1(context:()=>BrowserContextV1): Br
         : "Konfigurationsbackend nicht verfügbar oder Eingabe abgelehnt. Kein erfolgreicher Speichernachweis. "+(error??""));
     }
     async function save(field:AgentConfigurationFieldV1,value:AgentConfigurationValueV1|null,confirmation:"CONFIRM"|"UNKNOWN") {
-      if(!current || busy || needsReconciliation || !active())return;busy=true;controls(true);state("SAVING","Entwurf wird mit erwarteter Revision gespeichert und anschließend erneut gelesen …");
+      if(!current || busy || needsReconciliation || !active())return;busy=true;saveInFlight=true;controls(true);state("SAVING","Entwurf wird mit erwarteter Revision gespeichert und anschließend erneut gelesen …");
       try {
         const result=await request("POST",{schemaVersion:"pansphaira.agent-configuration/answers/v1",expectedRevision:current.revision,answers:[{field,value,confirmation}]});
         if(!active())return;
@@ -80,10 +83,10 @@ export function createConfigurationDraftViewV1(context:()=>BrowserContextV1): Br
         if(!accepted(result.value))throw new Error("Ungültiger Zielreadback");
         const readback=await request("GET");if(!active())return;
         if(readback.status !== 200 || !accepted(readback.value) || readback.value.revision !== result.value.revision || JSON.stringify(readback.value.draft) !== JSON.stringify(result.value.draft)) throw new Error("Persistierter Zielreadback stimmt nicht überein");
-        current=readback.value;show();state("PERSISTED","Entwurf gespeichert und identisch vom zuständigen Backend erneut gelesen. Revision "+current.revision+".");
+        current=readback.value;dirty=false;show();state("PERSISTED","Entwurf gespeichert und identisch vom zuständigen Backend erneut gelesen. Revision "+current.revision+".");
         editor.querySelector<HTMLElement>("select,input,button")?.focus();
       } catch(e){if(active()){needsReconciliation=true;state("OUTCOME_UNKNOWN","Speicherausgang unklar: Der Server kann den Entwurf bereits gespeichert haben. Keine automatische Wiederholung. Vor weiteren Änderungen den aktuellen Entwurf ausdrücklich neu laden und abgleichen. "+(e instanceof Error?e.message:"Unbekannter Backendfehler"));}}
-      finally{busy=false;if(active())controls(false);}
+      finally{busy=false;saveInFlight=false;if(active())controls(false);}
     }
     function edit(field:AgentConfigurationFieldV1,question=false) {
       if(!current)return;editor.replaceChildren();
@@ -106,6 +109,7 @@ export function createConfigurationDraftViewV1(context:()=>BrowserContextV1): Br
         if(existing.confirmation !== "UNKNOWN" && existing.confirmation !== "CONTRADICTED") select.value=JSON.stringify(existing.value);
         select.id="configuration-value";label.htmlFor=select.id;form.append(label,select);readValue=()=>JSON.parse(select.value) as AgentConfigurationValueV1|null;
       }
+      form.addEventListener('input',()=>{dirty=true;},{signal});form.addEventListener('change',()=>{dirty=true;},{signal});
       const submit=text("button","Bestätigen und Entwurf speichern") as HTMLButtonElement;submit.type="submit";
       const unknown=text("button","Als unbekannt speichern") as HTMLButtonElement;unknown.type="button";
       form.append(submit,unknown);form.addEventListener("submit",e=>{e.preventDefault();void save(field,readValue(),"CONFIRM");},{signal});
@@ -135,7 +139,7 @@ export function createConfigurationDraftViewV1(context:()=>BrowserContextV1): Br
     async function load() {
       if(busy)return;busy=true;controls(true);state("LOADING","Versionierter Entwurf wird vom zuständigen Backend gelesen …");
       try{const result=await request("GET");if(!active())return;if(result.status !== 200){failure(result.status,result.value?.error);return;}if(!accepted(result.value))throw new Error("Ungültiger Backendvertrag");
-        current=result.value;needsReconciliation=false;show();state(current.persisted?"READBACK_RECEIVED":"EMPTY",current.persisted?"Gespeicherten Entwurf gelesen. Revision "+current.revision+".":"Noch kein gespeicherter Entwurf. Geprüftes begrenztes Profil ist vorbelegt; ungelöste Pflichtwerte bleiben ausdrücklich unbekannt.");
+        current=result.value;needsReconciliation=false;dirty=false;show();state(current.persisted?"READBACK_RECEIVED":"EMPTY",current.persisted?"Gespeicherten Entwurf gelesen. Revision "+current.revision+".":"Noch kein gespeicherter Entwurf. Geprüftes begrenztes Profil ist vorbelegt; ungelöste Pflichtwerte bleiben ausdrücklich unbekannt.");
       }catch(e){if(active())failure(503,e instanceof Error?e.message:"Unbekannter Backendfehler");}finally{busy=false;if(active())controls(false);}
     }
     reload.addEventListener("click",()=>{void load();},{signal});await load();
