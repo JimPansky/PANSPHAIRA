@@ -4,7 +4,7 @@ import { validateWorkspaceContextTabBootstrapV1, validateWorkspaceContextSnapsho
   type WorkspaceContextSnapshotV1, type WorkspaceContextReadbackV1, type WorkspaceContextSelectionEntryV1 } from "../../contracts/src/workspace-context-selection-v1.js";
 import { text } from "./api-v1.js";
 
-export type WorkspaceModuleViewRequestV1 = "READ" | "CATALOG" | "DATA" | "PREVIEW" | "UNDO_PREVIEW" | "CONFIRM" | "CANCEL" | "HUMAN_READ" | "HUMAN_DECIDE" | "HUMAN_RECONCILE" | "AGENT_PLAN" | "AGENT_START" | "AGENT_READ";
+export type WorkspaceModuleViewRequestV1 = "READ" | "CATALOG" | "DATA" | "PREVIEW" | "UNDO_PREVIEW" | "CONFIRM" | "CANCEL" | "HUMAN_READ" | "HUMAN_DECIDE" | "HUMAN_RECONCILE" | "AGENT_PLAN" | "AGENT_START" | "AGENT_READ" | "NAV_SEARCH" | "NAV_REQUEST" | "NAV_READ" | "NAV_ACK";
 export type WorkspaceModuleViewResponseV1 =
   { readonly outcome: "CURRENT_MODULE_VIEW_RESPONSE"; readonly value: unknown; readonly context: WorkspaceContextReadbackV1 }
   | { readonly outcome: "STALE_MODULE_VIEW_RESPONSE" | "MODULE_VIEW_DENIED" | "MODULE_VIEW_WRITE_OUTCOME_UNKNOWN"; readonly error: string };
@@ -50,7 +50,7 @@ export function createWorkspaceContextSelectionV1(options: {
     request?.abort(); previous?.close();
   }
   function failure() {
-    invalidate(); pending("Aktueller Kontext nicht bestätigt. Alte Auswahl wurde verworfen; keine automatische Wiederholung. Fachliche Navigation und Abmelden bleiben verfügbar.", true);
+    invalidate(); pending("Aktueller Kontext nicht bestätigt. Alte Auswahl verworfen; kein Retry. Fachnavigation/Abmelden bleiben verfügbar.", true);
     root.dataset.state = "CONTEXT_UNAVAILABLE";
   }
   async function request(suffix: string, body?: unknown, signal?: AbortSignal): Promise<unknown> {
@@ -136,15 +136,18 @@ export function createWorkspaceContextSelectionV1(options: {
       });
     } catch { if (live()) failure(); }
   }
-  function retire() {
+  function retire(remote = true) {
     if (closed) return epoch;
     epoch++; const old = current?.context; invalidate();
     pending("Kontextwechsel: Alte Auswahl und ausstehende Antworten werden verworfen …", true);
-    if (old) void serialized(async () => { try { await request("/retire", { schemaVersion: "pansphaira.workspace-context/verify/v1", tabId: old.binding.tabId, contextHandle: old.contextHandle }); } catch { /* No false retirement success or blind replay; subsequent binding revalidates. */ } });
+    if (old && remote) void serialized(async () => { try { await request("/retire", { schemaVersion: "pansphaira.workspace-context/verify/v1", tabId: old.binding.tabId, contextHandle: old.contextHandle }); } catch { /* No false retirement success or blind replay; subsequent binding revalidates. */ } });
     return epoch;
   }
   const api = Object.freeze({
     epoch() { return epoch; }, retire,
+    // Controlled shell-only local disposal for one native target claim. This
+    // skips no native fence: the ACK requires its exact epoch/selection delta.
+    beginTarget() { return retire(false); },
     current() { return current?.context ?? null; },
     async selectModuleViewInstance(instanceId: string): Promise<boolean> {
       const entry = current?.selections.find(e => e.elementId === "pan.erv.module-card" && e.rowId === instanceId);
@@ -159,7 +162,7 @@ export function createWorkspaceContextSelectionV1(options: {
     // Trusted shell composition only: callers never receive the session/tab
     // proof, choose a free URL, replace context or create mutation authority.
     async moduleViewRequest(operation: WorkspaceModuleViewRequestV1, payload?: Readonly<Record<string, unknown>>, csrfProof?: string): Promise<WorkspaceModuleViewResponseV1> {
-      const suffixes: Readonly<Record<WorkspaceModuleViewRequestV1, string>> = { READ: "", CATALOG: "/catalog", DATA: "/data", PREVIEW: "/preview", UNDO_PREVIEW: "/undo-preview", CONFIRM: "/confirm", CANCEL: "/cancel", HUMAN_READ: "/read", HUMAN_DECIDE: "/decide", HUMAN_RECONCILE: "/reconcile", AGENT_PLAN: "/plan", AGENT_START: "/start", AGENT_READ: "/read" };
+      const suffixes: Readonly<Record<WorkspaceModuleViewRequestV1, string>> = { READ: "", CATALOG: "/catalog", DATA: "/data", PREVIEW: "/preview", UNDO_PREVIEW: "/undo-preview", CONFIRM: "/confirm", CANCEL: "/cancel", HUMAN_READ: "/read", HUMAN_DECIDE: "/decide", HUMAN_RECONCILE: "/reconcile", AGENT_PLAN: "/plan", AGENT_START: "/start", AGENT_READ: "/read", NAV_SEARCH: "/search", NAV_REQUEST: "/request", NAV_READ: "/read", NAV_ACK: "/ack" };
       if (!Object.hasOwn(suffixes, operation) || !current || !proof || !tabId || closed) return { outcome: "MODULE_VIEW_DENIED", error: "CURRENT_NATIVE_CONTEXT_REQUIRED" };
       if (payload && (Object.getPrototypeOf(payload) !== Object.prototype || Reflect.ownKeys(payload).some(k => typeof k !== "string" || k === "context") || Object.values(Object.getOwnPropertyDescriptors(payload)).some(d => !d.enumerable || !("value" in d)))) return { outcome: "MODULE_VIEW_DENIED", error: "MODULE_VIEW_PAYLOAD_DENIED" };
       const captured = current, capturedEpoch = epoch, capturedLifetime = lifetime;
@@ -177,7 +180,7 @@ export function createWorkspaceContextSelectionV1(options: {
           const body = operation === "READ" || operation === "AGENT_READ" ? undefined : operation === "CATALOG" ? verification : { ...payload, context: verification };
           if (body !== undefined) headers["content-type"] = "application/json";
           writeSent = operation === "CONFIRM" || operation === "HUMAN_DECIDE" || operation === "AGENT_START";
-          const response = await fetch(base + (operation.startsWith("AGENT_") ? "/workspace/agent-run" : operation.startsWith("HUMAN_") ? "/workspace/erv-human" : "/workspace/module-view") + suffixes[operation], { credentials: "same-origin", cache: "no-store", headers, ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }), signal: AbortSignal.any([options.signal, AbortSignal.timeout(5000)]) });
+          const response = await fetch(base + (operation.startsWith("NAV_") ? "/workspace/invoice-navigation" : operation.startsWith("AGENT_") ? "/workspace/agent-run" : operation.startsWith("HUMAN_") ? "/workspace/erv-human" : "/workspace/module-view") + suffixes[operation], { credentials: "same-origin", cache: "no-store", headers, ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }), signal: AbortSignal.any([options.signal, AbortSignal.timeout(5000)]) });
           if (!live()) return { outcome: writeSent ? "MODULE_VIEW_WRITE_OUTCOME_UNKNOWN" : "STALE_MODULE_VIEW_RESPONSE", error: "MODULE_VIEW_CONTEXT_RETIRED" };
           if (response.status !== 200) return { outcome: "MODULE_VIEW_DENIED", error: "MODULE_VIEW_SERVER_DENIED_" + response.status };
           const value: unknown = await response.json();
@@ -192,11 +195,14 @@ export function createWorkspaceContextSelectionV1(options: {
         }
       });
     },
-    async refreshModuleViewContext(): Promise<boolean> {
-      if (!current || closed) return false;
-      const captured = current.context, capturedEpoch = epoch, capturedLifetime = lifetime;
+    async refreshModuleViewContext(source?: WorkspaceContextReadbackV1): Promise<boolean> {
+      const captured = current?.context ?? source;
+      if (!captured || closed || !proof || !tabId) return false;
+      check(captured);
+      const capturedCurrent = current, capturedEpoch = epoch, capturedLifetime = lifetime;
       return serialized(async () => {
-        const live = () => !closed && epoch === capturedEpoch && lifetime === capturedLifetime && current?.context === captured;
+        const live = () => !closed && !options.signal.aborted && epoch === capturedEpoch && lifetime === capturedLifetime && current === capturedCurrent
+          && options.context().sessionId === initial.sessionId && options.context().tenantId === initial.tenantId;
         try {
           if (!live()) return false;
           const fresh = validateWorkspaceContextSnapshotV1(await request("")); check(fresh.context);
@@ -213,7 +219,7 @@ export function createWorkspaceContextSelectionV1(options: {
       if (!["pan.setup", "pan.erv"].includes(value.moduleId)) { failure(); return; }
       // Replacement within the same navigation epoch owns a distinct lifetime.
       // Retained controls and queued outcomes cannot clear its successor.
-      invalidate(); pending("Aktueller nativer Seitenkontext wird serverseitig geprüft …", true);
+      invalidate(); pending("Nativen Seitenkontext prüfen …", true);
       const capturedLifetime = lifetime, controller = new AbortController(); bindingRequest = controller;
       const live = () => !closed && capturedEpoch === epoch && lifetime === capturedLifetime && !controller.signal.aborted;
       try {

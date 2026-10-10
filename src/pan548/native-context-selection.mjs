@@ -111,7 +111,10 @@ export function createNativeWorkspaceContextSelectionV1(options){
   },
   retire(headers,value){const{tab}=tabFor(headers),v=validateWorkspaceContextVerifyV1(value);if(v.tabId!==tab.id)throw new Error('CONTEXT_TAB_DENIED');if(!tab.context||!equalSecret(v.contextHandle,tab.context.contextHandle))throw new Error('CONTEXT_REVISION_STALE');tab.epoch=next(tab.epoch);tab.selectionRevision=next(tab.selectionRevision);tab.context=null;tab.selection=null;return {outcome:'CONTEXT_RETIRED',executionAuthorityGranted:false,effectsProduced:false};},
   close(){if(closed)return;closed=true;tabs.clear();},
- });owned.set(owner,{binding:sessions.binding,moduleViewStore});return owner;
+ });owned.set(owner,{binding:sessions.binding,moduleViewStore,nativeReader});return owner;
 }
 export const isNativeWorkspaceContextSelectionV1=(owner,binding)=>owned.has(owner)&&same(owned.get(owner).binding,binding);
+// Owner-local composition fence only. A second authentic reader for the same
+// tenant is not proof of the leading source captured by this context owner.
+export const isNativeWorkspaceReaderContextSelectionV1=(owner,binding,reader)=>isNativeWorkspaceContextSelectionV1(owner,binding)&&owned.get(owner).nativeReader===reader;
 export const isNativeWorkspaceModuleViewContextSelectionV1=(owner,binding,store)=>isNativeWorkspaceContextSelectionV1(owner,binding)&&sameWorkspaceModuleViewStoreV1(owned.get(owner).moduleViewStore,store);
