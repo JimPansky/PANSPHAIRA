@@ -7,6 +7,7 @@ import {ModelAccessBrokerV1} from '../../dist/packages/contracts/src/model-acces
 import {canonicalJson} from '../../dist/packages/contracts/src/canonical-json.js';
 import {MODEL_TOOL_TRANSCRIPT_SCHEMA_V1,snapshotModelToolDataV1} from '../../dist/packages/contracts/src/model-tool-transcript-v1.js';
 import {validateModelConnectionLimitsV1} from '../../dist/packages/contracts/src/workspace-model-connection-v1.js';
+const completed=new WeakSet();
 const hash=v=>createHash('sha256').update(canonicalJson(v)).digest('hex');
 const stop=code=>{throw Error(code);};
 const secret=/(?:sk-[A-Za-z0-9_-]{12,}|AKIA[A-Z0-9]{16}|-----BEGIN .*PRIVATE KEY-----|(?:password|api[_-]?key|access[_-]?token)\s*[:=]\s*\S+)/i;
@@ -36,7 +37,7 @@ export async function runExistingBrokerToolFeedbackV1(options){
  async function bounded(promise){
   return await new Promise((resolve,reject)=>{let done=false;const finish=(e,v)=>{if(done)return;done=true;signal.removeEventListener('abort',abort);e?reject(Error(e)):resolve(v);},abort=()=>finish(external.aborted?'LOOP_CANCELLED':'LOOP_TIME_LIMIT');signal.addEventListener('abort',abort,{once:true});Promise.resolve(promise).then(v=>finish(null,v),e=>finish(reasons.has(e?.message)||e?.message==='MODEL_CONNECTION_PRICE_BOUND_DENIED'?e.message:'LOOP_PROVIDER_DENIED'));if(signal.aborted)abort();});
  }
- function readback(outcome,exitCode,endReason,text){return frozen({schemaVersion:'pansphaira.broker-tool-feedback/readback/v1',outcome,exitCode,endReason,realModelAcceptance:false,usageState:exitCode===0?'OWNER_OBSERVED_USAGE_NOT_PRODUCT_MODEL_ACCEPTANCE':attempted?'UNKNOWN_USAGE_RETAINED':'NO_DISPATCH',actualToolActions:actions,actualRequests:requests,toolReadbacks:exitCode===0?readbacks:[],text,usage:{inputTokens,outputTokens,costMicros},elapsedMs:Date.now()-started});}
+ function readback(outcome,exitCode,endReason,text){const result=frozen({schemaVersion:'pansphaira.broker-tool-feedback/readback/v1',outcome,exitCode,endReason,realModelAcceptance:false,usageState:exitCode===0?'OWNER_OBSERVED_USAGE_NOT_PRODUCT_MODEL_ACCEPTANCE':attempted?'UNKNOWN_USAGE_RETAINED':'NO_DISPATCH',actualToolActions:actions,actualRequests:requests,toolReadbacks:exitCode===0?readbacks:[],text,usage:{inputTokens,outputTokens,costMicros},elapsedMs:Date.now()-started});if(exitCode===0)completed.add(result);return result;}
  try{
   while(true){
    current();if(turns>=limits.maxTurns)stop('LOOP_TURN_LIMIT');if(requests>=limits.maxRequests)stop('LOOP_REQUEST_LIMIT');if(costMicros>=limits.maxCostMicros)stop('LOOP_COST_LIMIT');if(inputTokens+outputTokens>=limits.maxTokens)stop('LOOP_TOKEN_LIMIT');
@@ -82,4 +83,4 @@ export async function runExistingBrokerToolFeedbackV1(options){
 
 // Consumer MUST check both. Exit zero alone, a self-written end reason or a
 // RESULT_READY from an unqualified synthetic source is not model acceptance.
-export function isCompletedBrokerToolFeedbackV1(result){return result?.schemaVersion==='pansphaira.broker-tool-feedback/readback/v1'&&result.exitCode===0&&result.outcome==='RESULT_READY'&&result.endReason==='BOUNDED_TOOL_FEEDBACK_COMPLETED'&&result.realModelAcceptance===false;}
+export function isCompletedBrokerToolFeedbackV1(result){return completed.has(result)&&result?.schemaVersion==='pansphaira.broker-tool-feedback/readback/v1'&&result.exitCode===0&&result.outcome==='RESULT_READY'&&result.endReason==='BOUNDED_TOOL_FEEDBACK_COMPLETED'&&result.realModelAcceptance===false;}
