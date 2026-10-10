@@ -4,7 +4,7 @@ import { validateWorkspaceContextTabBootstrapV1, validateWorkspaceContextSnapsho
   type WorkspaceContextSnapshotV1, type WorkspaceContextReadbackV1, type WorkspaceContextSelectionEntryV1 } from "../../contracts/src/workspace-context-selection-v1.js";
 import { text } from "./api-v1.js";
 
-export type WorkspaceModuleViewRequestV1 = "READ" | "CATALOG" | "DATA" | "PREVIEW" | "UNDO_PREVIEW" | "CONFIRM" | "CANCEL" | "HUMAN_READ" | "HUMAN_DECIDE" | "HUMAN_RECONCILE";
+export type WorkspaceModuleViewRequestV1 = "READ" | "CATALOG" | "DATA" | "PREVIEW" | "UNDO_PREVIEW" | "CONFIRM" | "CANCEL" | "HUMAN_READ" | "HUMAN_DECIDE" | "HUMAN_RECONCILE" | "AGENT_PLAN" | "AGENT_START" | "AGENT_READ";
 export type WorkspaceModuleViewResponseV1 =
   { readonly outcome: "CURRENT_MODULE_VIEW_RESPONSE"; readonly value: unknown; readonly context: WorkspaceContextReadbackV1 }
   | { readonly outcome: "STALE_MODULE_VIEW_RESPONSE" | "MODULE_VIEW_DENIED" | "MODULE_VIEW_WRITE_OUTCOME_UNKNOWN"; readonly error: string };
@@ -159,7 +159,7 @@ export function createWorkspaceContextSelectionV1(options: {
     // Trusted shell composition only: callers never receive the session/tab
     // proof, choose a free URL, replace context or create mutation authority.
     async moduleViewRequest(operation: WorkspaceModuleViewRequestV1, payload?: Readonly<Record<string, unknown>>, csrfProof?: string): Promise<WorkspaceModuleViewResponseV1> {
-      const suffixes: Readonly<Record<WorkspaceModuleViewRequestV1, string>> = { READ: "", CATALOG: "/catalog", DATA: "/data", PREVIEW: "/preview", UNDO_PREVIEW: "/undo-preview", CONFIRM: "/confirm", CANCEL: "/cancel", HUMAN_READ: "/read", HUMAN_DECIDE: "/decide", HUMAN_RECONCILE: "/reconcile" };
+      const suffixes: Readonly<Record<WorkspaceModuleViewRequestV1, string>> = { READ: "", CATALOG: "/catalog", DATA: "/data", PREVIEW: "/preview", UNDO_PREVIEW: "/undo-preview", CONFIRM: "/confirm", CANCEL: "/cancel", HUMAN_READ: "/read", HUMAN_DECIDE: "/decide", HUMAN_RECONCILE: "/reconcile", AGENT_PLAN: "/plan", AGENT_START: "/start", AGENT_READ: "/read" };
       if (!Object.hasOwn(suffixes, operation) || !current || !proof || !tabId || closed) return { outcome: "MODULE_VIEW_DENIED", error: "CURRENT_NATIVE_CONTEXT_REQUIRED" };
       if (payload && (Object.getPrototypeOf(payload) !== Object.prototype || Reflect.ownKeys(payload).some(k => typeof k !== "string" || k === "context") || Object.values(Object.getOwnPropertyDescriptors(payload)).some(d => !d.enumerable || !("value" in d)))) return { outcome: "MODULE_VIEW_DENIED", error: "MODULE_VIEW_PAYLOAD_DENIED" };
       const captured = current, capturedEpoch = epoch, capturedLifetime = lifetime;
@@ -173,10 +173,11 @@ export function createWorkspaceContextSelectionV1(options: {
           const verification = { schemaVersion: "pansphaira.workspace-context/verify/v1", tabId: captured.context.binding.tabId, contextHandle: captured.context.contextHandle };
           const headers: Record<string, string> = { "x-pan548-session": initial.sessionId, "x-pan548-tab": proof!, "x-pan548-tab-id": tabId!, "x-pan546-context": captured.context.contextHandle };
           if (operation === "HUMAN_DECIDE" && csrfProof !== undefined) headers["x-pan527-csrf"] = csrfProof;
-          const body = operation === "READ" ? undefined : operation === "CATALOG" ? verification : { ...payload, context: verification };
+          if (operation === "AGENT_READ") { if (typeof payload?.runId !== "string" || !/^operation:ui-[a-f0-9]{48}$/.test(payload.runId)) throw Error("AGENT_RUN_ID_DENIED"); headers["x-pan548-run"] = payload.runId; }
+          const body = operation === "READ" || operation === "AGENT_READ" ? undefined : operation === "CATALOG" ? verification : { ...payload, context: verification };
           if (body !== undefined) headers["content-type"] = "application/json";
-          writeSent = operation === "CONFIRM" || operation === "HUMAN_DECIDE";
-          const response = await fetch(base + (operation.startsWith("HUMAN_") ? "/workspace/erv-human" : "/workspace/module-view") + suffixes[operation], { credentials: "same-origin", cache: "no-store", headers, ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }), signal: AbortSignal.any([options.signal, AbortSignal.timeout(5000)]) });
+          writeSent = operation === "CONFIRM" || operation === "HUMAN_DECIDE" || operation === "AGENT_START";
+          const response = await fetch(base + (operation.startsWith("AGENT_") ? "/workspace/agent-run" : operation.startsWith("HUMAN_") ? "/workspace/erv-human" : "/workspace/module-view") + suffixes[operation], { credentials: "same-origin", cache: "no-store", headers, ...(body === undefined ? {} : { method: "POST", body: JSON.stringify(body) }), signal: AbortSignal.any([options.signal, AbortSignal.timeout(5000)]) });
           if (!live()) return { outcome: writeSent ? "MODULE_VIEW_WRITE_OUTCOME_UNKNOWN" : "STALE_MODULE_VIEW_RESPONSE", error: "MODULE_VIEW_CONTEXT_RETIRED" };
           if (response.status !== 200) return { outcome: "MODULE_VIEW_DENIED", error: "MODULE_VIEW_SERVER_DENIED_" + response.status };
           const value: unknown = await response.json();

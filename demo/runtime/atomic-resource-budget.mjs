@@ -133,7 +133,11 @@ export function createResourceBudgetStoreV1(value) {
     const payload = completionPayload(candidate);
     return Object.freeze({ ...payload, authenticator: authenticate(payload) });
   };
-  const settle = (candidate, observedResult = null) => {
+  const settle = (candidate, observedResult = null, verifyAtCommit = undefined) => {
+    // Owner-local synchronous capability only, never a serialized caller/model
+    // field. Existing completion authentication and retry/result binding stay
+    // mandatory. This guard runs AFTER SQLite writer reservation, not before it.
+    if (verifyAtCommit !== undefined && typeof verifyAtCommit !== 'function') ccpStrictDenyV1("RESOURCE_BUDGET_SETTLEMENT_COMMIT_GUARD_DENIED");
     const receipt = closed(candidate, ["operationId", "requestDigest", "modelUnits", "runtimeUnits", "evidenceDigest", "authenticator"]);
     const { authenticator, ...payload } = receipt;
     const validated = completionPayload(payload);
@@ -150,6 +154,7 @@ export function createResourceBudgetStoreV1(value) {
         return prior;
       }
       if (prior.state !== "UNKNOWN_USAGE") ccpStrictDenyV1("RESOURCE_BUDGET_DISPATCH_REQUIRED_DENIED");
+      if (verifyAtCommit !== undefined && verifyAtCommit() !== true) ccpStrictDenyV1("RESOURCE_BUDGET_SETTLEMENT_COMMIT_GUARD_DENIED");
       db.prepare("UPDATE reservations SET state='SETTLED',model_consumed=?,runtime_consumed=?,completion=?,result_json=? WHERE operation_id=? AND state='UNKNOWN_USAGE'").run(validated.modelUnits, validated.runtimeUnits, completion, resultJson, validated.operationId);
       return read(validated.operationId);
     });

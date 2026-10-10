@@ -105,6 +105,29 @@ test("PAN529 actual100 barrier reservations cannot exceed either persisted integ
   }
 });
 
+test("PAN529 owner-only settlement guard requires exact synchronous true under native writer transaction and cannot bypass signer/result/unknown custody", () => {
+  const root = mkdtempSync(join(tmpdir(), "pan529-settlement-guard-"));
+  const store = createResourceBudgetStoreV1(budgetOptions(root));
+  try {
+    const command = { operationId: "operation:guard-001", requestDigest: "c".repeat(64), modelUnits: 8, runtimeUnits: 6 };
+    store.reserve(command); store.markUnknownUsage(command.operationId);
+    const evidence = store.ownerCompletionEvidence({ operationId: command.operationId, requestDigest: command.requestDigest, modelUnits: 3, runtimeUnits: 2, evidenceDigest: "f".repeat(64) });
+    const held = store.snapshot();
+    for (const guard of [null, true, { available: true }, () => false, () => undefined, () => Promise.resolve(true)]) {
+      assert.throws(() => store.settle(evidence, null, guard), /RESOURCE_BUDGET_SETTLEMENT_COMMIT_GUARD_DENIED/);
+      assert.equal(store.read(command.operationId).state, "UNKNOWN_USAGE"); assert.deepEqual(store.snapshot(), held);
+    }
+    let calls = 0;
+    assert.throws(() => store.settle({ ...evidence, authenticator: "0".repeat(64) }, null, () => { calls++; return true; }), /RESOURCE_BUDGET_UNTRUSTED_COMPLETION_DENIED/);
+    assert.equal(calls, 0); assert.deepEqual(store.snapshot(), held);
+    assert.throws(() => store.settle(evidence, null, () => { throw Error("NATIVE_CONTEXT_RETIRED_DURING_SETTLEMENT_WAIT"); }), /NATIVE_CONTEXT_RETIRED/);
+    assert.deepEqual(store.snapshot(), held);
+    store.settle(evidence, null, () => { calls++; return true; }); assert.equal(calls, 1);
+    assert.equal(store.read(command.operationId).state, "SETTLED"); assert.equal(store.snapshot().model.committedUnits, 3);
+    assert.deepEqual(store.settle(evidence, null, () => { throw Error("NO_NEW_GUARD_OR_DISPATCH_ON_SETTLED_READ"); }), store.read(command.operationId));
+  } finally { store.close(); rmSync(root, { recursive: true, force: true }); }
+});
+
 test("PAN529 unknownUsage reserve cannot be released by a model answer and trusted completion releases only the unused rest", () => {
   const root = mkdtempSync(join(tmpdir(), "pan529-unknown-"));
   try {

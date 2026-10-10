@@ -693,6 +693,15 @@ repository_only_files = {
     "tests/pan548/native-reentrant.test.mjs",
     "tests/pan548/browser-context.test.mjs",
     "tests/pan548/registration.test.mjs",
+    # Bounded current native task panel: no runnable manifest or real provider.
+    "docs/architecture/workspace-agent-panel-v1.md",
+    "packages/browser-workspace/src/workspace-agent-panel-v1.css",
+    "packages/browser-workspace/src/workspace-agent-panel-v1.ts",
+    "packages/contracts/src/workspace-agent-run-v1.ts",
+    "src/pan548/native-agent-run.mjs",
+    "tests/pan548/native-agent-run.test.mjs",
+    "tests/pan548/agent-run-transport-contract.test.mjs",
+    "tests/pan548/browser-agent-panel.test.mjs",
 
     # PAN546 additive personal views and connected native Human browser: exact
     # source-only members; existing runnable manifest and ingress bound unchanged.

@@ -367,6 +367,27 @@ The actual unchanged mechanical scanner observes1099 source files,
 scanner/validator and negative tests remain unchanged; only the explicit
 current generator migration and observed census bindings advance.
 
+## Additive current PAN548 native shared-panel registration (V77)
+
+The delivered PAN546/V76 census above remains historical evidence. The unchanged
+mechanical scanner on the bounded native-agent-panel source observes1105 source
+files,37 declaration sites/files,308 import sites in307 files,7 reexports,
+30 similar-shape sites and2606 unique checksum paths. All21 byte obligations and
+13 pinned profiles remain; explicit append-only V77 links the complete prior
+V76 generator digest to the actual current generator bytes. Scanner, validator,
+negative cases and immutable admitted-base fixture are not changed or rebased.
+
+The same graph98/all103 owners and original hard gates remain. Exactly eight
+new source-only panel/contract/native-ledger-adapter/test/document members are
+added to the existing548 owner and its existing closed fixed canonical entry;
+old tests and1792 legacy runnable members stay present. Existing ModelAccessBroker,
+native resource SQLite ledger and546 personal preview/confirmation/CAS/readback/
+Undo are consumed, not replaced. Synthetic PUI07/DUI06 exercise is distinct from
+real DUI09 route/consent/toolloop, KS single-bundle composition, current CI and
+WholeCanonical, protected merge, public release/archive/event and whole548
+acceptance. Missing real565575 capability stays failclosed; metadata never grants
+inference, egress, credentials, productive effects or completion.
+
 This is mechanical inventory, not a runtime, native/browser, image, CI,
 WholeCanonical, real-model, KS-composition, merge, release or delivery PASS.
 The actual425 stale-census/selection failures remain historical evidence;

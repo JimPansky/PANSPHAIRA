@@ -164,6 +164,25 @@ test("AAS-036-5 OpenAI Chat/Responses and Anthropic adapters preserve feature pa
   }
 });
 
+test("PAN548 broker Responses text-only/no structured output is canonically bound before provider dispatch", async () => {
+  const policy = syntheticModelAccessPolicyV1("OPENAI_RESPONSES");
+  const request: CanonicalModelRequestV1 = {
+    ...syntheticCanonicalModelRequestV1("OPENAI_RESPONSES"),
+    attachments: [], structuredOutput: null,
+  };
+  let calls = 0;
+  const result = await new ModelAccessBrokerV1(policy).invoke(request, async bound => {
+    calls++;
+    assert.equal(Object.hasOwn(bound.request, "text"), false);
+    assert.match(bound.requestDigest, /^[a-f0-9]{64}$/);
+    assert.equal(JSON.stringify(bound.request).includes("undefined"), false);
+    return providerResponse();
+  });
+  assert.equal(result.outcome, "ALLOW");
+  assert.equal(calls, 1);
+  assert.equal(result.response?.toolCallCandidates[0]?.authority, "NONE");
+});
+
 test("AAS-036-7 replay, concurrency, tenant, timeout, failure and disclosure matrix fails closed", async () => {
   const policy = syntheticModelAccessPolicyV1();
   const request = syntheticCanonicalModelRequestV1();

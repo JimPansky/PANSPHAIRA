@@ -1,4 +1,7 @@
 import { readFileSync } from "node:fs";
+import {join} from 'node:path';
+import {createNativeWorkspaceAgentRunV1,syntheticWorkspaceViewModelV1} from '../pan548/native-agent-run.mjs';
+import {mountProtectedWorkspaceAgentRunV1} from '../pan527/origin-session-adapter.mjs';
 import { mountProtectedWorkspaceDocumentV1, mountProtectedWorkspaceConfigurationV1, mountProtectedWorkspaceNotificationsV1, mountProtectedWorkspaceAnalysisV1, mountProtectedWorkspaceContextSelectionV1, mountProtectedWorkspaceModuleViewsV1, mountProtectedWorkspaceErvHumanV1, protectedWorkspaceSetupStatusV1, protectedGuidedOwnerContextV1 } from "../pan527/origin-session-adapter.mjs";
 import { createBrowserProfileStoreV1, createWorkspaceModuleViewStoreV1 } from "../pan543/profile-store.mjs";
 import { defaultBrowserProfileV1 } from "../../dist/packages/contracts/src/browser-profile-v1.js";
@@ -13,7 +16,7 @@ import { createNativeWorkspaceErvHumanV1 } from "../pan546/native-human-workspac
 // Owner-only assembly; no HTTP registration, arbitrary code URL or business-store replacement.
 export function enableWorkspaceBrowserV1(options) {
   if (!options || Object.getPrototypeOf(options) !== Object.prototype) throw new Error("WORKSPACE_OWNER_DENIED");
-  const descriptors = Object.getOwnPropertyDescriptors(options); const keys = ["optIn", "gateway", "tenantId", "origin", "nativeReader", "diagnosticPlugins", "profileCatalogV1", "configurationDrafts", "notifications", "analysisReader", "contextSelection", "moduleViews", "humanDecisions"];
+  const descriptors = Object.getOwnPropertyDescriptors(options); const keys = ["optIn", "gateway", "tenantId", "origin", "nativeReader", "diagnosticPlugins", "profileCatalogV1", "configurationDrafts", "notifications", "analysisReader", "contextSelection", "moduleViews", "humanDecisions", "agentRuns"];
   if (Object.hasOwn(descriptors, "profileCatalogV1") && typeof descriptors.profileCatalogV1.value !== "function") throw new Error("WORKSPACE_OWNER_DENIED");
   if (!keys.slice(0, 5).every(k => Object.hasOwn(descriptors, k)) || Reflect.ownKeys(descriptors).some(k => typeof k !== "string" || !keys.includes(k))
     || Object.values(descriptors).some(d => !d.enumerable || !("value" in d)) || options.optIn !== true
@@ -27,17 +30,18 @@ export function enableWorkspaceBrowserV1(options) {
     if (!fields || Reflect.ownKeys(fields).length !== 2 || ["schemaVersion", "humanRoot"].some(k => !Object.hasOwn(fields, k)) || Object.values(fields).some(d => !d.enumerable || !("value" in d)) || value.schemaVersion !== "pansphaira.workspace-native-module-views/owner-v1" || typeof value.humanRoot !== "string" || options.contextSelection !== true) throw new Error("WORKSPACE_MODULE_VIEWS_OWNER_DENIED");
   }
   if (Object.hasOwn(descriptors,"humanDecisions") && (typeof options.humanDecisions!=="boolean" || options.humanDecisions===true&&!options.moduleViews)) throw Error("WORKSPACE_HUMAN_OWNER_DENIED");
+  if(Object.hasOwn(descriptors,'agentRuns')&&(typeof options.agentRuns!=='boolean'||options.agentRuns===true&&(!options.moduleViews||options.contextSelection!==true)))throw Error('WORKSPACE_AGENT_OWNER_DENIED');
   const sessions = gateway.sessionAdapter(tenantId);
   if (Object.hasOwn(descriptors, "configurationDrafts") && !isAgentConfigurationDraftStoreV1(options.configurationDrafts, sessions.binding)) throw new Error("WORKSPACE_CONFIGURATION_OWNER_DENIED");
   if (Object.hasOwn(descriptors, "notifications") && !isNativeNotificationsV1(options.notifications, sessions.binding)) throw new Error("WORKSPACE_NOTIFICATIONS_OWNER_DENIED");
   if (Object.hasOwn(descriptors, "analysisReader") && !isNativeAnalysisReadAdapterV1(options.analysisReader, sessions.binding)) throw new Error("WORKSPACE_ANALYSIS_OWNER_DENIED");
   const owner = protectedGuidedOwnerContextV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest });
   const profiles = createBrowserProfileStoreV1({ root: owner.productRoot, catalog: options.profileCatalogV1 ?? (() => defaultBrowserProfileV1().items.map(i => ({ id: i.id, version: i.version, state: "AVAILABLE" }))) });
-  let mounted; let attachment; let notifications; let analysis; let contextSelection; let moduleStore; let dataCatalog; let viewOwner; let moduleViews; let human;
+  let mounted; let attachment; let notifications; let analysis; let contextSelection; let moduleStore; let dataCatalog; let viewOwner; let moduleViews; let human; let agent;
   try { mounted = mountProtectedWorkspaceDocumentV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest,
     html: readFileSync(new URL("../../packages/browser-workspace/src/workspace.html", import.meta.url), "utf8")
-      .replace("<body>", '<body' + (options.diagnosticPlugins === true ? ' data-owner-diagnostic-plugins="true"' : '') + (options.configurationDrafts ? ' data-owner-configuration-drafts="true"' : '') + (options.notifications ? ' data-owner-notifications="true"' : '') + (options.analysisReader ? ' data-owner-analysis-reader="true"' : '') + (options.contextSelection === true ? ' data-owner-context-selection="true"' : '') + (options.moduleViews ? ' data-owner-module-views="true"' : '') + (options.humanDecisions===true ? ' data-owner-human-decisions="true"' : '') + '>'),
-    style: readFileSync(new URL("../../packages/browser-workspace/src/workspace.css", import.meta.url), "utf8") + (options.configurationDrafts ? readFileSync(new URL("../../packages/browser-workspace/src/configuration-draft-v1.css", import.meta.url), "utf8") : "") + (options.analysisReader ? readFileSync(new URL("../../packages/browser-workspace/src/analysis-v1.css", import.meta.url), "utf8") : "") + (options.moduleViews ? readFileSync(new URL("../../packages/browser-workspace/src/module-view-v1.css", import.meta.url), "utf8") : ""),
+      .replace("<body>", '<body' + (options.diagnosticPlugins === true ? ' data-owner-diagnostic-plugins="true"' : '') + (options.configurationDrafts ? ' data-owner-configuration-drafts="true"' : '') + (options.notifications ? ' data-owner-notifications="true"' : '') + (options.analysisReader ? ' data-owner-analysis-reader="true"' : '') + (options.contextSelection === true ? ' data-owner-context-selection="true"' : '') + (options.moduleViews ? ' data-owner-module-views="true"' : '') + (options.humanDecisions===true ? ' data-owner-human-decisions="true"' : '') + (options.agentRuns===true ? ' data-owner-agent-runs="true"' : '') + '>'),
+    style: readFileSync(new URL("../../packages/browser-workspace/src/workspace.css", import.meta.url), "utf8") + (options.configurationDrafts ? readFileSync(new URL("../../packages/browser-workspace/src/configuration-draft-v1.css", import.meta.url), "utf8") : "") + (options.analysisReader ? readFileSync(new URL("../../packages/browser-workspace/src/analysis-v1.css", import.meta.url), "utf8") : "") + (options.moduleViews ? readFileSync(new URL("../../packages/browser-workspace/src/module-view-v1.css", import.meta.url), "utf8") : "") + (options.agentRuns===true ? readFileSync(new URL('../../packages/browser-workspace/src/workspace-agent-panel-v1.css',import.meta.url),'utf8') : ''),
     script: readFileSync(new URL("../../dist/browser-workspace/app.js", import.meta.url), "utf8"),
     readErv(request, principal) { return nativeReader.read({ tenantId: principal.tenantId, objectId: request.objectId, expectedRevision: request.expectedRevision }); },
     profilesV1: { schemaVersion: "pansphaira.workspace-profile-adapter/v1", read(principal) { return profiles.read(principal); }, write(command, principal) { return profiles.write(principal, command); } },
@@ -58,9 +62,10 @@ export function enableWorkspaceBrowserV1(options) {
         dataCatalog = createNativeWorkspaceDataCatalogV1({ sessions, contextSelection: nativeContext, nativeReader, humanRoot: options.moduleViews.humanRoot });
         viewOwner = createNativeWorkspaceViewOwnerV1({ sessions, contextSelection: nativeContext, dataCatalog, store: moduleStore });
         moduleViews = mountProtectedWorkspaceModuleViewsV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest, adapterVersion: "pan546-native-personal-view/v1", dataCatalog, viewOwner });
+        if(options.agentRuns===true)agent=mountProtectedWorkspaceAgentRunV1(gateway,{optIn:true,tenantId,origin,identityDigest:sessions.binding.identityDigest,adapterVersion:'pan548-native-agent-run/v1',owner:createNativeWorkspaceAgentRunV1({sessions,contextSelection:nativeContext,dataCatalog,viewOwner,root:join(owner.productRoot,'native-ui-runs'),model:syntheticWorkspaceViewModelV1(tenantId)}),script:readFileSync(new URL('../../dist/browser-workspace/workspace-agent-panel.js',import.meta.url),'utf8')});
         if(options.humanDecisions===true)human=mountProtectedWorkspaceErvHumanV1(gateway,{optIn:true,tenantId,origin,identityDigest:sessions.binding.identityDigest,owner:createNativeWorkspaceErvHumanV1({sessions,contextSelection:nativeContext,humanRoot:options.moduleViews.humanRoot}),script:readFileSync(new URL('../../dist/browser-workspace/erv-human.js',import.meta.url),'utf8')});
       }
     }
-  } catch (error) { human?.close(); moduleViews?.close(); viewOwner?.close(); dataCatalog?.close(); contextSelection?.close(); moduleStore?.close(); analysis?.close(); notifications?.close(); attachment?.close(); mounted?.close(); profiles.close(); throw error; }
-  return Object.freeze({ close() { human?.close(); moduleViews?.close(); viewOwner?.close(); dataCatalog?.close(); contextSelection?.close(); moduleStore?.close(); analysis?.close(); notifications?.close(); attachment?.close(); mounted.close(); profiles.close(); } });
+  } catch (error) { agent?.close(); human?.close(); moduleViews?.close(); viewOwner?.close(); dataCatalog?.close(); contextSelection?.close(); moduleStore?.close(); analysis?.close(); notifications?.close(); attachment?.close(); mounted?.close(); profiles.close(); throw error; }
+  return Object.freeze({ close() { agent?.close(); human?.close(); moduleViews?.close(); viewOwner?.close(); dataCatalog?.close(); contextSelection?.close(); moduleStore?.close(); analysis?.close(); notifications?.close(); attachment?.close(); mounted.close(); profiles.close(); } });
 }

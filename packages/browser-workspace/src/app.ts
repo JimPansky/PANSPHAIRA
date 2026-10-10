@@ -78,6 +78,9 @@ async function start() {
     ? createWorkspaceContextSelectionV1({ root: element("shell.context-selection"), base, context: owner.context, signal: lifetime.signal }) : null;
   const moduleViewEditor = document.body.dataset.ownerModuleViews === "true" && contextSelection
     ? createWorkspaceModuleViewEditorV1({ main, context: contextSelection, signal: lifetime.signal }) : null;
+  if (document.body.dataset.ownerAgentRuns === "true" && contextSelection && moduleViewEditor) void import(base+"/workspace/agent-run/app.js")
+    .then(module=>{if(!lifetime.signal.aborted)module.createWorkspaceAgentPanelV1({container:canvas,context:contextSelection,editor:moduleViewEditor,signal:lifetime.signal});})
+    .catch(()=>{if(!lifetime.signal.aborted)canvas.append(text('p','Auftragspanel nicht verfügbar. Kein Lauf bestätigt; Fachnavigation, Profile und Abmelden bleiben unabhängig.'));});
   if (document.body.dataset.ownerHumanDecisions === "true" && contextSelection) void import(base+"/workspace/erv-human/app.js")
     .then(module=>{if(!lifetime.signal.aborted)module.createWorkspaceErvHumanV1({main,context:contextSelection,signal:lifetime.signal,refreshNativeSources:()=>moduleViewEditor?.refreshNativeSources()??Promise.resolve(true)});})
     .catch(()=>{if(!lifetime.signal.aborted)main.append(text('p','Native Human-Browserkontrollen nicht verfügbar. Keine Fachentscheidung bestätigt; andere Module und Abmelden bleiben unabhängig.'));});

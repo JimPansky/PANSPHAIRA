@@ -1,7 +1,7 @@
 import {spawnSync} from 'node:child_process';
 import {mkdtempSync} from 'node:fs';
 import {join} from 'node:path';
-const files=['tests/pan548/context-contract.test.mjs','tests/pan548/native-context.test.mjs','tests/pan548/native-expiry.test.mjs','tests/pan548/native-reentrant.test.mjs','tests/pan548/browser-context.test.mjs','tests/pan548/registration.test.mjs'];
+const files=['tests/pan548/context-contract.test.mjs','tests/pan548/native-context.test.mjs','tests/pan548/native-expiry.test.mjs','tests/pan548/native-reentrant.test.mjs','tests/pan548/browser-context.test.mjs','tests/pan548/registration.test.mjs','tests/pan548/native-agent-run.test.mjs','tests/pan548/agent-run-transport-contract.test.mjs','tests/pan548/browser-agent-panel.test.mjs'];
 // Same Node24 ParseNodeOptionsEnvVar grammar and closed admission boundary as
 // the qualified existing PAN549 entry; trusted Node/npm parent remains required.
 function nodeOptionTokens(raw){
@@ -36,6 +36,7 @@ try{
   const env={...process.env,TMPDIR:process.env.TMPDIR||process.env.RUNNER_TEMP};
   if(!env.TMPDIR)throw new Error('PAN548_OWNED_SCRATCH_REQUIRED');
   if(!env.PAN548_BROWSER_EVIDENCE){env.PAN548_BROWSER_EVIDENCE=mkdtempSync(join(env.TMPDIR,'pan548-browser-evidence-'));process.stdout.write('PAN548_BROWSER_EVIDENCE_DIR='+env.PAN548_BROWSER_EVIDENCE+'\n');}
+  if(!env.PAN546_BROWSER_EVIDENCE)env.PAN546_BROWSER_EVIDENCE=env.PAN548_BROWSER_EVIDENCE;
   env.PAN527_BROWSER_MODULE=env.PAN527_BROWSER_MODULE||import.meta.resolve('playwright');env.PAN527_CERTUTIL=env.PAN527_CERTUTIL||'certutil';
   for(const argv of [['node_modules/typescript/bin/tsc','-p','tsconfig.json'],['scripts/build-pan541-browser.mjs'],['--test','--test-concurrency=1','--test-reporter=tap',...files]]){
    const run=spawnSync(process.execPath,argv,{env,stdio:'inherit'});if(run.error||run.signal||run.status===null)throw new Error('PAN548_TEST_PROCESS_INTERRUPTED');if(run.status!==0){process.exitCode=run.status;break;}
