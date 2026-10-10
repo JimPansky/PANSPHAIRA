@@ -18,7 +18,7 @@ test('575 internal real transport/native574 execution preserves two call IDs/too
   const r=await x.run();assert.equal(isCompletedBrokerToolFeedbackV1(r),true,JSON.stringify(r));assert.equal(r.realModelAcceptance,false);assert.equal(r.actualToolActions,2);assert.equal(r.actualRequests,2);assert.equal(x.native.nativeEvidence().materialInvocations,1);assert.equal(x.native.nativeEvidence().cell.executions,1);assert.equal(x.native.nativeEvidence().cell.providerOrderCount,0);
   const first=x.observations[0].body,second=x.observations[1].body;assert.equal(first.messages.length,1);assert.equal(first.messages.some(m=>m.role==='tool'),false);assert.deepEqual(second.messages.map(m=>m.role),['user','assistant','tool','tool']);assert.deepEqual(second.messages.slice(2).map(m=>m.tool_call_id),['call_PlAnAa9','call_CeLlBb8']);
   for(const m of second.messages.slice(2)){const f=JSON.parse(m.content);assert.equal(f.trust,'UNTRUSTED_TOOL_DATA');assert.equal(f.native.outcome,'NATIVE_READBACK');assert.equal(first.messages[0].content.includes(f.feedback.challengeId),false);assert.equal(f.feedback.callId,m.tool_call_id);}
-  assert.equal(x.observations.every(o=>!o.authorizationPresent),true);assert.equal(isCompletedBrokerToolFeedbackV1({...r,exitCode:3}),false);assert.equal(isCompletedBrokerToolFeedbackV1({...r,endReason:'LOOP_TOOL_LIMIT'}),false);
+  assert.equal(x.observations.every(o=>!o.authorizationPresent),true);assert.equal(isCompletedBrokerToolFeedbackV1({...r}),false);assert.equal(isCompletedBrokerToolFeedbackV1(structuredClone(r)),false);assert.equal(isCompletedBrokerToolFeedbackV1({...r,exitCode:3}),false);assert.equal(isCompletedBrokerToolFeedbackV1({...r,endReason:'LOOP_TOOL_LIMIT'}),false);
  }finally{await x.close();}
 });
 

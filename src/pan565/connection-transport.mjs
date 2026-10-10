@@ -26,8 +26,8 @@ export function bindModelConnectionTransportV1(value){
  if(pricing&&(typeof pricing.currency!=='string'||!/^[A-Z]{3}$/.test(pricing.currency)||!Number.isSafeInteger(pricing.revision)||pricing.revision<1||['inputMicrosPerMillionTokens','outputMicrosPerMillionTokens'].some(k=>!Number.isSafeInteger(pricing[k])||pricing[k]<0||pricing[k]>1000000000)))fail('MODEL_CONNECTION_PRICING_DENIED');
  // Nonzero-priced real calls require an independently owner-bound product
  // grant in addition to the exact browser confirmation. Null is default deny.
- const grant=o.productGrant===null?null:exact(o.productGrant,['limits','testDataDigest','expiresAtMs']);
- if(grant)grant.limits=validateModelConnectionLimitsV1(grant.limits);
+ const grant=o.productGrant===null?null:exact(o.productGrant,Object.hasOwn(o.productGrant,'allowedPurposes')?['limits','testDataDigest','expiresAtMs','allowedPurposes']:['limits','testDataDigest','expiresAtMs']);
+ if(grant){grant.limits=validateModelConnectionLimitsV1(grant.limits);if(Object.hasOwn(grant,'allowedPurposes')){grant.allowedPurposes=modelConnectionArrayV1(grant.allowedPurposes,2);if(!grant.allowedPurposes.length||new Set(grant.allowedPurposes).size!==grant.allowedPurposes.length||grant.allowedPurposes.some(p=>!['purpose:ui-connection-probe','purpose:ui-view-proposal'].includes(p)))fail('MODEL_CONNECTION_PRODUCT_CONSENT_DENIED');}}
  const secret=()=>{if(summary.authMethod==='NONE_LOCAL')return {value:null,fingerprint:null};let b;try{b=readProtectedOwnerSecretFileV1(o.credentialFile);}catch{fail('MODEL_CONNECTION_SECRET_UNAVAILABLE');}const value=b.toString('utf8').trim();b.fill(0);if(!/^[A-Za-z0-9._~-]{8,4096}$/.test(value))fail('MODEL_CONNECTION_SECRET_UNAVAILABLE');return {value,fingerprint:sha(value)};};
  async function addresses(signal){
   if(signal.aborted)fail('MODEL_CONNECTION_TIMEOUT');

@@ -50,13 +50,16 @@ cannot read that partition.
 
 ## Model and resource boundary
 
-The only currently assembled route is `SYNTHETIC_PROBE_ONLY` and every plan/run
-DTO declares `realModelAcceptance: false`. The user-visible text and disabled
-real-model control say that explicitly. `syntheticWorkspaceViewModelV1` is a
-bounded deterministic backend test for the original PUI-07 synthetic positive,
-not an intent interpreter or real inference.
+The explicit legacy assembly without modelConnections remains
+`SYNTHETIC_PROBE_ONLY`. Supplying modelConnections binds the same existing565
+native owner through an opaque process-owned `OWNER_BOUND_PROVIDER` capability;
+an empty list or missing selection/purpose denies, never silently falls back.
+Every plan/run DTO still declares `realModelAcceptance: false`. This owner mode
+is not proof of a configured product model or actual language-model inference.
+The deterministic legacy peer and the controlled LOCAL HTTP peer used for native
+owner qualification are neither intent interpreters nor language models.
 
-The existing `ModelAccessBrokerV1` validates two synthetic request/response phases:
+The legacy `ModelAccessBrokerV1` entry retains its two synthetic request/response phases:
 one untrusted `ui.view.propose` MOVE/RESIZE candidate for exactly the selected
 instance, then a bounded final description after native preview validation. It
 never saves a view or performs a business action. Existing #546 validator/reducer
@@ -82,18 +85,29 @@ There is no browser settle method and no arbitrary tool action. Cancel and resum
 explicitly disabled with `NO_NATIVE_MODEL_TASK_CANCEL_CONTRACT` and
 `NO_NATIVE_MODEL_TASK_RESUME_CONTRACT`; hiding the panel is not task cancellation.
 
-`OWNER_BOUND_PROVIDER` is refused with `AGENT_REAL_ROUTE_NOT_BOUND_DENIED`.
-DUI-09 is NOT implemented/qualified by this synthetic increment. #565/#575's
-required exact safe connection/secret-reference/egress, actual
-adapter/deployment/model/parser/configuration identities and capped product
-inference consent are absent. An existing worker subscription or GitHub
-authentication does not supply them. There is no credential search, new account,
-paid inference, global harness/provider change or silent fallback. The resume
-trigger is that concrete admitted native capability, not the whole dependency's
-CLOSED status. Real DUI-09 must then independently prove at least two correlated
-native UI tools, fresh information supplied only in a trusted tool result and a
-subsequent real model response; two synthetic broker phases with one candidate
-are not that proof. Direct transport and actual harness proof stay separate.
+An unbranded/copied `OWNER_BOUND_PROVIDER` label remains refused with
+`AGENT_REAL_ROUTE_NOT_BOUND_DENIED`. Native owner admission is now implemented:
+dynamic existing reference selection, three fresh separate565 prerequisites,
+task-specific purpose/payload/session/ownerGrant/route/identity/price-currency/
+eight-limit/expiry offer and exact explicit once-only confirmation. Probe-only
+owner grants and fixed public probe consent cannot authorize personal UI task or
+tool data. The native browser shows this offer before a default-unchecked
+data/budget checkbox; intent edits and context retirement invalidate it. Planning
+never dispatches. The existing565 COST/runtime ledger reserves the full admitted
+run before HTTP; current authority/secret/context is rechecked before each step.
+The shared575 completion is privately branded, not supplied by provider prose.
+
+The actual two native tools are ui.view.read then ui.view.propose, with fresh
+correlated tool-message information through the existing shared broker. Controlled
+HTTP qualification exercises this path, separate546 preview/confirm/CAS/GET/Undo
+and UNKNOWN/read/reload/no-replay, but genuine DUI-09 remains NOT_RUN. No suitable
+authorized real product route/model deployment/configuration identity, secret
+reference or fixed price/currency was found in the allowed product metadata.
+An existing worker subscription or GitHub authentication does not supply them.
+There is no credential search, new account, paid inference, global harness/provider
+change or silent fallback. Only a concrete suitable product option and its
+necessary bounded approval can enable a genuine-model qualification, not a whole
+dependency's CLOSED status. Direct transport and actual harness proof stay separate.
 
 ## Same shell, proposal and confirmation
 

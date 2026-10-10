@@ -1,4 +1,14 @@
 export const MODEL_CONNECTION_SCHEMA_V1 = 'pansphaira.workspace-model-connection/readback/v1' as const;
+export interface WorkspaceModelFeedbackOfferV1 {
+ readonly schemaVersion:'pansphaira.workspace-model-feedback/offer/v1';readonly purpose:'purpose:ui-view-proposal';readonly payloadDigest:string;readonly identityDigest:string;readonly ownerGrantDigest:string;readonly routeId:string;readonly provider:string;readonly model:string;readonly evidenceClass:'SYNTHETIC_ONLY'|'OWNER_BOUND_NOT_QUALIFIED';readonly limits:ModelConnectionLimitsV1;readonly currency:string;readonly pricingClass:'CODE_OWNED_SYNTHETIC_ZERO_PRICE'|'OWNER_BOUND_FIXED_PRICE';readonly priceRevision:number|null;readonly expiresAtMs:number;readonly offerDigest:string;
+}
+export function validateWorkspaceModelFeedbackOfferV1(value:unknown):WorkspaceModelFeedbackOfferV1{
+ const r=modelConnectionClosedV1(value,['schemaVersion','purpose','payloadDigest','identityDigest','ownerGrantDigest','routeId','provider','model','evidenceClass','limits','currency','pricingClass','priceRevision','expiresAtMs','offerDigest']);
+ if(r.schemaVersion!=='pansphaira.workspace-model-feedback/offer/v1'||r.purpose!=='purpose:ui-view-proposal'||!digest(r.payloadDigest)||!digest(r.identityDigest)||!digest(r.ownerGrantDigest)||!digest(r.offerDigest)||!id(r.routeId,'route')||!id(r.provider,'provider')||!atom(r.model)||!unsigned(r.expiresAtMs)||!['SYNTHETIC_ONLY','OWNER_BOUND_NOT_QUALIFIED'].includes(String(r.evidenceClass)))throw Error('MODEL_CONNECTION_FEEDBACK_OFFER_DENIED');
+ r.limits=validateModelConnectionLimitsV1(r.limits);
+ if(r.evidenceClass==='SYNTHETIC_ONLY'&&(r.pricingClass!=='CODE_OWNED_SYNTHETIC_ZERO_PRICE'||r.currency!=='NONE'||r.priceRevision!==null)||r.evidenceClass==='OWNER_BOUND_NOT_QUALIFIED'&&(r.pricingClass!=='OWNER_BOUND_FIXED_PRICE'||typeof r.currency!=='string'||!/^[A-Z]{3}$/.test(r.currency)||!Number.isSafeInteger(r.priceRevision)||Number(r.priceRevision)<1))throw Error('MODEL_CONNECTION_FEEDBACK_OFFER_DENIED');
+ return Object.freeze(r)as unknown as WorkspaceModelFeedbackOfferV1;
+}
 export const MODEL_CONNECTION_PHASES_V1 = ['REACHABILITY','AUTHENTICATION','MODEL_AVAILABILITY','INFERENCE'] as const;
 export type ModelConnectionPhaseV1 = typeof MODEL_CONNECTION_PHASES_V1[number];
 export type ModelConnectionCheckStateV1 = 'NOT_RUN'|'PASS'|'FAILED'|'STALE'|'UNKNOWN_USAGE';
