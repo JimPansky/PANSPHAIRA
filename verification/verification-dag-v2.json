@@ -9181,7 +9181,7 @@
         {
           "path": "scripts/run-pan529-runtime-budget-tests.mjs",
           "role": "SOURCE",
-          "sha256": "5b49bd8ef347ccf4ccb57db8e5f5d413cce185395dc8412972f10619f507ea96"
+          "sha256": "947e67ca8591a0c6730fe4d62252c1de4d692d283daf5b1b38ec914ad8510e51"
         },
         {
           "path": "docs/architecture/pan529-runtime-budget-v1.md",

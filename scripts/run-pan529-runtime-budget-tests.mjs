@@ -7,7 +7,12 @@ try {
   else {
     if (args.length) throw new Error("PAN529_TEST_ARGUMENT_DENIED");
     if (process.platform !== "linux" || process.arch !== "x64") throw new Error("PAN529_TEST_REQUIRES_SUPPORTED_LINUX_X86_64");
-    const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", "--test-reporter=tap", ...files], { stdio: "inherit" });
+    // Reuse the existing548 canonical owned-scratch binding. Hosted runners
+    // provide RUNNER_TEMP, not TMPDIR; never substitute system /tmp or weaken
+    // the original native-fixture custody check.
+    const env = { ...process.env, TMPDIR: process.env.TMPDIR || process.env.RUNNER_TEMP };
+    if (!env.TMPDIR) throw new Error("PAN529_OWNED_SCRATCH_REQUIRED");
+    const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", "--test-reporter=tap", ...files], { stdio: "inherit", env });
     if (result.error || result.signal || result.status === null) throw new Error("PAN529_TEST_PROCESS_INTERRUPTED");
     process.exitCode = result.status;
   }
