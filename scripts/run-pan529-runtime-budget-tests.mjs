@@ -12,8 +12,14 @@ try {
     // the original native-fixture custody check.
     const env = { ...process.env, TMPDIR: process.env.TMPDIR || process.env.RUNNER_TEMP };
     if (!env.TMPDIR) throw new Error("PAN529_OWNED_SCRATCH_REQUIRED");
-    const result = spawnSync(process.execPath, ["--test", "--test-concurrency=1", "--test-reporter=tap", ...files], { stdio: "inherit", env });
-    if (result.error || result.signal || result.status === null) throw new Error("PAN529_TEST_PROCESS_INTERRUPTED");
-    process.exitCode = result.status;
+    // The direct548 fixture admits source-derived browser assets even without
+    // Chromium. Reuse its existing canonical builder before fixture admission;
+    // a warm local dist must never hide a missing hosted prerequisite.
+    for (const argv of [["scripts/build-pan541-browser.mjs"], ["--test", "--test-concurrency=1", "--test-reporter=tap", ...files]]) {
+      const result = spawnSync(process.execPath, argv, { stdio: "inherit", env });
+      if (result.error || result.signal || result.status === null) throw new Error("PAN529_TEST_PROCESS_INTERRUPTED");
+      process.exitCode = result.status;
+      if (result.status !== 0) break;
+    }
   }
 } catch (error) { process.stderr.write((error instanceof Error ? error.message : "PAN529_TEST_TOOLING_UNAVAILABLE") + "\n"); process.exitCode = 1; }
