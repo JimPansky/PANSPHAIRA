@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,readdirSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+const files=['tests/pan575/tool-transcript.test.mjs','tests/pan575/broker-feedback-native.test.mjs','tests/pan575/native-ui-consumer.test.mjs','tests/pan575/registration.test.mjs'];
+const inputs=[['docs/architecture/broker-tool-feedback-v1.md','DERIVED_EVIDENCE'],['packages/contracts/src/model-tool-transcript-v1.ts','CONTRACT'],['src/pan575/broker-tool-feedback.mjs','SECURITY'],['src/pan575/native-composition-tools.mjs','SECURITY'],['tests/pan575/protocol-fixture.mjs','VALIDATOR'],...files.map(p=>[p,'VALIDATOR'])];
+const load=p=>JSON.parse(readFileSync(p,'utf8')),sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
+test('575 additive registration stays on existing529 closed whole suite; every original case retained, no new pipeline/test gate',()=>{
+ const pkg=load('package.json');assert.equal(pkg.scripts['pan529:test'],'node scripts/run-pan529-runtime-budget-tests.mjs');assert.equal(pkg.scripts['pan575:test'],undefined);assert.equal(pkg.scripts.pretest.split('npm run pan529:test').length,2);
+ const r=spawnSync(process.execPath,['scripts/run-pan529-runtime-budget-tests.mjs','--list'],{encoding:'utf8'});assert.equal(r.status,0,r.stderr);const all=JSON.parse(r.stdout);assert.deepEqual(all.slice(-files.length),files);assert.deepEqual(all.slice(0,-files.length),['tests/pan529/runtime-template.test.mjs','tests/pan529/broker-equal-key.test.mjs','tests/pan529/atomic-resource-budget.test.mjs','tests/pan529/native-receipt-cache.test.mjs','tests/pan529/native-controller.test.mjs','tests/pan529/native-process-integration.test.mjs','tests/pan529/registration.test.mjs','tests/pan529/test-runner.test.mjs','dist/tests/model-access-broker.test.js','dist/tests/ccp-cost-budget.test.js']);assert.deepEqual(readdirSync('tests/pan575').filter(x=>x.endsWith('.test.mjs')).map(x=>'tests/pan575/'+x).sort(),[...files].sort());
+});
+test('575 existing owner/source-only byte closure without legacy runnable or ownership/hardgate weakening',()=>{
+ const g=load('verification/verification-dag-v2.json'),n=g.nodes.find(x=>x.id==='pan529-runtime-budget-v1');assert.equal(g.graphVersion,98);assert.equal(g.nodes.length,103);assert.deepEqual(n.ownedTests,['npm run pan529:test']);assert.deepEqual(n.dependsOn,['pan526-portable-runtime-v1']);assert.equal(n.riskClass,'HIGH');assert.equal(n.globalInvalidation,false);assert.deepEqual(n.inputs.slice(-inputs.length).map(({path,role})=>[path,role]),inputs);
+ assert.deepEqual(g.hardGates,['npm run lint','npm run release-governance:verify','npm run supply-chain:verify','sha256sum -c SHA256SUMS','./scripts/build-public-release.sh --output <isolated-absolute-path>']);const sums=new Map(readFileSync('SHA256SUMS','utf8').trimEnd().split('\n').map(s=>{const m=/^([a-f0-9]{64})  \.\/(.+)$/.exec(s);assert.ok(m);return [m[2],m[1]];})),legacy=new Set(readFileSync('release/public-files.manifest','utf8').split('\n').filter(l=>l&&!l.startsWith('#')).map(l=>l.split('\t')[0])),builder=readFileSync('scripts/build-public-release.sh','utf8');assert.equal(legacy.size,1792);
+ for(const [p]of inputs){assert.deepEqual(g.nodes.filter(x=>x.inputs.some(i=>i.path===p)).map(x=>x.id),[n.id]);assert.equal(n.inputs.find(i=>i.path===p).sha256,sha(p));assert.equal(sums.get(p),sha(p));assert.equal(legacy.has(p),false);assert.ok(builder.includes(JSON.stringify(p)));}
+ assert.equal(readFileSync('packages/contracts/src/model-access-broker.ts','utf8').includes('from "./model-tool-transcript-v1.js"'),false,'LEGACY_BROKER_RUNTIME_IMPORT_CLOSURE_MUST_STAY_CLOSED');
+});
+test('575 docs and548 direct consumer identify one shared actual mechanism and no synthetic real-model/authority acceptance',()=>{
+ const doc=readFileSync('docs/architecture/broker-tool-feedback-v1.md','utf8');for(const v of ['LOOP-AC01..05','OPENAI_CHAT_COMPLETIONS','UNKNOWN_USAGE','nonzero','NOT_RUN','SYNTHETIC_PROBE_ONLY','realModelAcceptance=false','No second'])assert.ok(doc.includes(v),v);
+ const consumer=readFileSync('src/pan548/native-agent-run.mjs','utf8');assert.ok(consumer.includes('runExistingBrokerToolFeedbackV1'));assert.ok(consumer.includes("if(model.mode!=='SYNTHETIC_PROBE_ONLY')fail('AGENT_REAL_ROUTE_NOT_BOUND_DENIED')"));assert.ok(consumer.includes("canonicalJson(['ui.view.read','ui.view.propose'])"));
+});

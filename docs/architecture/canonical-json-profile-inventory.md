@@ -436,3 +436,23 @@ or evidence digest. Product route/identities/suitable secret reference/currency
 and explicit capped consent remain missing, separately from implementable
 internal work. Registration alone is not review, CI/WholeCanonical, protected
 merge, release, anonymous readback or original issue closure.
+
+## Existing broker PAN575 feedback registration (V80)
+
+The unchanged scanner now observes 1131 source files, 37 declaration sites/files,
+311 import sites in310 files,7 reexports,30 similar-shape sites and2637 unique
+checksum paths. Nine source-only transcript alias/shared feedback/native574
+adapter/fixture/test/document members attach only to the existing529 owner.
+Four fixed files append to its unchanged whole `npm run pan529:test`; direct548
+uses its existing native/browser entry. No new pipeline, gate, owner, taskstore,
+controller, credentialstore or public runnable member is created.
+
+The append-only V80 pins actual generator bytes. All old tests, graph98/all103
+semantics/hard gates,21 immutable obligations,13 profiles and legacy1792 manifest
+stay exact. Existing broker transcript/565 transport/574 kernels/548 context and
+546 preview/confirmation/CAS/readback/Undo stay owners. Controlled protocol fixture
+and mounted synthetic548 feedback may qualify internal mechanics only; actual
+model575 feedback and548 DUI09 are NOT_RUN. Remaining native product owner/admission
+integration is own internal implementation, not an external block or user decision.
+Registration is not real-model consent/acceptance, whole548, original575 closure,
+CI/WholeCanonical, protected merge, release or anonymous/public delivery.

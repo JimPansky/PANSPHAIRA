@@ -9,6 +9,7 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 import {readProtectedOwnerSecretFileV1} from '../pan527/origin-session-adapter.mjs';
 import {modelConnectionClosedV1 as exact,modelConnectionArrayV1,validateModelConnectionSummaryV1,validateModelConnectionLimitsV1} from '../../dist/packages/contracts/src/workspace-model-connection-v1.js';
+import {isModelChatCallIdV1} from '../../dist/packages/contracts/src/model-tool-transcript-v1.js';
 const sha=v=>createHash('sha256').update(v).digest('hex'),fail=(c='MODEL_CONNECTION_TARGET_DENIED')=>{throw Error(c);};
 export const connectionTransportIdentityV1=()=>({adapterDigest:sha(readFileSync(new URL('./connection-transport.mjs',import.meta.url))),parserDigest:sha(readFileSync(new URL('./connection-transport.mjs',import.meta.url)))});
 const publicV4=ip=>{if(isIP(ip)!==4)return false;const[a,b]=ip.split('.').map(Number);return !(a===0||a===10||a===127||a===169&&b===254||a===172&&b>=16&&b<=31||a===192&&[0,168].includes(b)||a===100&&b>=64&&b<=127||a===198&&[18,19,51].includes(b)||a===203&&b===0||a>=224);};
@@ -52,18 +53,20 @@ export function bindModelConnectionTransportV1(value){
    });req.on('error',()=>done(signal.aborted?'MODEL_CONNECTION_TIMEOUT':'MODEL_CONNECTION_TRANSPORT_UNKNOWN'));req.end(body===null?undefined:JSON.stringify(body));
   });
  }
- async function providerCall(bound,signal,authorize,limits){
+ async function providerCall(bound,signal,authorize,limits,toolStep=false){
   limits=validateModelConnectionLimitsV1(limits);
   if(summary.evidenceClass!=='SYNTHETIC_ONLY'){if(!pricing)fail('MODEL_CONNECTION_PRICING_DENIED');const maximum=(BigInt(Buffer.byteLength(JSON.stringify(bound.request),'utf8'))*BigInt(pricing.inputMicrosPerMillionTokens)+BigInt(limits.maxTokens)*BigInt(pricing.outputMicrosPerMillionTokens)+999999n)/1000000n;if(maximum>BigInt(limits.maxCostMicros))fail('MODEL_CONNECTION_PRICE_BOUND_DENIED');}
   const r=await exchange('POST','/v1/chat/completions',bound.request,signal,authorize);
   if(r.status!==200||r.data.model!==summary.model)fail('MODEL_CONNECTION_MODEL_ID_DENIED');
   const data=r.data,msg=data.choices?.[0]?.message,u=data.usage;
   const credential=secret().value;if(credential&&JSON.stringify(data).includes(credential))fail('MODEL_CONNECTION_SECRET_ECHO_DENIED');
-  if(!msg||typeof msg.content!=='string'||!u||!Number.isSafeInteger(u.prompt_tokens)||u.prompt_tokens<0||!Number.isSafeInteger(u.completion_tokens)||u.completion_tokens<0)fail('MODEL_CONNECTION_USAGE_UNKNOWN');
-  const toolCalls=(msg.tool_calls??[]).map(t=>{if(!t||typeof t.id!=='string'||!/^tool:[a-z0-9._-]{3,80}$/.test(t.id)||t.type!=='function'||typeof t.function?.name!=='string'||typeof t.function.arguments!=='string')fail('MODEL_CONNECTION_TOOL_FORMAT_DENIED');let args;try{args=JSON.parse(t.function.arguments);}catch{fail('MODEL_CONNECTION_TOOL_FORMAT_DENIED');}return {id:t.id,name:t.function.name,arguments:args};});
+  const calls=msg?.tool_calls??[];
+  if(!msg||!Array.isArray(calls)||calls.length>32||typeof msg.content!=='string'&&!(toolStep&&msg.content===null&&calls.length>0)||!u||!Number.isSafeInteger(u.prompt_tokens)||u.prompt_tokens<0||!Number.isSafeInteger(u.completion_tokens)||u.completion_tokens<0)fail('MODEL_CONNECTION_USAGE_UNKNOWN');
+  const ids=new Set();
+  const toolCalls=calls.map(t=>{if(!t||typeof t.id!=='string'||(toolStep?!isModelChatCallIdV1(t.id)||ids.has(t.id):!/^tool:[a-z0-9._-]{3,80}$/.test(t.id))||t.type!=='function'||typeof t.function?.name!=='string'||typeof t.function.arguments!=='string')fail('MODEL_CONNECTION_TOOL_FORMAT_DENIED');let args;try{args=JSON.parse(t.function.arguments);}catch{fail('MODEL_CONNECTION_TOOL_FORMAT_DENIED');}ids.add(t.id);return {id:t.id,name:t.function.name,arguments:args};});
   let costMicros=0;if(summary.evidenceClass!=='SYNTHETIC_ONLY'){if(!pricing)fail('MODEL_CONNECTION_USAGE_UNKNOWN');costMicros=Math.ceil((u.prompt_tokens*pricing.inputMicrosPerMillionTokens+u.completion_tokens*pricing.outputMicrosPerMillionTokens)/1000000);if(!Number.isSafeInteger(costMicros))fail('MODEL_CONNECTION_USAGE_UNKNOWN');}
-  return {contentType:'text/plain',text:msg.content,toolCalls,usage:{inputTokens:u.prompt_tokens,outputTokens:u.completion_tokens,costMicros}};
+  return {contentType:'text/plain',text:msg.content??'',toolCalls,usage:{inputTokens:u.prompt_tokens,outputTokens:u.completion_tokens,costMicros}};
  }
  const snapshot=()=>{let fingerprint=null,available=true;try{fingerprint=secret().fingerprint;}catch{available=false;}return {summary:{...summary,selectable:summary.selectable&&available,availability:{...summary.availability,auth:summary.availability.auth&&available}},secretFingerprint:fingerprint};};
- return Object.freeze({snapshot,exchange,providerCall,secretFingerprint:()=>secret().fingerprint,productGrant:grant===null?null:structuredClone(grant),pricing:pricing===null?null:structuredClone(pricing),targetDigest:sha(JSON.stringify(target)),summary});
+ return Object.freeze({snapshot,exchange,providerCall:(bound,signal,authorize,limits)=>providerCall(bound,signal,authorize,limits,false),providerToolStepCall:(bound,signal,authorize,limits)=>providerCall(bound,signal,authorize,limits,true),secretFingerprint:()=>secret().fingerprint,productGrant:grant===null?null:structuredClone(grant),pricing:pricing===null?null:structuredClone(pricing),targetDigest:sha(JSON.stringify(target)),summary});
 }

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import {join} from 'node:path';
-import {createNativeWorkspaceAgentRunV1,syntheticWorkspaceViewModelV1} from '../pan548/native-agent-run.mjs';
+import {createNativeWorkspaceAgentRunV1,syntheticWorkspaceViewChatFeedbackModelV1} from '../pan548/native-agent-run.mjs';
 import {mountProtectedWorkspaceAgentRunV1} from '../pan527/origin-session-adapter.mjs';
 import { mountProtectedWorkspaceDocumentV1, mountProtectedWorkspaceConfigurationV1, mountProtectedWorkspaceNotificationsV1, mountProtectedWorkspaceAnalysisV1, mountProtectedWorkspaceContextSelectionV1, mountProtectedWorkspaceModuleViewsV1, mountProtectedWorkspaceErvHumanV1, protectedWorkspaceSetupStatusV1, protectedGuidedOwnerContextV1 } from "../pan527/origin-session-adapter.mjs";
 import { createBrowserProfileStoreV1, createWorkspaceModuleViewStoreV1 } from "../pan543/profile-store.mjs";
@@ -71,7 +71,7 @@ export function enableWorkspaceBrowserV1(options) {
         dataCatalog = createNativeWorkspaceDataCatalogV1({ sessions, contextSelection: nativeContext, nativeReader, humanRoot: options.moduleViews.humanRoot });
         viewOwner = createNativeWorkspaceViewOwnerV1({ sessions, contextSelection: nativeContext, dataCatalog, store: moduleStore });
         moduleViews = mountProtectedWorkspaceModuleViewsV1(gateway, { optIn: true, tenantId, origin, identityDigest: sessions.binding.identityDigest, adapterVersion: "pan546-native-personal-view/v1", dataCatalog, viewOwner });
-        if(options.agentRuns===true)agent=mountProtectedWorkspaceAgentRunV1(gateway,{optIn:true,tenantId,origin,identityDigest:sessions.binding.identityDigest,adapterVersion:'pan548-native-agent-run/v1',owner:createNativeWorkspaceAgentRunV1({sessions,contextSelection:nativeContext,dataCatalog,viewOwner,root:join(owner.productRoot,'native-ui-runs'),model:syntheticWorkspaceViewModelV1(tenantId)}),script:readFileSync(new URL('../../dist/browser-workspace/workspace-agent-panel.js',import.meta.url),'utf8')});
+        if(options.agentRuns===true)agent=mountProtectedWorkspaceAgentRunV1(gateway,{optIn:true,tenantId,origin,identityDigest:sessions.binding.identityDigest,adapterVersion:'pan548-native-agent-run/v1',owner:createNativeWorkspaceAgentRunV1({sessions,contextSelection:nativeContext,dataCatalog,viewOwner,root:join(owner.productRoot,'native-ui-runs'),model:syntheticWorkspaceViewChatFeedbackModelV1(tenantId)}),script:readFileSync(new URL('../../dist/browser-workspace/workspace-agent-panel.js',import.meta.url),'utf8')});
         if(options.humanDecisions===true)human=mountProtectedWorkspaceErvHumanV1(gateway,{optIn:true,tenantId,origin,identityDigest:sessions.binding.identityDigest,owner:createNativeWorkspaceErvHumanV1({sessions,contextSelection:nativeContext,humanRoot:options.moduleViews.humanRoot}),script:readFileSync(new URL('../../dist/browser-workspace/erv-human.js',import.meta.url),'utf8')});
       }
     }

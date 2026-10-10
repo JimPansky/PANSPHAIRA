@@ -758,6 +758,16 @@ repository_only_files = {
     "tests/pan565/transport-price-bound.test.mjs",
     "tests/pan565/browser-model-connection.test.mjs",
     "tests/pan565/registration.test.mjs",
+    # PAN575 shared broker feedback source-only; no new runnable payload.
+    "docs/architecture/broker-tool-feedback-v1.md",
+    "packages/contracts/src/model-tool-transcript-v1.ts",
+    "src/pan575/broker-tool-feedback.mjs",
+    "src/pan575/native-composition-tools.mjs",
+    "tests/pan575/protocol-fixture.mjs",
+    "tests/pan575/tool-transcript.test.mjs",
+    "tests/pan575/broker-feedback-native.test.mjs",
+    "tests/pan575/native-ui-consumer.test.mjs",
+    "tests/pan575/registration.test.mjs",
 
     # PAN468 module-contribution impact selection — repository-only
     # (corrects the impact/compare consumer classification and bounds the
