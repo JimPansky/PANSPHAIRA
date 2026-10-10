@@ -3053,7 +3053,15 @@ const pan548Inputs = [
   ["tests/pan548/native-expiry.test.mjs", "VALIDATOR"],
   ["tests/pan548/native-reentrant.test.mjs", "VALIDATOR"],
   ["tests/pan548/browser-context.test.mjs", "VALIDATOR"],
-  ["tests/pan548/registration.test.mjs", "VALIDATOR"]
+  ["tests/pan548/registration.test.mjs", "VALIDATOR"],
+  ["docs/architecture/workspace-agent-panel-v1.md", "DERIVED_EVIDENCE"],
+  ["packages/browser-workspace/src/workspace-agent-panel-v1.css", "SOURCE"],
+  ["packages/browser-workspace/src/workspace-agent-panel-v1.ts", "SOURCE"],
+  ["packages/contracts/src/workspace-agent-run-v1.ts", "CONTRACT"],
+  ["src/pan548/native-agent-run.mjs", "SECURITY"],
+  ["tests/pan548/native-agent-run.test.mjs", "VALIDATOR"],
+  ["tests/pan548/agent-run-transport-contract.test.mjs", "VALIDATOR"],
+  ["tests/pan548/browser-agent-panel.test.mjs", "VALIDATOR"]
 ];
 let pan548Node = dag.nodes.find(({id}) => id === "pan548-authentic-context-selection-v1");
 if (pan548Node === undefined) {
@@ -3072,6 +3080,11 @@ if (pan548Node === undefined) {
   dag.nodes.push(pan548Node);
 }
 pan548Node.inputs = pan548Inputs.map(([inputPath, role]) => ({path: inputPath, role, sha256: digest(inputPath)}));
+for (const invariant of [
+  "Additive default-off PUI07/DUI06 panel consumes the same native context/catalog/view owners and existing ModelAccessBroker/native resource SQLite ledger, not a second task engine.",
+  "Opaque native plan/start/independent read binds source/session/lease/rights and unknown usage; separate546 preview/confirmation/CAS/readback/Undo is the only personal-view effect boundary.",
+  "Synthetic probe is visibly not real-model DUI09 acceptance; unbound565575 route/consent failclosed; cancel/resume unavailable; no new inference/global rights or gate weakening."
+]) if (!pan548Node.invariants.includes(invariant)) pan548Node.invariants.push(invariant);
 if (!repositoryIntegrityNode.ownedTests.includes("npm run pan548:test")) repositoryIntegrityNode.ownedTests.push("npm run pan548:test");
 dag.graphVersion = 98;
 

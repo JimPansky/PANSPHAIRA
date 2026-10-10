@@ -360,7 +360,7 @@ export function adaptCanonicalRequestV1(
       input: [{ role: "user", content: [{ type: "input_text", text: request.text }] }],
       max_output_tokens: request.budget.maxTokens,
       tools: tools.map(({ function: fn }) => ({ type: "function", ...fn })),
-      text: request.structuredOutput === null ? undefined : { format: { type: "json_schema", ...request.structuredOutput } },
+      ...(request.structuredOutput === null ? {} : { text: { format: { type: "json_schema", ...request.structuredOutput } } }),
       attachments: request.attachments,
       ...request.optionalFields,
     };

@@ -1,0 +1,14 @@
+/* Nonmodal same-shell task projection; no overlay, focus trap or new framework. */
+.workspace-agent{grid-column:1/-1;min-width:0;max-width:100%;box-sizing:border-box;border:1px solid #bccad9;border-radius:12px;background:#f4f7fb;color:#182c40;padding:16px;overflow-wrap:anywhere;line-height:1.5}
+.workspace-agent *{min-width:0;max-width:100%;box-sizing:border-box}
+.workspace-agent-controls{display:flex;flex-wrap:wrap;gap:8px;border-bottom:1px solid #cad5e2;padding-bottom:12px;margin-bottom:12px}
+.workspace-agent button{white-space:normal;overflow-wrap:anywhere;font:inherit;line-height:1.4;padding:9px 12px;border:1px solid #9badc2;border-radius:7px;background:#fff;color:#182c40;text-align:left}
+.workspace-agent button:disabled{color:#536578;background:#e5ebf3;cursor:not-allowed}
+.workspace-agent button:focus-visible,.workspace-agent textarea:focus-visible{outline:3px solid #275fa7;outline-offset:2px}
+.workspace-agent-compose{display:flex;flex-wrap:wrap;gap:8px}
+.workspace-agent-compose label,.workspace-agent-compose textarea{flex-basis:100%}
+.workspace-agent textarea{width:100%;font:inherit;padding:10px;border:1px solid #9badc2;border-radius:7px;resize:vertical}
+.workspace-agent dl{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,3fr);gap:6px 16px}
+.workspace-agent dt{font-weight:650}.workspace-agent dd{margin:0;overflow-wrap:anywhere}
+.workspace-agent[data-presentation="FOCUS"]{border-color:#275fa7;box-shadow:0 0 0 2px #cdddf2}.workspace-agent[data-presentation="FOCUS"] .workspace-agent-body{padding:8px 0}
+@media(max-width:600px){.workspace-agent{padding:10px}.workspace-agent-controls,.workspace-agent-compose{flex-direction:column}.workspace-agent button{width:100%}.workspace-agent dl{grid-template-columns:minmax(0,1fr)}.workspace-agent dd{padding-bottom:8px}}

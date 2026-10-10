@@ -4781,7 +4781,7 @@
         {
           "path": "docs/architecture/canonical-json-profile-inventory.md",
           "role": "DERIVED_EVIDENCE",
-          "sha256": "956bdcae5f062d00c0f7744ee08df878dadb9dd064a24ad22fd54560701465cb"
+          "sha256": "2dd183b74f62795f022ae5afe2ab4ff3b5193e4e975483d3fa4b5a889c21b986"
         },
         {
           "path": "docs/architecture/pan574-composition-bindings-v1.md",
@@ -4906,7 +4906,7 @@
         {
           "path": "scripts/build-public-release.sh",
           "role": "SECURITY",
-          "sha256": "2a6e5ce176a142cd6e4983bdf21897bc103f38f3dde88b6c2f7b96f728bb1d6f"
+          "sha256": "fef307ad5837b727ce504cd7cd70aebd462ab4fb093669c5ccfe8bb2a001d8f2"
         },
         {
           "path": "scripts/demo-current-head-e2e.mjs",
@@ -4966,7 +4966,7 @@
         {
           "path": "tests/canonical-json-profile-inventory.test.ts",
           "role": "VALIDATOR",
-          "sha256": "e9a132cd23621393bd4d497794da9057e161de5f4a8c6b7203405f9c96dae3f9"
+          "sha256": "528ec80c1204bffef80ba9459f6781c69a6c6deaa256efb75dac0db881e11e67"
         },
         {
           "path": "tests/demo-current-head-e2e-uninstall.test.mjs",
@@ -5086,7 +5086,7 @@
         {
           "path": "verification/canonical-json-profile-inventory-v1.json",
           "role": "CONTRACT",
-          "sha256": "7bae91ed80b03371d5c7e2e8b6b813643fa917360e109c1325933672fca97aeb"
+          "sha256": "c72a33f39f478f97156fd5f30bb8108197223476f1b05d7e5344ad118b75593f"
         },
         {
           "path": "verification/demo-current-head-e2e/contract-v1.json",
@@ -9036,7 +9036,7 @@
         {
           "path": "src/pan527/origin-session-adapter.mjs",
           "role": "SOURCE",
-          "sha256": "1f9cb22fa94d838568ae49e59f633d8da4bd74021cc7dc32b1a3ac36d4fd179f"
+          "sha256": "7b0f72f484d8c006dc35164e1f595c1b405d87026d69813f96ae89d7080d656f"
         },
         {
           "path": "scripts/run-pan527-origin-session-tests.mjs",
@@ -9155,12 +9155,12 @@
         {
           "path": "packages/contracts/src/model-access-broker.ts",
           "role": "SOURCE",
-          "sha256": "695b74dce554df617e0fa7863cbc67b04cdae21db835acd149c9c3d3c94c9fd0"
+          "sha256": "7ccfb2a68b3f5f943c11641e31d4aff71d7151bcea8955dd55cd424d3de641e6"
         },
         {
           "path": "demo/runtime/atomic-resource-budget.mjs",
           "role": "SOURCE",
-          "sha256": "173d0023a02cd46e4b4aeae36baa8e6380c03b9b14094ba15fb114cc30a92095"
+          "sha256": "aecd101a3026d8ea4d75f9117bd9d0900ae06b28ecfcf17aca688ac516b350ac"
         },
         {
           "path": "src/pan529/runtime-template-contract.mjs",
@@ -9190,7 +9190,7 @@
         {
           "path": "tests/pan529/atomic-resource-budget.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "04b63deecddd44f2266235d03bf38ca46c1f62aeba9a0da82e08b1088a073466"
+          "sha256": "2a27df45d76cb02dffc2f9dbc088c8ca5dd4f57656ed0addf20fa95bdc3f7414"
         },
         {
           "path": "tests/pan529/broker-equal-key.test.mjs",
@@ -9856,7 +9856,7 @@
         {
           "path": "packages/browser-workspace/src/app.ts",
           "role": "SOURCE",
-          "sha256": "26938131fd23b428b0b7e58ed7a3241c46d84cb0a4c4d6c4de85fee30f07a925"
+          "sha256": "1f1a973da3a7a55b795f26454f14c9d15e070dc076e6e885963fe05221237a4e"
         },
         {
           "path": "packages/browser-workspace/src/plugin-diagnostics-v1.ts",
@@ -9896,7 +9896,7 @@
         {
           "path": "scripts/build-pan541-browser.mjs",
           "role": "SOURCE",
-          "sha256": "80b45966d4ea7bd5f0c6fe46a31b0e2c65f69ff5b2074455c9eaceb0104c94c9"
+          "sha256": "6d7f7db3128e7cb1a46e54017d7bd0de66e6940cef6b0b227ab551d3edb220dd"
         },
         {
           "path": "scripts/run-pan541-shared-browser-shell-tests.mjs",
@@ -9911,7 +9911,7 @@
         {
           "path": "src/pan541/workspace-browser.mjs",
           "role": "SOURCE",
-          "sha256": "fcd63ad4cfba2ffdc0c14347e03e4091caa97b7ae1cf9504ad669021971452da"
+          "sha256": "95ca4af8d766a7f99e3bcee0eef1b7540de32fd2af9397d588391d692b4be115"
         },
         {
           "path": "tests/pan541/browser-context-safety.test.mjs",
@@ -10056,7 +10056,7 @@
         {
           "path": "packages/browser-workspace/src/module-view-editor-v1.ts",
           "role": "SOURCE",
-          "sha256": "ddf8a00295dcf8e2ea61a1b7b44fb842660f0be6ac8fd758fca3c7ca53800725"
+          "sha256": "83a9a221000750d6fdb1ac491e47b5599d275ac1fbb0fcd131551f89cfc9ef55"
         },
         {
           "path": "packages/browser-workspace/src/module-view-v1.css",
@@ -10151,7 +10151,7 @@
         {
           "path": "tests/pan546/browser-fixture.mjs",
           "role": "VALIDATOR",
-          "sha256": "b5dfa317b82e4f36de67a3bc1474e8f2ef3cb5661242955fda91f5c85d933ace"
+          "sha256": "2d8f1b291b99d2fcbb277f7051369cdfee4cbd702ec183279355968facc7e642"
         },
         {
           "path": "tests/pan546/native-profile-reservation-probe.mjs",
@@ -10562,7 +10562,7 @@
         {
           "path": "packages/browser-workspace/src/context-selection-v1.ts",
           "role": "SOURCE",
-          "sha256": "7b8539ff102babbb1f7246f210dc518f63015121c53c127c05a360615df2dc54"
+          "sha256": "3452556b75ab442ad2de71ad5cad5987b44783888b15e691ce3a5e1f413b476f"
         },
         {
           "path": "packages/contracts/src/workspace-context-selection-v1.ts",
@@ -10572,7 +10572,7 @@
         {
           "path": "scripts/run-pan548-authentic-context-tests.mjs",
           "role": "VALIDATOR",
-          "sha256": "aef2f7797093db383a8910e3ec163ff3e44102f1d31c8e1c23a594a9cb3baa92"
+          "sha256": "e1222ef52d811a9fcdc6a1aee2fb70f8fc5560c4e5d480300ae016af203596ca"
         },
         {
           "path": "src/pan548/native-context-selection.mjs",
@@ -10607,7 +10607,47 @@
         {
           "path": "tests/pan548/registration.test.mjs",
           "role": "VALIDATOR",
-          "sha256": "ec36ea884b580a6a768967cd2f7cf68d6a8cb53b5c97cd6dffd892a4c1f0c1f3"
+          "sha256": "e9f5b8d2247970d925cfbffe3a18ffa6429cbb2e3d8b578c2e022695f590a73b"
+        },
+        {
+          "path": "docs/architecture/workspace-agent-panel-v1.md",
+          "role": "DERIVED_EVIDENCE",
+          "sha256": "472d5f5793e689f2d4cf4db02b6b33ec17c3683f4e2cc347595371eaccb2d929"
+        },
+        {
+          "path": "packages/browser-workspace/src/workspace-agent-panel-v1.css",
+          "role": "SOURCE",
+          "sha256": "b514da3315c5aa6347f89677bc8a61b4de59066a1dc97a6a2e4b7ad4f72468e7"
+        },
+        {
+          "path": "packages/browser-workspace/src/workspace-agent-panel-v1.ts",
+          "role": "SOURCE",
+          "sha256": "2bd1504cbc3495c389fd788f202ab66df4daee09c0dd0f689ae041bbdf6b646d"
+        },
+        {
+          "path": "packages/contracts/src/workspace-agent-run-v1.ts",
+          "role": "CONTRACT",
+          "sha256": "9c8def8c6587780a58a5e3fb48de6c8722755419478f45106fae4e114909243d"
+        },
+        {
+          "path": "src/pan548/native-agent-run.mjs",
+          "role": "SECURITY",
+          "sha256": "32673c5156c6c14567e31ce2f7e70e88540ac61f92143f7dd74d036a77e16920"
+        },
+        {
+          "path": "tests/pan548/native-agent-run.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "1ee94c8f680a048643fc4d16676b8f5c694353c391bf85d04d31c5070250ff6e"
+        },
+        {
+          "path": "tests/pan548/agent-run-transport-contract.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "389c12fb5fb89c59955c794ed69dc58b54279de96e5756067ace0c41b8f09aef"
+        },
+        {
+          "path": "tests/pan548/browser-agent-panel.test.mjs",
+          "role": "VALIDATOR",
+          "sha256": "5fa6d0988868d03acf12a934e0ac86d7deafea58006f35e864aaf5d854bf6b51"
         }
       ],
       "ownedTests": [
@@ -10620,7 +10660,10 @@
         "Independent host/domain/view/catalog/selection revisions and nullable primary objects remain exact native projections; copied foreign handles, invented rows, stale leases and post-leading-read expiry deny without leading effects.",
         "One additive shared lifetime primitive retires pending read/STT/model/render/preview responses, without implementing inference, voice, task execution or a second registry/shell/store.",
         "SourceMap is null and ui.context.read/ui.selection.read are descriptive only; executionAuthorityGranted and effectsProduced are false. Native rights remain server-owned and no mutation retries or false Cancel/Retire success are inferred.",
-        "Complete fixed contract/native/TLS/expiry/real-Chromium/registration suite, actual keyboard/module retirement and bounded desktop390/CSS-zoom evidence preserve existing gates and direct consumer contracts; early context is not whole original548 delivery."
+        "Complete fixed contract/native/TLS/expiry/real-Chromium/registration suite, actual keyboard/module retirement and bounded desktop390/CSS-zoom evidence preserve existing gates and direct consumer contracts; early context is not whole original548 delivery.",
+        "Additive default-off PUI07/DUI06 panel consumes the same native context/catalog/view owners and existing ModelAccessBroker/native resource SQLite ledger, not a second task engine.",
+        "Opaque native plan/start/independent read binds source/session/lease/rights and unknown usage; separate546 preview/confirmation/CAS/readback/Undo is the only personal-view effect boundary.",
+        "Synthetic probe is visibly not real-model DUI09 acceptance; unbound565575 route/consent failclosed; cancel/resume unavailable; no new inference/global rights or gate weakening."
       ]
     }
   ]
